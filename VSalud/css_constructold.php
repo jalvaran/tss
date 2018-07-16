@@ -114,25 +114,6 @@
         }
         .oculto {-webkit-transition:1s;-moz-transition:1s;-o-transition:1s;-ms-transition:1s;opacity:0;-ms-opacity:0;-moz-opacity:0;visibility:hidden;}
 
-.notification-container {
-    display:scroll; position:fixed; top:70px; right:10px;
-    width: 50px;
-    height: 50px;    
-    cursor:pointer;
-}
-
-.notification-counter {   
-    position: absolute;
-    top: -2px;
-    left: 25px;
-    
-    background-color: rgba(212, 19, 13, 1);
-    color: #fff;
-    border-radius: 18px;
-    padding: 1px 3px;
-    font: 14px Verdana;
-}
-
 </style>
 
 <link rel="stylesheet" href="css/cronometro.css">
@@ -149,11 +130,10 @@
 class CssIni{
 	private $Titulo;
 	
-	
 	function __construct($Titulo,$Headers=1){
             if($Headers==1){
 		print("
-		<meta http-equiv=Content-Type content=text/html charset='UTF-8' />
+		<meta http-equiv=Content-Type content=text/html; charset=ISO-8859-1 />
 		<title>$Titulo</title>
 		<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 		<meta name='description' content='Software de Techno Soluciones'>
@@ -188,18 +168,14 @@ class CssIni{
                 <link rel='stylesheet' href='chousen/source/chosen.css'>
                 <link rel='stylesheet' href='css/calendar.css'>   
                 <link rel='stylesheet' type='text/css' href='css/bootstrap.min.css' />
-                <link rel='stylesheet' type='text/css' href='css/DateTimePicker.css' />
-                <link rel='stylesheet' href='alertify/themes/alertify.core.css' />
-                <link rel='stylesheet' href='alertify/themes/alertify.default.css' id='toggleCSS' />
+                
 		");
-		print('<script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
-		<script type="text/javascript" src="js/bootstrap.min.js"></script>
-                
-		<script src="alertify/lib/alertify.min.js"></script>
-                
+		print('<script type="text/javascript" src="js/bootstrap.min.js"></script>	
+		<script type="text/javascript" src="js/DateTimePicker.js"></script>
+                <script src="../plugins/ckeditor/ckeditor.js"></script>
+                <script src="../plugins/ckeditor/samples/js/sample.js"></script>
                 ');
-            }   
-            
+            }
 	}
 	
 	/////////////////////Inicio una cabecera
@@ -241,11 +217,11 @@ class CssIni{
 	
 	/////Crea botones con despliegue
 		
-	function CreaBotonDesplegable($NombreBoton,$TituloBoton,$idBoton="")
+	function CreaBotonDesplegable($NombreBoton,$TituloBoton)
   {
 	
 		
-	print('<li><a href="#'.$NombreBoton.'" id="'.$idBoton.'"  role="button" class="btn" data-toggle="modal" title="'.$TituloBoton.'">
+	print('<li><a href="#'.$NombreBoton.'" role="button" class="btn" data-toggle="modal" title="'.$TituloBoton.'">
 			<span class="badge badge-success">'.$TituloBoton.'</span></a></li>');
 
 	}	
@@ -261,8 +237,7 @@ class CssIni{
 	/////////////////////Crea un Formulario
 	
 	function CrearForm($nombre,$action,$method,$target){
-		print('<li>'
-                        . '<form name= "'.$nombre.'" action="'.$action.'" id="'.$nombre.'" method="'.$method.'" target="'.$target.'"></li>');
+		print('<li><form name= "'.$nombre.'" action="'.$action.'" id="'.$nombre.'" method="'.$method.'" target="'.$target.'"></li>');
 		
 	}
         /////////////////////Crea un Formulario
@@ -290,7 +265,7 @@ class CssIni{
 	
 	/////////////////////Crea un Select
 	
-	function CrearSelect($nombre,$evento,$ancho=200){
+	function CrearSelect($nombre,$evento,$ancho=100){
 		print('<select id="'.$nombre.'" required name="'.$nombre.'" style="width:'.$ancho.'px" onchange="'.$evento.'" >');
 		
 	}
@@ -399,7 +374,7 @@ class CssIni{
 	
 	/////////////////////Crea un Cuadro de texto input
 	
-	function CrearInputNumber($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$Min,$Max,$Step,$css=""){
+	function CrearInputNumber($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$Min,$Max,$Step){
 		
 		if($ReadOnly==1)
 			$ReadOnly="readonly";
@@ -412,7 +387,7 @@ class CssIni{
 			$Required="";
 		
 			print('<strong style="color:'.$color.'">'.$label.'<input name="'.$nombre.'" value="'.$value.'" type="'.$type.'" id="'.$nombre.'" placeholder="'.$placeh.'" '.$TxtEvento.' = "'.$TxtFuncion.'" 
-			'.$ReadOnly.' '.$Required.' min="'.$Min.'"   max="'.$Max.'" step="'.$Step.'" autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px;'.$css.'"></strong>');
+			'.$ReadOnly.' '.$Required.' min="'.$Min.'"   max="'.$Max.'" step="'.$Step.'" autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px;"></strong>');
 		
 	}
 	
@@ -499,34 +474,6 @@ class CssIni{
         ');
 		
 	}
-        
-        /////////////////////Crea un Cuadro de Dialogo
-	
-	function CrearModal($id,$title,$Vector){
-		
-            print('<div id="'.$id.'" class="modal fade" role="dialog">');
-		
-            print('<div class="modal-dialog">');
-            
-            print('<div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">'.$title.'</h4>
-                    </div>
-                    <div class="modal-body">');
-		
-	}
-        
-        function CerrarModal($Nombre="BtnCierreModal") {
-            print('</div>
-                    <div class="modal-footer">
-                      <button type="button" id='.$Nombre.' class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>');
-        }
         
         /////////////////////Cierra un Cuadro de Dialogo
 	
@@ -764,11 +711,10 @@ class CssIni{
 	}
 	
 	function CrearImageLink($page,$imagerute,$target,$Alto,$Ancho){
-		print('<a href="'.$page.'" target="'.$target.'"><img src="'.$imagerute.'" style="cursor:pointer;height:'.$Alto.'px; width:'.$Ancho.'px"></a>');
+		print('<a href="'.$page.'" target="'.$target.'"><img src="'.$imagerute.'" style="height:'.$Alto.'px; width:'.$Ancho.'px"></a>');
 	}
         function CrearImage($Nombre,$imagerute,$Alterno,$Alto,$Ancho,$Javascript=""){
-            
-            print('<img id="'.$Nombre.'"  nombre="'.$Nombre.'" '.$Javascript.'  src="'.$imagerute.'" onerror="this.src=`'.$Alterno.'`;" style="cursor:pointer;height:'.$Alto.'px; width:'.$Ancho.'px; " data-toggle="tooltip" title="'.$Alterno.'">');
+		print('<img id="'.$Nombre.'"  nombre="'.$Nombre.'" '.$Javascript.'  src="'.$imagerute.'" onerror="this.src=`'.$Alterno.'`;" style="height:'.$Alto.'px; width:'.$Ancho.'px">');
 	}
 	function CrearLink($link,$target,$Titulo){
 		print('<a href="'.$link.'" target="'.$target.'" >'.$Titulo.'</a>');
@@ -912,8 +858,8 @@ class CssIni{
         
         /////////////////////Crea un Boton Naranja
 	
-	function CrearBotonNaranja($nombre,$value,$js=""){
-		print('<input type="submit" id="'.$nombre.'"  name="'.$nombre.'" value="'.$value.'" '.$js.' class="btn btn-warning">');
+	function CrearBotonNaranja($nombre,$value){
+		print('<input type="submit" id="'.$nombre.'"  name="'.$nombre.'" value="'.$value.'" class="btn btn-warning">');
 		
 	}
         
@@ -923,7 +869,7 @@ class CssIni{
             
             print('<script src="js/jquery.js"></script>
             <script src="js/bootstrap-transition.js"></script>
-            
+            <script src="js/beeper.js"></script>
             <script src="js/bootstrap-alert.js"></script>
             <script src="js/bootstrap-modal.js"></script>
             <script src="js/bootstrap-dropdown.js"></script>
@@ -972,7 +918,7 @@ class CssIni{
         
         /////////////////////Crear un DIV
 	
-	function CrearDiv($ID, $Class, $Alineacion,$Visible, $Habilitado,$Styles=""){
+	function CrearDiv($ID, $Class, $Alineacion,$Visible, $Habilitado){
             if($Visible==1)
                 $V="block";
             else
@@ -982,7 +928,7 @@ class CssIni{
                 $H="true";
             else
                 $H="false";
-            print("<div id='$ID' class='$Class' align='$Alineacion' style='display:$V;$Styles' >");
+            print("<div id='$ID' class='$Class' align='$Alineacion' style='display:$V;' >");
 		
 	}
         
@@ -1035,13 +981,13 @@ class CssIni{
 ////////////////////////////Crear Footer	
 		
 function Footer(){
-		$Year=date("Y");
+		
 		print('<footer>    
   <div style="text-align: center">
     <div>
        <a href="../VMenu/Menu.php" class="f_logo"><img src="../images/header-logo.png" alt=""></a>
       <div class="copy">
-      &copy; '.$Year.' | <a href="#">Privacy Policy</a> <br> Software  designed by <a href="http://technosoluciones.com.co/" rel="nofollow" target="_blank">Techno Soluciones SAS</a>
+      &copy; 2016 | <a href="#">Privacy Policy</a> <br> Software  designed by <a href="http://technosoluciones.com.co/" rel="nofollow" target="_blank">Techno Soluciones SAS</a>
       </div>
     </div>
   </div>
@@ -1070,29 +1016,12 @@ function Footer(){
            }else{
                $Required="";
            }
-           if(isset($VarSelect["Title"]) and !empty($VarSelect["Title"])){
+           if(isset($VarSelect["Title"])){
                 print("<strong>$VarSelect[Title]</strong><br>");
            }
            echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="2" name="'.$Nombre.'" '.$Required.' style="width:200px;">';
            
        	
-	}   
-        
-        /////////////////////Crear una Chosen
-	
-	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo){
-            $obCon=new conexion(1);
-            $consulta=$obCon->ConsultarTabla($Tabla, $Condicion);
-            $VarSelect["Ancho"]=$Ancho;
-            $VarSelect["Required"]=$Requerido;
-            $VarSelect["PlaceHolder"]=$PlaceHolder;
-            $VarSelect["Title"]=$Titulo;
-            $this->CrearSelectChosen($Nombre, $VarSelect);
-            $this->CrearOptionSelect("", $PlaceHolder, 0);
-            while($DatosTabla=$obCon->FetchArray($consulta)){
-               $this->CrearOptionSelect($DatosTabla[$idItem], "$DatosTabla[$Display1] $DatosTabla[$Display2] $DatosTabla[$Display3]", 0);
-            }
-            $this->CerrarSelect();
 	}   
         
         /////////////////////Asignar ancho a un elemento por id
@@ -1152,7 +1081,7 @@ function Footer(){
 	
 	function CrearInputFecha($Titulo,$Nombre,$Value,$Ancho,$Alto,$VectorFe){
             //include_once '../modelo/php_conexion.php';
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             $DatosFechaCierre=$obVenta->DevuelveValores("cierres_contables", "ID", 1);
             $FechaCierre=$DatosFechaCierre["Fecha"];
           print("<div onmouseout=ValidarFecha('$FechaCierre','$Nombre');>");
@@ -1345,7 +1274,7 @@ function Footer(){
          /////////////////////Dibujar un cuadro de busqueda
 	
 	function DibujeSelectBuscador($Nombre,$pageConsulta,$OtrasVariables,$DivTarget,$Evento,$Alto,$Ancho,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Vector){
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
                             
             ?>
             <script>
@@ -1398,7 +1327,7 @@ function Footer(){
 	} 
         
         public function CrearSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido,$LeyendaInicial="Seleccione un Item") {
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             $Vector["Nombre"]=$Nombre;
             $Vector["Evento"]=$Evento;
             $Vector["Funcion"]=$FuncionJS;
@@ -1453,11 +1382,11 @@ function Footer(){
         }
         
         public function DivNotificacionesJS() {
-            print("<div id='DivRespuestasJS' style='position: scroll;bottom:10px; right:10px;width: 300px;'></div>");
+            print("<div id='DivRespuestasJS' style='position: fixed;bottom: 50%;right: 50%;width: 300px;'></div>");
         }
         //Imagen que oculta o muestra un div o un objeto
-        public function ImageOcultarMostrar($Nombre,$Leyenda,$idObjeto,$Ancho,$Alto,$Vector,$RutaImage='../images/circle.png') {
-            print("<strong>$Leyenda</strong><image name='$Nombre' id='$Nombre' src='$RutaImage' style='cursor: pointer;height:$Ancho"."px".";width:$Alto"."px"."' onclick=MuestraOculta('$idObjeto');>");
+        public function ImageOcultarMostrar($Nombre,$Leyenda,$idObjeto,$Ancho,$Alto,$Vector,$RutaImage='../images/hidde.png') {
+            print("<strong>$Leyenda</strong><image name='$Nombre' id='$Nombre' src='$RutaImage' style='height:$Ancho"."px".";width:$Alto"."px"."' onclick=MuestraOculta('$idObjeto');>");
         }
         //Div para maquetear
         public function DivGrid($ID, $Class, $Alineacion,$Visible, $Habilitado,$Ubicacion,$Altura,$Ancho,$Border,$BorderColor){
@@ -1498,7 +1427,7 @@ function Footer(){
         //Multi Select
         
         public function CrearMultiSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido) {
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             
             print('<select multiple class="form-control" id="'.$Nombre.'" name="'.$Nombre.'[]">');
                         
@@ -1514,77 +1443,8 @@ function Footer(){
             }
             $this->CerrarSelect();
         }
-        //Agrega graficos
-        public function AgregaJSGraficos() {
-            print('<script src="js/highcharts.js"></script>
-            <script src="js/modules/exporting.js"></script>');
-        }
         
-        //Agrega un Grafico
-        public function CreeGraficoBarrasSimple($Titulo,$Subtitulo,$EjeX,$EjeY,$VectorColumnas,$VectorValores,$idDiv,$Vector) {
-             ?>               
-        <script>
-        $(function () {
-            $('#<?php echo "$idDiv"?>').highcharts({
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: '<?php echo "$Titulo"?>'
-                },
-                subtitle: {
-                    text: '<?php echo "$Subtitulo"?>'
-                },
-                xAxis: {
-                    categories: [
-
-                        <?php foreach ($VectorColumnas as $NombreColumnas){
-                            echo "'$NombreColumnas',";
-                        }
-                        ?> 
-                    ],
-
-
-
-                    crosshair: true
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: '<?php echo "$EjeY"?>'
-                    }
-                },
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        '<td style="padding:0"><b>$ {point.y:.1f} </b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: true,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: '<?php echo "$EjeX"?>',
-                    data: [<?php foreach ($VectorValores as $Valores){
-                        print($Valores.",");    
-                        
-                        }
-                        ?> 
-        ]
-
-                },  ]
-            });
-        });
-        </script>
-	 <?php   
-        }
-        
-        //Checkbox animado
+       //Checkbox animado
         public function CheckOnOff($Nombre,$JavaScript,$Activo,$Vector) {
             
             if($Activo==1){
@@ -1606,54 +1466,22 @@ function Footer(){
             $this->CrearImage($Nombre, $imagerute, $Alterno, 60, 100, $JavaScript);
         }
         
-        //Cuadro de dialogo para crear tercero
-        
-        public function DialTercero($id,$titulo,$myPage,$Vector) {
-            $obCon=new ProcesoVenta(1);
-            $this->CrearCuadroDeDialogo($id,$titulo); 
-	 
-                $this->CrearForm2("FrmCrearCliente",$myPage,"post","_self");
-                $this->CrearSelect("CmbTipoDocumento","Oculta()");
-                $this->CrearOptionSelect('13','Cedula',1);
-                $this->CrearOptionSelect('31','NIT',0);
-                $this->CerrarSelect();
-                //$css->CrearInputText("CmbPreVentaAct","hidden","",$idPreventa,"","","","",0,0,0,0);
-                $this->CrearInputText("TxtNIT","number","","","Identificacion","black","","",200,30,0,1);
-                $this->CrearInputText("TxtPA","text","","","Primer Apellido","black","onkeyup","CreaRazonSocial()",200,30,0,0);
-                $this->CrearInputText("TxtSA","text","","","Segundo Apellido","black","onkeyup","CreaRazonSocial()",200,30,0,0);
-                $this->CrearInputText("TxtPN","text","","","Primer Nombre","black","onkeyup","CreaRazonSocial()",200,30,0,0);
-                $this->CrearInputText("TxtON","text","","","Otros Nombres","black","onkeyup","CreaRazonSocial()",200,30,0,0);
-                $this->CrearInputText("TxtRazonSocial","text","","","Razon Social","black","","",200,30,0,1);
-                $this->CrearInputText("TxtDireccion","text","","","Direccion","black","","",200,30,0,1);
-                $this->CrearInputText("TxtTelefono","text","","","Telefono","black","","",200,30,0,1);
-                $this->CrearInputText("TxtEmail","text","","","Email","black","","",200,30,0,1);
-                $VarSelect["Ancho"]="200";
-                $VarSelect["PlaceHolder"]="Seleccione el municipio";
-                $this->CrearSelectChosen("CmbCodMunicipio", $VarSelect);
-                $sql="SELECT * FROM cod_municipios_dptos";
-                $Consulta=$obCon->Query($sql);
-                   while($DatosMunicipios=$obCon->FetchArray($Consulta)){
-                       $Sel=0;
-                       if($DatosMunicipios["ID"]==1011){
-                           $Sel=1;
-                       }
-                       $this->CrearOptionSelect($DatosMunicipios["ID"], $DatosMunicipios["Ciudad"], $Sel);
-                   }
-                $this->CerrarSelect();
-                echo '<br><br>';
-                $this->CrearBoton("BtnCrearCliente", "Crear Cliente");
-                $this->CerrarForm();
-            $this->CerrarCuadroDeDialogo(); 
-        }
-        public function BotonNotificaciones($Vector) {
-            print('<div class="notification-container">        
-                <img src="../images/notificaciones.png" style="height:50px;width:50px" href="#ModalAlertasTS5" data-toggle="modal"></img><span id="TS5_Alertas" class="notification-counter">NC</span></input>
-            </div>');
-            $this->CrearModal("ModalAlertasTS5", "Notificaciones", "");
-                $this->CrearDiv("DivNotificacionesTS5", "", "center", 1, 1);
-                $this->CerrarDiv();
-            $this->CerrarModal();
-        }
+        /////////////////////Crear una Chosen con los valores de una tabla
+	
+	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo){
+            $obCon=new conexion(1);
+            $consulta=$obCon->ConsultarTabla($Tabla, $Condicion);
+            $VarSelect["Ancho"]=$Ancho;
+            $VarSelect["Required"]=$Requerido;
+            $VarSelect["PlaceHolder"]=$PlaceHolder;
+            $VarSelect["Title"]=$Titulo;
+            $this->CrearSelectChosen($Nombre, $VarSelect);
+            $this->CrearOptionSelect("", $PlaceHolder, 0);
+            while($DatosTabla=$obCon->FetchArray($consulta)){
+               $this->CrearOptionSelect($DatosTabla[$idItem], "$DatosTabla[$Display1] $DatosTabla[$Display2] $DatosTabla[$Display3]", 0);
+            }
+            $this->CerrarSelect();
+	}   
         //////////////////////////////////FIN
 }
 	

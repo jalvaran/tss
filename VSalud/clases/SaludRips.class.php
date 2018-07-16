@@ -736,14 +736,15 @@ class Rips extends conexion{
     public function VerificarZip($NombreArchivo,$idUser,$Vector) {
         $zip = new ZipArchive;
         $Fecha=date("Y-m-d H:i:s");
-        //print("Entra");
+        $Archivos="";
         if ($zip->open($NombreArchivo) === TRUE){
-            $zip->extractTo('archivos/'); //función para extraer el ZIP, le pasamos la ruta donde queremos que nos descomprima
+            $zip->extractTo('../archivos/'); //función para extraer el ZIP, le pasamos la ruta donde queremos que nos descomprima
             for($i = 0; $i < $zip->numFiles; $i++){
                 //obtenemos ruta que tendrán los documentos cuando los descomprimamos
-                $nombresFichZIP['tmp_name'][$i] = 'archivos/'.$zip->getNameIndex($i);
+                $nombresFichZIP['tmp_name'][$i] = '../archivos/'.$zip->getNameIndex($i);
                 //obtenemos nombre del fichero
                 $nombresFichZIP['name'][$i] = $zip->getNameIndex($i);
+                $Archivos[$i]=$nombresFichZIP['name'][$i];
                 $DatosArchivos= $this->DevuelveValores("salud_upload_control", "nom_cargue", $nombresFichZIP['name'][$i]);
                 if($DatosArchivos==''){
                     $this->RegistreUpload($nombresFichZIP['name'][$i], $Fecha, $idUser, "");
@@ -754,6 +755,7 @@ class Rips extends conexion{
 
             $zip->close();
 	}
+        return $Archivos;
     }
     
     //Subir Circular 030 inicial

@@ -28,25 +28,26 @@ $Vector["Required"]["Pagina"]=1;
 $Vector["Required"]["Habilitado"]=1;
 
 //
-//
+/*/*
 $Vector["Pagina"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
-$Vector["Pagina"]["TablaVinculo"]="paginas";  //tabla de donde se vincula
-$Vector["Pagina"]["IDTabla"]="Nombre"; //id de la tabla que se vincula
+$Vector["Pagina"]["TablaVinculo"]="menu_submenus";  //tabla de donde se vincula
+$Vector["Pagina"]["IDTabla"]="Pagina"; //id de la tabla que se vincula
 $Vector["Pagina"]["Display"]="Nombre";                    //Columna que quiero mostrar
 $Vector["Pagina"]["Predeterminado"]="N";
+*/
 
 $Vector["TipoUsuario"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
 $Vector["TipoUsuario"]["TablaVinculo"]="usuarios_tipo";  //tabla de donde se vincula
 $Vector["TipoUsuario"]["IDTabla"]="Tipo"; //id de la tabla que se vincula
 $Vector["TipoUsuario"]["Display"]="Tipo"; 
 $Vector["TipoUsuario"]["Predeterminado"]="N";
-
+/*
 $Vector["Habilitado"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
 $Vector["Habilitado"]["TablaVinculo"]="respuestas_condicional";  //tabla de donde se vincula
 $Vector["Habilitado"]["IDTabla"]="Valor"; //id de la tabla que se vincula
 $Vector["Habilitado"]["Display"]="Valor";                    //Columna que quiero mostrar
 $Vector["Habilitado"]["Predeterminado"]="SI";
-
+*/
                   //Columna que quiero mostrar
 ///Filtros y orden
 $Vector["Order"]=" $MyID DESC ";   //Orden

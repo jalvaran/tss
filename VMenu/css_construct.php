@@ -1,4 +1,4 @@
-<link rel="icon" href="../images/technoIco.png">
+<link rel="icon" href="../images/technoIco.ico">
 <link rel="shortcut icon" href="../images/technoIco.ico" />
 <link rel="stylesheet" href="css/touchTouch.css">
 <link rel="stylesheet" href="css/style.css">
