@@ -28,15 +28,17 @@ print("<body>");
     /////
     /////
     $css->CrearDiv("principal", "container", "center",1,1);
-    include_once("procesadores/Salud_SubirRips.process.php");
+    //include_once("procesadores/Salud_SubirRips.process.php");
     print("<br>");
     
     
     ///////////////Se crea el DIV que servirá de contenedor secundario
     /////
     /////
-    $css->CrearDiv("Secundario", "container", "center",1,1);
-   										
+    $css->CrearInputText("Parar", "hidden", "", 0, "", "", "", "", 100, 30, 0, 1);
+     $css->CrearDiv("Secundario", "container", "center",1,1);
+     $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
+    $css->CerrarDiv();
     
     //////////////////////////Se dibujan los campos para la anulacion de la factura
     /////
@@ -120,8 +122,7 @@ print("<body>");
         //$css->CerrarForm();
             
     $css->CerrarDiv();//Cerramos contenedor Secundario
-    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
-    $css->CerrarDiv();
+    
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts
     print('<script type="text/javascript" src="jsPages/Salud_SubirRips.js"></script>');

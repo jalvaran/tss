@@ -151,7 +151,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_consultas_temp` "
@@ -201,7 +201,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_hospitalizaciones_temp` "
@@ -265,7 +265,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_procedimientos_temp` "
@@ -316,7 +316,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_otros_servicios_temp` "
@@ -352,7 +352,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_usuarios_temp` "
@@ -381,23 +381,53 @@ class Rips extends conexion{
     }
     
     // insertar Rips de facturas generadas a tabla temporal, despues por medio de un trigger se llevará a la general
-    public function InsertarRipsFacturacionGenerada($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser, $Vector) {
+    public function InsertarRipsFacturacionGenerada($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser,$destino,$FechaRadicado,$NumeroRadicado,$Escenario,$CuentaGlobal,$CuentaRIPS,$idEPS, $Vector) {
         // si se recibe el archivo
-        
+        $sql="SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1";
+        $consulta=$this->Query($sql);
+        $DatosIPS= $this->FetchArray($consulta);
+        $CodigoIPS=$DatosIPS["CodigoPrestadora"];
         if($Separador==1){
            $Separador=";"; 
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
-            
+            $line=0;
+            $Mensaje["Errores"]=0;
+            $Mensaje["LineasError"]="";
+            $Mensaje["PosError"]="";
             $sql="INSERT INTO `salud_rips_facturas_generadas_temp` "
-              . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, `fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, `valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`) VALUES";
+              . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
+              . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
+                    . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
+                    . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`) VALUES";
             
             while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
-                //////Inserto los datos en la tabla  
-                $i++;    
+                $line++;
+                if($data[0]<>$CodigoIPS){
+                    $Mensaje["Errores"]++;
+                    $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
+                    $Mensaje["PosError"]=1;
+                    if($Mensaje["Errores"]>50){
+                        $Mensaje["LineasError"]="N";
+                        
+                    }
+                    
+                }
+                if($data[8]<>$idEPS){
+                    $Mensaje["Errores"]++;
+                    $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
+                    $Mensaje["PosError"]=9;
+                    if($Mensaje["Errores"]>50){
+                        $Mensaje["LineasError"]="N";
+                        
+                    }
+                    
+                }
+                $i++; 
+                
                     //Convertimos la fecha de ingreso en formato 0000-00-00
                     if($data[5]<>""){
                        $FechaArchivo= explode("/", $data[5]);
@@ -435,14 +465,20 @@ class Rips extends conexion{
                        $FechaFinal="0000-00-00";
                     }
                     
-                    $sql.="('', '$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$FechaFactura', '$FechaInicio', '$FechaFinal', '$data[8]', '$data[9]', '$data[10]', '$data[11]', '$data[12]', '$data[13]', '$data[14]', '$data[15]', '$data[16]', '$TipoNegociacion','$NombreArchivo','$FechaCargue','$idUser'),";
-                    
+                    $sql.="('', '$data[0]', '$data[1]', '$data[2]', '$data[3]', '$data[4]', '$FechaFactura', "
+                            . "'$FechaInicio', '$FechaFinal', '$data[8]', '$data[9]', '$data[10]', '$data[11]', "
+                            . "'$data[12]', '$data[13]', '$data[14]', '$data[15]', '$data[16]', '$TipoNegociacion',"
+                            . "'$NombreArchivo','$FechaCargue','$idUser','$FechaRadicado','$NumeroRadicado','$destino',"
+                            . "'$Escenario','$CuentaGlobal','$CuentaRIPS'),";     
                     if($i==10000){
                         $sql=substr($sql, 0, -1);
                         $this->Query($sql);
                         $sql="INSERT INTO `salud_rips_facturas_generadas_temp` "
-                        . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, `fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, `valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`) VALUES";
-                        $i=0;
+                        . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
+                        . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
+                              . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
+                              . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`) VALUES";
+                       $i=0;
                     }
                 
             }
@@ -451,7 +487,7 @@ class Rips extends conexion{
             $sql="";
             fclose($handle); 
             $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
-        
+            return($Mensaje);
     }
      
     // insertar Rips de facturas generadas a tabla temporal, despues por medio de un trigger se llevará a la general
@@ -465,7 +501,7 @@ class Rips extends conexion{
         }
         
                        
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
         $i=0;
 
         $sql="INSERT INTO `salud_archivo_medicamentos_temp` "
@@ -500,7 +536,7 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        $handle = fopen("archivos/".$NombreArchivo, "r");
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             
             $sql="INSERT INTO `salud_archivo_nacidos_temp` (`id_recien_nacido`, `num_factura`, "
@@ -666,11 +702,13 @@ class Rips extends conexion{
             (`cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
-            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`)
+            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,
+            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`)
             SELECT `cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,`num_factura`,
             `fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,`nom_enti_administradora`,`num_contrato`,
             `plan_beneficios`,`num_poliza`,`valor_total_pago`,`valor_comision`,`valor_descuentos`,`valor_neto_pagar`,
-            `tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser` 
+            `tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,
+            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`
             FROM salud_rips_facturas_generadas_temp as t1 WHERE NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
             WHERE t1.`num_factura`=t2.`num_factura`); ";
@@ -746,6 +784,7 @@ class Rips extends conexion{
                 $nombresFichZIP['name'][$i] = $zip->getNameIndex($i);
                 $Archivos[$i]=$nombresFichZIP['name'][$i];
                 $DatosArchivos= $this->DevuelveValores("salud_upload_control", "nom_cargue", $nombresFichZIP['name'][$i]);
+                
                 if($DatosArchivos==''){
                     $this->RegistreUpload($nombresFichZIP['name'][$i], $Fecha, $idUser, "");
                 }

@@ -1152,7 +1152,7 @@ function Footer(){
 	
 	function CrearInputFecha($Titulo,$Nombre,$Value,$Ancho,$Alto,$VectorFe){
             //include_once '../modelo/php_conexion.php';
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             $DatosFechaCierre=$obVenta->DevuelveValores("cierres_contables", "ID", 1);
             $FechaCierre=$DatosFechaCierre["Fecha"];
           print("<div onmouseout=ValidarFecha('$FechaCierre','$Nombre');>");
@@ -1345,7 +1345,7 @@ function Footer(){
          /////////////////////Dibujar un cuadro de busqueda
 	
 	function DibujeSelectBuscador($Nombre,$pageConsulta,$OtrasVariables,$DivTarget,$Evento,$Alto,$Ancho,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Vector){
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
                             
             ?>
             <script>
@@ -1398,7 +1398,7 @@ function Footer(){
 	} 
         
         public function CrearSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido,$LeyendaInicial="Seleccione un Item") {
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             $Vector["Nombre"]=$Nombre;
             $Vector["Evento"]=$Evento;
             $Vector["Funcion"]=$FuncionJS;
@@ -1498,7 +1498,7 @@ function Footer(){
         //Multi Select
         
         public function CrearMultiSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido) {
-            $obVenta=new ProcesoVenta(1);
+            $obVenta=new conexion(1);
             
             print('<select multiple class="form-control" id="'.$Nombre.'" name="'.$Nombre.'[]">');
                         
@@ -1609,7 +1609,7 @@ function Footer(){
         //Cuadro de dialogo para crear tercero
         
         public function DialTercero($id,$titulo,$myPage,$Vector) {
-            $obCon=new ProcesoVenta(1);
+            $obCon=new conexion(1);
             $this->CrearCuadroDeDialogo($id,$titulo); 
 	 
                 $this->CrearForm2("FrmCrearCliente",$myPage,"post","_self");
