@@ -204,8 +204,14 @@ if($_REQUEST["idAccion"]){
             print(json_encode($Mensaje));
         break;
         case 6: //Verificar si hay facturas repetidas y si las hay no las cargue y muestre en que linea
-            $DatosDuplicados=$obRips->VerifiqueDuplicadosAF(""); // Verifica si hay duplicados en los AF subidos
-            $Mensaje["msg"]="OK";            
+            $Error=$obRips->VerifiqueDuplicadosAF(""); // Verifica si hay duplicados en los AF subidos
+            if($Error==1){
+                $Mensaje["msg"]="Error";
+            }
+            if($Error==0){
+                $Mensaje["msg"]="OK";   
+            }
+                  
             print(json_encode($Mensaje));
         break;
     }

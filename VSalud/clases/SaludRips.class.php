@@ -1011,7 +1011,14 @@ class Rips extends conexion{
     }
     //Verifica si hay duplicados en los AF y los retorna
     public function VerifiqueDuplicadosAF($Vector) {
-        
+        $Error=0;
+        $sql="SELECT ID FROM vista_af_duplicados LIMIT 1";
+        $consulta= $this->Query($sql);
+        $Datos= $this->FetchArray($consulta);
+        if($Datos["ID"]>0){
+            $Error=1;
+        }
+        return $Error;
     }
     //Fin Clases
 }

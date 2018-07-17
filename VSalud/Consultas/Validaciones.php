@@ -12,12 +12,17 @@ if(!empty($_REQUEST["idValidacion"])){
     $idValidacion=$obCon->normalizar($_REQUEST["idValidacion"]);
     switch ($idValidacion){
         case 1: //Verifique si una cuenta RIPS Existe
+            $DatosCuentaRIPS["msg"]="OK";
             $obValidacion= new Validacion($idUser);
             $CuentaRIPS=$obCon->normalizar($_REQUEST["CuentaRIPS"]);
             $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
-            $DatosCuentaRIPS=$obCon->DevuelveValores("salud_archivo_ct", "CuentaRIPS", $CuentaRIPS);
-            $DatosCuentaRIPS["msg"]="OK";
-            
+            $sql="SELECT CuentaRIPS FROM salud_archivo_facturacion_mov_generados WHERE CuentaRIPS='$CuentaRIPS' LIMIT 1";
+            $consulta=$obCon->Query($sql);
+            $DatosConsulta=$obCon->FetchArray($consulta);
+            if($DatosConsulta["CuentaRIPS"]==$CuentaRIPS){
+                $DatosCuentaRIPS["msg"]="Error";
+            }
+                        
             echo json_encode($DatosCuentaRIPS);
         break;
     }

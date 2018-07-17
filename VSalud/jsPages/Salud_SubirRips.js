@@ -16,6 +16,7 @@ function ValidaCuentaRIPS(){
         form_data.append('CuentaRIPS', CuentaRIPS)
                 
         $.ajax({
+        
         url: 'Consultas/Validaciones.php',
         dataType: "json",
         cache: false,
@@ -27,19 +28,14 @@ function ValidaCuentaRIPS(){
             //console.log(data);
             
             if(data.msg==='OK'){
-                console.log(data); 
+                
                 document.getElementById('BtnSubirZip').disabled=false;
-                if(data.ID){
-                    alertify.alert("El numero de Cuenta ya Existe!");
-                    document.getElementById('BtnSubirZip').disabled=true;
-                }
-                    
+                                    
             }
             
             if(data.msg==='Error'){
-                //alertify.alert("Debes completar todos los campos");
-                alert(data.error);
-                //DibujePedidos();
+                alertify.alert("El numero de Cuenta ya Existe!");
+                document.getElementById('BtnSubirZip').disabled=true;
             }
             
         },
@@ -104,6 +100,7 @@ function submitInfo(event){
         ErroresArchivos=document.getElementById("Parar").value;
         
         if(ErroresArchivos==1){
+            document.getElementById("Parar").value=0;
             return;
         }
         
@@ -121,11 +118,19 @@ function submitInfo(event){
         ErroresArchivos=document.getElementById("Parar").value;
         
         if(ErroresArchivos==1){
+            document.getElementById("Parar").value=0;
             return;
         }
         
         //Se valida Si una factura ya está cargada y si es así para y muestra cuales
         
+        VerificaDuplicados();
+        ErroresArchivos=document.getElementById("Parar").value;
+        
+        if(ErroresArchivos==1){
+            document.getElementById("Parar").value=0;
+            return;
+        }
         
         //Se va a enviar para guardar en el repositorio final
         for(i=0;i<data.Archivos.length;i++){
@@ -163,6 +168,7 @@ function VerificarCT(Separador){
     form_data.append('idAccion', 2);
     form_data.append('Separador', Separador);
     $.ajax({
+    async:false,
     url: './Consultas/Salud_SubirRips.info.php',
     dataType: 'json',
     cache: false,
@@ -231,6 +237,7 @@ function GrabarArchivoEnTemporal(Archivo,Fin){
     form_data.append('idAccion', 3);
     form_data.append('NombreArchivo', Archivo);
     $.ajax({
+    async:false,
     url: './Consultas/Salud_SubirRips.info.php',
     dataType: 'json',
     cache: false,
@@ -274,12 +281,54 @@ function GrabarArchivoEnTemporal(Archivo,Fin){
  * 
  * Analiza Archivos para Subirlos a los repositorios reales
  */
+function VerificaDuplicados(){
+    
+    var form_data = new FormData();
+    form_data.append('idAccion', 6);
+    
+    $.ajax({
+    async:false,
+    url: './Consultas/Salud_SubirRips.info.php',
+    dataType: 'json',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    success: function(data){
+        if(data.msg==="OK"){
+            alertify.success("No hay facturas Duplicadas");
+        }
+        if(data.msg==="Error"){
+            document.getElementById("Parar").value=1;
+            document.getElementById("GifProcess").innerHTML="";
+            document.getElementById('BtnSubirZip').disabled=false;
+            alertify.error("Hay Facturas Duplicadas",0);
+            document.getElementById("DivConsultas").innerHTML="<h2><strong>Hay Facturas Duplicadas, no puede continuar <a href='vista_af_duplicados.php' target='_BLANK'>ver</a></strong><h2>";
+            
+        }
+             
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+      }
+  })
+  
+}
+
+
+/**
+ * 
+ * Analiza Archivos para Subirlos a los repositorios reales
+ */
 function AnalizaArchivos(Archivo,Fin){
     
     var form_data = new FormData();
     form_data.append('idAccion', 4);
     form_data.append('Archivo', Archivo);
     $.ajax({
+    async:false,
     url: './Consultas/Salud_SubirRips.info.php',
     dataType: 'json',
     cache: false,
@@ -294,6 +343,8 @@ function AnalizaArchivos(Archivo,Fin){
                 ModificaAI();
                 document.getElementById("GifProcess").innerHTML="";
                 document.getElementById('BtnSubirZip').disabled=false;
+                document.getElementById("Parar").value=0;
+                document.getElementById("DivConsultas").innerHTML="<h3><strong>Archivos Subidos y verificados correctamente</strong></h3>";
             }
         }
              
