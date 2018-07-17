@@ -11,7 +11,7 @@ $obCon = new conexion($idUser);
 if($_REQUEST["idAccion"]){
     $obRips = new Rips($idUser);
     switch ($_REQUEST["idAccion"]){
-        case 1:
+        case 1: //Subir al servidor el .zip con los archivos
             $idEPS=$obRips->normalizar($_REQUEST["idEPS"]);
             $Mensaje["Separador"]=$obRips->normalizar($_REQUEST["CmbSeparador"]);
             if($Mensaje["Separador"]==1){
@@ -45,7 +45,7 @@ if($_REQUEST["idAccion"]){
             //$Mensaje["Archivos"]=$Archivos;
             print(json_encode($Mensaje));
         break;
-        case 2:
+        case 2://Devuelve los nombres de los archivos que se guardaron  en la carpeta y se verifica que correspondan al CT
             $Mensaje["msg"]="OK";
             $Mensaje["Errores"]=0;
             $Separador=$obRips->normalizar($_REQUEST["Separador"]);
@@ -148,7 +148,13 @@ if($_REQUEST["idAccion"]){
                 
                 $obRips->VaciarTabla("salud_archivo_nacidos_temp"); //Vacío la tabla de subida temporal
                 $obRips->InsertarRipsNacidos($NombreArchivo, $TipoNegociacion, $Separador, $FechaCargue, $idUser, "");
-                $Mensaje["fin"]=1;
+                
+            }
+            if($Prefijo=="AU"){
+                
+                $obRips->VaciarTabla("salud_archivo_urgencias_temp"); //Vacío la tabla de subida temporal
+                $obRips->InsertarRipsUrgencias($NombreArchivo, $TipoNegociacion, $Separador, $FechaCargue, $idUser, "");
+                
             }
                    
             print(json_encode($Mensaje));
@@ -186,9 +192,22 @@ if($_REQUEST["idAccion"]){
             if($Prefijo=="AN"){
                 $obRips->AnaliceInsercionNacidos(""); //Analizamos la tabla temporal que se sube y se inserta en la principal
             }
+            if($Prefijo=="AU"){
+                $obRips->AnaliceInsercionUrgencias(""); //Analizamos la tabla temporal que se sube y se inserta en la principal
+            }
             $Mensaje["msg"]="OK";            
             print(json_encode($Mensaje));
         break;    
+        case 5: //Modifica los autoincrementables
+            $obRips->ModifiqueAutoIncrementables(""); // Se realiza para ajustar los autoincrementables de las tablas tras la importaciosn
+            $Mensaje["msg"]="OK";            
+            print(json_encode($Mensaje));
+        break;
+        case 6: //Verificar si hay facturas repetidas y si las hay no las cargue y muestre en que linea
+            $DatosDuplicados=$obRips->VerifiqueDuplicadosAF(""); // Verifica si hay duplicados en los AF subidos
+            $Mensaje["msg"]="OK";            
+            print(json_encode($Mensaje));
+        break;
     }
     
 }else{

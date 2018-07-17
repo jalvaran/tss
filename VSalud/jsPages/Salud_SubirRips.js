@@ -100,13 +100,14 @@ function submitInfo(event){
             return;
             
         }
-        VerificarCT(data.Separador);
+        VerificarCT(data.Separador); //Se verifica que el CT contenga todos los archivos enviados
         ErroresArchivos=document.getElementById("Parar").value;
         
         if(ErroresArchivos==1){
             return;
         }
-        for(i=0;i<data.Archivos.length;i++){
+        
+        for(i=0;i<data.Archivos.length;i++){ //Guarda los archivos en las tablas temporales
             var prefijo = data.Archivos[i].substr(0,2);
             
             if(prefijo!="CT" && prefijo!="AD"){
@@ -115,7 +116,6 @@ function submitInfo(event){
             }
            
             
-            
         }
         
         ErroresArchivos=document.getElementById("Parar").value;
@@ -123,6 +123,10 @@ function submitInfo(event){
         if(ErroresArchivos==1){
             return;
         }
+        
+        //Se valida Si una factura ya está cargada y si es así para y muestra cuales
+        
+        
         //Se va a enviar para guardar en el repositorio final
         for(i=0;i<data.Archivos.length;i++){
             var prefijo = data.Archivos[i].substr(0,2);
@@ -184,16 +188,15 @@ function VerificarCT(Separador){
   
 }
 
-
 /**
  * 
- * Analiza Archivos para Subirlos a los repositorios reales
+ * Modificar Autoincrementables
  */
-function AnalizaArchivos(Archivo){
+function ModificaAI(){
     
     var form_data = new FormData();
-    form_data.append('idAccion', 4);
-    form_data.append('Archivo', Archivo);
+    form_data.append('idAccion', 5);
+    
     $.ajax({
     url: './Consultas/Salud_SubirRips.info.php',
     dataType: 'json',
@@ -203,10 +206,11 @@ function AnalizaArchivos(Archivo){
     data: form_data,
     type: 'post',
     success: function(data){
-        if(data.msg==="OK"){
-            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Guardado Correctamente";
-           
-        }
+        
+        if(data.msg==="OK"){        
+            alertify.success("Los autoincrementables se han modificado");
+        }    
+        
              
     },
     error: function (xhr, ajaxOptions, thrownError) {
@@ -216,7 +220,6 @@ function AnalizaArchivos(Archivo){
   })
   
 }
-
 
 /**
  * 
@@ -255,6 +258,42 @@ function GrabarArchivoEnTemporal(Archivo,Fin){
             }
             if(data.Error.Pos===9){
                 alertify.error("La Aseguradora No Coincide- Error en las lineas: "+data.Error.Lines,0);
+            }
+        }
+             
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+      }
+  })
+  
+}
+
+/**
+ * 
+ * Analiza Archivos para Subirlos a los repositorios reales
+ */
+function AnalizaArchivos(Archivo,Fin){
+    
+    var form_data = new FormData();
+    form_data.append('idAccion', 4);
+    form_data.append('Archivo', Archivo);
+    $.ajax({
+    url: './Consultas/Salud_SubirRips.info.php',
+    dataType: 'json',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    success: function(data){
+        if(data.msg==="OK"){
+            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Guardado Correctamente";
+            if(Fin===1){
+                ModificaAI();
+                document.getElementById("GifProcess").innerHTML="";
+                document.getElementById('BtnSubirZip').disabled=false;
             }
         }
              

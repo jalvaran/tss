@@ -193,6 +193,67 @@ class Rips extends conexion{
                 
     }
     
+    // insertar Rips de urgencias generados a tabla temporal, despues por medio de un trigger se llevará a la general
+    public function InsertarRipsUrgencias($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser, $Vector) {
+        // si se recibe el archivo
+        if($Separador==1){
+           $Separador=";"; 
+        }else{
+           $Separador=",";  
+        }
+        $handle = fopen("../archivos/".$NombreArchivo, "r");
+            $i=0;
+            
+            $sql="INSERT INTO `salud_archivo_urgencias_temp` (`id_urgencias`, `num_factura`, `cod_prest_servicio`, `tipo_ident_usuario`, `num_ident_usuario`, `fecha_ingreso`, `hora_ingreso`, `num_autorizacion`, `causa_externa`, `diagnostico_salida`, "
+                    . "`diagn_relac1_salida`, `diagn_relac2_salida`, `diagn_relac3_salida`, `destino_usuario`, `estado_salida`, `causa_muerte`, `fecha_salida`, `hora_salida`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`) VALUES ";
+            while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
+                //////Inserto los datos en la tabla  
+                    
+                  $i++;  
+                    if($data[4]<>""){
+                       $FechaArchivo= explode("/", $data[4]);
+                       if(count($FechaArchivo)>1){
+                           $FechaIngreso= $FechaArchivo[2]."-".$FechaArchivo[1]."-".$FechaArchivo[0];
+                       }else{
+                           $FechaIngreso=$data[4];
+                       }
+                       
+                    }else{
+                       $FechaIngreso="0000-00-00";
+                    }
+                    
+                    if($data[15]<>""){
+                       $FechaArchivo= explode("/", $data[15]);
+                       if(count($FechaArchivo)>1){
+                           $FechaSalida= $FechaArchivo[2]."-".$FechaArchivo[1]."-".$FechaArchivo[0];
+                       }else{
+                           $FechaSalida=$data[15];
+                       }
+                       
+                    }else{
+                       $FechaSalida="0000-00-00";
+                    }
+                    
+                    
+                    
+                    $sql.="('', '$data[0]', '$data[1]', '$data[2]', '$data[3]', '$FechaIngreso', '$data[5]', '$data[6]', '$data[7]', '$data[8]', '$data[9]', '$data[10]', '$data[11]', '$data[12]', '$data[13]', '$data[14]', '$FechaSalida', '$data[16]','$TipoNegociacion','$NombreArchivo','$FechaCargue','$idUser'),";
+                    if($i==10000){
+                        $sql=substr($sql, 0, -1);
+                        $this->Query($sql);
+                        $sql="INSERT INTO `salud_archivo_urgencias_temp` (`id_urgencias`, `num_factura`, `cod_prest_servicio`, `tipo_ident_usuario`, `num_ident_usuario`, `fecha_ingreso`, `hora_ingreso`, `num_autorizacion`, `causa_externa`, `diagnostico_salida`, "
+                                . "`diagn_relac1_salida`, `diagn_relac2_salida`, `diagn_relac3_salida`, `destino_usuario`, `estado_salida`, `causa_muerte`, `fecha_salida`, `hora_salida`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`) VALUES ";
+                         $i=0;
+                    }
+                
+            }
+            $sql=substr($sql, 0, -1);
+            $this->Query($sql);
+            fclose($handle); 
+            $sql="";
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
+                
+    }
+    
     // insertar Rips de consultas generados a tabla temporal, despues por medio de un trigger se llevará a la general
     public function InsertarRipsHospitalizaciones($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser, $Vector) {
         // si se recibe el archivo
@@ -402,7 +463,7 @@ class Rips extends conexion{
               . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
               . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
                     . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
-                    . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`) VALUES";
+                    . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`) VALUES";
             
             while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
                 $line++;
@@ -469,7 +530,7 @@ class Rips extends conexion{
                             . "'$FechaInicio', '$FechaFinal', '$data[8]', '$data[9]', '$data[10]', '$data[11]', "
                             . "'$data[12]', '$data[13]', '$data[14]', '$data[15]', '$data[16]', '$TipoNegociacion',"
                             . "'$NombreArchivo','$FechaCargue','$idUser','$FechaRadicado','$NumeroRadicado','$destino',"
-                            . "'$Escenario','$CuentaGlobal','$CuentaRIPS'),";     
+                            . "'$Escenario','$CuentaGlobal','$CuentaRIPS','$line'),";     
                     if($i==10000){
                         $sql=substr($sql, 0, -1);
                         $this->Query($sql);
@@ -477,7 +538,7 @@ class Rips extends conexion{
                         . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
                         . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
                               . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
-                              . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`) VALUES";
+                              . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`) VALUES";
                        $i=0;
                     }
                 
@@ -614,6 +675,7 @@ class Rips extends conexion{
         $this->AjusteAutoIncrement("salud_archivo_otros_servicios", "id_otro_servicios", $Vector);
         $this->AjusteAutoIncrement("salud_archivo_facturacion_mov_generados", "id_fac_mov_generados", $Vector);
         $this->AjusteAutoIncrement("salud_archivo_nacidos", "id_recien_nacido", $Vector);
+        $this->AjusteAutoIncrement("salud_archivo_urgencias", "id_urgencias", $Vector);
     }
     //Registra los nombres de los archivos subidos
     public function RegistreUpload($NombreArchivo,$Fecha,$idUser,$Vector) {
@@ -639,6 +701,18 @@ class Rips extends conexion{
                 . "SELECT * FROM `salud_archivo_hospitalizaciones_temp` as t1 "
                 . "WHERE NOT EXISTS "
                 . "(SELECT 1 FROM `salud_archivo_hospitalizaciones` as t2 "
+                . "WHERE t1.`nom_cargue`=t2.`nom_cargue` AND t1.`num_factura`=t2.`num_factura`); ";
+        
+        $this->Query($sql);
+    }
+    
+    //Copia los registros de la tabla temporal urgencias que no existan en la principal y los inserta
+    public function AnaliceInsercionUrgencias($Vector) {
+        //Secuencia SQL que selecciona los usuarios que no estan creados de la tabla temporal y los inserta en la principal
+        $sql="INSERT INTO `salud_archivo_urgencias` "
+                . "SELECT * FROM `salud_archivo_urgencias_temp` as t1 "
+                . "WHERE NOT EXISTS "
+                . "(SELECT 1 FROM `salud_archivo_urgencias` as t2 "
                 . "WHERE t1.`nom_cargue`=t2.`nom_cargue` AND t1.`num_factura`=t2.`num_factura`); ";
         
         $this->Query($sql);
@@ -934,6 +1008,10 @@ class Rips extends conexion{
             FROM salud_circular030_inicial as t1 WHERE indic_act_fact='A' AND valor_total_pagos>0 ; ";
         
         $this->Query($sql);
+    }
+    //Verifica si hay duplicados en los AF y los retorna
+    public function VerifiqueDuplicadosAF($Vector) {
+        
     }
     //Fin Clases
 }
