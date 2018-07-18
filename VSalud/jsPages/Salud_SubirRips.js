@@ -97,16 +97,17 @@ function submitInfo(event){
             return;
             
         }
-        if(data.msg==='ErrorCuentaRIPS'){ //Si no es igual la cuenta rips escrita con el del archivo
-            document.getElementById("DivConsultas").innerHTML="";
-            alertify.alert("El numero de Cuenta RIP digitado no es igual del del CT: "+data.CuentaRIPSCT);
-            return;            
-        }
         if(data.ErrorFecha){
             document.getElementById("DivConsultas").innerHTML="";
             alertify.alert("La Fecha de Radicado es mayor a la Actual, por favor selecciona otra fecha");
             return;         
         }
+        if(data.msg==='ErrorCuentaRIPS'){ //Si no es igual la cuenta rips escrita con el del archivo
+            document.getElementById("DivConsultas").innerHTML="";
+            alertify.alert("El numero de Cuenta RIP digitado no es igual del del CT: "+data.CuentaRIPSCT);
+            return;            
+        }
+        
         VerificarCT(data.Separador); //Se verifica que el CT contenga todos los archivos enviados
         ErroresArchivos=document.getElementById("Parar").value;
         
@@ -173,8 +174,9 @@ function submitInfo(event){
         
     },
     error: function (xhr, ajaxOptions, thrownError) {
+        console.log(thrownError);
         alert(xhr.status);
-        alert(thrownError);
+        alert(JSON.parse(thrownError));
       }
   })
 }

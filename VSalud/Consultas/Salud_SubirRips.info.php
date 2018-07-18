@@ -1,5 +1,5 @@
 <?php
-header("Content-type: application/json; charset=utf-8");
+header('Content-type: application/json');
 session_start();
 $idUser=$_SESSION['idUser'];
 $TipoUser=$_SESSION['tipouser'];
@@ -52,14 +52,13 @@ if($_REQUEST["idAccion"]){
                 $Mensaje["Archivos"][$i]=$DatosArchivos["nom_cargue"];
                 $i++;
             }
-            /*
+            
             $fecha_actual = strtotime(date("Y-m-d"));
             $fecha_entrada = strtotime($FechaRadicado);
             if($fecha_entrada>$fecha_actual){
-                $Mensaje["ErrorFecha"];
+                $Mensaje["ErrorFecha"]=1;
             }
-             * 
-             */
+            
             $Mensaje["CuentaRIPSCT"]=$NumCuentaRIPS;
             print(json_encode($Mensaje));
         break;

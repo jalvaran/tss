@@ -79,8 +79,9 @@ print("<body>");
             print("<td>");
                 $Page="Consultas/BuscarFacturasDiferencias.php?st= &idEPS=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEps`,`DivFacturasDif`,`5`);return false ;";
-                $css->CrearSelectTable("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "onchange", $FuncionJS, "", 1,"Seleccione una EPS");
-           
+                //$css->CrearSelectTable("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "onchange", $FuncionJS, "", 1,"Seleccione una EPS");
+                $css->CrearTableChosen("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "cod_pagador_min", 300, 1, "EPS", "");
+                $css->CrearBotonEvento("BtnMostrar", "Buscar", 1, "onClick", "EnvieObjetoConsulta(`$Page`,`idEps`,`DivDatosFactura`,``);return false;", "naranja", "");
             print("</td>"); 
             print("<td>");
             
