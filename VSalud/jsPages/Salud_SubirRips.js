@@ -132,6 +132,16 @@ function submitInfo(event){
             return;
         }
         
+        //Se valida Si una factura está duplicada y devuelta dependiendo de la respuesta del usuario se reescribirá o no
+        
+        VerificaDevoluciones();
+        ErroresArchivos=document.getElementById("Parar").value;
+        
+        if(ErroresArchivos==1){
+            document.getElementById("Parar").value=0;
+            return;
+        }
+        
         //Se va a enviar para guardar en el repositorio final
         for(i=0;i<data.Archivos.length;i++){
             var prefijo = data.Archivos[i].substr(0,2);
@@ -355,4 +365,77 @@ function AnalizaArchivos(Archivo,Fin){
       }
   })
   
+}
+//Verifica devoluciones
+function VerificaDevoluciones(){
+    
+    var form_data = new FormData();
+    form_data.append('idValidacion', 2);//hay devoluciones duplicadas?    
+    $.ajax({
+    async:false,
+    url: './Consultas/Validaciones.php',
+    dataType: 'json',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    success: function(data){
+        if(data.msg==="SI"){
+            alertify.set({ labels: {
+                ok     : "Actualizar",
+                cancel : "No Cargar"
+            } });
+            alertify.confirm("Hay Facturas Duplicadas en Estado de Devolucion desea actualizarlas?,<br> <a href='vista_af_devueltos.php' target='_blank'>VER RELACION.</a><br> <strong>NOTA: Esta acción es irreversible. <strong>",
+            function (e) {
+                if (e) {
+                    document.getElementById("Parar").value=0;
+                    ActualizarFacturasDevueltas();
+                     
+                } else {
+                    alertify.error("Se canceló la actualización de las facturas devueltas previamente, no puede continuar");
+                    document.getElementById("Parar").value=1;
+                    document.getElementById("GifProcess").innerHTML="";
+                    document.getElementById('BtnSubirZip').disabled=false;
+                    document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+           
+                }
+            });
+        }
+             
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        document.getElementById("Parar").value=1;
+        alert(xhr.status);
+        alert(thrownError);
+      }
+  })
+    
+}
+//Se actualizan las facturas devueltas por orden del usuario
+function ActualizarFacturasDevueltas(){
+    var form_data = new FormData();
+    form_data.append('idValidacion', 3);//hay devoluciones duplicadas?    
+    $.ajax({
+    async:false,
+    url: './Consultas/Validaciones.php',
+    dataType: 'json',
+    cache: false,
+    contentType: false,
+    processData: false,
+    data: form_data,
+    type: 'post',
+    success: function(data){
+        if(data.msg==="OK"){
+            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li><strong>Facturas en estado de devolucion Actualizadas</strong>";
+            alertify.success("Se actualizaron las facturas devueltas previamente",0); 
+        }
+             
+    },
+    error: function (xhr, ajaxOptions, thrownError) {
+        document.getElementById("Parar").value=1;
+        alert(xhr.status);
+        alert(thrownError);
+      }
+  })
 }

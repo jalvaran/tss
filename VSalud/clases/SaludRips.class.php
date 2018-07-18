@@ -1020,5 +1020,76 @@ class Rips extends conexion{
         }
         return $Error;
     }
+    
+    //Actualiza Facturas duplicadas en AF en estado devuelto
+    public function ActualiceAFDevueltas($Vector) {
+        // Se copian los archivos a la tabla historica
+        $sql="INSERT INTO `salud_rips_facturas_generadas_historico` "
+                . "SELECT * FROM `salud_archivo_facturacion_mov_generados` as t1 "
+                . "WHERE EXISTS "
+                . "(SELECT 1 FROM `vista_af_devueltos` as t2 "
+                . "WHERE t1.`num_factura`=t2.`num_factura`); ";
+        
+        $this->Query($sql); 
+        
+        // Eliminar Archivos del AC que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_consultas` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_consultas.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AH que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_hospitalizaciones` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_hospitalizaciones.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AM que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_medicamentos` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_medicamentos.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AN que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_nacidos` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_nacidos.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AT que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_otros_servicios` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_otros_servicios.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AP que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_procedimientos` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_procedimientos.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+        // Eliminar Archivos del AU que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_urgencias` WHERE EXISTS "
+                . "(SELECT num_factura FROM `vista_af_devueltos` "
+                . "WHERE salud_archivo_urgencias.`num_factura`=vista_af_devueltos.`num_factura`)";
+        
+        $this->Query($sql);
+        
+               
+        // Eliminar Archivos del AF que tienen las facturas devueltas
+        $sql="DELETE FROM `salud_archivo_facturacion_mov_generados` WHERE EXISTS "
+                . "(SELECT num_factura FROM `salud_rips_facturas_generadas_historico` "
+                . "WHERE salud_archivo_facturacion_mov_generados.`num_factura`=salud_rips_facturas_generadas_historico.`num_factura`"
+                . " AND salud_archivo_facturacion_mov_generados.`nom_cargue`=salud_rips_facturas_generadas_historico.`nom_cargue`)";
+        
+        $this->Query($sql);
+        
+    }
     //Fin Clases
 }

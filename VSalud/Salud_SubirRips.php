@@ -61,7 +61,7 @@ print("<body>");
                     $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
                     $TxtFuncion="ValidaCuentaRIPS();";
                     print("<br><br>");
-                    $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "onChange", $TxtFuncion, 200, 30, 0, 1);
+                    $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "onBlur", $TxtFuncion, 200, 30, 0, 1);
                 print("</td>");
                 print("<td>");
                     $css->CrearInputText("FechaRadicado", "date", "", date("Y-m-d"), "Fecha Radicado", "", "", "", 150, 30, 0, 1);
