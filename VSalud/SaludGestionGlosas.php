@@ -1,5 +1,5 @@
 <?php 
-$myPage="SaludGlosasDevoluciones.php";
+$myPage="SaludGestionGlosas.php";
 include_once("../sesiones/php_control.php");
 include_once("clases/Glosas.class.php");
 include_once("css_construct.php");
@@ -13,8 +13,7 @@ $css =  new CssIni("Glosas");
 
 print("</head>");
 print("<body>");
-    
-    include_once("procesadores/SaludGlosas.process.php");
+  
     
     $css->CabeceraIni("Glosas"); //Inicia la cabecera de la pagina
       
@@ -36,6 +35,8 @@ print("<body>");
     
     $css->CrearCuadroDeDialogo("DialBusquedaGlosas","Buscar Glosa");
     $css->CrearTabla();
+    
+    
         $css->FilaTabla(16);
             print("<td>");
             $css->CrearInputText("CajaAsigna", "hidden", "", "", "", "", "", "", 100, 30, 0, 0);
@@ -65,25 +66,61 @@ print("<body>");
     $css->CerrarCuadroDeDialogo();
     
     $css->CrearTabla();
+    $css->FilaTabla(16);
+        $css->ColTabla("<strong>Opciones de Busqueda</strong>", 4);
+    $css->CierraFilaTabla();
         $css->FilaTabla(16);
             $css->ColTabla("<strong>EPS</strong>", 1);
-            $css->ColTabla("<strong>FACTURA</strong>", 1);
+            $css->ColTabla("<strong>Factura</strong>", 1);
+            $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
+            $css->ColTabla("<strong>Cuenta Global</strong>", 1);
         $css->CierraFilaTabla();
         $css->FilaTabla(16);
-        print("<td>");
-            $css->CrearDiv2("DivF", "container", "center", 2, 1, 130, 200, 1, 1, "", "");
-                $Page="Consultas/BuscarFacturasDiferencias.php?idFactura=";
-                $css->CrearInputText("TxtBuscarFact","text","","","Buscar Factura","black","onchange","EnvieObjetoConsulta(`$Page`,`TxtBuscarFact`,`DivFacturasDif`,`5`);return false;",200,30,0,0);
-        
+            print("<td>");
                 $Page="Consultas/BuscarFacturasDiferencias.php?st= &idEPS=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEps`,`DivFacturasDif`,`5`);return false ;";
                 $css->CrearSelectTable("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "onchange", $FuncionJS, "", 1,"Seleccione una EPS");
+           
+            print("</td>"); 
+            print("<td>");
+            
+                $Page="Consultas/BuscarFacturasDiferencias.php?idFactura=";
+                $css->CrearInputText("TxtBuscarFact","text","","","Factura","black","onchange","EnvieObjetoConsulta(`$Page`,`TxtBuscarFact`,`DivFacturasDif`,`5`);return false;",200,30,0,0);
+        
+            print("</td>");
+            print("<td>");
+            
+                $Page="Consultas/BuscarFacturasDiferencias.php?idFactura=";
+                $css->CrearInputText("TxtBuscarCuentaRIPS","text","","","Cuenta RIPS","black","onchange","EnvieObjetoConsulta(`$Page`,`TxtBuscarFact`,`DivFacturasDif`,`5`);return false;",200,30,0,0);
+        
+            print("</td>");
+            print("<td>");
+            
+                $Page="Consultas/BuscarFacturasDiferencias.php?idFactura=";
+                $css->CrearInputText("TxtBuscarCuentaGlobal","text","","","Cuenta Global","black","onchange","EnvieObjetoConsulta(`$Page`,`TxtBuscarFact`,`DivFacturasDif`,`5`);return false;",200,30,0,0);
+        
+            print("</td>");
+            
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+        
+        print("<td colspan=4>");
+            $css->CrearNotificacionAzul("Cuentas", 16);
+            $css->CrearDiv("DivCuentas", "", "center", 1, 1);
             $css->CerrarDiv();
-        print("</td>"); 
-        print("<td>");
-            $css->CrearDiv2("DivF", "container", "center", 2, 1, 500, 300, 1, 1, "", "");
-            $css->DivGrid("DivFacturasDif", "container", "center", 1, 1, 3, 90, 175,5,"transparent");
+        print("</td>");
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+        print("<td colspan=4>");
+            $css->CrearNotificacionVerde("Facturas", 16);
+            $css->CrearDiv("DivCuentas", "", "center", 1, 1);
             $css->CerrarDiv();
+        print("</td>");
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+        print("<td colspan=4>");
+            $css->CrearNotificacionNaranja("Detalle de Facturas", 16);
+            $css->CrearDiv("DivCuentas", "", "center", 1, 1);
             $css->CerrarDiv();
         print("</td>");
        $css->CierraFilaTabla();

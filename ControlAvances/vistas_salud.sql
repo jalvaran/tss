@@ -88,3 +88,11 @@ t2.EstadoGlosa,t2.fecha_cargue FROM `salud_rips_facturas_generadas_temp` t1
 INNER JOIN salud_archivo_facturacion_mov_generados t2 ON t1.`num_factura`=t2.`num_factura` 
 WHERE t2.`EstadoGlosa`=9;
 
+
+DROP VIEW IF EXISTS `vista_salud_cuentas_rips`;
+CREATE VIEW vista_salud_cuentas_rips AS 
+SELECT `CuentaRIPS`,`cod_enti_administradora`,`nom_enti_administradora`,(SELECT MIN(`fecha_factura`)) AS FechaDesde,
+(SELECT MAX(`fecha_factura`)) AS FechaHasta,`fecha_radicado`,`numero_radicado`, 
+(COUNT(`id_fac_mov_generados`)) AS NumFacturas,sum(`valor_neto_pagar`) as Total, 
+MIN(`EstadoGlosa`) AS EstadoGlosa 
+FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;

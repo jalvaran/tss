@@ -79,6 +79,7 @@ function submitInfo(event){
   //event.preventDefault();
   var form_data = getInfoForm();
       form_data.append('idAccion', 1);
+      
   $.ajax({
     url: './Consultas/Salud_SubirRips.info.php',
     dataType: 'json',
@@ -88,13 +89,23 @@ function submitInfo(event){
     data: form_data,
     type: 'post',
     success: function(data){
-        console.log(data);
+        //console.log(data);
         document.getElementById("DivConsultas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
         if(data.CT == 0){
            
             alertify.error("No se recibió ningún archivo CT",0);
             return;
             
+        }
+        if(data.msg==='ErrorCuentaRIPS'){ //Si no es igual la cuenta rips escrita con el del archivo
+            document.getElementById("DivConsultas").innerHTML="";
+            alertify.alert("El numero de Cuenta RIP digitado no es igual del del CT: "+data.CuentaRIPSCT);
+            return;            
+        }
+        if(data.ErrorFecha){
+            document.getElementById("DivConsultas").innerHTML="";
+            alertify.alert("La Fecha de Radicado es mayor a la Actual, por favor selecciona otra fecha");
+            return;         
         }
         VerificarCT(data.Separador); //Se verifica que el CT contenga todos los archivos enviados
         ErroresArchivos=document.getElementById("Parar").value;
@@ -177,6 +188,7 @@ function VerificarCT(Separador){
     var form_data = new FormData();
     form_data.append('idAccion', 2);
     form_data.append('Separador', Separador);
+    form_data.append('CuentaRIPS', $('#CuentaRIPS').val());
     $.ajax({
     async:false,
     url: './Consultas/Salud_SubirRips.info.php',

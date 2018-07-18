@@ -796,7 +796,7 @@ class CssIni{
         /////////////////////Crear una fila para una tabla
 	function CrearNotificacionVerde($Mensaje,$FontSize){
 		print('<div class="alert alert-success fade in" align="center" style="font-size:'.$FontSize.'px">'
-                        . '<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>'
+                        . ''
                         . '<strong>'.$Mensaje.'</strong></div>');
 		
 	}
@@ -804,7 +804,7 @@ class CssIni{
         /////////////////////Crear una fila para una tabla
 	function CrearNotificacionAzul($Mensaje,$FontSize){
 		print('<div class="alert alert-info fade in" align="center" style="font-size:'.$FontSize.'px">'
-                        . '<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>'
+                        . ''
                         . '<strong>'.$Mensaje.'</strong></div>');
 		
 	}
@@ -812,7 +812,7 @@ class CssIni{
         /////////////////////Crear una fila para una tabla
 	function CrearNotificacionNaranja($Mensaje,$FontSize){
 		print('<div class="alert alert-warning fade in" align="center" style="font-size:'.$FontSize.'px">'
-                        . '<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>'
+                        . ''
                         . '<strong>'.$Mensaje.'</strong></div>');
 		
 	}

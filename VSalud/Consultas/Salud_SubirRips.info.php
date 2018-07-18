@@ -1,5 +1,5 @@
 <?php
-
+header("Content-type: application/json; charset=utf-8");
 session_start();
 $idUser=$_SESSION['idUser'];
 $TipoUser=$_SESSION['tipouser'];
@@ -12,7 +12,11 @@ if($_REQUEST["idAccion"]){
     $obRips = new Rips($idUser);
     switch ($_REQUEST["idAccion"]){
         case 1: //Subir al servidor el .zip con los archivos
+            $Mensaje["msg"]="OK";
             $idEPS=$obRips->normalizar($_REQUEST["idEPS"]);
+            $CuentaRIPS=$obRips->normalizar($_REQUEST["CuentaRIPS"]);
+            $FechaRadicado=$obRips->normalizar($_REQUEST["FechaRadicado"]);
+            $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
             $Mensaje["Separador"]=$obRips->normalizar($_REQUEST["CmbSeparador"]);
             if($Mensaje["Separador"]==1){
                 $Mensaje["Separador"]=";";
@@ -33,16 +37,30 @@ if($_REQUEST["idAccion"]){
             $consulta= $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0'");
             $i=0;
             $Mensaje["CT"]=0;
+            $NumCuentaRIPS=0;
             while($DatosArchivos= $obRips->FetchArray($consulta)){
                 $Prefijo=substr($DatosArchivos["nom_cargue"], 0, 2);
                 if($Prefijo=="CT"){
                     $Mensaje["CT"]=1;
+                    $NumCuentaRIPS=substr($DatosArchivos["nom_cargue"], 2, 6);
+                    if($NumCuentaRIPS<>$CuentaRIPS){
+                        $obRips->BorraReg("salud_upload_control", "Analizado", 0);
+                        $Mensaje["msg"]="ErrorCuentaRIPS";
+                    }
                 }
+                
                 $Mensaje["Archivos"][$i]=$DatosArchivos["nom_cargue"];
                 $i++;
             }
-            $Mensaje["msg"]="OK";
-            //$Mensaje["Archivos"]=$Archivos;
+            /*
+            $fecha_actual = strtotime(date("Y-m-d"));
+            $fecha_entrada = strtotime($FechaRadicado);
+            if($fecha_entrada>$fecha_actual){
+                $Mensaje["ErrorFecha"];
+            }
+             * 
+             */
+            $Mensaje["CuentaRIPSCT"]=$NumCuentaRIPS;
             print(json_encode($Mensaje));
         break;
         case 2://Devuelve los nombres de los archivos que se guardaron  en la carpeta y se verifica que correspondan al CT
