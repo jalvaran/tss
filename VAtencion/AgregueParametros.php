@@ -96,7 +96,7 @@ $idLink=0;
                 
                 if($idLink==1 AND $FlagSincronizado==0){
                     $VectorAC["F"]=0;
-                    $obVenta->AgregarColumnaTabla($DatosTablas[0], 'Sync', 'DATETIME', "DEFAULT '0000-00-00 00:00:00'", '', $VectorAC);
+                    $obCon->AgregarColumnaTabla($DatosTablas[0], 'Sync', 'DATETIME', "DEFAULT '0000-00-00 00:00:00'", '', $VectorAC);
                 }
                     
             }

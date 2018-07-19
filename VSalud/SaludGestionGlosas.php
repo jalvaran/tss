@@ -1,9 +1,9 @@
 <?php 
 $myPage="SaludGestionGlosas.php";
 include_once("../sesiones/php_control.php");
-include_once("clases/Glosas.class.php");
+//include_once("clases/Glosas.class.php");
 include_once("css_construct.php");
-$obGlosas = new Glosas($idUser);
+$obGlosas = new conexion($idUser);
 //////Si recibo un cliente
 $NumFactura="";
 
@@ -35,7 +35,7 @@ print("<body>");
         $css->CerrarDiv();
     $css->CerrarCuadroDeDialogoAmplio();
     
-    $css->CrearModal("ModalGlosar", "Glosar", "");
+    $css->CrearModal("ModalGlosar", "", "");
         $css->CrearDiv("DivGlosar", "", "center", 1, 1);
         $css->CerrarDiv();
     $css->CerrarModal();

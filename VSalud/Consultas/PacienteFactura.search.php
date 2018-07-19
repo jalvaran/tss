@@ -106,6 +106,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla("Total EPS", 1);
                 $css->ColTabla("Total Usuario", 1);
                 $css->ColTabla("Valor Total", 1);
+                $css->ColTabla("Devolver", 1);
                 
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
@@ -118,6 +119,10 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla(number_format($DatosFactura["valor_neto_pagar"]), 1);
                 $css->ColTabla(number_format($DatosFactura["valor_total_pago"]), 1);                
                 $css->ColTabla(number_format($DatosFactura["valor_neto_pagar"]+$DatosFactura["valor_total_pago"]), 1);
+                print("<td>");
+                    $css->CrearBotonEvento("BtnDevolverFactura", "Devolver", 1, "onClick", "DevolverFactura('$idFactura')", "rojo", "");
+                print("</td>");
+                
             $css->CierraFilaTabla();
         $css->CerrarTabla();
           
