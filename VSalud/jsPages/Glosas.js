@@ -204,9 +204,9 @@ function BuscarUsuarioFactura(idFactura){
 function BuscarActividadesFactura(idFactura){
     var form_data = new FormData();
         form_data.append('idFactura', idFactura);
-        document.getElementById('DivDetallesUsuario').innerHTML="Buscando Actividades...";
+        document.getElementById('DivActividadesFacturas').innerHTML="Buscando Actividades...";
         $.ajax({
-        url: './Consultas/PacienteFactura.search.php',
+        url: './Consultas/ActividadesFactura.search.php',
         //dataType: 'json',
         cache: false,
         contentType: false,
@@ -216,7 +216,7 @@ function BuscarActividadesFactura(idFactura){
         success: function(data){
             console.log(data)
           if (data != "") { 
-              document.getElementById('DivDetallesUsuario').innerHTML=data;
+              document.getElementById('DivActividadesFacturas').innerHTML=data;
               
           }else {
             alert("No hay resultados para la consulta");
