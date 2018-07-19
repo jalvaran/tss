@@ -1,6 +1,10 @@
 <?php
 header('Content-type: application/json');
 session_start();
+if (!isset($_SESSION['username'])){
+  exit("<a href='../index.php' ><img src='../images/401.png'>Iniciar Sesion </a>");
+  
+}
 $idUser=$_SESSION['idUser'];
 $TipoUser=$_SESSION['tipouser'];
 include_once("../../modelo/php_conexion.php");
