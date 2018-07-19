@@ -166,3 +166,66 @@ function FiltreFacturasXEstadoGlosa(){
           }
       })        
 }  
+
+function MostrarActividades(idFactura){
+    document.getElementById('BtnModalFacturas').click();
+    BuscarUsuarioFactura(idFactura);
+    BuscarActividadesFactura(idFactura);
+}
+
+function BuscarUsuarioFactura(idFactura){
+    var form_data = new FormData();
+        form_data.append('idFactura', idFactura);
+        document.getElementById('DivDetallesUsuario').innerHTML="Buscando Paciente...";
+        $.ajax({
+        url: './Consultas/PacienteFactura.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+          if (data != "") { 
+              document.getElementById('DivDetallesUsuario').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })   
+}
+
+function BuscarActividadesFactura(idFactura){
+    var form_data = new FormData();
+        form_data.append('idFactura', idFactura);
+        document.getElementById('DivDetallesUsuario').innerHTML="Buscando Actividades...";
+        $.ajax({
+        url: './Consultas/PacienteFactura.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+          if (data != "") { 
+              document.getElementById('DivDetallesUsuario').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })   
+}
+    

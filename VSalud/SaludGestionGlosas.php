@@ -28,7 +28,7 @@ print("<body>");
         
     $css->CerrarDiv();
     
-    $css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Actividades de esta factura");
+    $css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Datos de la Factura");
         $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
         $css->CerrarDiv();
         $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);

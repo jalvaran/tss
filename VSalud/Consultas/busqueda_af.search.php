@@ -170,7 +170,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
                                 
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar", "ver factura", 1, "onClick", "MostrarActividades($DatosCuenta[num_factura])", "verde", "");
+                     $css->CrearBotonEvento("BtnMostrar", "ver factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]')", "verde", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }
