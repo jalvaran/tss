@@ -16,18 +16,41 @@ print("<body>");
   
     
     $css->CabeceraIni("Glosas"); //Inicia la cabecera de la pagina
-      
+    
     $css->CabeceraFin(); 
     ///////////////Creamos el contenedor
     /////
     /////
+    $css->CrearDiv("DivButtons", "", "", 0, 0);
     
-
+        $css->CreaBotonDesplegable("DialFacturasDetalle", "Abrir","BtnModalFacturas");
+        $css->CreaBotonDesplegable("ModalGlosar", "Abrir","BtnModalGlosar");
+        
+    $css->CerrarDiv();
+    
+    $css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Actividades de esta factura");
+        $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
+        $css->CerrarDiv();
+        $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);
+        $css->CerrarDiv();
+    $css->CerrarCuadroDeDialogoAmplio();
+    
+    $css->CrearModal("ModalGlosar", "Glosar", "");
+        $css->CrearDiv("DivGlosar", "", "center", 1, 1);
+        $css->CerrarDiv();
+    $css->CerrarModal();
+    
     $css->CrearDiv("principal", "container", "center",1,1);
     
     $css->CrearTabla();
     $css->FilaTabla(16);
-        $css->ColTabla("<strong>Opciones de Busqueda</strong>", 4);
+        $css->ColTabla("<strong>Opciones de Busqueda</strong>", 2);
+        print("<td colspan=2>");
+            print("<strong>Carga Masiva: </strong>");
+            $css->CrearUpload("UpCargaMasiva");
+            
+            $css->CrearBotonEvento("BtnEnviarCargaMasiva", "Cargar", 1, "onClick", "EnviarCargaMasiva()", "rojo", "");
+        print("</td>");
     $css->CierraFilaTabla();
         $css->FilaTabla(16);
             $css->ColTabla("<strong>EPS</strong>", 1);

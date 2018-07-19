@@ -14,6 +14,7 @@ function BuscarCuentaXCriterio(Criterio=1){
   var form_data = new FormData();
      if(Criterio==1){//Si se busca por numero de factura
          form_data.append('idFactura', $('#TxtBuscarFact').val());
+         MostrarFacturas('',$('#TxtBuscarFact').val());
          document.getElementById("TxtBuscarCuentaGlobal").value="";
          document.getElementById("TxtBuscarCuentaRIPS").value="";
          document.getElementById("CmdEstadoGlosa").value="";
@@ -76,10 +77,92 @@ function BuscarCuentaXCriterio(Criterio=1){
   })
 }
 
+function MostrarFacturas(CuentaRIPS,NumFactura=''){
+    document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+    var form_data = new FormData();
+        form_data.append('CuentaRIPS', CuentaRIPS);
+        form_data.append('idFactura', NumFactura);
+        $.ajax({
+        url: './Consultas/busqueda_af.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+          if (data != "") { 
+              document.getElementById('DivFacturas').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
 
-function getInfoForm(){
-  var form_data = new FormData();
-  form_data.append('TxtFechaCorte', $("[id='TxtFechaCorte']").val());
-  
-  return form_data;
-}
+function FiltreRangoFechas(){
+     var form_data = new FormData();
+        form_data.append('FechaInicial', $('#FiltroFechaInicial').val());
+        form_data.append('FechaFinal', $('#FiltroFechaFinal').val());
+        document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+   
+        $.ajax({
+        url: './Consultas/busqueda_af.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+          if (data != "") { 
+              document.getElementById('DivFacturas').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+
+function FiltreFacturasXEstadoGlosa(){
+     var form_data = new FormData();
+        form_data.append('idEstadoGlosas', $('#CmbEstadoGlosaFacturas').val());
+        
+        document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+   
+        $.ajax({
+        url: './Consultas/busqueda_af.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+          if (data != "") { 
+              document.getElementById('DivFacturas').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
