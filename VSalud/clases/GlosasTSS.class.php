@@ -18,17 +18,20 @@ class Glosas extends conexion{
     * @param type $Vector
     * Creada: 2018-07-19 Julian Alvaran
     */
-    public function DevolverFactura($idFactura,$FechaDevolucion,$Observaciones,$CodigoGlosa,$idUser,$Soporte,$Vector) {
+    public function DevolverFactura($idFactura,$ValorFactura,$FechaDevolucion,$FechaAuditoria,$Observaciones,$CodigoGlosa,$idUser,$Soporte,$Vector) {
         //////Hago el registro en la tabla             
         $tab="salud_registro_devoluciones_facturas";
-        $NumRegistros=6;
+        $NumRegistros=9;
 
-        $Columnas[0]="FechaDevolucion";	$Valores[0]=$FechaDevolucion;
-        $Columnas[1]="num_factura";     $Valores[1]=$idFactura;
-        $Columnas[2]="Observaciones";   $Valores[2]=$Observaciones;
-        $Columnas[3]="CodGlosa";        $Valores[3]=$CodigoGlosa;
-        $Columnas[4]="idUser";          $Valores[4]=$idUser;
-        $Columnas[5]="Soporte";         $Valores[5]=$Soporte;
+        $Columnas[0]="FechaDevolucion";         $Valores[0]=$FechaDevolucion;
+        $Columnas[1]="num_factura";             $Valores[1]=$idFactura;
+        $Columnas[2]="Observaciones";           $Valores[2]=$Observaciones;
+        $Columnas[3]="CodGlosa";                $Valores[3]=$CodigoGlosa;
+        $Columnas[4]="idUser";                  $Valores[4]=$idUser;
+        $Columnas[5]="Soporte";                 $Valores[5]=$Soporte;
+        $Columnas[6]="FechaReciboAuditoria";    $Valores[6]=$FechaAuditoria;
+        $Columnas[7]="FechaRegistro";           $Valores[7]=date("Y-m-d");
+        $Columnas[8]="ValorFactura";            $Valores[8]=$ValorFactura;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         

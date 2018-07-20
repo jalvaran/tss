@@ -1,144 +1,3 @@
-<style type="text/css">
-			
-        * {
-                margin:0px;
-                padding:0px;
-        }
-
-        #MenuBasico {
-                margin:0px;
-                width:auto;
-                font-family:Arial, Helvetica, sans-serif;
-        }
-
-        ul, ol {
-                list-style:none;
-        }
-
-        .nav > li {
-                float:left;
-        }
-
-        .nav li a {
-                background-color:#000;
-                color:#fff;
-                text-decoration:none;
-                padding:10px 12px;
-                display:block;
-        }
-
-        .nav li a:hover {
-                background-color:#434343;
-        }
-
-        .nav li ul {
-                display:none;
-                position:absolute;
-                min-width:140px;
-        }
-
-        .nav li:hover > ul {
-                display:block;
-        }
-
-        .nav li ul li {
-                position:relative;
-        }
-
-        .nav li ul li ul {
-                right:-140px;
-                top:0px;
-        }
-        
-
-        #ventana-flotante {
-        width: 360px;  /* Ancho de la ventana */
-        height: 90px;  /* Alto de la ventana */
-        background:#58B0E7;
-        background:-moz-linear-gradient(top,#B4F6FF 1px,#63D0FE 1px,#58B0E7);
-        background:-webkit-gradient(linear,0 0,0 100%,color-stop(0.02,#B4F6FF),color-stop(0.02,#63D0FE),color-stop(1,#58B0E7));  /* Color de fondo */
-        position: fixed;
-        top: 200px;
-        left: 50%;
-        margin-left: -180px;
-        color:#FFFFFF;
-        box-shadow:0px 1px #EDEDED;
-        -moz-box-shadow:0px 1px #EDEDED;
-        -webkit-box-shadow:0px 1px #EDEDED;
-        text-shadow:0px 1px #388DBE;
-        border-color:#3390CA;
-        border-radius: 4px;
-        }
-        #ventana-flotante #contenedor {
-        padding: 25px 10px 10px 10px;
-        }
-        #ventana-flotante .cerrar {
-        float: right;
-        border-bottom: 1px solid #bbb;
-        border-left: 1px solid #bbb;
-        color: white;
-        background: red;
-        line-height: 17px;
-        text-decoration: none;
-        padding: 0px 14px;
-        font-family: Arial;
-        border-radius: 0 0 0 5px;
-        box-shadow: -1px 1px white;
-        font-size: 18px;
-        -webkit-transition: .3s;
-        -moz-transition: .3s;
-        -o-transition: .3s;
-        -ms-transition: .3s;
-        }
-        #ventana-flotante .cerrar:hover {
-        background: #ff6868;
-        color: white;
-        text-decoration: none;
-        text-shadow: -1px -1px red;
-        border-bottom: 1px solid red;
-        border-left: 1px solid red;
-        }
-        #ventana-flotante #contenedor .contenido {
-        padding: 15px;
-        color:#FFFFFF;
-		box-shadow:0px 1px #EDEDED;
-		-moz-box-shadow:0px 1px #EDEDED;
-		-webkit-box-shadow:0px 1px #EDEDED;
-		text-shadow:0px 1px #3C3C3C;
-		border-color:#202020;
-		background:#525252;
-		background:-moz-linear-gradient(top,#9F9F9F 1px,#6C6C6C 1px,#525252);
-		background:-webkit-gradient(linear,0 0,0 100%,color-stop(0.02,#9F9F9F),color-stop(0.02,#6C6C6C),color-stop(1,#525252));        
-        margin: 0 auto;
-        border-radius: 4px;
-        }
-        .oculto {-webkit-transition:1s;-moz-transition:1s;-o-transition:1s;-ms-transition:1s;opacity:0;-ms-opacity:0;-moz-opacity:0;visibility:hidden;}
-
-.notification-container {
-    display:scroll; position:fixed; top:70px; right:10px;
-    width: 50px;
-    height: 50px;    
-    cursor:pointer;
-}
-
-.notification-counter {   
-    position: absolute;
-    top: -2px;
-    left: 25px;
-    
-    background-color: rgba(212, 19, 13, 1);
-    color: #fff;
-    border-radius: 18px;
-    padding: 1px 3px;
-    font: 14px Verdana;
-}
-
-</style>
-
-<link rel="stylesheet" href="css/cronometro.css">
-<link rel="stylesheet" type="text/css" media="all" href="css/jsDatePick_ltr.min.css" />
-<script type="text/javascript" src="js/jsDatePick.min.1.3.js"></script>
-
 <?php
 	
 
@@ -502,7 +361,22 @@ class CssIni{
         
         /////////////////////Crea un Cuadro de Dialogo
 	
-	function CrearModal($id,$title,$Vector){
+	function CrearModalAmplio($id,$title,$Vector){
+		
+            print('<div id="'.$id.'" class="modal fade" role="dialog" style="width:90%;left:5%;margin:0">');
+		
+            print('<div class="modal-dialog">');
+            
+            print('<div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">'.$title.'</h4>
+                    </div>
+                    <div class="modal-body">');
+		
+	}
+        
+        function CrearModal($id,$title,$Vector){
 		
             print('<div id="'.$id.'" class="modal fade" role="dialog">');
 		
@@ -1053,10 +927,10 @@ function Footer(){
 /////////////////////Crear una Chosen
 	
 	function CrearSelectChosen($Nombre, $VarSelect){
-          $Ancho=200; 
+          $Ancho='200px'; 
           $PlaceHolder="Seleccione una opcion"; 
           if(isset($VarSelect["Ancho"])){
-             $Ancho=$VarSelect["Ancho"];
+             $Ancho=$VarSelect["Ancho"].'px';
           }
               
           
@@ -1073,7 +947,7 @@ function Footer(){
            if(isset($VarSelect["Title"]) and !empty($VarSelect["Title"])){
                 print("<strong>$VarSelect[Title]</strong><br>");
            }
-           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="2" name="'.$Nombre.'" '.$Required.' style="width:200px;">';
+           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="1" name="'.$Nombre.'" '.$Required.' style="width:'.$Ancho.';">';
            
        	
 	}   
@@ -1088,10 +962,17 @@ function Footer(){
             $VarSelect["PlaceHolder"]=$PlaceHolder;
             $VarSelect["Title"]=$Titulo;
             $this->CrearSelectChosen($Nombre, $VarSelect);
+           
             $this->CrearOptionSelect("", $PlaceHolder, 0);
             while($DatosTabla=$obCon->FetchArray($consulta)){
-               $this->CrearOptionSelect($DatosTabla[$idItem], "$DatosTabla[$Display1] $DatosTabla[$Display2] $DatosTabla[$Display3]", 0);
+               $Dato1= utf8_encode($DatosTabla[$Display1]);
+               $Dato2= utf8_encode($DatosTabla[$Display2]);
+               $Dato3= utf8_encode($DatosTabla[$Display3]);
+               
+               $this->CrearOptionSelect($DatosTabla[$idItem], "$Dato1 $Dato2 $Dato3", 0);
+               
             }
+            
             $this->CerrarSelect();
 	}   
         

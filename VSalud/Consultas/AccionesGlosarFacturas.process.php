@@ -21,19 +21,21 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
             $FechaDevolucion=$obGlosas->normalizar($_REQUEST["FechaDevolucion"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
             $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
             $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorFactura=$obGlosas->normalizar($_REQUEST["ValorFactura"]);
             $destino='';
             if(!empty($_FILES['Soporte']['name'])){
             
                 $Atras="../";
                 $carpeta="SoportesSalud/SoportesDevoluciones/";
                 opendir($Atras.$Atras.$carpeta);
-                $Name=$id."_".str_replace(' ','_',$FechaDevolucion.$idFactura.$_FILES['Soporte']['name']);
+                $Name=str_replace(' ','_',$FechaDevolucion."_".$idFactura."_".$_FILES['Soporte']['name']);
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
-            $obGlosas->DevolverFactura($idFactura, $FechaDevolucion, $Observaciones, $CodigoGlosa, $idUser, $destino, "");
+            $obGlosas->DevolverFactura($idFactura,$ValorFactura, $FechaDevolucion,$FechaAuditoria, $Observaciones, $CodigoGlosa, $idUser, $destino, "");
         
         break;
 

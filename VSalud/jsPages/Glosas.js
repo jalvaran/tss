@@ -5,6 +5,20 @@
  * 317 774 0609
  */
 
+function ValidarFecha(idTxtFecha){
+    var FechaValidar = document.getElementById(idTxtFecha).value;
+    var hoy             = new Date();
+    var fechaFormulario = new Date(FechaValidar);
+
+    // Compara solo las fechas => no las horas!!
+    hoy.setHours(0,0,0,0);
+
+    if (hoy < fechaFormulario) {
+        return 1;    
+    }else{
+        return 0;
+    }
+}
 
 /**
  * Buscar una cuenta RIPS por diferentes criterios
@@ -268,17 +282,23 @@ function DevolverFactura(idFactura){
     alertify.confirm("Estás seguro que deseas devolver la Factura "+idFactura+"?<br><strong>NOTA: Esta acción es irreversible. <strong>",
     function (e) {
         if (e) {
-            document.getElementById('BtnModalGlosar').click();
-            DibujeFormulario(1,idFactura);
+            if(ValidarFecha('FechaDevolucion')){
+                alertify.error("La fecha de devolucion seleccionada es mayor a la actual, por favor seleccione una fecha válida");
+                return;
+            }
+            if(ValidarFecha('FechaAuditoria')){
+                alertify.error("La fecha de Recibo de auditoría seleccionada es mayor a la actual, por favor seleccione una fecha válida");
+                return;
+            }
             AccionesGlosarFacturas(idFactura,1);
-            alertify.success("Se realizó la devolucion de la factura"+idFactura);            
+                        
         } else {
             alertify.error("Se canceló la devolucion de la factura"+idFactura);
-            
 
         }
     });
 }
+
 /**
  * Dibuja los diferentes formularios donde se capturará la gestion de glosas
  * @param {type} idFormulario
@@ -286,13 +306,13 @@ function DevolverFactura(idFactura){
  * @returns {undefined}
  */
 function DibujeFormulario(idFormulario,idFactura){
-    
+        document.getElementById('BtnModalGlosar').click();
         var form_data = new FormData();       
         
         form_data.append('idFactura', idFactura);
         form_data.append('idFormulario', idFormulario);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -301,20 +321,17 @@ function DibujeFormulario(idFormulario,idFactura){
         data: form_data,
         type: 'post',
         success: function(data){
+            
+            if (data != "") { 
             document.getElementById("DivGlosar").innerHTML=data;
             
-            var config = {
-              '.chosen-select'           : {},
-              '.chosen-select-deselect'  : {allow_single_deselect:true},
-              '.chosen-select-no-single' : {disable_search_threshold:10},
-              '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
-              '.chosen-select-width'     : {width:"200px"}
-            }
             for (var selector in config) {
-              $(selector).chosen(config[selector]);
+                $(selector).chosen(config[selector]);
             }
-            document.getElementById("CodigoGlosa_chosen").style.width = "400px";  
-
+            
+            document.getElementById("CodigoGlosa_chosen").style.width = "400px";      
+        }
+            
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alertify.error("Error al tratar de devolver la factura "+idFactura,0);
@@ -323,6 +340,7 @@ function DibujeFormulario(idFormulario,idFactura){
           }
       })
 }
+
 /**
  * Realiza todas las acciones que se ejecutaran para el sistema de glosado de facturas
  * @param {type} idFactura -> El numero de factura que se realizará la glosa
@@ -331,7 +349,11 @@ function DibujeFormulario(idFormulario,idFactura){
  */
 function AccionesGlosarFacturas(idFactura,idAccion){
         if(idAccion==1){
-            var form_data = new FormData();
+            
+            var form_data = getInfoFormDevoluciones();
+            if(form_data==0){
+                return;
+            }
         }
         
         form_data.append('idAccion', idAccion); //Devolver una factura
@@ -346,8 +368,12 @@ function AccionesGlosarFacturas(idFactura,idAccion){
         data: form_data,
         type: 'post',
         success: function(data){
-            if(data.msg==="OK"){
-                alertify.alert("Se Devolvió la factura "+idFactura);
+            if(idAccion==1){
+                document.getElementById("DivGlosar").innerHTML="<strong>Devolucion Realizada!</strong>";
+                //document.getElementById('BtnModalGlosar').click();
+                BuscarUsuarioFactura(idFactura);
+                BuscarActividadesFactura(idFactura);
+                alertify.success("Se realizó la devolucion de la factura "+idFactura);
             }
 
         },
@@ -358,3 +384,28 @@ function AccionesGlosarFacturas(idFactura,idAccion){
           }
       })
 }
+
+
+/**
+ * 
+ * Captura la informacion del Formulario de devoluciones
+ */
+function getInfoFormDevoluciones(){
+    if($('#FechaAuditoria').val()=='' || $('#FechaDevolucion').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
+        alertify.set({ labels: {
+                ok     : "OK",
+                cancel : "Cancelar"
+            } });
+        alertify.alert("Todos los campos son obligatorios");
+        return 0;
+    }
+    var form_data = new FormData();
+    form_data.append('FechaAuditoria', $('#FechaAuditoria').val());
+    form_data.append('FechaDevolucion', $('#FechaDevolucion').val());
+    form_data.append('CodigoGlosa', $('#CodigoGlosa').val());
+    form_data.append('Observaciones', $('#Observaciones').val());
+    form_data.append('ValorFactura', $('#ValorFacturaDevolucion').val());
+    form_data.append('Soporte', $('#UpSoporteDevolucion').prop('files')[0]);    
+    return form_data;
+}
+

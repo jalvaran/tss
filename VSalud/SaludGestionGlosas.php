@@ -28,12 +28,14 @@ print("<body>");
         
     $css->CerrarDiv();
     
-    $css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Datos de la Factura");
+    $css->CrearModalAmplio("DialFacturasDetalle", "", "");
+    //$css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Datos de la Factura");
         $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
         $css->CerrarDiv();
         $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);
         $css->CerrarDiv();
-    $css->CerrarCuadroDeDialogoAmplio();
+    //$css->CerrarCuadroDeDialogoAmplio();
+    $css->CerrarModal();
     
     $css->CrearModal("ModalGlosar", "", "");
         $css->CrearDiv("DivGlosar", "", "center", 1, 1);

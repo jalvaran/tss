@@ -88,7 +88,7 @@ if( !empty($_REQUEST["idFactura"]) ){
         $css->CerrarTabla();
         
         $sql="SELECT fecha_factura,cod_enti_administradora,nom_enti_administradora,num_contrato,"
-                . "  valor_neto_pagar,valor_total_pago,numero_radicado,CuentaRIPS,CuentaGlobal "
+                . "  valor_neto_pagar,valor_total_pago,numero_radicado,CuentaRIPS,CuentaGlobal,EstadoGlosa "
                 . "FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$idFactura'";
         $Consulta=$obGlosas->Query($sql);
         $DatosFactura=$obGlosas->FetchArray($Consulta);
@@ -120,9 +120,14 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla(number_format($DatosFactura["valor_total_pago"]), 1);                
                 $css->ColTabla(number_format($DatosFactura["valor_neto_pagar"]+$DatosFactura["valor_total_pago"]), 1);
                 print("<td>");
-                    $css->CrearBotonEvento("BtnDevolverFactura", "Devolver", 1, "onClick", "DevolverFactura('$idFactura')", "rojo", "");
+                    $Enable=1;
+                    if($DatosFactura["EstadoGlosa"]==9){
+                        $Enable=0;
+                    }
+                    $css->CrearBotonEvento("BtnDevolverFactura", "Devolver", $Enable, "onClick", "DibujeFormulario(1,`$idFactura`)", "rojo", "");
                 print("</td>");
-                
+                $css->CrearDiv("Div", "", "", 1, 1);
+                $css->CerrarDiv();
             $css->CierraFilaTabla();
         $css->CerrarTabla();
           
