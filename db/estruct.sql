@@ -414,12 +414,15 @@ CREATE TABLE `salud_archivo_consultas` (
   `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del archivo con el que se carga',
   `fecha_cargue` datetime NOT NULL COMMENT 'Fecha en que se carga',
   `idUser` int(11) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_consultas`),
   KEY `num_factura` (`num_factura`),
-  KEY `nom_cargue` (`nom_cargue`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de cosnultas AC';
+  KEY `nom_cargue` (`nom_cargue`),
+  KEY `num_ident_usuario` (`num_ident_usuario`),
+  KEY `num_factura_2` (`num_factura`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de cosnultas AC';
 
 
 DROP TABLE IF EXISTS `salud_archivo_consultas_temp`;
@@ -452,6 +455,37 @@ CREATE TABLE `salud_archivo_consultas_temp` (
   KEY `num_factura` (`num_factura`),
   KEY `nom_cargue` (`nom_cargue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de cosnultas AC';
+
+
+DROP TABLE IF EXISTS `salud_archivo_control_glosas_respuestas`;
+CREATE TABLE `salud_archivo_control_glosas_respuestas` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `num_factura` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Número de la factura " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `CuentaGlobal` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
+  `cod_glosa_general` int(1) NOT NULL COMMENT 'Código de la glosa general"',
+  `cod_glosa_especifico` int(3) NOT NULL COMMENT 'Código de la glosa especifico"',
+  `id_cod_glosa` bigint(12) NOT NULL COMMENT 'id del Código de la glosa"',
+  `actividad_glosa` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Codigo de la actividad glosada"',
+  `EstadoGlosa` int(2) NOT NULL,
+  `fecha_ips` date NOT NULL COMMENT 'Fecha de expedición de la factura " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `fecha_recibo_auditoria` date NOT NULL COMMENT 'Fecha de expedición de la factura &quot; Ver Alineamientos tecnicos para ips ver pag 13&quot;',
+  `valor_actividad` double(15,2) NOT NULL COMMENT 'Valor total del pago compartido copago " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_glosado_eps` double(15,2) NOT NULL COMMENT 'Valor de la comisión " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_levantado_eps` double(15,2) NOT NULL COMMENT 'Valor total de descuentos " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_aceptado_ips` double(15,2) NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `observacion_auditor` text COLLATE utf8_spanish_ci NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `Soporte` varchar(200) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Ruta de Archivo de comprobación de radicado',
+  `fecha_registo` date NOT NULL COMMENT 'Fecha de expedición de la factura " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `idUser` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `num_factura` (`num_factura`),
+  KEY `EstadoGlosa` (`EstadoGlosa`),
+  KEY `CuentaGlobal` (`CuentaGlobal`),
+  KEY `CuentaRIPS` (`CuentaRIPS`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo Control de glosas y respuestas';
 
 
 DROP TABLE IF EXISTS `salud_archivo_ct`;
@@ -504,7 +538,7 @@ CREATE TABLE `salud_archivo_facturacion_mov_generados` (
   `Escenario` varchar(15) COLLATE utf8_spanish_ci NOT NULL,
   `CuentaGlobal` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
   `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
-  `EstadoGlosa` int(2) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_fac_mov_generados`),
@@ -513,7 +547,7 @@ CREATE TABLE `salud_archivo_facturacion_mov_generados` (
   KEY `tipo_negociacion` (`tipo_negociacion`),
   KEY `Updated` (`Updated`),
   KEY `EstadoCobro` (`EstadoCobro`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de transacciones_AF_generadas';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de transacciones_AF_generadas';
 
 
 DROP TABLE IF EXISTS `salud_archivo_facturacion_mov_pagados`;
@@ -664,14 +698,13 @@ CREATE TABLE `salud_archivo_medicamentos` (
   `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del archivo con el que se carga',
   `fecha_cargue` datetime NOT NULL COMMENT 'Fecha en que se carga',
   `idUser` int(11) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_medicamentos`),
   KEY `num_factura` (`num_factura`),
-  KEY `nom_cargue` (`nom_cargue`),
-  KEY `nom_cargue_2` (`nom_cargue`),
-  KEY `num_factura_2` (`num_factura`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de medicamentos AM';
+  KEY `nom_cargue` (`nom_cargue`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de medicamentos AM';
 
 
 DROP TABLE IF EXISTS `salud_archivo_medicamentos_temp`;
@@ -777,12 +810,13 @@ CREATE TABLE `salud_archivo_otros_servicios` (
   `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del archivo con el que se carga',
   `fecha_cargue` datetime NOT NULL COMMENT 'Fecha en que se carga',
   `idUser` int(11) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_otro_servicios`),
   KEY `nom_cargue` (`nom_cargue`),
   KEY `num_factura` (`num_factura`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de otros servicios AT';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de otros servicios AT';
 
 
 DROP TABLE IF EXISTS `salud_archivo_otros_servicios_temp`;
@@ -833,12 +867,13 @@ CREATE TABLE `salud_archivo_procedimientos` (
   `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del archivo con el que se carga',
   `fecha_cargue` datetime NOT NULL COMMENT 'Fecha en que se carga',
   `idUser` int(11) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_procedimiento`),
   KEY `nom_cargue` (`nom_cargue`),
   KEY `num_factura` (`num_factura`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de procedimientos AP';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de procedimientos AP';
 
 
 DROP TABLE IF EXISTS `salud_archivo_procedimientos_temp`;
@@ -957,7 +992,8 @@ CREATE TABLE `salud_archivo_usuarios` (
   KEY `primer_ape_usuario` (`primer_ape_usuario`),
   KEY `segundo_ape_usuario` (`segundo_ape_usuario`),
   KEY `primer_nom_usuario` (`primer_nom_usuario`),
-  KEY `segundo_nom_usuario` (`segundo_nom_usuario`)
+  KEY `segundo_nom_usuario` (`segundo_nom_usuario`),
+  KEY `num_ident_usuario_2` (`num_ident_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci ROW_FORMAT=COMPACT COMMENT='Archivo de usuarios US';
 
 
@@ -1151,6 +1187,17 @@ CREATE TABLE `salud_eps` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='directorio de empresas promotoras de salud (EPS)';
 
 
+DROP TABLE IF EXISTS `salud_estado_glosas`;
+CREATE TABLE `salud_estado_glosas` (
+  `ID` int(2) NOT NULL AUTO_INCREMENT COMMENT 'Id del estado glosa',
+  `Estado_glosa` varchar(50) CHARACTER SET utf8 COLLATE utf8_spanish2_ci NOT NULL COMMENT 'Descripcion del estado',
+  `idUser` int(11) NOT NULL COMMENT 'Usuario que registra el estado ',
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha y Hora del registro',
+  `Sync` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT 'Ultima sincronizacion',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+
 DROP TABLE IF EXISTS `salud_facturas_radicacion_numero`;
 CREATE TABLE `salud_facturas_radicacion_numero` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1226,6 +1273,24 @@ CREATE TABLE `salud_procesos_gerenciales_conceptos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 
+DROP TABLE IF EXISTS `salud_registro_devoluciones_facturas`;
+CREATE TABLE `salud_registro_devoluciones_facturas` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FechaDevolucion` date NOT NULL,
+  `FechaReciboAuditoria` date NOT NULL,
+  `num_factura` varchar(20) NOT NULL,
+  `Observaciones` text NOT NULL,
+  `CodGlosa` int(3) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Soporte` varchar(200) NOT NULL,
+  `ValorFactura` double NOT NULL,
+  `FechaRegistro` date NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `salud_registro_glosas`;
 CREATE TABLE `salud_registro_glosas` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1247,6 +1312,51 @@ CREATE TABLE `salud_registro_glosas` (
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+DROP TABLE IF EXISTS `salud_rips_facturas_generadas_historico`;
+CREATE TABLE `salud_rips_facturas_generadas_historico` (
+  `id_fac_mov_generados` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `cod_prest_servicio` bigint(12) NOT NULL COMMENT 'Código del prestador de servicios de salud " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `razon_social` varchar(60) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Razón social o apellidos y nombre del prestado  " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `tipo_ident_prest_servicio` enum('NI','CC','CE','PA') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Tipo de identificación del prestador de servicios de salud " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `num_ident_prest_servicio` bigint(20) NOT NULL COMMENT 'Número de identificación del prestador de servicios de salud " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `num_factura` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Número de la factura " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `fecha_factura` date NOT NULL COMMENT 'Fecha de expedición de la factura " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `fecha_inicio` date NOT NULL COMMENT 'Fecha de inicio " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `fecha_final` date NOT NULL COMMENT 'Fecha final " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `cod_enti_administradora` varchar(6) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Código entidad administradora " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `nom_enti_administradora` varchar(200) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre entidad administradora " Ver Alineamientos tecnicos para ips ver pag 13" ',
+  `num_contrato` varchar(15) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Número del contrato " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `plan_beneficios` varchar(30) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Plan de beneficios " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `num_poliza` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Número de la póliza " Ver Alineamientos tecnicos para ips ver pag 13" ',
+  `valor_total_pago` double(15,2) NOT NULL COMMENT 'Valor total del pago compartido copago " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_comision` double(15,2) NOT NULL COMMENT 'Valor de la comisión " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_descuentos` double(15,2) NOT NULL COMMENT 'Valor total de descuentos " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `valor_neto_pagar` double(15,2) NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `tipo_negociacion` enum('evento','capita') COLLATE utf8_spanish_ci NOT NULL,
+  `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre con el que se hizo el cargue al sistema de cartera',
+  `fecha_cargue` datetime NOT NULL COMMENT 'Fecha Y Hora que se hizo el cargue',
+  `idUser` int(11) NOT NULL,
+  `eps_radicacion` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Eps en la que se radico la factura',
+  `dias_pactados` int(2) DEFAULT NULL COMMENT 'Dias que se pactaron para el pago de la factura con eps',
+  `fecha_radicado` date DEFAULT NULL COMMENT 'Fecha de la radicacion de la factura',
+  `numero_radicado` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Numero con que se radico la factura',
+  `Soporte` varchar(200) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Ruta de Archivo de comprobación de radicado',
+  `estado` varchar(50) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Indica en que tabla esta el registro en un momento dado ',
+  `EstadoCobro` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `Arma030Anterior` enum('S','N') COLLATE utf8_spanish_ci NOT NULL DEFAULT 'N',
+  `Escenario` varchar(15) COLLATE utf8_spanish_ci NOT NULL,
+  `CuentaGlobal` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  KEY `estado` (`estado`),
+  KEY `tipo_negociacion` (`tipo_negociacion`),
+  KEY `Updated` (`Updated`),
+  KEY `EstadoCobro` (`EstadoCobro`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de transacciones_AF_generadas';
 
 
 DROP TABLE IF EXISTS `salud_rips_facturas_generadas_temp`;
@@ -1400,4 +1510,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-07-17 14:10:30
+-- 2018-07-20 14:46:57
