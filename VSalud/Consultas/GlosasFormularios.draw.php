@@ -130,7 +130,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     $css->ColTabla("<h4 style='color:blue'><strong>Glosar la actividad $DatosActividad[Codigo] $Descripcion. </strong></h4>", 5);
                     $css->ColTabla("Total Actividad: <strong>".number_format($TotalActividad)."</strong><br>Total Glosado X Ahora: <strong>".number_format($TotalGlosado)."</strong><br>Total Disponible X Glosar: <strong>".number_format($TotalXGlosar)."</strong>",1);
-                    $css->CrearInputText("ValorXGlosarMax", "text", "", $TotalXGlosar, "", "", "", "", 150, 30, 0, 0);
+                    $css->CrearInputText("ValorXGlosarMax", "hidden", "", $TotalXGlosar, "", "", "", "", 150, 30, 0, 0);
                 $css->CierraFilaTabla();
                 $css->FilaTabla(14);
                     

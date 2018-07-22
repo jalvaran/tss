@@ -544,7 +544,7 @@ function getInfoFormGlosasRespuestas(){
  * @returns {undefined}
  */
 function ValidaValorGlosa(valor){
-    var ValorGlosado = document.getElementById('ValorEPS').value;
+    var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
     var ValorXGlosar = Math.round(document.getElementById('ValorXGlosarMax').value);
     if(ValorGlosado > ValorXGlosar){
         alertify.alert("El valor de la glosa digitado es mayor al que se puede Glosar");
@@ -708,7 +708,8 @@ function GuadarGlosasTemporales(idFactura){
             
         var form_data = new FormData();        
         form_data.append('idAccion', 5); //Devolver una factura
-        
+        document.getElementById("DivGlosar").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+  
         $.ajax({
         async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',

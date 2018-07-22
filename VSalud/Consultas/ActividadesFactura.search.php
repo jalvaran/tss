@@ -33,12 +33,17 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla("Cantidad", 1);
                 $css->ColTabla("Valor Contratado", 1);
                 $css->ColTabla("Valor Total", 1);
+                $css->ColTabla("Número de Glosas", 1);
                 $css->ColTabla("Valor Glosado", 1);
                 $css->ColTabla("Valor Levantado", 1);
-                $css->ColTabla("Glosar", 1);
-                $css->ColTabla("Responder", 1);
+                $css->ColTabla("Valor Aceptado", 1);
+                $css->ColTabla("Valor X Conciliar", 1);
                 $css->ColTabla("Valor Conciliado", 1);
                 $css->ColTabla("Estado", 1);
+                $css->ColTabla("Glosar", 1);
+                $css->ColTabla("Responder", 1);
+                
+                
             $css->CierraFilaTabla();
             
             $sql1="SELECT 'AC' as Archivo,id_consultas  as idArchivo,cod_consulta as Codigo,"
@@ -71,6 +76,10 @@ if( !empty($_REQUEST["idFactura"]) ){
             $Consulta=$obGlosas->Query($sql); 
             
             while($DatosFactura=$obGlosas->FetchArray($Consulta)){
+                $CodActividad=$DatosFactura["Codigo"];
+                $sqlGlosas="SELECT COUNT(*) AS NumGlosas,SUM(ValorGlosado) AS ValorGlosado FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
+                $Datos=$obGlosas->Query($sqlGlosas);
+                $DatosValoresGlosas=$obGlosas->FetchArray($Datos);
                 $css->FilaTabla(12);
                     $TipoArchivo=$DatosFactura["Archivo"];
                     $idArchivo=$DatosFactura["idArchivo"];
@@ -81,9 +90,13 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->ColTabla($DatosFactura["Cantidad"], 1);
                     $css->ColTabla("", 1);//pendiente despues de contratos
                     $css->ColTabla(number_format($DatosFactura["Total"]), 1);
+                    $css->ColTabla(number_format($DatosValoresGlosas["NumGlosas"]), 1);
+                    $css->ColTabla(number_format($DatosValoresGlosas["ValorGlosado"]), 1);
                     $css->ColTabla($DatosFactura["Archivo"], 1);
                     $css->ColTabla($DatosFactura["Archivo"], 1);
                     $css->ColTabla($DatosFactura["Archivo"], 1);
+                    $css->ColTabla($DatosFactura["Archivo"], 1);
+                    $css->ColTabla($DatosFactura["Estado"], 1);
                     print("<td>");
                         $Enable=1;
                         if($DatosFactura["EstadoGlosa"]==9 or $DatosFactura["EstadoGlosa"]==5 or $DatosFactura["EstadoGlosa"]==11){
@@ -95,7 +108,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                     print("<td>");
                         $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad()", "verde", "");
                     print("</td>");
-                    $css->ColTabla($DatosFactura["Estado"], 1);
+                    
                 $css->CierraFilaTabla();
             }
             

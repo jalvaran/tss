@@ -215,13 +215,28 @@ class Glosas extends conexion{
      */
     public function GuardaGlosasTemporalesAIniciales($idUser,$Vector) {
         $consulta=$this->ConsultarTabla("salud_glosas_iniciales_temp", "");
+        $Estado=12;
         while($DatosGlosaTemporal=$this->FetchArray($consulta)){
-            
+            $NumFactura=$DatosGlosaTemporal["num_factura"];
+            $CodActividad=$DatosGlosaTemporal["CodigoActividad"];
             $idGlosa=$this->RegistrarGlosaInicial($DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], $DatosGlosaTemporal["ValorXConciliar"], "");
             $this->RegistraGlosaRespuesta($DatosGlosaTemporal["TipoArchivo"], $idGlosa, $DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], 1, $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["Observaciones"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], 0, $DatosGlosaTemporal["ValorXConciliar"], $DatosGlosaTemporal["Soporte"], $idUser, "");
             $this->BorraReg("salud_glosas_iniciales_temp", "ID", $DatosGlosaTemporal["ID"]);
+            if($DatosGlosaTemporal["TipoArchivo"]=="AC"){
+                $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND CodigoActividad='$CodActividad'";
+                $Datos= $this->Query($sql);
+                $DatosEstado=$this->FetchArray($Datos);
+                $Estado=$DatosEstado["MinEstado"];
+                
+            }
+            //Se está calculando el estado de las actividades dentro de las glosas iniciales para actualizar los archivos y facturas
+            //$sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura'";
+            //$Datos= $this->Query($sql);
+            //$DatosEstado=$this->FetchArray($Datos);
+            //$this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", $DatosEstado["MinEstado"], "num_factura", $NumFactura);
         }
         $this->VaciarTabla("salud_glosas_iniciales_temp");
+        
     }
     
     //Fin Clases
