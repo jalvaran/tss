@@ -29,16 +29,16 @@ print("<body>");
     $css->CerrarDiv();
     
     $css->CrearModalAmplio("DialFacturasDetalle", "", "");
-    //$css->CrearCuadroDeDialogoAmplio("DialFacturasDetalle", "Datos de la Factura");
-        $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
+    
+        $css->CrearDiv("DivHistoricoGlosas", "container", "center", 1, 1);
         $css->CerrarDiv();
-        $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);
-        $css->CerrarDiv();
-    //$css->CerrarCuadroDeDialogoAmplio();
+           
     $css->CerrarModal();
     
-    $css->CrearModal("ModalGlosar", "", "");
+    $css->CrearModalAmplio("ModalGlosar", "", "");
         $css->CrearDiv("DivGlosar", "", "center", 1, 1);
+        $css->CerrarDiv();
+        $css->CrearDiv("DivHistorialGlosas", "", "center", 1, 1);
         $css->CerrarDiv();
     $css->CerrarModal();
     
@@ -102,6 +102,10 @@ print("<body>");
         print("<td colspan=4>");
             $css->CrearNotificacionNaranja("Detalle de Facturas", 16);
             $css->CrearDiv("DivActividades", "", "center", 1, 1);
+                $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
+                $css->CerrarDiv();
+                $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);
+                $css->CerrarDiv();
             $css->CerrarDiv();
         print("</td>");
        $css->CierraFilaTabla();

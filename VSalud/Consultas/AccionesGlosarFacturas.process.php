@@ -18,7 +18,9 @@ if( !empty($_REQUEST["idAccion"]) ){
     
     switch ($_REQUEST["idAccion"]) {
         case 1: //Registra la devolucion de una factura
-            
+            if(!empty($_REQUEST["idFactura"]) or !empty($_REQUEST["FechaDevolucion"]) or !empty($_REQUEST["FechaAuditoria"]) or !empty($_REQUEST["Observaciones"]) or !empty($_REQUEST["CodigoGlosa"]) ){
+                exit("No se recibieron los valores esperados");
+            }
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
             $FechaDevolucion=$obGlosas->normalizar($_REQUEST["FechaDevolucion"]);
             $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
@@ -37,6 +39,39 @@ if( !empty($_REQUEST["idAccion"]) ){
             }
             $obGlosas->DevolverFactura($idFactura,$ValorFactura, $FechaDevolucion,$FechaAuditoria, $Observaciones, $CodigoGlosa, $idUser, $destino, "");
         
+        break;
+        
+        case 2: //Registra las glosas iniciales
+            if(empty($_REQUEST["CodigoGlosa"]) or empty($_REQUEST["idFactura"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
+                   exit("No se recibieron los valores esperados");
+            }
+            $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
+            $idActividad=$obGlosas->normalizar($_REQUEST["idActividad"]);
+            $TipoArchivo=$obGlosas->normalizar($_REQUEST["TipoArchivo"]);
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+            $TotalActividad=$obGlosas->normalizar($_REQUEST["TotalActividad"]);
+            
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','_',$FechaIPS."_".$idActividad."_".$idFactura."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            
+            $idGlosa=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, "");
+            //$obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $idFactura, $idActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
+            print("Glosa inicial registrada en la tabla temporal");
         break;
 
         

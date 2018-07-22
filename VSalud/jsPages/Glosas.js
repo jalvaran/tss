@@ -13,7 +13,7 @@ function ValidarFecha(idTxtFecha){
     // Compara solo las fechas => no las horas!!
     hoy.setHours(0,0,0,0);
 
-    if (hoy < fechaFormulario) {
+    if (fechaFormulario > hoy ) {
         return 1;    
     }else{
         return 0;
@@ -201,7 +201,7 @@ function FiltreFacturasXEstadoGlosa(){
  * @returns {undefined}
  */
 function MostrarActividades(idFactura){
-    document.getElementById('BtnModalFacturas').click();
+    //document.getElementById('BtnModalFacturas').click();
     BuscarUsuarioFactura(idFactura);
     BuscarActividadesFactura(idFactura);
 }
@@ -356,6 +356,25 @@ function AccionesGlosarFacturas(idFactura,idAccion){
             }
         }
         
+        if(idAccion==2){ //Glosar una actividad inicial
+           
+            if(ValidarFecha('FechaIPS')==1){
+                console.log(ValidarFecha('FechaIPS'));
+                alertify.alert("La fecha de IPS no puede ser mayor a la de hoy");
+                document.getElementById('FechaIPS').focus();
+                return;
+            }
+            if(ValidarFecha('FechaAuditoria')==1){
+                alertify.alert("La fecha de Auditoria no puede ser mayor a la de hoy");
+                document.getElementById('FechaAuditoria').focus();
+                return;
+            }
+            var form_data = getInfoFormGlosasRespuestas();
+            if(form_data==0){
+                return;
+            }
+        }
+        
         form_data.append('idAccion', idAccion); //Devolver una factura
         form_data.append('idFactura', idFactura);
         $.ajax({
@@ -374,6 +393,14 @@ function AccionesGlosarFacturas(idFactura,idAccion){
                 BuscarUsuarioFactura(idFactura);
                 BuscarActividadesFactura(idFactura);
                 alertify.success("Se realizó la devolucion de la factura "+idFactura);
+            }
+            
+            if(idAccion==2){
+                DibujeFormularioActividades('',idActividad,idFactura,3)
+                alertify.success(data);
+                //document.getElementById("DivGlosar").innerHTML="Tarea Registrada";
+                
+                //alertify.success("Se realizó el registro de la glosa inicial ");
             }
 
         },
@@ -409,3 +436,109 @@ function getInfoFormDevoluciones(){
     return form_data;
 }
 
+/**
+ * Funcion que espera el evento Click sobre el boton de Glosar actividad
+ * para Glosar una actividad en especifico
+ * @param {type} Tabla ->tabla de donde viene la actividad
+ * @param {type} idActividad -> id de la actividad que se va a glosar
+ * @returns {undefined}
+ */
+function GlosarActividad(TipoArchivo,idActividad,idFactura){
+    document.getElementById('BtnModalGlosar').click();
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2);
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3);
+    
+}
+
+/**
+ * Dibuja los diferentes formularios donde se capturará la gestion de glosas de las actividades
+ * @param {type} idFormulario
+ * @param {type} idFactura
+ * @returns {undefined}
+ */
+function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormulario){
+        
+        var form_data = new FormData();       
+        
+        form_data.append('TipoArchivo', TipoArchivo);
+        form_data.append('idActividad', idActividad);
+        form_data.append('idFormulario', idFormulario);
+        form_data.append('idFactura', idFactura);
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                if(idFormulario==3){
+                    document.getElementById("DivHistorialGlosas").innerHTML=data;
+                }else{
+                    document.getElementById("DivGlosar").innerHTML=data;
+                }
+                
+            
+            for (var selector in config) {
+                $(selector).chosen(config[selector]);
+            }
+            
+            document.getElementById("CodigoGlosa_chosen").style.width = "400px";      
+        }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el formulario de glosar la actividad "+idActividad,0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * 
+ * Captura la informacion del Formulario de devoluciones
+ */
+function getInfoFormGlosasRespuestas(){
+    if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
+        alertify.set({ labels: {
+                ok     : "OK",
+                cancel : "Cancelar"
+            } });
+        alertify.alert("Todos los campos son obligatorios");
+        return 0;
+    }
+    var form_data = new FormData();
+    form_data.append('FechaAuditoria', $('#FechaAuditoria').val());
+    form_data.append('FechaIPS', $('#FechaIPS').val());
+    form_data.append('CodigoGlosa', $('#CodigoGlosa').val());
+    form_data.append('Observaciones', $('#Observaciones').val());
+    form_data.append('idActividad', $('#idActividad').val());
+    form_data.append('TipoArchivo', $('#TipoArchivo').val());
+    form_data.append('ValorEPS', $('#ValorEPS').val());
+    form_data.append('ValorAceptado', $('#ValorAceptado').val());
+    form_data.append('ValorConciliar', $('#ValorConciliar').val());
+    form_data.append('TotalActividad', $('#TotalActividad').val());
+    form_data.append('Soporte', $('#UpSoporteGlosa').prop('files')[0]);    
+    return form_data;
+}
+/**
+ * Valida que no se ingrese un mayor valor a glosar y  calcula el valor a conciliar
+ * @param {type} ValorMaximoAGlosar
+ * @returns {undefined}
+ */
+function ValidaValorGlosa(ValorMaximoAGlosar){
+    var ValorGlosado = document.getElementById('ValorEPS').value;
+    if(ValorMaximoAGlosar<ValorGlosado){
+        alertify.alert("El valor de la glosa digitado es mayor al que se puede Glosar");
+        return 1;
+    }
+    document.getElementById('ValorConciliar').value=document.getElementById('ValorEPS').value-document.getElementById('ValorAceptado').value;
+    return 0;
+}
