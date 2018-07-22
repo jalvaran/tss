@@ -312,7 +312,7 @@ function DibujeFormulario(idFormulario,idFactura){
         form_data.append('idFactura', idFactura);
         form_data.append('idFormulario', idFormulario);
         $.ajax({
-        //async:false,
+        async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -543,10 +543,10 @@ function getInfoFormGlosasRespuestas(){
  * @param {type} ValorMaximoAGlosar
  * @returns {undefined}
  */
-function ValidaValorGlosa(){
+function ValidaValorGlosa(valor){
     var ValorGlosado = document.getElementById('ValorEPS').value;
-    var ValorXGlosar = document.getElementById('ValorXGlosarMax').value;
-    if(ValorGlosado>ValorXGlosar){
+    var ValorXGlosar = Math.round(document.getElementById('ValorXGlosarMax').value);
+    if(ValorGlosado > ValorXGlosar){
         alertify.alert("El valor de la glosa digitado es mayor al que se puede Glosar");
         return 1;
     }
@@ -564,7 +564,7 @@ function EliminarGlosaTemporal(idGlosa,idFactura,idActividad,TipoArchivo){
         form_data.append('idAccion', 3);
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        //dataType: 'json',
+        async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -658,6 +658,10 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
                 document.getElementById('FechaAuditoria').focus();
                 return;
             }
+            if(ValidaValorGlosa()==1){
+                
+                return;
+            }
             var form_data = getInfoFormGlosasRespuestas();
                 
             if(form_data==0){
@@ -700,6 +704,31 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
  * Guadar las Glosas Temporales en la tabla de glosas iniciales
  * @returns {undefined}
  */
-function GuadarGlosasTemporales(){
-    
+function GuadarGlosasTemporales(idFactura){
+            
+        var form_data = new FormData();        
+        form_data.append('idAccion', 5); //Devolver una factura
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            alertify.alert(data);
+            document.getElementById('DivGlosar').innerHTML=data;
+            document.getElementById('DivHistorialGlosas').innerHTML='';
+            MostrarActividades(idFactura);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }

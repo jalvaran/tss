@@ -41,8 +41,8 @@ if( !empty($_REQUEST["idAccion"]) ){
         
         break;
         
-        case 2: //Registra las glosas iniciales
-            if(empty($_REQUEST["CodigoGlosa"]) or empty($_REQUEST["idFactura"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
+        case 2: //Registra las glosas iniciales en la tabla temporal
+            if(empty($_REQUEST["idActividad"]) or empty($_REQUEST["idFactura"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
                    exit("No se recibieron los valores esperados");
             }
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
@@ -70,7 +70,6 @@ if( !empty($_REQUEST["idAccion"]) ){
             }
             
             $idGlosa=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, "");
-            //$obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $idFactura, $idActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             print("Glosa inicial registrada en la tabla temporal");
         break;
         case 3://eliminar un registro de la tabla temporal de glosas
@@ -86,7 +85,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $DatosGlosaTemp=$obGlosas->DevuelveValores("salud_glosas_iniciales_temp", "ID", $idGlosaTemp);
             $idFactura=$DatosGlosaTemp["num_factura"];
             
-            $idActividad=$DatosGlosaTemp["CodigoActividad"];
+            $idActividad=$DatosGlosaTemp["idArchivo"];
             $TipoArchivo=$DatosGlosaTemp["TipoArchivo"];
             $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
             $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
@@ -112,6 +111,11 @@ if( !empty($_REQUEST["idAccion"]) ){
             $idGlosa=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, "",$DatosGlosaTemp["ValorGlosado"]);
             $obGlosas->EliminarGlosaTemporal($idGlosaTemp);
             print("Glosa inicial editada en la tabla temporal");
+        break;
+        
+        case 5:// Guarda las glosas de la tabla temporal a la real
+            $obGlosas->GuardaGlosasTemporalesAIniciales($idUser, "");
+            print("Glosas Registradas");
         break;
 
         

@@ -71,9 +71,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
             
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
-            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
-            $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
-            $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;
+            
             $DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "  num_factura='$idFactura'");
             if($TipoArchivo=='AC'){
                 $Tabla="salud_archivo_consultas";
@@ -117,7 +115,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
             $Consulta=$obGlosas->Query($sql);
             $DatosActividad=$obGlosas->FetchArray($Consulta);
+            $CodActividad=$DatosActividad["Codigo"];
             $TotalActividad=$DatosActividad["Total"];
+            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;
             $TotalXGlosar=$TotalActividad-$TotalGlosado;
             $Descripcion= utf8_encode($DatosActividad["Descripcion"]);
             $css->CrearTabla();
@@ -126,9 +128,9 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->CrearInputText("TotalActividad", "hidden", "", $TotalActividad, "", "", "", "", 0, 0, 0, 0);
                     $css->CrearInputText("TipoArchivo", "hidden", "", $TipoArchivo, "", "", "", "", 0, 0, 0, 0);
                     
-                    $css->ColTabla("<h4 style='color:blue'><strong>Glosar la actividad $idActividad $Descripcion. </strong></h4>", 5);
+                    $css->ColTabla("<h4 style='color:blue'><strong>Glosar la actividad $DatosActividad[Codigo] $Descripcion. </strong></h4>", 5);
                     $css->ColTabla("Total Actividad: <strong>".number_format($TotalActividad)."</strong><br>Total Glosado X Ahora: <strong>".number_format($TotalGlosado)."</strong><br>Total Disponible X Glosar: <strong>".number_format($TotalXGlosar)."</strong>",1);
-                    $css->CrearInputText("ValorXGlosarMax", "hidden", "", $TotalXGlosar, "", "", "", "", 0, 0, 0, 0);
+                    $css->CrearInputText("ValorXGlosarMax", "text", "", $TotalXGlosar, "", "", "", "", 150, 30, 0, 0);
                 $css->CierraFilaTabla();
                 $css->FilaTabla(14);
                     
@@ -155,7 +157,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->FilaTabla(14);
                     print("<td style='text-align:center'>");
                         
-                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", "", "Valor EPS", "", "onChange", "ValidaValorGlosa($TotalXGlosar)", 150, 30, 0, 1, 0, $TotalActividad, 1);
+                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", "", "Valor EPS", "", "onChange", "ValidaValorGlosa()", 150, 30, 0, 1, 0, $TotalActividad, 1);
                         print("</td>");
                         print("<td style='text-align:center'>");
                         $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", 0, "Valor Aceptado EPS", "", "onChange", "ValidaValorGlosa()", 150, 30, 1, 1, 0, $TotalActividad, 1);
@@ -238,7 +240,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $DatosGlosaTemp=$obGlosas->DevuelveValores("salud_glosas_iniciales_temp", "ID", $idGlosaTemp);
             
             $TipoArchivo=$DatosGlosaTemp["TipoArchivo"];
-            $idActividad=$DatosGlosaTemp["CodigoActividad"];
+            $idActividad=$DatosGlosaTemp["idArchivo"];
             
             $idFactura=$DatosGlosaTemp["num_factura"];
             $DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "  num_factura='$idFactura'");
@@ -284,16 +286,26 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
             $Consulta=$obGlosas->Query($sql);
             $DatosActividad=$obGlosas->FetchArray($Consulta);
+            $CodActividad=$DatosActividad["Codigo"];
             $TotalActividad=$DatosActividad["Total"];
+            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes-$DatosGlosaTemp["ValorGlosado"];
+            
+            $TotalXGlosar=$TotalActividad-$TotalGlosado;
             $Descripcion= utf8_encode($DatosActividad["Descripcion"]);
             $css->CrearTabla();
-                $css->FilaTabla(12);
+                $css->FilaTabla(14);
                     $css->CrearInputText("idGlosaEditar", "hidden", "", $idGlosaTemp, "", "", "", "", 0, 0, 0, 0);
                     $css->CrearInputText("idActividad", "hidden", "", $idActividad, "", "", "", "", 0, 0, 0, 0);
                     $css->CrearInputText("TotalActividad", "hidden", "", $TotalActividad, "", "", "", "", 0, 0, 0, 0);
                     $css->CrearInputText("TipoArchivo", "hidden", "", $TipoArchivo, "", "", "", "", 0, 0, 0, 0);
+                    $css->CrearInputText("ValorXGlosarMax", "hidden", "", $TotalXGlosar, "", "", "", "", 0, 0, 0, 0);
+              
                     
-                    $css->ColTabla("<h4 style='color:green'><strong>Editar la Glosa de la actividad $idActividad $Descripcion, Total: ". number_format($TotalActividad)."</strong></h4>", 6);
+                    $css->ColTabla("<h4 style='color:green'><strong>Editar la Glosa de la actividad $DatosActividad[Codigo] $Descripcion.</strong></h4>", 5);
+                    $css->ColTabla("Total Actividad: <strong>".number_format($TotalActividad)."</strong><br>Total Glosado X Ahora: <strong>".number_format($TotalGlosado)."</strong><br>Total Disponible X Glosar: <strong>".number_format($TotalXGlosar)."</strong>",1);
+                    
                 $css->CierraFilaTabla();
                 $css->FilaTabla(14);
                     
@@ -319,8 +331,8 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->CierraFilaTabla();
                     $css->FilaTabla(14);
                     print("<td style='text-align:center'>");
-                        $ValorMaximoAGlosar=$TotalActividad;
-                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", $DatosGlosaTemp["ValorGlosado"], "Valor EPS", "", "onChange", "ValidaValorGlosa($ValorMaximoAGlosar)", 150, 30, 0, 1, 0, $TotalActividad, 1);
+                        
+                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", $DatosGlosaTemp["ValorGlosado"], "Valor EPS", "", "onChange", "ValidaValorGlosa()", 150, 30, 0, 1, 0, $TotalActividad, 1);
                         print("</td>");
                         print("<td style='text-align:center'>");
                         $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", 0, "Valor Aceptado EPS", "", "onChange", "", 150, 30, 1, 1, 0, $TotalActividad, 1);

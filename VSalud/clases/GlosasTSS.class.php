@@ -61,19 +61,31 @@ class Glosas extends conexion{
         $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
         $TotalGlosasTemporal=$this->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
         $TotalGlosasExistentes=$TotalGlosasExistentes+$TotalGlosasTemporal;
+        if($TipoArchivo=='AC'){
+            $CodigoActivida=$this->ValorActual("salud_archivo_consultas", "cod_consulta as Codigo", " id_consultas='$idActividad'");
+        }
+        if($TipoArchivo=='AP'){
+            $CodigoActivida=$this->ValorActual("salud_archivo_procedimientos", "cod_procedimiento as Codigo", " id_procedimiento='$idActividad'");
+        }
+        if($TipoArchivo=='AT'){
+            $CodigoActivida=$this->ValorActual("salud_archivo_otros_servicios", "cod_servicio  as Codigo", " id_otro_servicios='$idActividad'");
+        }
+        if($TipoArchivo=='AM'){
+            $CodigoActivida=$this->ValorActual("salud_archivo_medicamentos", "cod_medicamento as Codigo", " id_medicamentos='$idActividad'");
+        }
         if(($TotalGlosasExistentes+$ValorEPS)>$TotalActividad){
             exit("El valor Glosado Excede el total de la actividad.");
         }
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales_temp";
-        $NumRegistros=16;
+        $NumRegistros=17;
 
         $Columnas[0]="FechaIPS";                $Valores[0]=$FechaIPS;
         $Columnas[1]="FechaAuditoria";          $Valores[1]=$FechaAuditoria;
         $Columnas[2]="FechaRegistro";           $Valores[2]=$FechaRegistro;
         $Columnas[3]="CodigoGlosa";             $Valores[3]=$CodigoGlosa;
         $Columnas[4]="num_factura";             $Valores[4]=$idFactura;
-        $Columnas[5]="CodigoActividad";         $Valores[5]=$idActividad;
+        $Columnas[5]="CodigoActividad";         $Valores[5]=$CodigoActivida["Codigo"];
         $Columnas[6]="EstadoGlosa";             $Valores[6]=1;
         $Columnas[7]="ValorGlosado";            $Valores[7]=$ValorEPS;
         $Columnas[8]="ValorLevantado";          $Valores[8]=0;
@@ -84,6 +96,7 @@ class Glosas extends conexion{
         $Columnas[13]="TipoArchivo";            $Valores[13]=$TipoArchivo;
         $Columnas[14]="Observaciones";          $Valores[14]=$Observaciones;
         $Columnas[15]="Soporte";                $Valores[15]=$destino;
+        $Columnas[16]="idArchivo";              $Valores[16]=$idActividad;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
@@ -189,9 +202,26 @@ class Glosas extends conexion{
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
     }
-    
+    /**
+     * Elimina una glosa temporal
+     * @param type $idGlosa
+     */
     public function EliminarGlosaTemporal($idGlosa) {
         $this->BorraReg("salud_glosas_iniciales_temp", "ID", $idGlosa);
+    }
+    /**
+     * Guarda las glosas temporales en la tabla real, en la tabla de registros de respuesta y elimina de la tabla temporal
+     * @param type $Vector
+     */
+    public function GuardaGlosasTemporalesAIniciales($idUser,$Vector) {
+        $consulta=$this->ConsultarTabla("salud_glosas_iniciales_temp", "");
+        while($DatosGlosaTemporal=$this->FetchArray($consulta)){
+            
+            $idGlosa=$this->RegistrarGlosaInicial($DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], $DatosGlosaTemporal["ValorXConciliar"], "");
+            $this->RegistraGlosaRespuesta($DatosGlosaTemporal["TipoArchivo"], $idGlosa, $DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], 1, $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["Observaciones"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], 0, $DatosGlosaTemporal["ValorXConciliar"], $DatosGlosaTemporal["Soporte"], $idUser, "");
+            $this->BorraReg("salud_glosas_iniciales_temp", "ID", $DatosGlosaTemporal["ID"]);
+        }
+        $this->VaciarTabla("salud_glosas_iniciales_temp");
     }
     
     //Fin Clases
