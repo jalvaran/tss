@@ -347,7 +347,7 @@ function DibujeFormulario(idFormulario,idFactura){
  * @param {type} idAccion  -> La accion a realizar 1: Devolucion de una factura
  * @returns {undefined}
  */
-function AccionesGlosarFacturas(idFactura,idAccion){
+function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''){
         if(idAccion==1){
             
             var form_data = getInfoFormDevoluciones();
@@ -369,11 +369,18 @@ function AccionesGlosarFacturas(idFactura,idAccion){
                 document.getElementById('FechaAuditoria').focus();
                 return;
             }
+            
+            if(ValidaValorGlosa()==1){
+                
+                return;
+            }
             var form_data = getInfoFormGlosasRespuestas();
             if(form_data==0){
                 return;
             }
         }
+        
+        
         
         form_data.append('idAccion', idAccion); //Devolver una factura
         form_data.append('idFactura', idFactura);
@@ -396,7 +403,9 @@ function AccionesGlosarFacturas(idFactura,idAccion){
             }
             
             if(idAccion==2){
-                DibujeFormularioActividades('',idActividad,idFactura,3)
+                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales   
+                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
+   
                 alertify.success(data);
                 //document.getElementById("DivGlosar").innerHTML="Tarea Registrada";
                 
@@ -445,8 +454,9 @@ function getInfoFormDevoluciones(){
  */
 function GlosarActividad(TipoArchivo,idActividad,idFactura){
     document.getElementById('BtnModalGlosar').click();
-    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2);
-    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3);
+    
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales
     
 }
 
@@ -533,12 +543,163 @@ function getInfoFormGlosasRespuestas(){
  * @param {type} ValorMaximoAGlosar
  * @returns {undefined}
  */
-function ValidaValorGlosa(ValorMaximoAGlosar){
+function ValidaValorGlosa(){
     var ValorGlosado = document.getElementById('ValorEPS').value;
-    if(ValorMaximoAGlosar<ValorGlosado){
+    var ValorXGlosar = document.getElementById('ValorXGlosarMax').value;
+    if(ValorGlosado>ValorXGlosar){
         alertify.alert("El valor de la glosa digitado es mayor al que se puede Glosar");
         return 1;
     }
     document.getElementById('ValorConciliar').value=document.getElementById('ValorEPS').value-document.getElementById('ValorAceptado').value;
     return 0;
+}
+/**
+ * Eliminar una glosa de la tabla temporal
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function EliminarGlosaTemporal(idGlosa,idFactura,idActividad,TipoArchivo){
+    var form_data = new FormData();
+        form_data.append('idGlosa', idGlosa);
+        form_data.append('idAccion', 3);
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+              DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales
+              DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para registro de glosas
+              alertify.success(data);
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })       
+}
+
+
+/**
+ * Dibuja los diferentes formularios para la edicion de glosas de las actividades
+ * @param {type} idGlosa
+ * @param {type} idFormulario
+ * @returns {undefined}
+ */
+function DibujeFormularioEdicionActividades(idGlosa,idFormulario){
+        
+        var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa);
+        form_data.append('idFormulario', idFormulario);
+        
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivGlosar").innerHTML=data;
+            
+            for (var selector in config) {
+                $(selector).chosen(config[selector]);
+            }
+            
+            document.getElementById("CodigoGlosa_chosen").style.width = "400px";      
+        }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el formulario de glosar la actividad "+idActividad,0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Editar Una glosa de la tabla temporal
+ * @param {type} idGlosaTemp
+ * @param {type} idAccion
+ * @param {type} TipoArchivo
+ * @param {type} idActividad
+ * @param {type} idFactura
+ * @returns {undefined}
+ */
+function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFactura){
+                
+        if(idAccion==4){ //Editar una actividad inicial
+           
+            if(ValidarFecha('FechaIPS')==1){
+                console.log(ValidarFecha('FechaIPS'));
+                alertify.alert("La fecha de IPS no puede ser mayor a la de hoy");
+                document.getElementById('FechaIPS').focus();
+                return;
+            }
+            if(ValidarFecha('FechaAuditoria')==1){
+                alertify.alert("La fecha de Auditoria no puede ser mayor a la de hoy");
+                document.getElementById('FechaAuditoria').focus();
+                return;
+            }
+            var form_data = getInfoFormGlosasRespuestas();
+                
+            if(form_data==0){
+                return;
+            }
+        }
+        
+        
+        
+        form_data.append('idAccion', idAccion); //Devolver una factura
+        form_data.append('idGlosaTemp', idGlosaTemp);
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            if(idAccion==4){
+                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3);//Dibujar las glosas temporales
+                alertify.success(data);
+                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
+   
+                
+            }
+
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Guadar las Glosas Temporales en la tabla de glosas iniciales
+ * @returns {undefined}
+ */
+function GuadarGlosasTemporales(){
+    
 }

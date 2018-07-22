@@ -105,7 +105,7 @@ class Glosas extends conexion{
      * @param type $Vector
      * @return type
      */
-    public function RegistrarGlosaInicial($idFactura,$idActividad,$ValorActividad,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorConciliar,$Vector) {
+    public function RegistrarGlosaInicial($idFactura,$idActividad,$ValorActividad,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorConciliar,$Vector,$ValorEdicion=0) {
         $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
         
         if(($TotalGlosasExistentes+$ValorEPS)>$ValorActividad){
@@ -188,6 +188,10 @@ class Glosas extends conexion{
         $Columnas[19]="idUser";                 $Valores[19]=$idUser;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
+    }
+    
+    public function EliminarGlosaTemporal($idGlosa) {
+        $this->BorraReg("salud_glosas_iniciales_temp", "ID", $idGlosa);
     }
     
     //Fin Clases

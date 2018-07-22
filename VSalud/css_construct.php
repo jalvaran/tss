@@ -954,7 +954,7 @@ function Footer(){
         
         /////////////////////Crear una Chosen
 	
-	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo){
+	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo,$idSeleccionado=""){
             $obCon=new conexion(1);
             $consulta=$obCon->ConsultarTabla($Tabla, $Condicion);
             $VarSelect["Ancho"]=$Ancho;
@@ -968,8 +968,11 @@ function Footer(){
                $Dato1= utf8_encode($DatosTabla[$Display1]);
                $Dato2= utf8_encode($DatosTabla[$Display2]);
                $Dato3= utf8_encode($DatosTabla[$Display3]);
-               
-               $this->CrearOptionSelect($DatosTabla[$idItem], "$Dato1 $Dato2 $Dato3", 0);
+               $sel=0;
+               if($idSeleccionado==$DatosTabla[$idItem]){
+                   $sel=1;
+               }
+               $this->CrearOptionSelect($DatosTabla[$idItem], "$Dato1 $Dato2 $Dato3", $sel);
                
             }
             

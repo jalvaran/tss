@@ -73,6 +73,46 @@ if( !empty($_REQUEST["idAccion"]) ){
             //$obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $idFactura, $idActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             print("Glosa inicial registrada en la tabla temporal");
         break;
+        case 3://eliminar un registro de la tabla temporal de glosas
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            $obGlosas->EliminarGlosaTemporal($idGlosa);
+            print("La glosa temporal ha sido eliminada");
+        break;
+        case 4://Se reciben los parametros para editar una glosa
+            if(empty($_REQUEST["idGlosaTemp"]) or empty($_REQUEST["CodigoGlosa"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
+                   exit("No se recibieron los valores esperados");
+            }
+            $idGlosaTemp=$obGlosas->normalizar($_REQUEST["idGlosaTemp"]);
+            $DatosGlosaTemp=$obGlosas->DevuelveValores("salud_glosas_iniciales_temp", "ID", $idGlosaTemp);
+            $idFactura=$DatosGlosaTemp["num_factura"];
+            
+            $idActividad=$DatosGlosaTemp["CodigoActividad"];
+            $TipoArchivo=$DatosGlosaTemp["TipoArchivo"];
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+            $TotalActividad=$obGlosas->normalizar($_REQUEST["TotalActividad"]);
+            
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','_',$FechaIPS."_".$idActividad."_".$idFactura."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            
+            $idGlosa=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, "",$DatosGlosaTemp["ValorGlosado"]);
+            $obGlosas->EliminarGlosaTemporal($idGlosaTemp);
+            print("Glosa inicial editada en la tabla temporal");
+        break;
 
         
     }
