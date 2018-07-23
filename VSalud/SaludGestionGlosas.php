@@ -30,7 +30,7 @@ print("<body>");
     
     $css->CrearModalAmplio("DialFacturasDetalle", "", "");
     
-        $css->CrearDiv("DivHistoricoGlosas", "container", "center", 1, 1);
+        $css->CrearDiv("DivHistoricoGlosas1", "container", "center", 1, 1);
         $css->CerrarDiv();
            
     $css->CerrarModal();
@@ -105,6 +105,19 @@ print("<body>");
                 $css->CrearDiv("DivDetallesUsuario", "container", "center", 1, 1);
                 $css->CerrarDiv();
                 $css->CrearDiv("DivActividadesFacturas", "container", "center", 1, 1);
+                $css->CerrarDiv();
+            $css->CerrarDiv();
+        print("</td>");
+       $css->CierraFilaTabla();
+       $css->FilaTabla(16);
+        print("<td colspan=4>");
+            $css->CrearNotificacionRoja("Detalle de Glosas", 16);
+            $css->CrearDiv("DivDetalleGlosas", "", "center", 1, 1);
+                $css->CrearDiv("DivHistoricoGlosas", "container", "center", 1, 1);
+                $css->CerrarDiv();
+                $css->CrearDiv("DivFormRespuestasGlosas", "container", "center", 1, 1);
+                $css->CerrarDiv();
+                $css->CrearDiv("DivRespuestasGlosasTemporal", "container", "center", 1, 1);
                 $css->CerrarDiv();
             $css->CerrarDiv();
         print("</td>");

@@ -82,7 +82,7 @@ function BuscarCuentaXCriterio(Criterio=1){
         console.log(data)
       if (data != "") { 
           document.getElementById('DivCuentas').innerHTML=data;
-                  
+                
       }else {
         alert("No hay resultados para la consulta");
       }
@@ -732,4 +732,205 @@ function GuadarGlosasTemporales(idFactura){
             alert(thrownError);
           }
       })
+}
+
+/**
+ * Se visualiza el historico de glosas de una actividad para responder o contraglosar
+ * @returns {undefined}
+ */
+function VerDetallesActividad(CodActividad,idFactura){
+            
+        var form_data = new FormData();       
+        
+        form_data.append('CodActividad', CodActividad);
+        form_data.append('idFactura', idFactura);
+        form_data.append('idFormulario', 5); //Formulario donde se dibujan las actividades glosadas de esta factura
+        
+        
+        $.ajax({
+        //async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivHistoricoGlosas").innerHTML=data;
+                //document.getElementById('BtnModalFacturas').click();
+              
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el historico",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+}
+/**
+ * Formulario de respuesta para las glosas
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function RespuestaGlosa(idGlosa){
+    
+    var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa);
+        form_data.append('idFormulario', 6); //Formulario donde se dibujan las actividades glosadas de esta factura
+                
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
+                
+                for (var selector in config) {
+                $(selector).chosen(config[selector]);
+            }
+            
+            document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+              DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el historico",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+}
+/**
+ * Se valida que el valor aceptado por la ips no sea mayor al glosado
+ * @returns {Number}
+ */
+function ValidaValorXConciliar(){
+    var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
+    var ValorAceptadoIPS = Math.round(document.getElementById('ValorAceptado').value);
+    if(ValorAceptadoIPS > ValorGlosado){
+        alertify.alert("El valor aceptado no puede ser mayor al valor Glosado");
+        return 1;
+    }
+    document.getElementById('ValorConciliar').value=document.getElementById('ValorEPS').value-document.getElementById('ValorAceptado').value;
+    return 0;
+}
+/**
+ * Agrega una Respuesta a Glosa Temporal
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function AgregarRespuestaGlosaTemporal(idGlosa){
+    var form_data = getInfoFormGlosasRespuestas();        
+        form_data.append('idAccion', 6); //Agregar respuesta a Glosa temporal
+        form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            alertify.success(data);
+            //document.getElementById('DivRespuestasGlosasTemporal').innerHTML=data;
+            document.getElementById('DivFormRespuestasGlosas').innerHTML=data;
+            DibujeRespuestaTemporal('');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Dibuja la tabla temporal de las respuesta a las glosas
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function DibujeRespuestaTemporal(idGlosa){
+    
+    var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
+        form_data.append('idFormulario', 7);  //Formulario donde se dibuja la tabla temporal de las respuestas a las glosas
+                
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivRespuestasGlosasTemporal").innerHTML=data;
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el temporal de respuestas",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Eliminar una repuesta a glosa temporal
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function EliminarRepuestaGlosaTemporal(idGlosa,idAccion){
+    var form_data = new FormData();
+        form_data.append('idGlosa', idGlosa);
+        form_data.append('idAccion', idAccion); //7 para eliminar una respuesta a glosa temporal
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+              
+                alertify.success(data);
+                DibujeRespuestaTemporal('');
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })       
 }

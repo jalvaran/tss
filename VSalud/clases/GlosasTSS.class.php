@@ -63,29 +63,42 @@ class Glosas extends conexion{
         $TotalGlosasExistentes=$TotalGlosasExistentes+$TotalGlosasTemporal;
         if($TipoArchivo=='AC'){
             $CodigoActivida=$this->ValorActual("salud_archivo_consultas", "cod_consulta as Codigo", " id_consultas='$idActividad'");
+            $Codigo=$CodigoActivida["Codigo"];
+            $DatosDescripcion=$this->ValorActual("salud_cups", "descripcion_cups as Descripcion", " codigo_sistema='$Codigo'");
+            $Descripcion=$DatosDescripcion["Descripcion"];
         }
         if($TipoArchivo=='AP'){
             $CodigoActivida=$this->ValorActual("salud_archivo_procedimientos", "cod_procedimiento as Codigo", " id_procedimiento='$idActividad'");
+            $Codigo=$CodigoActivida["Codigo"];
+            $DatosDescripcion=$this->ValorActual("salud_cups", "descripcion_cups as Descripcion", " codigo_sistema='$Codigo'");
+            $Descripcion=$DatosDescripcion["Descripcion"];
+            
         }
         if($TipoArchivo=='AT'){
-            $CodigoActivida=$this->ValorActual("salud_archivo_otros_servicios", "cod_servicio  as Codigo", " id_otro_servicios='$idActividad'");
+            $CodigoActivida=$this->ValorActual("salud_archivo_otros_servicios", "cod_servicio  as Codigo,nom_servicio as Descripcion", " id_otro_servicios='$idActividad'");
+            $Codigo=$CodigoActivida["Codigo"];
+            $Descripcion=$CodigoActivida["Descripcion"];
+            
         }
         if($TipoArchivo=='AM'){
-            $CodigoActivida=$this->ValorActual("salud_archivo_medicamentos", "cod_medicamento as Codigo", " id_medicamentos='$idActividad'");
+            $CodigoActivida=$this->ValorActual("salud_archivo_medicamentos", "cod_medicamento as Codigo,nom_medicamento as Descripcion", " id_medicamentos='$idActividad'");
+            $Codigo=$CodigoActivida["Codigo"];
+            $Descripcion=$CodigoActivida["Descripcion"];
+            
         }
         if(($TotalGlosasExistentes+$ValorEPS)>$TotalActividad){
             exit("El valor Glosado Excede el total de la actividad.");
         }
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales_temp";
-        $NumRegistros=17;
+        $NumRegistros=18;
 
         $Columnas[0]="FechaIPS";                $Valores[0]=$FechaIPS;
         $Columnas[1]="FechaAuditoria";          $Valores[1]=$FechaAuditoria;
         $Columnas[2]="FechaRegistro";           $Valores[2]=$FechaRegistro;
         $Columnas[3]="CodigoGlosa";             $Valores[3]=$CodigoGlosa;
         $Columnas[4]="num_factura";             $Valores[4]=$idFactura;
-        $Columnas[5]="CodigoActividad";         $Valores[5]=$CodigoActivida["Codigo"];
+        $Columnas[5]="CodigoActividad";         $Valores[5]=$Codigo;
         $Columnas[6]="EstadoGlosa";             $Valores[6]=1;
         $Columnas[7]="ValorGlosado";            $Valores[7]=$ValorEPS;
         $Columnas[8]="ValorLevantado";          $Valores[8]=0;
@@ -97,6 +110,7 @@ class Glosas extends conexion{
         $Columnas[14]="Observaciones";          $Valores[14]=$Observaciones;
         $Columnas[15]="Soporte";                $Valores[15]=$destino;
         $Columnas[16]="idArchivo";              $Valores[16]=$idActividad;
+        $Columnas[17]="NombreActividad";        $Valores[17]=$Descripcion;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
@@ -170,13 +184,13 @@ class Glosas extends conexion{
      * @param type $idUser
      * @param type $Vector
      */
-    public function RegistraGlosaRespuesta($TipoArchivo,$idGlosa,$idFactura,$idActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
+    public function RegistraGlosaRespuesta($TipoArchivo,$idGlosa,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
         $DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
         
         $FechaRegistro=date("Y-m-d");
         $tab="salud_archivo_control_glosas_respuestas";
-        $NumRegistros=20;
+        $NumRegistros=21;
 
         $Columnas[0]="num_factura";             $Valores[0]=$idFactura;
         $Columnas[1]="idGlosa";                 $Valores[1]=$idGlosa;
@@ -199,6 +213,7 @@ class Glosas extends conexion{
         $Columnas[17]="fecha_registo";          $Valores[17]=$FechaRegistro;
         $Columnas[18]="TipoArchivo";            $Valores[18]=$TipoArchivo;
         $Columnas[19]="idUser";                 $Valores[19]=$idUser;
+        $Columnas[20]="DescripcionActividad";   $Valores[20]=$NombreActividad;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
     }
@@ -220,7 +235,7 @@ class Glosas extends conexion{
             $NumFactura=$DatosGlosaTemporal["num_factura"];
             $CodActividad=$DatosGlosaTemporal["CodigoActividad"];
             $idGlosa=$this->RegistrarGlosaInicial($DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], $DatosGlosaTemporal["ValorXConciliar"], "");
-            $this->RegistraGlosaRespuesta($DatosGlosaTemporal["TipoArchivo"], $idGlosa, $DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], 1, $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["Observaciones"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], 0, $DatosGlosaTemporal["ValorXConciliar"], $DatosGlosaTemporal["Soporte"], $idUser, "");
+            $this->RegistraGlosaRespuesta($DatosGlosaTemporal["TipoArchivo"], $idGlosa, $DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"],$DatosGlosaTemporal["NombreActividad"], $DatosGlosaTemporal["ValorActividad"], 1, $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["Observaciones"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], 0, $DatosGlosaTemporal["ValorXConciliar"], $DatosGlosaTemporal["Soporte"], $idUser, "");
             $this->BorraReg("salud_glosas_iniciales_temp", "ID", $DatosGlosaTemporal["ID"]);
             if($DatosGlosaTemporal["TipoArchivo"]=="AC"){
                 
@@ -262,6 +277,60 @@ class Glosas extends conexion{
         }
         $this->VaciarTabla("salud_glosas_iniciales_temp");
         
+    }
+    /**
+     * Registra respuestas en tabla temporal
+     * @param type $TipoArchivo
+     * @param type $idGlosa
+     * @param type $idFactura
+     * @param type $idActividad
+     * @param type $NombreActividad
+     * @param type $TotalActividad
+     * @param type $EstadoGlosa
+     * @param type $FechaIPS
+     * @param type $FechaAuditoria
+     * @param type $Observaciones
+     * @param type $CodigoGlosa
+     * @param type $ValorEPS
+     * @param type $ValorAceptado
+     * @param type $ValorLevantado
+     * @param type $ValorConciliar
+     * @param type $destino
+     * @param type $idUser
+     * @param type $Vector
+     */
+    public function RegistraGlosaRespuestaTemporal($TipoArchivo,$idGlosa,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
+        $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
+        $DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        
+        $FechaRegistro=date("Y-m-d");
+        $tab="salud_archivo_control_glosas_respuestas_temp";
+        $NumRegistros=21;
+
+        $Columnas[0]="num_factura";             $Valores[0]=$idFactura;
+        $Columnas[1]="idGlosa";                 $Valores[1]=$idGlosa;
+        $Columnas[2]="CuentaGlobal";            $Valores[2]=$DatosFactura["CuentaGlobal"];
+        $Columnas[3]="CuentaRIPS";              $Valores[3]=$DatosFactura["CuentaRIPS"];
+        $Columnas[4]="cod_glosa_general";       $Valores[4]=substr($CodigoGlosa,0,1);
+        $Columnas[5]="cod_glosa_especifico";    $Valores[5]=substr($CodigoGlosa,1,2);
+        $Columnas[6]="id_cod_glosa";            $Valores[6]=$CodigoGlosa;
+        $Columnas[7]="CodigoActividad";         $Valores[7]=$idActividad;
+        $Columnas[8]="EstadoGlosa";             $Valores[8]=$EstadoGlosa;
+        $Columnas[9]="FechaIPS";                $Valores[9]=$FechaIPS;
+        $Columnas[10]="FechaAuditoria";         $Valores[10]=$FechaAuditoria;
+        $Columnas[11]="valor_actividad";        $Valores[11]=$TotalActividad;
+        
+        $Columnas[12]="valor_glosado_eps";      $Valores[12]=$ValorEPS;
+        $Columnas[13]="valor_levantado_eps";    $Valores[13]=$ValorLevantado;
+        $Columnas[14]="valor_aceptado_ips";     $Valores[14]=$ValorAceptado;
+        $Columnas[15]="observacion_auditor";    $Valores[15]=$Observaciones;
+        $Columnas[16]="Soporte";                $Valores[16]=$destino;
+        $Columnas[17]="fecha_registo";          $Valores[17]=$FechaRegistro;
+        $Columnas[18]="TipoArchivo";            $Valores[18]=$TipoArchivo;
+        $Columnas[19]="idUser";                 $Valores[19]=$idUser;
+        $Columnas[20]="DescripcionActividad";   $Valores[20]=$NombreActividad;
+        
+        $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
     }
     
     //Fin Clases

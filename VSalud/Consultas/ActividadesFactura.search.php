@@ -106,7 +106,11 @@ if( !empty($_REQUEST["idFactura"]) ){
                     
                         print("</td>");
                     print("<td>");
-                        $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad()", "verde", "");
+                        $Enable=0;
+                        if($DatosValoresGlosas["NumGlosas"]>0){
+                            $Enable=1;
+                        }
+                        $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura')", "verde", "");
                     print("</td>");
                     
                 $css->CierraFilaTabla();

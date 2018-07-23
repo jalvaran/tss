@@ -117,6 +117,58 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->GuardaGlosasTemporalesAIniciales($idUser, "");
             print("Glosas Registradas");
         break;
+    
+        case 6:// Guarda las glosas de la tabla temporal a la real
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            $CuentaRIPS=$DatosGlosa["CuentaRIPS"];
+            $TipoArchivo=$DatosGlosa["TipoArchivo"];
+            $CodActividad=$DatosGlosa["CodigoActividad"];            
+            $idFactura=$DatosGlosa["num_factura"];
+            $sql="SELECT ID FROM salud_archivo_control_glosas_respuestas_temp WHERE idGlosa='$idGlosa' AND EstadoGlosa=2";
+            $consulta=$obGlosas->Query($sql);
+            $DatosExistentes=$obGlosas->FetchArray($consulta);
+            if($DatosExistentes["ID"]<>''){
+                exit("<h4 style='color:red'>Ya exite una respuesta agregada a esta Glosa</h4>");
+            }
+            //$DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "num_factura='$idFactura'");
+            
+            $TotalActividad=$DatosGlosa["valor_actividad"];            
+            $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
+            
+            $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+                        
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','_',"Respuesta_".$FechaIPS."_".$CuentaRIPS."_$idFactura"."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            
+            $obGlosas->RegistraGlosaRespuestaTemporal($TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 2, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
+            
+            print("<h4 style='color:blue'>Respuesta a Glosas Registrada en la tabla temporal</h4>");
+        break;
+        
+        case 7://Elimina una respuesta a glosa de la tabla temporal
+            $idGlosaTemp=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            $obGlosas->BorraReg("salud_archivo_control_glosas_respuestas_temp", "ID", $idGlosaTemp);
+            print("Respuesta a Glosa temporal eliminada");
+        break;    
 
         
     }
