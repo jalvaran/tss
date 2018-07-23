@@ -403,10 +403,21 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
             }
             
             if(idAccion==2){
-                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales   
-                DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
-   
-                alertify.success(data);
+                console.log(data);
+                var datos=JSON.parse(data);
+                if(datos.Error){
+                    alertify.alert(datos.msg);
+                    
+                }else{
+                    alertify.success(datos.msg);
+                    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales   
+                    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
+                
+                }
+                
+                
+                
+                
                 //document.getElementById("DivGlosar").innerHTML="Tarea Registrada";
                 
                 //alertify.success("Se realizó el registro de la glosa inicial ");
@@ -801,11 +812,11 @@ function RespuestaGlosa(idGlosa){
                 document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
                 
                 for (var selector in config) {
-                $(selector).chosen(config[selector]);
-            }
+                    $(selector).chosen(config[selector]);
+                }
             
-            document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
-              DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+                DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
             }
             
         },
@@ -933,4 +944,116 @@ function EliminarRepuestaGlosaTemporal(idGlosa,idAccion){
             alert(thrownError);
           }
       })       
+}
+/**
+ * envia la peticion al servidor para dibujar el formulario de edicion de respuestas a glosas
+ * @param {type} idGlosa
+ * @param {type} idFormulario
+ * @returns {undefined}
+ */
+function DibujeFormularioEdicionRespuestas(idGlosa,idFormulario){
+    var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
+        form_data.append('idFormulario', idFormulario);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
+                
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
+                for (var selector in config) {
+                    $(selector).chosen(config[selector]);
+                }
+            
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de dibujar el temporal de respuestas",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+}
+/**
+ * Envia la peticion al servidor para editar una respuesta temporal a una glosa
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function EditarRespuestaGlosaTemporal(idGlosa){
+    var form_data = getInfoFormGlosasRespuestas();        
+        form_data.append('idAccion', 8); //Agregar respuesta a Glosa temporal
+        form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            alertify.success(data);
+            
+            document.getElementById('DivFormRespuestasGlosas').innerHTML=data;
+            DibujeRespuestaTemporal('');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Guarda las respuestas de la tabla temporal a la real
+ * @returns {undefined}
+ */
+function GuadarRespuestasTemporales(idActividad,idFactura){
+    var form_data = new FormData();
+        
+        form_data.append('idAccion', 9); //9 para guardar las respuestas de la tabla temporal a la real
+        document.getElementById("DivFormRespuestasGlosas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+  
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+                document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
+                document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
+                var idFactura=document.getElementById("TxtNumFactura").value;
+                var CodActividad=document.getElementById("TxtCodActividad").value;
+                VerDetallesActividad(CodActividad,idFactura);
+                alertify.success(data);
+                
+          }else{
+            alertify.alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }

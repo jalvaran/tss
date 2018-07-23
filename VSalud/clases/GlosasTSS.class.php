@@ -89,6 +89,14 @@ class Glosas extends conexion{
         if(($TotalGlosasExistentes+$ValorEPS)>$TotalActividad){
             exit("El valor Glosado Excede el total de la actividad.");
         }
+        $sql="SELECT ID FROM salud_glosas_iniciales WHERE num_factura='$idFactura' AND CodigoActividad='$Codigo' AND CodigoGlosa='$CodigoGlosa'";
+        $consulta=$this->Query($sql);
+        $DatosGlosasIniciales= $this->FetchArray($consulta);
+        if($DatosGlosasIniciales["ID"]<>''){
+            $Mensaje["msg"]="El codigo de Glosa $CodigoGlosa ya fue registrado a la factura $idFactura y codigo de actividad $Codigo";
+            $Mensaje["Error"]=1;
+            exit(json_encode($Mensaje));
+        }
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales_temp";
         $NumRegistros=18;
@@ -114,8 +122,8 @@ class Glosas extends conexion{
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
-        
-        return($idGlosa);
+        $Mensaje["msg"]="Glosa Agregada a la tabla temporal";
+        return($Mensaje);
         
     }
     /**
@@ -299,39 +307,75 @@ class Glosas extends conexion{
      * @param type $idUser
      * @param type $Vector
      */
-    public function RegistraGlosaRespuestaTemporal($TipoArchivo,$idGlosa,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
+    public function RegistraGlosaRespuestaTemporal($idReplace,$TipoArchivo,$idGlosa,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
         $DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
         
         $FechaRegistro=date("Y-m-d");
         $tab="salud_archivo_control_glosas_respuestas_temp";
-        $NumRegistros=21;
-
-        $Columnas[0]="num_factura";             $Valores[0]=$idFactura;
-        $Columnas[1]="idGlosa";                 $Valores[1]=$idGlosa;
-        $Columnas[2]="CuentaGlobal";            $Valores[2]=$DatosFactura["CuentaGlobal"];
-        $Columnas[3]="CuentaRIPS";              $Valores[3]=$DatosFactura["CuentaRIPS"];
-        $Columnas[4]="cod_glosa_general";       $Valores[4]=substr($CodigoGlosa,0,1);
-        $Columnas[5]="cod_glosa_especifico";    $Valores[5]=substr($CodigoGlosa,1,2);
-        $Columnas[6]="id_cod_glosa";            $Valores[6]=$CodigoGlosa;
-        $Columnas[7]="CodigoActividad";         $Valores[7]=$idActividad;
-        $Columnas[8]="EstadoGlosa";             $Valores[8]=$EstadoGlosa;
-        $Columnas[9]="FechaIPS";                $Valores[9]=$FechaIPS;
-        $Columnas[10]="FechaAuditoria";         $Valores[10]=$FechaAuditoria;
-        $Columnas[11]="valor_actividad";        $Valores[11]=$TotalActividad;
+        $Datos["ID"]=$idReplace;               
+        $Datos["num_factura"]=$idFactura;
+        $Datos["idGlosa"]=$idGlosa;
+        $Datos["CuentaGlobal"]=$DatosFactura["CuentaGlobal"];
+        $Datos["CuentaRIPS"]=$DatosFactura["CuentaRIPS"];
+        $Datos["cod_glosa_general"]=substr($CodigoGlosa,0,1);
+        $Datos["cod_glosa_especifico"]=substr($CodigoGlosa,1,2);
+        $Datos["id_cod_glosa"]=$CodigoGlosa;
+        $Datos["CodigoActividad"]=$idActividad;
+        $Datos["EstadoGlosa"]=$EstadoGlosa;
+        $Datos["FechaIPS"]=$FechaIPS;
+        $Datos["FechaAuditoria"]=$FechaAuditoria;
+        $Datos["valor_actividad"]=$TotalActividad;
+        $Datos["valor_glosado_eps"]=$ValorEPS;
+        $Datos["valor_levantado_eps"]=$ValorLevantado;
+        $Datos["valor_aceptado_ips"]=$ValorAceptado;
+        $Datos["observacion_auditor"]=$Observaciones;
+        $Datos["Soporte"]=$destino;
+        $Datos["fecha_registo"]=$FechaRegistro;
+        $Datos["TipoArchivo"]=$TipoArchivo;
+        $Datos["idUser"]=$idUser;
+        $Datos["DescripcionActividad"]=$NombreActividad;
+        if($idReplace=''){
+            $sql=$this->getSQLInsert($tab, $Datos);
+        }else{
+            $sql=$this->getSQLReeplace($tab, $Datos);
+        }
         
-        $Columnas[12]="valor_glosado_eps";      $Valores[12]=$ValorEPS;
-        $Columnas[13]="valor_levantado_eps";    $Valores[13]=$ValorLevantado;
-        $Columnas[14]="valor_aceptado_ips";     $Valores[14]=$ValorAceptado;
-        $Columnas[15]="observacion_auditor";    $Valores[15]=$Observaciones;
-        $Columnas[16]="Soporte";                $Valores[16]=$destino;
-        $Columnas[17]="fecha_registo";          $Valores[17]=$FechaRegistro;
-        $Columnas[18]="TipoArchivo";            $Valores[18]=$TipoArchivo;
-        $Columnas[19]="idUser";                 $Valores[19]=$idUser;
-        $Columnas[20]="DescripcionActividad";   $Valores[20]=$NombreActividad;
-        
-        $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
+        $this->Query($sql);
+               
     }
+    /**
+     * 
+     */
+    public function GuardaRespuestasGlosasTemporalAReal($idUser,$Vector){
+        
+        
+        $sql="INSERT INTO salud_archivo_control_glosas_respuestas (num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser) "
+                . "SELECT "
+                . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2" ;
+        
+        $this->Query($sql);
+        
+        $sql="SELECT idGlosa,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 ";
+        $consulta= $this->Query($sql);
+        while($DatosTemp=$this->FetchArray($consulta)){
+            $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
+            
+            $idGlosa=$DatosTemp["idGlosa"];
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa=2,ValorAceptado='$ValorAceptadoIPS',ValorXConciliar=ValorGlosado-ValorAceptado WHERE ID='$idGlosa'";
+            $this->Query($sql);
+            
+        }
+        
+        $this->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
+        
+       }
+    
     
     //Fin Clases
 }

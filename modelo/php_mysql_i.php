@@ -399,8 +399,32 @@ public function ShowColums($Tabla){
         return($Nombres);
 
     }
-    
-    
+    /**
+     * Devuelve el sql para Reemplazar un dato
+     * @param type $Tabla
+     * @param type $Datos
+     * @return string
+     */
+    function getSQLReeplace($Tabla,$Datos){
+      $sqlCampos = "REPLACE INTO $Tabla (";
+      $sqlValores= ' VALUES (';
+      $length_array = count($Datos);
+      $i = 1;
+      foreach ($Datos as $key => $value) {
+        $sqlCampos .= "`$key`";
+        $sqlValores .= "'$value'";
+        if ($i!= $length_array) {
+          $sqlCampos .= ", " ;
+          $sqlValores .= ", " ;
+        }else {
+          $sqlCampos .= ')';
+          $sqlValores .= ');'."\n\r";
+        }
+        $i++;
+      }
+      $sql=$sqlCampos.$sqlValores;
+      return $sql;
+    }
 //Fin Clases
 }
 
