@@ -461,22 +461,24 @@ DROP TABLE IF EXISTS `salud_archivo_control_glosas_respuestas`;
 CREATE TABLE `salud_archivo_control_glosas_respuestas` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `num_factura` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Número de la factura " Ver Alineamientos tecnicos para ips ver pag 12"',
+  `idGlosa` bigint(20) NOT NULL,
   `CuentaGlobal` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
   `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
   `cod_glosa_general` int(1) NOT NULL COMMENT 'Código de la glosa general"',
-  `cod_glosa_especifico` int(3) NOT NULL COMMENT 'Código de la glosa especifico"',
+  `cod_glosa_especifico` int(2) unsigned zerofill NOT NULL COMMENT 'Código de la glosa especifico&amp;quot;',
   `id_cod_glosa` bigint(12) NOT NULL COMMENT 'id del Código de la glosa"',
-  `actividad_glosa` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Codigo de la actividad glosada"',
+  `CodigoActividad` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Codigo de la actividad glosada&quot;',
   `EstadoGlosa` int(2) NOT NULL,
-  `fecha_ips` date NOT NULL COMMENT 'Fecha de expedición de la factura " Ver Alineamientos tecnicos para ips ver pag 13"',
-  `fecha_recibo_auditoria` date NOT NULL COMMENT 'Fecha de expedición de la factura &quot; Ver Alineamientos tecnicos para ips ver pag 13&quot;',
-  `valor_actividad` double(15,2) NOT NULL COMMENT 'Valor total del pago compartido copago " Ver Alineamientos tecnicos para ips ver pag 14"',
-  `valor_glosado_eps` double(15,2) NOT NULL COMMENT 'Valor de la comisión " Ver Alineamientos tecnicos para ips ver pag 14"',
-  `valor_levantado_eps` double(15,2) NOT NULL COMMENT 'Valor total de descuentos " Ver Alineamientos tecnicos para ips ver pag 14"',
-  `valor_aceptado_ips` double(15,2) NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante " Ver Alineamientos tecnicos para ips ver pag 14"',
+  `FechaIPS` date NOT NULL COMMENT 'Fecha de expedición de la factura &quot; Ver Alineamientos tecnicos para ips ver pag 13&quot;',
+  `FechaAuditoria` date NOT NULL COMMENT 'Fecha de expedición de la factura &amp;quot; Ver Alineamientos tecnicos para ips ver pag 13&amp;quot;',
+  `valor_actividad` double NOT NULL COMMENT 'Valor total del pago compartido copago &quot; Ver Alineamientos tecnicos para ips ver pag 14&quot;',
+  `valor_glosado_eps` double NOT NULL COMMENT 'Valor de la comisión &quot; Ver Alineamientos tecnicos para ips ver pag 14&quot;',
+  `valor_levantado_eps` double NOT NULL COMMENT 'Valor total de descuentos &quot; Ver Alineamientos tecnicos para ips ver pag 14&quot;',
+  `valor_aceptado_ips` double NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante &quot; Ver Alineamientos tecnicos para ips ver pag 14&quot;',
   `observacion_auditor` text COLLATE utf8_spanish_ci NOT NULL COMMENT 'Valor neto a pagar por la entidad contratante " Ver Alineamientos tecnicos para ips ver pag 14"',
   `Soporte` varchar(200) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Ruta de Archivo de comprobación de radicado',
   `fecha_registo` date NOT NULL COMMENT 'Fecha de expedición de la factura " Ver Alineamientos tecnicos para ips ver pag 13"',
+  `TipoArchivo` varchar(2) COLLATE utf8_spanish_ci NOT NULL,
   `idUser` int(11) NOT NULL,
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -484,7 +486,8 @@ CREATE TABLE `salud_archivo_control_glosas_respuestas` (
   KEY `num_factura` (`num_factura`),
   KEY `EstadoGlosa` (`EstadoGlosa`),
   KEY `CuentaGlobal` (`CuentaGlobal`),
-  KEY `CuentaRIPS` (`CuentaRIPS`)
+  KEY `CuentaRIPS` (`CuentaRIPS`),
+  KEY `idGlosa` (`idGlosa`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo Control de glosas y respuestas';
 
 
@@ -1209,6 +1212,62 @@ CREATE TABLE `salud_facturas_radicacion_numero` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 
+DROP TABLE IF EXISTS `salud_glosas_iniciales`;
+CREATE TABLE `salud_glosas_iniciales` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FechaIPS` date NOT NULL,
+  `FechaAuditoria` date NOT NULL,
+  `FechaRegistro` date NOT NULL,
+  `CodigoGlosa` int(3) NOT NULL,
+  `num_factura` varchar(20) NOT NULL,
+  `CodigoActividad` varchar(20) NOT NULL,
+  `EstadoGlosa` int(11) NOT NULL,
+  `ValorActividad` double NOT NULL,
+  `ValorGlosado` double NOT NULL,
+  `ValorLevantado` double NOT NULL,
+  `ValorAceptado` double NOT NULL,
+  `ValorXConciliar` double NOT NULL,
+  `ValorConciliado` double NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `num_factura` (`num_factura`),
+  KEY `CodigoActividad` (`CodigoActividad`),
+  KEY `CodigoGlosa` (`CodigoGlosa`),
+  KEY `EstadoGlosa` (`EstadoGlosa`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `salud_glosas_iniciales_temp`;
+CREATE TABLE `salud_glosas_iniciales_temp` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FechaIPS` date NOT NULL,
+  `FechaAuditoria` date NOT NULL,
+  `FechaRegistro` date NOT NULL,
+  `CodigoGlosa` int(3) NOT NULL,
+  `num_factura` varchar(20) NOT NULL,
+  `CodigoActividad` varchar(20) NOT NULL,
+  `EstadoGlosa` int(11) NOT NULL,
+  `ValorActividad` double NOT NULL,
+  `ValorGlosado` double NOT NULL,
+  `ValorLevantado` double NOT NULL,
+  `ValorAceptado` double NOT NULL,
+  `ValorXConciliar` double NOT NULL,
+  `ValorConciliado` double NOT NULL,
+  `TipoArchivo` varchar(2) NOT NULL,
+  `idArchivo` bigint(20) NOT NULL,
+  `Observaciones` text NOT NULL,
+  `Soporte` varchar(200) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `num_factura` (`num_factura`),
+  KEY `CodigoActividad` (`CodigoActividad`),
+  KEY `CodigoGlosa` (`CodigoGlosa`),
+  KEY `EstadoGlosa` (`EstadoGlosa`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `salud_pagos_temporal`;
 CREATE TABLE `salud_pagos_temporal` (
   `id_temp_rips_generados` varchar(1) COLLATE latin1_spanish_ci NOT NULL,
@@ -1510,4 +1569,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-07-20 14:46:57
+-- 2018-07-23 01:33:32

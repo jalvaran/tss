@@ -223,17 +223,42 @@ class Glosas extends conexion{
             $this->RegistraGlosaRespuesta($DatosGlosaTemporal["TipoArchivo"], $idGlosa, $DatosGlosaTemporal["num_factura"], $DatosGlosaTemporal["CodigoActividad"], $DatosGlosaTemporal["ValorActividad"], 1, $DatosGlosaTemporal["FechaIPS"], $DatosGlosaTemporal["FechaAuditoria"], $DatosGlosaTemporal["Observaciones"], $DatosGlosaTemporal["CodigoGlosa"], $DatosGlosaTemporal["ValorGlosado"], $DatosGlosaTemporal["ValorAceptado"], 0, $DatosGlosaTemporal["ValorXConciliar"], $DatosGlosaTemporal["Soporte"], $idUser, "");
             $this->BorraReg("salud_glosas_iniciales_temp", "ID", $DatosGlosaTemporal["ID"]);
             if($DatosGlosaTemporal["TipoArchivo"]=="AC"){
-                $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND CodigoActividad='$CodActividad'";
-                $Datos= $this->Query($sql);
-                $DatosEstado=$this->FetchArray($Datos);
-                $Estado=$DatosEstado["MinEstado"];
                 
+                $TablaArchivo="salud_archivo_consultas";
+                $ColCodigo="cod_consulta";
+                $this->update($TablaArchivo, "EstadoGlosa", 1, "WHERE num_factura='$NumFactura' AND $ColCodigo='$CodActividad'");
+                $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", 1, "num_factura", $NumFactura);
+      
             }
-            //Se está calculando el estado de las actividades dentro de las glosas iniciales para actualizar los archivos y facturas
-            //$sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura'";
-            //$Datos= $this->Query($sql);
-            //$DatosEstado=$this->FetchArray($Datos);
-            //$this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", $DatosEstado["MinEstado"], "num_factura", $NumFactura);
+            
+            if($DatosGlosaTemporal["TipoArchivo"]=="AT"){
+                
+                $TablaArchivo="salud_archivo_otros_servicios";
+                $ColCodigo="cod_servicio";
+                $this->update($TablaArchivo, "EstadoGlosa", 1, "WHERE num_factura='$NumFactura' AND $ColCodigo='$CodActividad'");
+                $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", 1, "num_factura", $NumFactura);
+      
+            }
+            
+            if($DatosGlosaTemporal["TipoArchivo"]=="AP"){
+                
+                $TablaArchivo="salud_archivo_procedimientos";
+                $ColCodigo="cod_procedimiento";
+                $this->update($TablaArchivo, "EstadoGlosa", 1, "WHERE num_factura='$NumFactura' AND $ColCodigo='$CodActividad'");
+                $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", 1, "num_factura", $NumFactura);
+      
+            }
+            
+            if($DatosGlosaTemporal["TipoArchivo"]=="AM"){
+                
+                $TablaArchivo="salud_archivo_medicamentos";
+                $ColCodigo="cod_medicamento";
+                $this->update($TablaArchivo, "EstadoGlosa", 1, "WHERE num_factura='$NumFactura' AND $ColCodigo='$CodActividad'");
+                $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", 1, "num_factura", $NumFactura);
+      
+            }
+            
+       
         }
         $this->VaciarTabla("salud_glosas_iniciales_temp");
         
