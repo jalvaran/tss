@@ -1057,3 +1057,15 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
           }
       })
 }
+/**
+ * Dibuja el formulario para realizar una contra glosa
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function ContraGlosarActividad(TipoArchivo,idActividad,idFactura){
+    document.getElementById('BtnModalGlosar').click();
+    
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
+    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales
+    
+}

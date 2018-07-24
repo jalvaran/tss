@@ -160,7 +160,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
                 
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar", "ver cuenta", 1, "onClick", "MostrarFacturas($DatosCuenta[CuentaRIPS])", "naranja", "");
+                     $css->CrearBotonEvento("BtnMostrar", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]')", "naranja", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }

@@ -77,7 +77,7 @@ if( !empty($_REQUEST["idFactura"]) ){
             
             while($DatosFactura=$obGlosas->FetchArray($Consulta)){
                 $CodActividad=$DatosFactura["Codigo"];
-                $sqlGlosas="SELECT COUNT(*) AS NumGlosas,SUM(ValorGlosado) AS ValorGlosado FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
+                $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,SUM(ValorGlosado) AS ValorGlosado FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
                 $Datos=$obGlosas->Query($sqlGlosas);
                 $DatosValoresGlosas=$obGlosas->FetchArray($Datos);
                 $css->FilaTabla(12);

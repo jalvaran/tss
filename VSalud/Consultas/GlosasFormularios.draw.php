@@ -361,14 +361,16 @@ if( !empty($_REQUEST["idFormulario"]) ){
         case 5: //Formulario para ver la tabla de control de glosas
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);             
             $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
-            $sql="SELECT ID,num_factura,FechaIPS,id_cod_glosa AS CodigoGlosa,CodigoActividad,observacion_auditor,"
+            $sql="SELECT TipoArchivo,ID,num_factura,FechaIPS,id_cod_glosa AS CodigoGlosa,CodigoActividad,observacion_auditor,"
                     . "(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa ) AS DescripcionGlosa,"
                     . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,EstadoGlosa,"
                     . "(SELECT valor_glosado_eps-valor_aceptado_ips-valor_levantado_eps) AS ValorXConciliar,"
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=EstadoGlosa) as Estado "
                     . "FROM salud_archivo_control_glosas_respuestas "
-                    . "WHERE EstadoGlosa=(SELECT max(EstadoGlosa) FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>5 AND EstadoGlosa<>9 AND EstadoGlosa<>11 ) "
-                    . "and  num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>5 AND EstadoGlosa<>9 AND EstadoGlosa<>11 ORDER BY ID LIMIT 100";
+                    . "WHERE "
+                    . "  num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<5 AND Tratado=0 ORDER BY ID LIMIT 100";
+            
+            
             $Consulta=$obGlosas->Query($sql);
             $css->CrearTabla();
                 $css->FilaTabla(12);
@@ -392,6 +394,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $css->CierraFilaTabla();
             while($DatosActividad=$obGlosas->FetchArray($Consulta)){
                 $idGlosa=$DatosActividad["ID"];
+                $TipoArchivo=$DatosActividad["TipoArchivo"];
                 $css->FilaTabla(12);
                     $css->ColTabla($DatosActividad["FechaIPS"], 1);
                     $css->ColTabla($DatosActividad["num_factura"], 1);
@@ -410,7 +413,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
           
                         }
                         if($DatosActividad["EstadoGlosa"]==2){
-                            $css->CrearBotonEvento("ContraGlosa", "Contra Glosa", 1, "onClick", "RespuestaGlosa('$idGlosa')", "naranja", "");
+                            $css->CrearBotonEvento("ContraGlosa", "Contra Glosa", 1, "onClick", "DibujeFormContraGlosa('$idGlosa')", "naranja", "");
           
                         }
                         print("</td>");

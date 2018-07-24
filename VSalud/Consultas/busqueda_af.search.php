@@ -16,7 +16,7 @@ include_once("../css_construct.php");
 if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty($_REQUEST["FechaInicial"]) or !empty($_REQUEST["FechaFinal"]) or !empty($_REQUEST["idEstadoGlosas"]) or !empty($_REQUEST["Page"]) ){
     $css =  new CssIni("id",0);
     $obGlosas = new conexion($idUser);
-    
+        
     // Consultas enviadas a traves de la URL
     $statement="";
     if(isset($_REQUEST['st'])){

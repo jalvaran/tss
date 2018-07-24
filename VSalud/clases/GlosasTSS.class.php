@@ -97,6 +97,14 @@ class Glosas extends conexion{
             $Mensaje["Error"]=1;
             exit(json_encode($Mensaje));
         }
+        $sql="SELECT ID FROM salud_glosas_iniciales_temp WHERE num_factura='$idFactura' AND CodigoActividad='$Codigo' AND CodigoGlosa='$CodigoGlosa'";
+        $consulta=$this->Query($sql);
+        $DatosGlosasIniciales= $this->FetchArray($consulta);
+        if($DatosGlosasIniciales["ID"]<>''){
+            $Mensaje["msg"]="El codigo de Glosa $CodigoGlosa ya fue registrado a la factura $idFactura y codigo de actividad $Codigo";
+            $Mensaje["Error"]=1;
+            exit(json_encode($Mensaje));
+        }
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales_temp";
         $NumRegistros=18;
@@ -309,7 +317,7 @@ class Glosas extends conexion{
      */
     public function RegistraGlosaRespuestaTemporal($idReplace,$TipoArchivo,$idGlosa,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
-        $DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
         
         $FechaRegistro=date("Y-m-d");
         $tab="salud_archivo_control_glosas_respuestas_temp";
@@ -349,7 +357,7 @@ class Glosas extends conexion{
      */
     public function GuardaRespuestasGlosasTemporalAReal($idUser,$Vector){
         
-        
+        //Copio las respuestas cuyo valor Glosado sea diferente al aceptado
         $sql="INSERT INTO salud_archivo_control_glosas_respuestas (num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser) "
@@ -357,25 +365,94 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps <> valor_aceptado_ips" ;
+        
+        $this->Query($sql);
+        //Copio las respuestas en estado 2 (respondida) cuyo valor Glosado sea igual al aceptado pero con la columna tratado =1
+        $sql="INSERT INTO salud_archivo_control_glosas_respuestas (num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser,Tratado) "
+                . "SELECT "
+                . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'2',FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser,'1' "
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
         
         $this->Query($sql);
         
-        $sql="SELECT idGlosa,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 ";
+        //Copio las respuestas en estado 7 (Aceptada) cuyo valor Glosado sea igual al aceptado pero con la columna tratado =1
+      
+        $sql="INSERT INTO salud_archivo_control_glosas_respuestas (num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser) "
+                . "SELECT "
+                . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
+                . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'7',FechaIPS,FechaAuditoria,valor_actividad,"
+                . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
+        
+        $this->Query($sql);
+        
+        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
-            
+            $ValorGlosado=$DatosTemp["valor_glosado_eps"];
+            $Estado=2;
+            if($ValorAceptadoIPS==$ValorGlosado){
+                $Estado=7;
+            }
+            $NumFactura=$DatosTemp["num_factura"];
+            $CodigoActividad=$DatosTemp["CodigoActividad"];
             $idGlosa=$DatosTemp["idGlosa"];
-            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa=2,ValorAceptado='$ValorAceptadoIPS',ValorXConciliar=ValorGlosado-ValorAceptado WHERE ID='$idGlosa'";
+            //Actualizo los datos de las glosas iniciales
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar=ValorGlosado-ValorAceptado WHERE ID='$idGlosa'";
             $this->Query($sql);
+            //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=1";
+            $this->Query($sql);
+            //Actualizo el estado de las facturas
+            $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND Tratado=0";
+            $Datos=$this->Query($sql);
+            $Datos= $this->FetchArray($Datos);
+            $EstadoGlosaFactura=$Datos["MinEstado"];
             
+            $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", $EstadoGlosaFactura, "num_factura", $NumFactura);
+            $TipoArchivo=$DatosTemp["TipoArchivo"];
+            //Actualizo el estado de las actividades
+            if($TipoArchivo=="AC"){
+                
+                $this->update("salud_archivo_consultas", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_consulta='$CodigoActividad'");
+                
+            }
+            if($TipoArchivo=="AP"){
+               
+                $this->update("salud_archivo_procedimientos", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_procedimiento='$CodigoActividad'");
+                
+            }
+            if($TipoArchivo=="AT"){
+               
+                $this->update("salud_archivo_otros_servicios", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_servicio='$CodigoActividad'");
+                
+            }
+            if($TipoArchivo=="AM"){
+               
+                $this->update("salud_archivo_medicamentos", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_medicamento='$CodigoActividad'");
+                
+            }
         }
         
         $this->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
         
        }
-    
+       /**
+        * Actualiza el estado de las factura según el mas bajo de las actividades
+        * @param type $idFactura
+        * 
+        */
+       public function ActualiceEstadoFacturaGlosas($idFactura) {
+           
+       }
     
     //Fin Clases
 }

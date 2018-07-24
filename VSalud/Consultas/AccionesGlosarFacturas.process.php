@@ -122,18 +122,26 @@ if( !empty($_REQUEST["idAccion"]) ){
         break;
     
         case 6:// Guarda las repuestas a glosas a la tabla temporal 
-            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            $idGlosaTemp=$obGlosas->normalizar($_REQUEST["idGlosa"]);
             
-            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosaTemp);
             $CuentaRIPS=$DatosGlosa["CuentaRIPS"];
             $TipoArchivo=$DatosGlosa["TipoArchivo"];
             $CodActividad=$DatosGlosa["CodigoActividad"];            
             $idFactura=$DatosGlosa["num_factura"];
-            $sql="SELECT ID FROM salud_archivo_control_glosas_respuestas_temp WHERE idGlosa='$idGlosa' AND EstadoGlosa=2";
+            $idGlosa=$DatosGlosa["idGlosa"];
+            $CodGlosa=$DatosGlosa["id_cod_glosa"];
+            $sql="SELECT ID FROM salud_archivo_control_glosas_respuestas_temp WHERE idGlosa='$idGlosa'  AND EstadoGlosa=2";
             $consulta=$obGlosas->Query($sql);
             $DatosExistentes=$obGlosas->FetchArray($consulta);
             if($DatosExistentes["ID"]<>''){
-                exit("<h4 style='color:red'>Ya exite una respuesta agregada a esta Glosa</h4>");
+                exit("<h4 style='color:red'>Ya exite una respuesta agregada a esta Glosa $idGlosa en la tabla temporal</h4>");
+            }
+            $sql="SELECT ID FROM salud_archivo_control_glosas_respuestas WHERE idGlosa='$idGlosa' AND id_cod_glosa='$CodGlosa' AND EstadoGlosa=2";
+            $consulta=$obGlosas->Query($sql);
+            $DatosExistentes=$obGlosas->FetchArray($consulta);
+            if($DatosExistentes["ID"]<>''){
+                exit("<h4 style='color:red'>Ya exite una respuesta agregada a esta Glosa $idGlosa</h4>");
             }
             //$DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "num_factura='$idFactura'");
             
