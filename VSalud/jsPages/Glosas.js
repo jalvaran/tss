@@ -535,6 +535,11 @@ function getInfoFormGlosasRespuestas(){
         alertify.alert("Todos los campos son obligatorios");
         return 0;
     }
+    if ($('#ValorLevantado').length) { //Verifico que existe el campo de texto Valor Levantado
+        var ValorLevantado=$('#ValorLevantado').val();
+      } else {
+        var ValorLevantado=0;
+      }
     var form_data = new FormData();
     form_data.append('FechaAuditoria', $('#FechaAuditoria').val());
     form_data.append('FechaIPS', $('#FechaIPS').val());
@@ -546,6 +551,7 @@ function getInfoFormGlosasRespuestas(){
     form_data.append('ValorAceptado', $('#ValorAceptado').val());
     form_data.append('ValorConciliar', $('#ValorConciliar').val());
     form_data.append('TotalActividad', $('#TotalActividad').val());
+    form_data.append('ValorLevantado', $('#ValorLevantado').val());
     form_data.append('Soporte', $('#UpSoporteGlosa').prop('files')[0]);    
     return form_data;
 }
@@ -785,16 +791,16 @@ function VerDetallesActividad(CodActividad,idFactura){
       })
 }
 /**
- * Formulario de respuesta para las glosas
+ * Formulario de respuesta para las glosas(6) y contra glosas (9) 
  * @param {type} idGlosa
  * @returns {undefined}
  */
-function RespuestaGlosa(idGlosa){
+function RespuestaGlosa(idGlosa,idFormulario=6){
     
     var form_data = new FormData();       
         
         form_data.append('idGlosa', idGlosa);
-        form_data.append('idFormulario', 6); //Formulario donde se dibujan las actividades glosadas de esta factura
+        form_data.append('idFormulario', idFormulario); //Formulario donde se dibujan las actividades glosadas de esta factura
                 
         $.ajax({
         async:false,
@@ -816,6 +822,7 @@ function RespuestaGlosa(idGlosa){
                 }
             
                 document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+                
                 DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
             }
             
@@ -841,15 +848,57 @@ function ValidaValorXConciliar(){
     document.getElementById('ValorConciliar').value=document.getElementById('ValorEPS').value-document.getElementById('ValorAceptado').value;
     return 0;
 }
+
 /**
- * Agrega una Respuesta a Glosa Temporal
+ * Se valida que el valor aceptado por la ips no sea mayor al glosado
+ * @returns {Number}
+ */
+function ValidaValorLevantado(){
+    var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
+    var ValorAceptadoIPS = Math.round(document.getElementById('ValorAceptado').value);
+    var ValorLevantado = Math.round(document.getElementById('ValorLevantado').value);
+    var ValorXConciliar=ValorGlosado-ValorAceptadoIPS-ValorLevantado;
+    if(ValorXConciliar < 0){
+        alertify.alert("El valor levantado no puede ser mayor al valor x Conciliar");
+        return 1;
+    }
+    document.getElementById('ValorConciliar').value=ValorXConciliar;
+    return 0;
+}
+/**
+ * Agrega una Respuesta a Glosa Temporal (6) o Contra Glosas (10)
  * @param {type} idGlosa
  * @returns {undefined}
  */
-function AgregarRespuestaGlosaTemporal(idGlosa){
+function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
     var form_data = getInfoFormGlosasRespuestas();        
-        form_data.append('idAccion', 6); //Agregar respuesta a Glosa temporal
+        form_data.append('idAccion', idAccion); //6 respuesta a Glosa temporal, 10 Contra Glosar
         form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
+        var Valida=0;
+        var Mensaje="El valor aceptado no puede ser mayor al valor Glosado";
+        if(ValidarFecha('FechaIPS')==1){
+            //console.log(ValidarFecha('FechaIPS'));
+            alertify.alert("La fecha de IPS no puede ser mayor a la de hoy");
+            document.getElementById('FechaIPS').focus();
+            return;
+        }
+        if(ValidarFecha('FechaAuditoria')==1){
+            alertify.alert("La fecha de Auditoria no puede ser mayor a la de hoy");
+            document.getElementById('FechaAuditoria').focus();
+            return;
+        }
+        Valida=ValidaValorXConciliar();
+        if(idAccion==10){
+            form_data.append('ValorLevantado', document.getElementById('ValorLevantado').value); //id de la Glosa a agregar
+            Valida=ValidaValorLevantado();
+            Mensaje="El valor levantado no puede ser mayor al valor x Conciliar";
+        }
+        
+        if(Valida==1){
+            alertify.error(Mensaje);
+            return;
+        }
+        
         $.ajax({
         async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
@@ -876,7 +925,9 @@ function AgregarRespuestaGlosaTemporal(idGlosa){
 
 /**
  * Dibuja la tabla temporal de las respuesta a las glosas
+ * temporal (1) Respuestas a glosas, (2) ContraGlosas
  * @param {type} idGlosa
+ * @param {type} Temporal  Determina si es una respuesta a una contraglosa para saber como voy a guardar los datos en la tabla real de la temporal
  * @returns {undefined}
  */
 function DibujeRespuestaTemporal(idGlosa){
@@ -885,7 +936,7 @@ function DibujeRespuestaTemporal(idGlosa){
         
         form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
         form_data.append('idFormulario', 7);  //Formulario donde se dibuja la tabla temporal de las respuestas a las glosas
-                
+              
         $.ajax({
         async:false,
         url: './Consultas/GlosasFormularios.draw.php',
@@ -995,7 +1046,10 @@ function EditarRespuestaGlosaTemporal(idGlosa){
     var form_data = getInfoFormGlosasRespuestas();        
         form_data.append('idAccion', 8); //Agregar respuesta a Glosa temporal
         form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
-        
+        if(ValidaValorLevantado()==1){
+            return;
+            alertify.error("Valor Levantado superior al valor X conciliar");
+        }
         $.ajax({
         async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
@@ -1056,16 +1110,4 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
             alert(thrownError);
           }
       })
-}
-/**
- * Dibuja el formulario para realizar una contra glosa
- * @param {type} idGlosa
- * @returns {undefined}
- */
-function ContraGlosarActividad(TipoArchivo,idActividad,idFactura){
-    document.getElementById('BtnModalGlosar').click();
-    
-    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
-    DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales
-    
 }
