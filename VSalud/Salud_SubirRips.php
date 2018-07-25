@@ -58,7 +58,7 @@ print("<body>");
             $css->CierraFilaTabla(); 
             $css->FilaTabla(16);
                 print("<td>");
-                    $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
+                    $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 200, 1, "EPS", "");
                     $TxtFuncion="ValidaCuentaRIPS();";
                     print("<br><br>");
                     $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "onBlur", $TxtFuncion, 200, 30, 0, 1);

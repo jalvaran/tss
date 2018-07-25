@@ -417,7 +417,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
           
                         }
                         if($DatosActividad["EstadoGlosa"]==3){
-                            $css->CrearBotonEvento("BtnContraGlosa", "Respuesta Contra Glosa", 1, "onClick", "RespuestaGlosa('$idGlosa','9')", "verde", "");
+                            $css->CrearBotonEvento("BtnContraGlosa", "Respuesta Contra Glosa", 1, "onClick", "RespuestaGlosa('$idGlosa','10')", "verde", "");
+          
+                        }
+                        if($DatosActividad["EstadoGlosa"]==4){
+                            $css->CrearBotonEvento("BtnGlosaXConciliar", "Conciliar", 1, "onClick", "RespuestaGlosa('$idGlosa','11')", "naranja", "");
           
                         }
                         print("</td>");
@@ -502,7 +506,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $css->CerrarTabla();
         break;  
     
-        case 7: //REspuestas agregadas a la tabla temporal
+        case 7: //Respuestas agregadas a la tabla temporal
                         
             $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
             $Condicion="";
@@ -530,6 +534,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->ColTabla("<strong>Valor Aceptado</strong>", 1);
                     
                     $css->ColTabla("<strong>Valor X Conciliar</strong>", 1);
+                    $css->ColTabla("<strong>Estado</strong>", 1);
                     $css->ColTabla("<strong>Editar</strong>", 1);
                     $css->ColTabla("<strong>Eliminar</strong>", 1);
                 $css->CierraFilaTabla();
@@ -554,6 +559,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->ColTabla(number_format($DatosActividad["valor_levantado_eps"]), 1);
                     $css->ColTabla(number_format($DatosActividad["valor_aceptado_ips"]), 1);
                     $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]-$DatosActividad["valor_aceptado_ips"]-$DatosActividad["valor_levantado_eps"]), 1);
+                    $css->ColTabla(number_format($DatosActividad["EstadoGlosa"]), 1);
                     print("<td>");
                         $css->CrearBotonEvento("EditarGlosaTemp", "Editar", 1, "onClick", "DibujeFormularioEdicionRespuestas('$idGlosaTemp','8')", "verde", "");
                     print("</td>");
@@ -591,27 +597,39 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                 $css->CierraFilaTabla();
                 $css->FilaTabla(14);
-                    
-                    print("<td style='text-align:center'>");
+                    $ColSpan=1;
+                    if($Estado==5){
+                        $ColSpan=2;
+                    }
+                    print("<td style='text-align:center' colspan=$ColSpan>");
                             $ReadOnly=1;
                         if($Estado==3){
                             $ReadOnly=0;
                         }
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1);
+                        if($Estado==5){
+                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                            $TipoCajaFecha="hidden";
+                            $TituloCajaFecha="";
+                        }else{
+                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1);
+                            $TipoCajaFecha="date";
+                            $TituloCajaFecha="Fecha de Auditoría<br>";
+                        }
                         print("</td>");
-                        print("<td style='text-align:center'>");
-                        
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1);
-                       
-                    print("</td>");
-                
+                        if($Estado<>5){
+                            print("<td style='text-align:center'>");
+                        }
+                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1);
+                     if($Estado<>5){  
+                        print("</td>");
+                    }
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Codigo Glosa", "Código de la Respuesta:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Codigo Glosa", "Código:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
-                        print("<strong>Soporte de la Respuesta:</strong><br>");
+                        print("<strong>Soporte:</strong><br>");
                         $css->CrearUpload("UpSoporteGlosa");
                     print("</td>");
                     $css->CierraFilaTabla();
@@ -619,8 +637,17 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", $DatosGlosa["valor_glosado_eps"], "Valor EPS", "", "", "", 150, 30, 1, 1, 0, "", 1);
-                        if($Estado==3){
-                            $css->CrearInputNumber("ValorLevantado", "number", "<br>Valor Levantado X EPS:<br>", $DatosGlosa["valor_levantado_eps"], "Valor Levantado x EPS", "", "onChange", "ValidaValorLevantado()", 150, 30, 0, 1, 0, "", 1);
+                        $js="ValidaValorLevantado()";
+                        if($Estado==3 or $Estado==4 or $Estado==5){
+                            
+                            $ReadOnly=0;
+                            if($Estado==4){
+                                $ReadOnly=1;
+                            }
+                            if($Estado==5){
+                                $js="ValidaValoresConciliacion()";
+                            }
+                            $css->CrearInputNumber("ValorLevantado", "number", "<br>Valor Levantado X EPS:<br>", $DatosGlosa["valor_levantado_eps"], "Valor Levantado x EPS", "", "onChange", $js, 150, 30, $ReadOnly, 1, 0, "", 1);
                         }
                         print("</td>");
                         print("<td style='text-align:center'>");
@@ -628,7 +655,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         if($Estado==3){
                             $ReadOnly=1;
                         }
-                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["valor_aceptado_ips"], "Valor Aceptado EPS", "", "onChange", "ValidaValorXConciliar()", 150, 30, $ReadOnly, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["valor_aceptado_ips"], "Valor Aceptado EPS", "", "onChange", $js, 150, 30, $ReadOnly, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
                         print("</td>");
                         
                         print("<td style='text-align:center' colspan=2>");
@@ -725,7 +752,157 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                 
             $css->CerrarTabla();
+        break;
+    
+        case 10: //Formulario para responder a una contra glosa
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            
+            $TipoArchivo=$DatosGlosa["TipoArchivo"];
+            $CodActividad=$DatosGlosa["CodigoActividad"];            
+            $idFactura=$DatosGlosa["num_factura"];
+            //$DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "num_factura='$idFactura'");
+            
+            $TotalActividad=$DatosGlosa["valor_actividad"];            
+            $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
+            
+            $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            $css->CrearTabla();
+                $css->FilaTabla(14);
+                    $css->CrearInputText("idGlosa", "hidden", "", $idGlosa, "", "", "", "", 0, 0, 0, 0);
+                    $css->CrearInputText("TotalGlosado", "hidden", "", $TotalGlosado, "", "", "", "", 0, 0, 0, 0);
+                    $css->ColTabla("<h4 style='color:green'><strong>Responder a contra Glosa de la actividad $CodActividad $Descripcion.</strong></h4>", 5);
+                    //$css->ColTabla("Total Glosado: <strong>".number_format($TotalGlosado)."</strong><br>Valor X Conciliar: <strong>".number_format($TotalXGlosar)."</strong>",1);
+                    
+                $css->CierraFilaTabla();
+                $css->FilaTabla(14);
+                    
+                    print("<td style='text-align:center'>");
+                    
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 1, 1);
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 1, 1);
+                       
+                    print("</td>");
+                
+                    print("<td style='text-align:center' colspan=3>");
+                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Codigo Glosa", "Código de la Respuesta:");
+                        $css->CerrarDiv();                        
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Soporte de la Respuesta:</strong><br>");
+                        $css->CrearUpload("UpSoporteGlosa");
+                    print("</td>");
+                    $css->CierraFilaTabla();
+                    $css->FilaTabla(14);
+                    print("<td style='text-align:center'>");
+                        
+                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", $DatosGlosa["valor_glosado_eps"], "Valor EPS", "", "", "", 150, 30, 1, 1, 0, "", 1);
+                        $css->CrearInputNumber("ValorLevantado", "number", "<br>Valor Levantado X EPS:<br>", $DatosGlosa["valor_levantado_eps"], "Valor EPS", "", "", "", 150, 30, 1, 1, 0, "", 1);
+                       
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>",$DatosGlosa["valor_aceptado_ips"], "Valor Aceptado EPS", "", "onChange", "ValidaValorLevantado()", 150, 30, 0, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        print("</td>");
+                        
+                        print("<td style='text-align:center' colspan=2>");
+                        $css->CrearInputNumber("ValorConciliar", "number", "Valor X Conciliar<br>", $DatosGlosa["valor_glosado_eps"]-$DatosGlosa["valor_levantado_eps"]-$DatosGlosa["valor_aceptado_ips"], "Valor Conciliar", "", "", "", 150, 30, 1, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        
+                    print("</td>");
+                
+                    print("<td style='text-align:center'>");
+                        $css->CrearTextArea("Observaciones", "", "", "Observaciones", "", "", "", 200, 60, 0, 1);
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        
+                        print("<br>");
+                        $css->CrearBotonEvento("BtnResponderGlosa", "Responder esta Contra Glosa", 1, "onClick", "AgregarRespuestaGlosaTemporal('$idGlosa','11')", "verde", "");
+                        
+                    print("</td>");
+                $css->CierraFilaTabla();
+                
+                
+            $css->CerrarTabla();
         break;  
+        case 11: //Formulario para Conciliar
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            
+            $TipoArchivo=$DatosGlosa["TipoArchivo"];
+            $CodActividad=$DatosGlosa["CodigoActividad"];            
+            $idFactura=$DatosGlosa["num_factura"];
+            //$DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "num_factura='$idFactura'");
+            
+            $TotalActividad=$DatosGlosa["valor_actividad"];            
+            $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
+            
+            $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            $css->CrearTabla();
+                $css->FilaTabla(14);
+                    $css->CrearInputText("idGlosa", "hidden", "", $idGlosa, "", "", "", "", 0, 0, 0, 0);
+                    $css->CrearInputText("TotalGlosado", "hidden", "", $TotalGlosado, "", "", "", "", 0, 0, 0, 0);
+                    $css->ColTabla("<h4 style='color:orange'><strong>Conciliar Glosa de la actividad $CodActividad $Descripcion.</strong></h4>", 5);
+                    //$css->ColTabla("Total Glosado: <strong>".number_format($TotalGlosado)."</strong><br>Valor X Conciliar: <strong>".number_format($TotalXGlosar)."</strong>",1);
+                    
+                $css->CierraFilaTabla();
+                $css->FilaTabla(14);
+                    
+                    print("<td style='text-align:center' colspan=2>");
+                        //Para este caso la Fecha IPS será la fecha de conciliacion
+                        $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1);
+                        print("</td>");
+                        //print("<td style='text-align:center'>");
+                        
+                        $css->CrearInputText("FechaAuditoria", "hidden", "", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                       
+                    //print("</td>");
+                
+                    print("<td style='text-align:center' colspan=3>");
+                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Conciliación:");
+                        $css->CerrarDiv();                        
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Soporte de la Concilición:</strong><br>");
+                        $css->CrearUpload("UpSoporteGlosa");
+                    print("</td>");
+                    $css->CierraFilaTabla();
+                    $css->FilaTabla(14);
+                    print("<td style='text-align:center'>");
+                        $css->CrearInputNumber("ValorLevantado", "number", "Valor Levantado X EPS:<br>", $DatosGlosa["valor_levantado_eps"], "Valor Levantado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                       
+                        $css->CrearInputNumber("ValorEPS", "number", "<br>Valor Glosado X EPS:<br>", $DatosGlosa["valor_glosado_eps"], "Valor EPS", "", "", "", 150, 30, 1, 1, 0, "", 1);
+                        
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["valor_aceptado_ips"], "Valor Aceptado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        
+                        print("</td>");
+                        
+                        print("<td style='text-align:center' colspan=2>");
+                        $css->CrearInputNumber("ValorConciliar", "number", "Valor X Conciliar<br>", $DatosGlosa["valor_glosado_eps"]-$DatosGlosa["valor_aceptado_ips"]-$DatosGlosa["valor_levantado_eps"], "Valor Conciliar", "", "", "", 150, 30, 1, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        
+                    print("</td>");
+                
+                    print("<td style='text-align:center'>");
+                        $css->CrearTextArea("Observaciones", "", "", "Observaciones", "", "", "", 200, 60, 0, 1);
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        
+                        print("<br>");
+                        $css->CrearBotonEvento("BtnConciliarGlosa", "Contra Glosar", 1, "onClick", "AgregarRespuestaGlosaTemporal('$idGlosa','12')", "naranja", "");
+                        
+                    print("</td>");
+                $css->CierraFilaTabla();
+                
+                
+            $css->CerrarTabla();
+        break;
     }
           
 }else{

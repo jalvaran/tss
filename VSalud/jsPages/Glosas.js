@@ -854,15 +854,51 @@ function ValidaValorXConciliar(){
  * @returns {Number}
  */
 function ValidaValorLevantado(){
+    var ValorLevantado=0;
+    if ( $("#ValorLevantado").length > 0 ) { //Se verifica si se está dibujando el valor levantado
+        ValorLevantado = Math.round(document.getElementById('ValorLevantado').value);
+    }
     var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
     var ValorAceptadoIPS = Math.round(document.getElementById('ValorAceptado').value);
-    var ValorLevantado = Math.round(document.getElementById('ValorLevantado').value);
+    
     var ValorXConciliar=ValorGlosado-ValorAceptadoIPS-ValorLevantado;
     if(ValorXConciliar < 0){
         alertify.alert("El valor levantado no puede ser mayor al valor x Conciliar");
         return 1;
     }
     document.getElementById('ValorConciliar').value=ValorXConciliar;
+    return 0;
+}
+/**
+ * Valida valores de conciliacion
+ * @returns {Number}
+ */
+function ValidaValoresConciliacion(){
+    var ValorLevantado = Math.round(document.getElementById('ValorLevantado').value);
+    var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
+    var ValorAceptadoIPS = Math.round(document.getElementById('ValorAceptado').value);
+    
+    var ValorXConciliar=ValorGlosado-ValorAceptadoIPS-ValorLevantado;
+    document.getElementById('ValorConciliar').value=ValorXConciliar;
+    if(ValorLevantado > ValorGlosado){
+        alertify.alert("El valor levantado no puede ser mayor al Valor Glosado");
+        //document.getElementById('ValorConciliar').value='';
+        return 1;
+    }
+    
+    if(ValorAceptadoIPS > ValorGlosado){
+        alertify.alert("El valor Aceptado no puede ser mayor al Valor Glosado");
+        //document.getElementById('ValorConciliar').value='';
+        return 1;
+    }
+    
+    if(ValorXConciliar != 0){
+        alertify.alert("El valor X Conciliar no puede ser diferente a Cero");
+        //document.getElementById('ValorConciliar').value='';
+        return 1;
+    }
+    
+    
     return 0;
 }
 /**
@@ -886,6 +922,12 @@ function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
             alertify.alert("La fecha de Auditoria no puede ser mayor a la de hoy");
             document.getElementById('FechaAuditoria').focus();
             return;
+        }
+        if(idAccion==12){// viene de las conciliaciones (Si el Valor X Conciliar no es Cero no debe continuar)
+            if(document.getElementById('ValorConciliar').value !=0){
+                alertify.alert("El Valor X Conciliar no puede ser diferente a cero, por favor ajuste el valores levantado  por la EPS y el Valor Aceptado por la IPS ");
+                return;
+            }
         }
         Valida=ValidaValorXConciliar();
         if(idAccion==10){
