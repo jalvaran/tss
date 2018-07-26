@@ -20,7 +20,8 @@ if( !empty($_REQUEST["idFactura"]) ){
     
     $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
     //$css->CrearNotificacionAzul("Factura No. $idFactura", 14);
-    
+    $css->CrearInputText("TxtFacturaActiva", "hidden", "", $idFactura, "", "", "", "", 150, 30, 0, 0);
+    $css->CrearInputText("TxtActividadActiva", "hidden", "", "", "", "", "", "", 150, 30, 0, 0);
     $css->CrearTabla();
             $css->FilaTabla(16);
                 $css->ColTabla("<strong>Actividades</strong>", 6);
@@ -38,7 +39,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla("Valor Levantado", 1);
                 $css->ColTabla("Valor Aceptado", 1);
                 $css->ColTabla("Valor X Conciliar", 1);
-                $css->ColTabla("Valor Conciliado", 1);
+                $css->ColTabla("Valor A Pagar", 1);
                 $css->ColTabla("Estado", 1);
                 $css->ColTabla("Glosar", 1);
                 $css->ColTabla("Responder", 1);
@@ -77,7 +78,9 @@ if( !empty($_REQUEST["idFactura"]) ){
             
             while($DatosFactura=$obGlosas->FetchArray($Consulta)){
                 $CodActividad=$DatosFactura["Codigo"];
-                $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,SUM(ValorGlosado) AS ValorGlosado FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
+                $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,ValorActividad,ValorGlosado,ValorLevantado,ValorAceptado,ValorXConciliar,"
+                        . "(SELECT ValorActividad-ValorAceptado) AS ValorAPagarXEPS "
+                        . "FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
                 $Datos=$obGlosas->Query($sqlGlosas);
                 $DatosValoresGlosas=$obGlosas->FetchArray($Datos);
                 $css->FilaTabla(12);
@@ -92,23 +95,31 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->ColTabla(number_format($DatosFactura["Total"]), 1);
                     $css->ColTabla(number_format($DatosValoresGlosas["NumGlosas"]), 1);
                     $css->ColTabla(number_format($DatosValoresGlosas["ValorGlosado"]), 1);
-                    $css->ColTabla($DatosFactura["Archivo"], 1);
-                    $css->ColTabla($DatosFactura["Archivo"], 1);
-                    $css->ColTabla($DatosFactura["Archivo"], 1);
-                    $css->ColTabla($DatosFactura["Archivo"], 1);
+                    $css->ColTabla(number_format($DatosValoresGlosas["ValorLevantado"]), 1);
+                    $css->ColTabla(number_format($DatosValoresGlosas["ValorAceptado"]), 1);
+                    $css->ColTabla(number_format($DatosValoresGlosas["ValorXConciliar"]), 1);
+                    if($DatosValoresGlosas["ValorXConciliar"]==0){
+                        $ValorAPagarXEPS=number_format($DatosValoresGlosas["ValorAPagarXEPS"]);
+                    }else{
+                        $ValorAPagarXEPS="En trámite";
+                    }
+                    $css->ColTabla($ValorAPagarXEPS, 1);
                     $css->ColTabla($DatosFactura["Estado"], 1);
                     print("<td>");
                         $Enable=1;
                         if($DatosFactura["EstadoGlosa"]==9 or $DatosFactura["EstadoGlosa"]==5 or $DatosFactura["EstadoGlosa"]==11){
                             $Enable=0;
                         }
-                        $css->CrearBotonEvento("BtnGlosarActividad", "Glosar", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura')", "naranja", "");
+                        $css->CrearBotonEvento("BtnGlosarActividad", "Glosar", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
                     
                         print("</td>");
                     print("<td>");
                         $Enable=0;
                         if($DatosValoresGlosas["NumGlosas"]>0){
                             $Enable=1;
+                        }
+                        if($DatosFactura["EstadoGlosa"]>=5){
+                            $Enable=0;
                         }
                         $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura')", "verde", "");
                     print("</td>");

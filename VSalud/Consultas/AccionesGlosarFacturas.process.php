@@ -219,6 +219,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             print("<h4 style='color:orange'>Respuesta a Glosas Editada en la tabla temporal</h4>");
         break;
         case 9:// Guarda las respuesta de las glosas de la tabla temporal a la real
+            $obGlosas->GuardaConciliacionesTemporalAReal($idUser, "");
             $obGlosas->GuardaRespuestaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaRespuestasGlosasTemporalAReal($idUser, "");

@@ -100,6 +100,7 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @returns {undefined}
  */
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
+    document.location.href = "#AnclaFacturas";
     document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
     var form_data = new FormData();
         form_data.append('CuentaRIPS', CuentaRIPS);
@@ -201,9 +202,12 @@ function FiltreFacturasXEstadoGlosa(){
  * @returns {undefined}
  */
 function MostrarActividades(idFactura){
-    //document.getElementById('BtnModalFacturas').click();
+    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+    document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     BuscarUsuarioFactura(idFactura);
     BuscarActividadesFactura(idFactura);
+    document.location.href = "#AnclaDetalleFacturas";
 }
 /**
  * Busca el Usuario o Paciente al que se le realizó una factura, y los valores de la factura
@@ -463,7 +467,12 @@ function getInfoFormDevoluciones(){
  * @param {type} idActividad -> id de la actividad que se va a glosar
  * @returns {undefined}
  */
-function GlosarActividad(TipoArchivo,idActividad,idFactura){
+function GlosarActividad(TipoArchivo,idActividad,idFactura,CodActividad){
+    document.getElementById('TxtActividadActiva').value=CodActividad;
+    document.getElementById('TxtFacturaActiva').value=idFactura;
+    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+    document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
     
     DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
@@ -722,7 +731,8 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
  * @returns {undefined}
  */
 function GuadarGlosasTemporales(idFactura){
-            
+       
+        
         var form_data = new FormData();        
         form_data.append('idAccion', 5); //Devolver una factura
         document.getElementById("DivGlosar").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
@@ -741,7 +751,9 @@ function GuadarGlosasTemporales(idFactura){
             alertify.alert(data);
             document.getElementById('DivGlosar').innerHTML=data;
             document.getElementById('DivHistorialGlosas').innerHTML='';
+            
             MostrarActividades(idFactura);
+            RefrescarDiv();
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alertify.error("Error al tratar de editar la glosa ",0);
@@ -756,7 +768,11 @@ function GuadarGlosasTemporales(idFactura){
  * @returns {undefined}
  */
 function VerDetallesActividad(CodActividad,idFactura){
-            
+        document.location.href = "#AnclaDetalleActividades";
+        document.getElementById("DivGlosar").innerHTML="";
+        document.getElementById('TxtActividadActiva').value=CodActividad;
+        document.getElementById('TxtFacturaActiva').value=idFactura;
+        
         var form_data = new FormData();       
         
         form_data.append('CodActividad', CodActividad);
@@ -796,7 +812,7 @@ function VerDetallesActividad(CodActividad,idFactura){
  * @returns {undefined}
  */
 function RespuestaGlosa(idGlosa,idFormulario=6){
-    
+    document.location.href = '#AnclaFormularioRespuestas';
     var form_data = new FormData();       
         
         form_data.append('idGlosa', idGlosa);
@@ -1138,9 +1154,7 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
           if (data != "") { 
                 document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
                 document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
-                var idFactura=document.getElementById("TxtNumFactura").value;
-                var CodActividad=document.getElementById("TxtCodActividad").value;
-                VerDetallesActividad(CodActividad,idFactura);
+                RefrescarDiv();
                 alertify.success(data);
                 
           }else{
@@ -1152,4 +1166,14 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
             alert(thrownError);
           }
       })
+}
+
+
+function RefrescarDiv(){
+    
+    var CodActividad = document.getElementById("TxtActividadActiva").value;
+    var Factura = document.getElementById("TxtFacturaActiva").value;
+    //alert("Refrescando"+CodActividad+Factura);
+    VerDetallesActividad(CodActividad,Factura);
+    MostrarActividades(Factura);
 }

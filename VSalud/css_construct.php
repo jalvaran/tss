@@ -694,7 +694,7 @@ class CssIni{
         /////////////////////Crear una fila para una tabla
 	function CrearNotificacionRoja($Mensaje,$FontSize){
 		print('<div class="alert alert-danger fade in" align="center" style="font-size:'.$FontSize.'px">'
-                        . '<a href="#" class="close" data-dismiss="alert" aria-label="close">x</a>'
+                        . ''
                         . '<strong>'.$Mensaje.'</strong></div>');
 		
 	}

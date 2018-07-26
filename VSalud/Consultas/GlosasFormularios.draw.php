@@ -445,6 +445,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
             
             $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            
             $css->CrearTabla();
                 $css->FilaTabla(14);
                     $css->CrearInputText("idGlosa", "hidden", "", $idGlosa, "", "", "", "", 0, 0, 0, 0);
