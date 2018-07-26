@@ -1242,18 +1242,6 @@ CREATE TABLE `salud_estado_glosas` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
-INSERT INTO `salud_estado_glosas` (`ID`, `Estado_glosa`, `idUser`, `Updated`, `Sync`) VALUES
-(1,	'Glosada',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(2,	'Glosa Respondida',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(3,	'Glosa Contra Glosada',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(4,	'Glosa Contra glosada respondida',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(5,	'Glosa Conciliada',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(6,	'Glosa X Conciliar',	5,	'2018-07-20 00:12:11',	'0000-00-00 00:00:00'),
-(7,	'Glosa Aceptada',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(8,	'Radicada Cxc',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(9,	'Devolucion',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(10,	'Devolucion Corregida',	5,	'2018-07-17 23:08:42',	'0000-00-00 00:00:00'),
-(11,	'Pagada',	1,	'2018-07-18 14:22:53',	'0000-00-00 00:00:00');
 
 DROP TABLE IF EXISTS `salud_facturas_radicacion_numero`;
 CREATE TABLE `salud_facturas_radicacion_numero` (
@@ -1346,6 +1334,19 @@ CREATE TABLE `salud_pagos_temporal` (
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+DROP TABLE IF EXISTS `salud_parametros_generales`;
+CREATE TABLE `salud_parametros_generales` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(45) NOT NULL,
+  `Descripcion` text NOT NULL,
+  `Valor` varchar(45) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
 DROP TABLE IF EXISTS `salud_procesos_gerenciales`;
@@ -1624,4 +1625,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-07-24 10:01:53
+-- 2018-07-26 16:42:34
