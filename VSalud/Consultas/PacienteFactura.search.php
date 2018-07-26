@@ -88,7 +88,7 @@ if( !empty($_REQUEST["idFactura"]) ){
         $css->CerrarTabla();
         
         $sql="SELECT fecha_factura,cod_enti_administradora,nom_enti_administradora,num_contrato,"
-                . "  valor_neto_pagar,valor_total_pago,numero_radicado,CuentaRIPS,CuentaGlobal,EstadoGlosa "
+                . "  valor_neto_pagar,valor_total_pago,fecha_radicado,numero_radicado,CuentaRIPS,CuentaGlobal,EstadoGlosa "
                 . "FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$idFactura'";
         $Consulta=$obGlosas->Query($sql);
         $DatosFactura=$obGlosas->FetchArray($Consulta);
@@ -99,6 +99,7 @@ if( !empty($_REQUEST["idFactura"]) ){
             $css->FilaTabla(12);
                 $css->ColTabla("EPS", 1);
                 $css->ColTabla("No. del Contrato", 1);
+                $css->ColTabla("Fecha del Radicado", 1);
                 $css->ColTabla("No. del Radicado", 1);
                 $css->ColTabla("Cuenta RIPS", 1);
                 $css->ColTabla("Cuenta Global", 1);
@@ -112,6 +113,7 @@ if( !empty($_REQUEST["idFactura"]) ){
             $css->FilaTabla(12);
                 $css->ColTabla($DatosFactura["cod_enti_administradora"]." ".$DatosFactura["nom_enti_administradora"], 1);
                 $css->ColTabla($DatosFactura["num_contrato"], 1);
+                $css->ColTabla($DatosFactura["fecha_radicado"], 1);
                 $css->ColTabla($DatosFactura["numero_radicado"], 1);
                 $css->ColTabla($DatosFactura["CuentaRIPS"], 1);
                 $css->ColTabla($DatosFactura["CuentaGlobal"], 1);
@@ -124,13 +126,19 @@ if( !empty($_REQUEST["idFactura"]) ){
                     if($DatosFactura["EstadoGlosa"]==9){
                         $Enable=0;
                     }
+                    $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFactura["fecha_radicado"], date("Y-m-d"), "");
+                    $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1); //Verifico cuantos dias hay parametrizados para poder registrar glosas o devolver una factura
+                    if($DiasRadicado["Dias"]>$Parametros["Valor"]){
+                        $Enable=0;
+                        print("<strong>Ya no es posible devolver esta Factura por tiempo<br><strong>");
+                    }
                     $css->CrearBotonEvento("BtnDevolverFactura", "Devolver", $Enable, "onClick", "DibujeFormulario(1,`$idFactura`)", "rojo", "");
                 print("</td>");
                 $css->CrearDiv("Div", "", "", 1, 1);
                 $css->CerrarDiv();
             $css->CierraFilaTabla();
         $css->CerrarTabla();
-          
+        
 }else{
     print("No se enviaron parametros");
 }

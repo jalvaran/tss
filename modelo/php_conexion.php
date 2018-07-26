@@ -321,5 +321,20 @@ class conexion extends db_conexion{
          //$Tablas=$this->FetchArray($Datos);
          return ($Datos);
      }
+     /**
+      * Funcion para calcular la diferencia entre dos fechas
+      * @param type $FechaInicial
+      * @param type $FechaFinal
+      * @param type $Vector
+      * @return type
+      */
+     public function CalculeDiferenciaFechas($FechaInicial,$FechaFinal,$Vector) {
+        $datetime1 = date_create($FechaInicial);
+        $datetime2 = date_create($FechaFinal);
+        $interval = date_diff($datetime1, $datetime2);
+        $Resultados["Dias"]=$interval->format('%a');
+        
+        return($Resultados);
+    }
 }
 ?>

@@ -110,6 +110,13 @@ if( !empty($_REQUEST["idFactura"]) ){
                         if($DatosFactura["EstadoGlosa"]==9 or $DatosFactura["EstadoGlosa"]==5 or $DatosFactura["EstadoGlosa"]==11){
                             $Enable=0;
                         }
+                        $DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");
+                        $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFechaFactura["fecha_radicado"], date("Y-m-d"), "");
+                        $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1); //Verifico cuantos dias hay parametrizados para poder registrar glosas o devolver una factura
+                        if($DiasRadicado["Dias"]>$Parametros["Valor"]){
+                            $Enable=0;
+                            print("<strong>Glosa fuera de tiempo<br><strong>");
+                        }
                         $css->CrearBotonEvento("BtnGlosarActividad", "Glosar", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
                     
                         print("</td>");

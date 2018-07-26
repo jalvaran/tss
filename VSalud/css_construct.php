@@ -11,6 +11,89 @@ class CssIni{
 	
 	function __construct($Titulo,$Headers=1){
             if($Headers==1){
+                ?> <style> #ventana-flotante {
+                        width: 360px;  /* Ancho de la ventana */
+                        height: 90px;  /* Alto de la ventana */
+                        background:#58B0E7;
+                        background:-moz-linear-gradient(top,#B4F6FF 1px,#63D0FE 1px,#58B0E7);
+                        background:-webkit-gradient(linear,0 0,0 100%,color-stop(0.02,#B4F6FF),color-stop(0.02,#63D0FE),color-stop(1,#58B0E7));  /* Color de fondo */
+                        position: fixed;
+                        top: 200px;
+                        left: 50%;
+                        margin-left: -180px;
+                        color:#FFFFFF;
+                        box-shadow:0px 1px #EDEDED;
+                        -moz-box-shadow:0px 1px #EDEDED;
+                        -webkit-box-shadow:0px 1px #EDEDED;
+                        text-shadow:0px 1px #388DBE;
+                        border-color:#3390CA;
+                        border-radius: 4px;
+                        }
+                        #ventana-flotante #contenedor {
+                        padding: 25px 10px 10px 10px;
+                        }
+                        #ventana-flotante .cerrar {
+                        float: right;
+                        border-bottom: 1px solid #bbb;
+                        border-left: 1px solid #bbb;
+                        color: white;
+                        background: red;
+                        line-height: 17px;
+                        text-decoration: none;
+                        padding: 0px 14px;
+                        font-family: Arial;
+                        border-radius: 0 0 0 5px;
+                        box-shadow: -1px 1px white;
+                        font-size: 18px;
+                        -webkit-transition: .3s;
+                        -moz-transition: .3s;
+                        -o-transition: .3s;
+                        -ms-transition: .3s;
+                        }
+                        #ventana-flotante .cerrar:hover {
+                        background: #ff6868;
+                        color: white;
+                        text-decoration: none;
+                        text-shadow: -1px -1px red;
+                        border-bottom: 1px solid red;
+                        border-left: 1px solid red;
+                        }
+                        #ventana-flotante #contenedor .contenido {
+                        padding: 15px;
+                        color:#FFFFFF;
+                                box-shadow:0px 1px #EDEDED;
+                                -moz-box-shadow:0px 1px #EDEDED;
+                                -webkit-box-shadow:0px 1px #EDEDED;
+                                text-shadow:0px 1px #3C3C3C;
+                                border-color:#202020;
+                                background:#525252;
+                                background:-moz-linear-gradient(top,#9F9F9F 1px,#6C6C6C 1px,#525252);
+                                background:-webkit-gradient(linear,0 0,0 100%,color-stop(0.02,#9F9F9F),color-stop(0.02,#6C6C6C),color-stop(1,#525252));        
+                        margin: 0 auto;
+                        border-radius: 4px;
+                        }
+                        .oculto {-webkit-transition:1s;-moz-transition:1s;-o-transition:1s;-ms-transition:1s;opacity:0;-ms-opacity:0;-moz-opacity:0;visibility:hidden;}
+
+                .notification-container {
+                    display:scroll; position:fixed; top:70px; right:10px;
+                    width: 50px;
+                    height: 50px;    
+                    cursor:pointer;
+                }
+
+                .notification-counter {   
+                    position: absolute;
+                    top: -2px;
+                    left: 25px;
+
+                    background-color: rgba(212, 19, 13, 1);
+                    color: #fff;
+                    border-radius: 18px;
+                    padding: 1px 3px;
+                    font: 14px Verdana;
+                }
+                </style> 
+                <?php
 		print("
 		<meta http-equiv=Content-Type content=text/html charset='UTF-8' />
 		<title>$Titulo</title>
