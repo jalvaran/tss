@@ -434,7 +434,47 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->EditaGlosaInicial($idGlosaInicial, $idFactura, $CodActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             $obGlosas->EditaTablaControlRespuestasGlosas($idGlosaRespuesta, $DatosGlosaRespuesta["TipoArchivo"], $idGlosaInicial, $idFactura, $CodActividad, $DatosGlosaRespuesta["DescripcionActividad"], $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, 0, 0, $ValorEPS, $destino, $idUser, "");
             print("Glosa inicial editada en la tabla temporal");
-        break;    
+        break; 
+        
+        case 15:// Edita las repuestas a glosas  
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            $CuentaRIPS=$DatosGlosa["CuentaRIPS"];
+            $TipoArchivo=$DatosGlosa["TipoArchivo"];
+            $CodActividad=$DatosGlosa["CodigoActividad"];            
+            $idFactura=$DatosGlosa["num_factura"];
+            
+            $TotalActividad=$DatosGlosa["valor_actividad"];            
+            $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
+                        
+            $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+            $ValorLevantado=$obGlosas->normalizar($_REQUEST["ValorLevantado"]);     
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','_',"Respuesta_".$FechaIPS."_".$CuentaRIPS."_$idFactura"."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            $obGlosas->EditaTablaControlRespuestasGlosas($idGlosa, $TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $DatosGlosa["EstadoGlosa"], $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
+            $idGlosaInicial=$DatosGlosa["idGlosa"];
+            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
+            $obGlosas->Query($sql);
+            print("<h4 style='color:orange'>Edicion Realizada</h4>");
+        break;
     }
           
 }else{

@@ -1319,3 +1319,87 @@ function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
           }
       })
 }
+
+/**
+ * Muestra el formulario para la edicion de una respuesta a una glosa
+ * @param {type} idGlosa
+ * @param {type} CodActividad
+ * @param {type} Descripcion
+ * @returns {undefined}
+ */
+function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
+    
+    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+    document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
+    document.getElementById('BtnModalGlosar').click();
+    
+    var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
+        form_data.append('idFormulario', idFormulario);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivGlosar").innerHTML=data;
+                for (var selector in config) {
+                    $(selector).chosen(config[selector]);
+                }
+            
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al dibujar el formulario",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+    
+        
+    
+}
+
+function EditarRespuestaGlosa(idGlosa){
+    var form_data = getInfoFormGlosasRespuestas();        
+        form_data.append('idAccion', 15); //Agregar respuesta a Glosa temporal
+        form_data.append('idGlosa', idGlosa); //id de la Glosa a editar
+         
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            alertify.success(data);
+            
+            document.getElementById('DivGlosar').innerHTML=data;
+            //MostrarActividades(idFactura);
+            RefrescarDiv();
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
