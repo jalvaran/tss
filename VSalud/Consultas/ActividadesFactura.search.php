@@ -128,7 +128,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                         if($DatosFactura["EstadoGlosa"]>=5){
                             $Enable=0;
                         }
-                        $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura')", "verde", "");
+                        $css->CrearBotonEvento("BtnResponderActividad", "Detalles ", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura')", "verde", "");
                        
                         print("<br><br>");
                         $css->CrearBotonEvento("BtnConciliarActividad", "Conciliar", $Enable, "onClick", "DibujeFormularioConciliarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "azul", "");

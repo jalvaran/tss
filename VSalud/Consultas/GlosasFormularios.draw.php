@@ -29,9 +29,10 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaDevolucion", "date", "Fecha de Devolución<br>", date("Y-m-d"), "Fecha de Devolucion", "", "", "", 150, 30, 0, 1);
-                        print("</br>");
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaDevolucion", "date", "Fecha de Devolución<br>", date("Y-m-d"), "Fecha de Devolucion", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 $css->CierraFilaTabla();
@@ -43,8 +44,8 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         $css->CerrarDiv();
                         
                     print("</td>");
-                $css->CierraFilaTabla();
-                $css->FilaTabla(16);
+                //$css->CierraFilaTabla();
+                //$css->FilaTabla(16);
                    
                     print("<td style='text-align:center'>");
                         $css->CrearTextArea("Observaciones", "", "", "Observaciones", "", "", "", 400, 60, 0, 1);
@@ -52,7 +53,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $css->CierraFilaTabla();
                 
                 $css->FilaTabla(16);
-                    print("<td style='text-align:center'>");
+                    print("<td colspan=2 style='text-align:center' >");
                         print("<strong>Soporte de devolución:</strong><br>");
                         $css->CrearUpload("UpSoporteDevolucion");
                         print("<br>");
@@ -136,11 +137,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -311,11 +312,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosaTemp["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosaTemp["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosaTemp["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosaTemp["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -480,11 +481,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 1, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 1, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 1, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 1, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -630,11 +631,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                             $ReadOnly=0;
                         }
                         if($Estado==5){
-                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="hidden";
                             $TituloCajaFecha="";
                         }else{
-                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="date";
                             $TituloCajaFecha="Fecha de Auditoría<br>";
                         }
@@ -642,7 +643,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         if($Estado<>5){
                             print("<td style='text-align:center'>");
                         }
-                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1);
+                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                      if($Estado<>5){  
                         print("</td>");
                     }
@@ -727,11 +728,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -803,11 +804,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 1, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", date("Y-m-d"), "Fecha IPS", "", "", "", 150, 30, 1, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 1, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 1, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -877,11 +878,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center' colspan=2>");
                         //Para este caso la Fecha IPS será la fecha de conciliacion
-                        $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         //print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "hidden", "", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "hidden", "", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     //print("</td>");
                 
@@ -958,11 +959,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center'>");
                     
-                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     print("</td>");
                 
@@ -1038,11 +1039,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                             $ReadOnly=0;
                         }
                         if($Estado==5){
-                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="hidden";
                             $TituloCajaFecha="";
                         }else{
-                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="date";
                             $TituloCajaFecha="Fecha de Auditoría<br>";
                         }
@@ -1050,7 +1051,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         if($Estado<>5){
                             print("<td style='text-align:center'>");
                         }
-                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1);
+                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                      if($Estado<>5){  
                         print("</td>");
                     }
@@ -1141,11 +1142,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                             $ReadOnly=0;
                         }
                         if($Estado==5){
-                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="hidden";
                             $TituloCajaFecha="";
                         }else{
-                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1);
+                            $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                             $TipoCajaFecha="date";
                             $TituloCajaFecha="Fecha de Auditoría<br>";
                         }
@@ -1153,7 +1154,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         if($Estado<>5){
                             print("<td style='text-align:center'>");
                         }
-                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1);
+                        $css->CrearInputText("FechaAuditoria", $TipoCajaFecha, $TituloCajaFecha, $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, $ReadOnly, 1,'',date("Y-m-d"));
                      if($Estado<>5){  
                         print("</td>");
                     }
@@ -1283,11 +1284,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     
                     print("<td style='text-align:center' colspan=2>");
                         //Para este caso la Fecha IPS será la fecha de conciliacion
-                        $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaIPS", "date", "Fecha Conciliación<br>", date("Y-m-d"), "Fecha IPS", "", "onChange", "ValidarFecha(`FechaIPS`)", 150, 30, 0, 1,'',date("Y-m-d"));
                         print("</td>");
                         //print("<td style='text-align:center'>");
                         
-                        $css->CrearInputText("FechaAuditoria", "hidden", "", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                        $css->CrearInputText("FechaAuditoria", "hidden", "", date("Y-m-d"), "Fecha de Auditoria", "", "", "", 150, 30, 0, 1,'',date("Y-m-d"));
                        
                     //print("</td>");
                 

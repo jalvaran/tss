@@ -296,7 +296,7 @@ class CssIni{
 	
 	/////////////////////Crea un Cuadro de texto input
 	
-	function CrearInputText($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$ToolTip='Rellena este Campo'){
+	function CrearInputText($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$ToolTip='Rellena este Campo',$Max="",$Min=""){
 		
             if($nombre=="TxtDevuelta"){
                     $TFont="2em";
@@ -314,8 +314,12 @@ class CssIni{
 		else
 			$Required="";
 		$JavaScript=$TxtEvento.' = '.$TxtFuncion;
+                $OtrasOpciones="";
+                if($Max<>''){
+                    $OtrasOpciones="max=$Max min=$Min";
+                }
                 
-                print('<strong style="color:'.$color.'">'.$label.'<input name="'.$nombre.'" value="'.$value.'" type="'.$type.'" id="'.$nombre.'" placeholder="'.$placeh.'" '.$JavaScript.' 
+                print('<strong style="color:'.$color.'">'.$label.'<input name="'.$nombre.'" value="'.$value.'" type="'.$type.'" id="'.$nombre.'" '.$OtrasOpciones.' placeholder="'.$placeh.'" '.$JavaScript.' 
                 '.$ReadOnly.' '.$Required.' autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px; font-size: '.$TFont.' ;data-toggle="tooltip" title="'.$ToolTip.'" "></strong>');
                 
 	}

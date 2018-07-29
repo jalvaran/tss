@@ -134,6 +134,11 @@ print("<body>");
    
     print('<script type="text/javascript" src="jsPages/Glosas.js"></script>');
     $css->AgregaSubir();
+    print('<a style="display:scroll; position:fixed; bottom:345px; right:10px;height:70px;width:60px" href="#" title="Cuentas"><img src="../images/salud_cuentas.png" /></a>');
+    print('<a style="display:scroll; position:fixed; bottom:270px; right:10px;height:70px;width:60px" href="#AnclaFacturas" title="Facturas"><img src="../images/salud_facturas.png" /></a>');
+    print('<a style="display:scroll; position:fixed; bottom:190px; right:10px;height:70px;width:60px" href="#AnclaDetalleFacturas" title="Facturas"><img src="../images/salud_archivos.png" /></a>');
+    print('<a style="display:scroll; position:fixed; bottom:120px; right:10px;height:70px;width:60px" href="#AnclaDetalleActividades" title="Facturas"><img src="../images/salud_detalles.png" /></a>');
+   		
     $css->Footer();
     
     print("</body></html>");
