@@ -78,9 +78,9 @@ if( !empty($_REQUEST["idFactura"]) ){
             
             while($DatosFactura=$obGlosas->FetchArray($Consulta)){
                 $CodActividad=$DatosFactura["Codigo"];
-                $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,ValorActividad,ValorGlosado,ValorLevantado,ValorAceptado,ValorXConciliar,"
+                $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,ValorActividad,SUM(ValorGlosado) AS ValorGlosado,SUM(ValorLevantado) as ValorLevantado,SUM(ValorAceptado) as ValorAceptado ,SUM(ValorXConciliar) as ValorXConciliar,"
                         . "(SELECT ValorActividad-ValorAceptado) AS ValorAPagarXEPS "
-                        . "FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad' AND EstadoGlosa<>12";
+                        . "FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad' AND EstadoGlosa<>12 AND EstadoGlosa<>13";
                 $Datos=$obGlosas->Query($sqlGlosas);
                 $DatosValoresGlosas=$obGlosas->FetchArray($Datos);
                 $css->FilaTabla(12);
@@ -107,7 +107,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->ColTabla($DatosFactura["Estado"], 1);
                     print("<td>");
                         $Enable=1;
-                        if($DatosFactura["EstadoGlosa"]==9 or $DatosFactura["EstadoGlosa"]==5 or $DatosFactura["EstadoGlosa"]==11){
+                        if($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<>8){
                             $Enable=0;
                         }
                         $DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");
@@ -129,6 +129,10 @@ if( !empty($_REQUEST["idFactura"]) ){
                             $Enable=0;
                         }
                         $css->CrearBotonEvento("BtnResponderActividad", "Detalles", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura')", "verde", "");
+                       
+                        print("<br><br>");
+                        $css->CrearBotonEvento("BtnConciliarActividad", "Conciliar", $Enable, "onClick", "DibujeFormularioConciliarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "azul", "");
+                    
                     print("</td>");
                     
                 $css->CierraFilaTabla();

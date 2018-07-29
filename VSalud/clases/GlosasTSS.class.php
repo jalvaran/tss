@@ -130,7 +130,7 @@ class Glosas extends conexion{
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
-        $Mensaje["msg"]="Glosa Agregada a la tabla temporal";
+        $Mensaje["msg"]="Glosa Agregada";
         return($Mensaje);
         
     }
@@ -912,8 +912,51 @@ class Glosas extends conexion{
         $this->Query($sql);
                
     }
-    
-    
+    /**
+     * Registra Glosa inicial Conciliada
+     * @param type $idFactura
+     * @param type $idActividad
+     * @param type $ValorActividad
+     * @param type $FechaIPS
+     * @param type $FechaAuditoria
+     * @param type $CodigoGlosa
+     * @param type $ValorEPS
+     * @param type $ValorAceptado
+     * @param type $ValorConciliar
+     * @param type $Vector
+     * @param type $ValorEdicion
+     * @return type
+     */
+    public function RegistrarGlosaInicialConciliada($EstadoGlosa,$idFactura,$idActividad,$ValorActividad,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorXConciliar,$ValorLevantado,$Vector) {
+        $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+        
+        if(($TotalGlosasExistentes+$ValorEPS)>$ValorActividad){
+            exit("El valor Glosado Excede el total de la actividad.");
+        }
+        $FechaRegistro=date("Y-m-d");
+        $tab="salud_glosas_iniciales";
+        $NumRegistros=13;
+
+        $Columnas[0]="FechaIPS";                $Valores[0]=$FechaIPS;
+        $Columnas[1]="FechaAuditoria";          $Valores[1]=$FechaAuditoria;
+        $Columnas[2]="FechaRegistro";           $Valores[2]=$FechaRegistro;
+        $Columnas[3]="CodigoGlosa";             $Valores[3]=$CodigoGlosa;
+        $Columnas[4]="num_factura";             $Valores[4]=$idFactura;
+        $Columnas[5]="CodigoActividad";         $Valores[5]=$idActividad;
+        $Columnas[6]="EstadoGlosa";             $Valores[6]=$EstadoGlosa;
+        $Columnas[7]="ValorGlosado";            $Valores[7]=$ValorEPS;
+        $Columnas[8]="ValorLevantado";          $Valores[8]=$ValorLevantado;
+        $Columnas[9]="ValorAceptado";           $Valores[9]=$ValorAceptado;
+        $Columnas[10]="ValorXConciliar";        $Valores[10]=$ValorXConciliar;
+        $Columnas[11]="ValorConciliado";        $Valores[11]=$ValorEPS-$ValorLevantado;
+        $Columnas[12]="ValorActividad";         $Valores[12]=$ValorActividad;
+        
+        $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
+        $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
+        
+        return($idGlosa);
+        
+    }
     
     
     //Fin Clases

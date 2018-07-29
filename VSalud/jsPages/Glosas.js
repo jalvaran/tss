@@ -535,15 +535,29 @@ function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormula
  * 
  * Captura la informacion del Formulario de devoluciones
  */
-function getInfoFormGlosasRespuestas(){
-    if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
-        alertify.set({ labels: {
-                ok     : "OK",
-                cancel : "Cancelar"
-            } });
-        alertify.alert("Todos los campos son obligatorios");
-        return 0;
+function getInfoFormGlosasRespuestas(Opciones=0){
+    if(Opciones==0){
+        if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
+            alertify.set({ labels: {
+                    ok     : "OK",
+                    cancel : "Cancelar"
+                } });
+            alertify.alert("Todos los campos son obligatorios");
+            return 0;
+        }
     }
+    
+    if(Opciones==1){
+        if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#Observaciones').val()==''){
+            alertify.set({ labels: {
+                    ok     : "OK",
+                    cancel : "Cancelar"
+                } });
+            alertify.alert("Todos los campos son obligatorios");
+            return 0;
+        }
+    }
+    
     if ($('#ValorLevantado').length) { //Verifico que existe el campo de texto Valor Levantado
         var ValorLevantado=$('#ValorLevantado').val();
       } else {
@@ -748,7 +762,7 @@ function GuadarGlosasTemporales(idFactura){
         type: 'post',
         success: function(data){
                         
-            alertify.alert(data);
+            alertify.success(data);
             document.getElementById('DivGlosar').innerHTML=data;
             document.getElementById('DivHistorialGlosas').innerHTML='';
             
@@ -923,7 +937,7 @@ function ValidaValoresConciliacion(){
  * @returns {undefined}
  */
 function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
-    var form_data = getInfoFormGlosasRespuestas();        
+    var form_data = getInfoFormGlosasRespuestas(1);        
         form_data.append('idAccion', idAccion); //6 respuesta a Glosa temporal, 10 Contra Glosar
         form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
         var Valida=0;
@@ -1372,12 +1386,101 @@ function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
         
     
 }
-
+/**
+ * Envia la peticion para editar una glosa
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
 function EditarRespuestaGlosa(idGlosa){
     var form_data = getInfoFormGlosasRespuestas();        
         form_data.append('idAccion', 15); //Agregar respuesta a Glosa temporal
         form_data.append('idGlosa', idGlosa); //id de la Glosa a editar
          
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                        
+            alertify.success(data);
+            
+            document.getElementById('DivGlosar').innerHTML=data;
+            //MostrarActividades(idFactura);
+            RefrescarDiv();
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Dibuja el formulario para conciliar por actividad
+ * @param {type} TipoArchivo
+ * @param {type} idArchivo
+ * @param {type} idFactura
+ * @param {type} CodActividad
+ * @returns {undefined}
+ */
+function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodActividad){
+    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+    document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
+    document.getElementById('BtnModalGlosar').click();
+    
+    var form_data = new FormData();       
+        
+        form_data.append('TipoArchivo', TipoArchivo); //id de la Glosa que se está respodiendo
+        form_data.append('idFormulario', 15);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
+        form_data.append('idActividad', idArchivo);
+        form_data.append('num_factura', idFactura);
+        form_data.append('CodigoActividad', CodActividad);
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivGlosar").innerHTML=data;
+                for (var selector in config) {
+                    $(selector).chosen(config[selector]);
+                }
+            
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al dibujar el formulario",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+    
+}
+
+function ConciliarActividad(idFactura,CodActividad,idArchivo,TipoArchivo){
+    var DescripcionActividad = document.getElementById('DescripcionActividad').value;
+    var form_data = getInfoFormGlosasRespuestas(1);        
+        form_data.append('idAccion', 16); //Agregar respuesta a Glosa temporal
+        form_data.append('idFactura', idFactura); 
+        form_data.append('CodActividad', CodActividad);
+        form_data.append('DescripcionActividad', DescripcionActividad);
         
         $.ajax({
         async:false,

@@ -496,6 +496,48 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->Query($sql);
             print("<h4 style='color:orange'>Edicion Realizada</h4>");
         break;
+        
+        case 16:// Conciliar X actividad
+                        
+            //$DatosGlosa=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosa);
+            //$CuentaRIPS=$DatosGlosa["CuentaRIPS"];
+            $TipoArchivo=$obGlosas->normalizar($_REQUEST["TipoArchivo"]);
+            $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);           
+            $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
+            
+            $TotalActividad=$obGlosas->normalizar($_REQUEST["TotalActividad"]);  
+            $TotalGlosado=$obGlosas->normalizar($_REQUEST["ValorEPS"]);  
+                        
+            $Descripcion= $obGlosas->normalizar($_REQUEST["DescripcionActividad"]);
+            
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+            $ValorLevantado=$obGlosas->normalizar($_REQUEST["ValorLevantado"]);     
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','_',"ConciliacionXActividad_".$FechaIPS."_".$CodActividad."_$idFactura"."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'";
+            $obGlosas->Query($sql);
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'";
+            $obGlosas->Query($sql);
+            $idGlosa=$obGlosas->RegistrarGlosaInicialConciliada(6, $idFactura, $CodActividad, $TotalActividad, $FechaIPS, $FechaAuditoria, '', $ValorEPS, $ValorAceptado, $ValorConciliar, $ValorLevantado, "");
+            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 6, $FechaIPS, $FechaAuditoria, $Observaciones, '', $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
+            $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
+            print("<h4 style='color:orange'>Conciliacion X Actividad Realizada</h4>");
+        break;
     }
           
 }else{

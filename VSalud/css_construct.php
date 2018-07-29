@@ -804,13 +804,13 @@ class CssIni{
                     $Clase="btn btn-danger";
                     break;
                 case "blanco":
-                    $Clase="btn-default";
-                    break;
-                case "azul":
-                    $Clase="btn-primary";
+                    $Clase="btn";
                     break;
                 case "azulclaro":
-                    $Clase="btn-info";
+                    $Clase="btn btn-info";
+                    break;
+                case "azul":
+                    $Clase="btn btn-info";
                     break;
             }
             if($enabled==1){
