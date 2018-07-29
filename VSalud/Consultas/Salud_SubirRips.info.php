@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json');
+//header('Content-type: application/json');
 session_start();
 if (!isset($_SESSION['username'])){
   exit("<a href='../index.php' ><img src='../images/401.png'>Iniciar Sesion </a>");
@@ -69,9 +69,9 @@ if($_REQUEST["idAccion"]){
         case 2://Devuelve los nombres de los archivos que se guardaron  en la carpeta y se verifica que correspondan al CT
             $Mensaje["msg"]="OK";
             $Mensaje["Errores"]=0;
-            $Separador=$obRips->normalizar($_REQUEST["Separador"]);
+            $Separador=$_REQUEST["Separador"];
             $Mensaje["Separador"]=$Separador;
-            
+            $Mensaje["ArchivosNE"]="";
             $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%'");
             while($DatosCT= $obRips->FetchArray($consulta)){
                 //print("Archivo".$DatosCT["nom_cargue"]);
@@ -233,6 +233,10 @@ if($_REQUEST["idAccion"]){
                 $Mensaje["msg"]="OK";   
             }
                   
+            print(json_encode($Mensaje));
+        break;
+        case 7: //Eliminar la ultima carga para cuando se produzcan errores
+            
             print(json_encode($Mensaje));
         break;
     }

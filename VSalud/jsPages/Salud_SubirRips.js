@@ -285,9 +285,11 @@ function GrabarArchivoEnTemporal(Archivo,Fin){
             document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Contiene errores";
            
             if(data.Error.Pos===1){
+                EliminarCarga();
                 alertify.error("La Prestadora No Existe - Error en las lineas: "+data.Error.Lines,0);
             }
             if(data.Error.Pos===9){
+                EliminarCarga();
                 alertify.error("La Aseguradora No Coincide- Error en las lineas: "+data.Error.Lines,0);
             }
         }
@@ -452,4 +454,31 @@ function ActualizarFacturasDevueltas(){
         alert(thrownError);
       }
   })
+}
+
+function EliminarCarga(){
+    var form_data = new FormData();
+       form_data.append('idValidacion', 3);//hay devoluciones duplicadas?    
+       $.ajax({
+       async:false,
+       url: './Consultas/Salud_SubirRips.info.php',
+       dataType: 'json',
+       cache: false,
+       contentType: false,
+       processData: false,
+       data: form_data,
+       type: 'post',
+       success: function(data){
+           if(data.msg==="OK"){
+               document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li><strong>Facturas en estado de devolucion Actualizadas</strong>";
+               alertify.success("Se actualizaron las facturas devueltas previamente",0); 
+           }
+
+       },
+       error: function (xhr, ajaxOptions, thrownError) {
+           document.getElementById("Parar").value=1;
+           alert(xhr.status);
+           alert(thrownError);
+         }
+     })   
 }
