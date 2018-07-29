@@ -389,6 +389,52 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             print("<h4 style='color:blue'>Conciliacion de la Glosa Registrada en la tabla temporal</h4>");
         break;
+        case 13://Anular una glosa
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+            $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
+            $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
+            $TipoArchivo=$obGlosas->normalizar($_REQUEST["TipoArchivo"]);
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            //print("Variables: ".$idGlosa." ".$idFactura." ".$CodActividad." ".$TipoArchivo." ".$Observaciones);
+            $obGlosas->AnularGlosa($idGlosa, $Observaciones, $idUser, "");
+            $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
+            print("Glosa Anulada");
+        break;    
+        case 14:
+            if(empty($_REQUEST["idGlosaInicial"]) or empty($_REQUEST["idGlosaRespuesta"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
+                   exit("No se recibieron los valores esperados");
+            }
+            $idGlosaInicial=$obGlosas->normalizar($_REQUEST["idGlosaInicial"]);
+            $idGlosaRespuesta=$obGlosas->normalizar($_REQUEST["idGlosaRespuesta"]);
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_glosas_iniciales", "ID", $idGlosaInicial);
+            $DatosGlosaRespuesta=$obGlosas->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $idGlosaRespuesta);
+            $idFactura=$DatosGlosa["num_factura"];
+            $CodActividad=$DatosGlosa["CodigoActividad"];
+            
+            $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
+            $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
+            
+            $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
+            $CodigoGlosa=$obGlosas->normalizar($_REQUEST["CodigoGlosa"]);
+            $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
+            $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
+            $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
+            $TotalActividad=$DatosGlosa["ValorActividad"];
+            
+            $destino='';
+            if(!empty($_FILES['Soporte']['name'])){
+            
+                $Atras="../";
+                $carpeta="SoportesSalud/SoportesGlosas/";
+                opendir($Atras.$Atras.$carpeta);
+                $Name=str_replace(' ','SoporteGlosaInicial_',$FechaIPS."_".$idGlosaInicial."_".$idFactura."_".$_FILES['Soporte']['name']);
+                $destino=$carpeta.$Name;
+                move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
+            }
+            $obGlosas->EditaGlosaInicial($idGlosaInicial, $idFactura, $CodActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
+            $obGlosas->EditaTablaControlRespuestasGlosas($idGlosaRespuesta, $DatosGlosaRespuesta["TipoArchivo"], $idGlosaInicial, $idFactura, $CodActividad, $DatosGlosaRespuesta["DescripcionActividad"], $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, 0, 0, $ValorEPS, $destino, $idUser, "");
+            print("Glosa inicial editada en la tabla temporal");
+        break;    
     }
           
 }else{

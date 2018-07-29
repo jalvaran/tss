@@ -80,7 +80,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $CodActividad=$DatosFactura["Codigo"];
                 $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,ValorActividad,ValorGlosado,ValorLevantado,ValorAceptado,ValorXConciliar,"
                         . "(SELECT ValorActividad-ValorAceptado) AS ValorAPagarXEPS "
-                        . "FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad'";
+                        . "FROM salud_glosas_iniciales WHERE num_factura='$idFactura' and CodigoActividad='$CodActividad' AND EstadoGlosa<>12";
                 $Datos=$obGlosas->Query($sqlGlosas);
                 $DatosValoresGlosas=$obGlosas->FetchArray($Datos);
                 $css->FilaTabla(12);

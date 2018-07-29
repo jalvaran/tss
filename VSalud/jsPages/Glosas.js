@@ -560,7 +560,7 @@ function getInfoFormGlosasRespuestas(){
     form_data.append('ValorAceptado', $('#ValorAceptado').val());
     form_data.append('ValorConciliar', $('#ValorConciliar').val());
     form_data.append('TotalActividad', $('#TotalActividad').val());
-    form_data.append('ValorLevantado', $('#ValorLevantado').val());
+    form_data.append('ValorLevantado', ValorLevantado);
     form_data.append('Soporte', $('#UpSoporteGlosa').prop('files')[0]);    
     return form_data;
 }
@@ -1168,7 +1168,11 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
       })
 }
 
-
+/**
+ * Refresca los div donde están dibujadas las facturas y las actividades, 
+ * se utiliza para despues de una accion que cambie un estado o valor
+ * @returns {undefined}
+ */
 function RefrescarDiv(){
     
     var CodActividad = document.getElementById("TxtActividadActiva").value;
@@ -1176,4 +1180,142 @@ function RefrescarDiv(){
     //alert("Refrescando"+CodActividad+Factura);
     VerDetallesActividad(CodActividad,Factura);
     MostrarActividades(Factura);
+}
+/**
+ * Anula una glosa
+ * @param {type} idGlosa
+ * @param {type} idFactura
+ * @param {type} CodActividad
+ * @param {type} TipoArchivo
+ * @returns {undefined}
+ */
+function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo){
+    alertify.prompt("Escriba el por qué Anulará esta Glosa", function (e, str) {
+            if (e) {
+                    if (str != '') {
+                    
+                        var form_data = new FormData();   
+                            form_data.append('idAccion', 13); //Agregar respuesta a Glosa temporal
+                            form_data.append('idGlosa', idGlosa); //id de la Glosa a anular
+                            form_data.append('idFactura', idFactura); 
+                            form_data.append('CodActividad', CodActividad); 
+                            form_data.append('TipoArchivo', TipoArchivo); 
+                            form_data.append('Observaciones', str); 
+                            $.ajax({
+                            async:false,
+                            url: './Consultas/AccionesGlosarFacturas.process.php',
+                            //dataType: 'json',
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            data: form_data,
+                            type: 'post',
+                            success: function(data){
+
+                                alertify.alert(data);            
+                                RefrescarDiv();
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alertify.error("Error al tratar de editar la glosa ",0);
+                                alert(xhr.status);
+                                alert(thrownError);
+                              }
+                          })
+                    
+                    }else{
+                       alertify.alert("Debes Escribir una observacion"); 
+                    }
+                    //alertify.success("You've clicked OK and typed: " + str);
+            } else {
+                    alertify.error("haz cancelado la accion");
+            }
+    }, "");
+    
+    
+}
+/**
+ * Muestra el formulario de edicion para una glosa inicial
+ * @param {type} idGlosa
+ * @returns {undefined}
+ */
+function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
+    
+    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+    document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
+    document.getElementById('BtnModalGlosar').click();
+    
+    var form_data = new FormData();       
+        
+        form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
+        form_data.append('idFormulario', 12);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
+        form_data.append('CodActividad', CodActividad);
+        form_data.append('Descripcion', Descripcion);
+        $.ajax({
+        async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if (data != "") { 
+                
+                document.getElementById("DivGlosar").innerHTML=data;
+                for (var selector in config) {
+                    $(selector).chosen(config[selector]);
+                }
+            
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al dibujar el formulario",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+    
+        
+    
+}
+/**
+ * Envia los datos para editar una glosa inicial
+ * @param {type} idGlosaInicial
+ * @param {type} idGlosaRespuesta
+ * @returns {undefined}
+ */
+function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
+       
+    var form_data = getInfoFormGlosasRespuestas();   
+        form_data.append('idGlosaInicial', idGlosaInicial); //Agregar respuesta a Glosa temporal
+        form_data.append('idGlosaRespuesta', idGlosaRespuesta); //id de la Glosa a anular
+        form_data.append('idAccion', 14); 
+        
+        $.ajax({
+        async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+
+            alertify.alert(data);            
+            RefrescarDiv();
+
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de editar la glosa ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }

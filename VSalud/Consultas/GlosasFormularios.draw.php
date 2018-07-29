@@ -117,7 +117,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $DatosActividad=$obGlosas->FetchArray($Consulta);
             $CodActividad=$DatosActividad["Codigo"];
             $TotalActividad=$DatosActividad["Total"];
-            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>12");
             $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
             $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;
             $TotalXGlosar=$TotalActividad-$TotalGlosado;
@@ -361,7 +361,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
         case 5: //Formulario para ver la tabla de control de glosas
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);             
             $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
-            $sql="SELECT TipoArchivo,ID,num_factura,FechaIPS,id_cod_glosa AS CodigoGlosa,CodigoActividad,observacion_auditor,"
+            $sql="SELECT TipoArchivo,ID,num_factura,FechaIPS,id_cod_glosa AS CodigoGlosa,CodigoActividad,observacion_auditor,idGlosa,"
                     . "(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa ) AS DescripcionGlosa,"
                     . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,EstadoGlosa,"
                     . "(SELECT valor_glosado_eps-valor_aceptado_ips-valor_levantado_eps) AS ValorXConciliar,"
@@ -394,7 +394,12 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $css->CierraFilaTabla();
             while($DatosActividad=$obGlosas->FetchArray($Consulta)){
                 $idGlosa=$DatosActividad["ID"];
+                $idGlosaInicial=$DatosActividad["idGlosa"];
                 $TipoArchivo=$DatosActividad["TipoArchivo"];
+                $idFactura=$DatosActividad["num_factura"];
+                $CodActividad=$DatosActividad["CodigoActividad"];
+                $EstadoGlosa=$DatosActividad["EstadoGlosa"];
+                $Descripcion=$DatosActividad["DescripcionGlosa"];
                 $css->FilaTabla(12);
                     $css->ColTabla($DatosActividad["FechaIPS"], 1);
                     $css->ColTabla($DatosActividad["num_factura"], 1);
@@ -424,6 +429,15 @@ if( !empty($_REQUEST["idFormulario"]) ){
                             $css->CrearBotonEvento("BtnGlosaXConciliar", "Conciliar", 1, "onClick", "RespuestaGlosa('$idGlosa','11')", "naranja", "");
           
                         }
+                        print("<br>");
+                        $ReadOnly=0;
+                        if($DatosActividad["EstadoGlosa"]==1){
+                            $ReadOnly=1;
+                        }
+                        $css->CrearBotonEvento("BtnEditar", "Editar Glosa", $ReadOnly, "onClick", "MuestraEditarGlosaInicial('$idGlosaInicial')", "naranja", "");
+                        print("<br>");
+                        $css->CrearBotonEvento("BtnAnular", "Anular Glosa", 1, "onClick", "AnularGlosa('$idGlosaInicial','$idFactura','$CodActividad','$TipoArchivo')", "rojo", "");
+          
                         print("</td>");
                     
                 $css->CierraFilaTabla();
@@ -904,6 +918,85 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
             $css->CerrarTabla();
         break;
+        case 12: //Formulario Editar una Glosa Inicial
+            $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
+           
+            $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
+            
+            $DatosGlosa=$obGlosas->DevuelveValores("salud_glosas_iniciales", "ID", $idGlosa);
+            $DatosRespuestaGlosa=$obGlosas->ValorActual("salud_archivo_control_glosas_respuestas", "ID,observacion_auditor as Observaciones,DescripcionActividad", " idGlosa='$idGlosa' AND EstadoGlosa='1'");
+            $Descripcion=$DatosRespuestaGlosa["DescripcionActividad"];
+            $idFactura=$DatosGlosa["num_factura"];
+            
+            $DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "  num_factura='$idFactura'");
+            
+            
+            $CodActividad=$DatosGlosa["CodigoActividad"];
+            $TotalActividad=$DatosGlosa["ValorActividad"];
+            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>12");
+            $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
+            $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;
+            $TotalXGlosar=$TotalActividad-$TotalGlosado;
+            
+            $css->CrearTabla();
+                $css->FilaTabla(14);
+                      $css->CrearInputText("TotalActividad", "hidden", "", $TotalActividad, "", "", "", "", 0, 0, 0, 0);
+                    
+                    $css->ColTabla("<h4 style='color:blue'><strong>Glosar la actividad $CodActividad $Descripcion. </strong></h4>", 5);
+                    $css->ColTabla("Total Actividad: <strong>".number_format($TotalActividad)."</strong><br>Total Glosado X Ahora: <strong>".number_format($TotalGlosado)."</strong><br>Total Disponible X Glosar: <strong>".number_format($TotalXGlosar)."</strong>",1);
+                    $css->CrearInputText("ValorXGlosarMax", "hidden", "", $TotalXGlosar, "", "", "", "", 150, 30, 0, 0);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(14);
+                    
+                    print("<td style='text-align:center'>");
+                    
+                        $css->CrearInputText("FechaIPS", "date", "Fecha IPS<br>", $DatosGlosa["FechaIPS"], "Fecha IPS", "", "", "", 150, 30, 0, 1);
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        
+                        $css->CrearInputText("FechaAuditoria", "date", "Fecha de Auditoría<br>", $DatosGlosa["FechaAuditoria"], "Fecha de Auditoria", "", "", "", 150, 30, 0, 1);
+                       
+                    print("</td>");
+                
+                    print("<td style='text-align:center' colspan=3>");
+                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Codigo Glosa", "Código de la Glosa:",$DatosGlosa["CodigoGlosa"]);
+                        $css->CerrarDiv();                        
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Soporte de Glosa:</strong><br>");
+                        $css->CrearUpload("UpSoporteGlosa");
+                    print("</td>");
+                    $css->CierraFilaTabla();
+                    $css->FilaTabla(14);
+                    print("<td style='text-align:center'>");
+                        
+                        $css->CrearInputNumber("ValorEPS", "number", "Valor Glosado X EPS:<br>", $DatosGlosa["ValorGlosado"], "Valor EPS", "", "onChange", "ValidaValorGlosa()", 150, 30, 0, 1, 0, $TotalActividad, 1);
+                        print("</td>");
+                        print("<td style='text-align:center'>");
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["ValorAceptado"], "Valor Aceptado EPS", "", "onChange", "ValidaValorGlosa()", 150, 30, 1, 1, 0, $TotalActividad, 1);
+                        print("</td>");
+                        
+                        print("<td style='text-align:center' colspan=2>");
+                        $css->CrearInputNumber("ValorConciliar", "number", "Valor X Conciliar<br>", $DatosGlosa["ValorXConciliar"], "Valor Conciliar", "", "onChange", "CalculeValorConciliar()", 150, 30, 1, 1, 0, $TotalActividad, 1);
+                        
+                    print("</td>");
+                
+                    print("<td style='text-align:center'>");
+                        $css->CrearTextArea("Observaciones", "", $DatosRespuestaGlosa["Observaciones"], "Observaciones", "", "", "", 200, 60, 0, 1);
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        
+                        print("<br>");
+                        $idGlosaRespuesta=$DatosRespuestaGlosa["ID"];
+                        $css->CrearBotonEvento("BtnEditarGlosa", "Editar", 1, "onClick", "EditarGlosaInicial('$idGlosa','$idGlosaRespuesta')", "naranja", "");
+                        
+                    print("</td>");
+                $css->CierraFilaTabla();
+                
+                
+            $css->CerrarTabla();
+        break;    
     }
           
 }else{

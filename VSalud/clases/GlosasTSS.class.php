@@ -89,7 +89,7 @@ class Glosas extends conexion{
         if(($TotalGlosasExistentes+$ValorEPS)>$TotalActividad){
             exit("El valor Glosado Excede el total de la actividad.");
         }
-        $sql="SELECT ID FROM salud_glosas_iniciales WHERE num_factura='$idFactura' AND CodigoActividad='$Codigo' AND CodigoGlosa='$CodigoGlosa'";
+        $sql="SELECT ID FROM salud_glosas_iniciales WHERE num_factura='$idFactura' AND CodigoActividad='$Codigo' AND CodigoGlosa='$CodigoGlosa' AND EstadoGlosa<>12";
         $consulta=$this->Query($sql);
         $DatosGlosasIniciales= $this->FetchArray($consulta);
         if($DatosGlosasIniciales["ID"]<>''){
@@ -352,6 +352,28 @@ class Glosas extends conexion{
         $this->Query($sql);
                
     }
+    /**
+     * Edite una Glosa Temporal
+     * @param type $idGlosaTemp
+     * @param type $TipoArchivo
+     * @param type $idArchivo
+     * @param type $idFactura
+     * @param type $idActividad
+     * @param type $NombreActividad
+     * @param type $TotalActividad
+     * @param type $EstadoGlosa
+     * @param type $FechaIPS
+     * @param type $FechaAuditoria
+     * @param type $Observaciones
+     * @param type $CodigoGlosa
+     * @param type $ValorEPS
+     * @param type $ValorAceptado
+     * @param type $ValorLevantado
+     * @param type $ValorConciliar
+     * @param type $destino
+     * @param type $idUser
+     * @param type $Vector
+     */
     public function EditaGlosaRespuestaTemporal($idGlosaTemp,$TipoArchivo,$idArchivo,$idFactura,$idActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
         //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
@@ -384,6 +406,50 @@ class Glosas extends conexion{
         $sql=$this->getSQLReeplace($tab, $Datos);
         
         
+        $this->Query($sql);
+               
+    }
+    /**
+     * Edita una glosa inicial
+     * @param type $idGlosaInicial
+     * @param type $idFactura
+     * @param type $CodActividad
+     * @param type $ValorActividad
+     * @param type $EstadoGlosa
+     * @param type $FechaIPS
+     * @param type $FechaAuditoria
+     * @param type $CodigoGlosa
+     * @param type $ValorEPS
+     * @param type $ValorAceptado
+     * @param type $ValorLevantado
+     * @param type $ValorConciliar
+     * @param type $destino
+     * @param type $idUser
+     * @param type $Vector
+     */
+    public function EditaGlosaInicial($idGlosaInicial,$idFactura,$CodActividad,$ValorActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
+        $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
+        //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        
+        $FechaRegistro=date("Y-m-d");
+        $tab="salud_glosas_iniciales";
+        $Datos["ID"]=$idGlosaInicial;   
+        $Datos["FechaIPS"]=$FechaIPS;////   
+        $Datos["FechaAuditoria"]=$FechaAuditoria;//
+        $Datos["FechaRegistro"]=$FechaRegistro;//
+        $Datos["CodigoGlosa"]=$CodigoGlosa;//        
+        $Datos["num_factura"]=$idFactura;//
+        $Datos["CodigoActividad"]=$CodActividad;//
+        $Datos["ValorGlosado"]=$ValorEPS;//
+        $Datos["ValorLevantado"]=$ValorLevantado;//
+        $Datos["ValorAceptado"]=$ValorAceptado;//
+        $Datos["ValorXConciliar"]=$ValorEPS-$ValorAceptado-$ValorLevantado;//
+        $Datos["ValorConciliado"]=0;
+        $Datos["EstadoGlosa"]=$EstadoGlosa;//
+        $Datos["ValorActividad"]=$ValorActividad;//
+        //$Datos["Soporte"]=$destino;//
+               
+        $sql=$this->getSQLReeplace($tab, $Datos);
         $this->Query($sql);
                
     }
@@ -744,5 +810,103 @@ class Glosas extends conexion{
         }
         
     }   
+    /**
+     * Funcion para anular una glosa
+     * @param type $idGlosa
+     * @param type $Vector
+     */
+    public function AnularGlosa($idGlosa,$Observaciones,$idUser,$Vector) {
+        $Fecha=date("Y-m-d H:i:s");
+        $ObservacionAnulacion="Glosa Anulada $Fecha por el usuario: $idUser, Motivo: $Observaciones - ";
+        $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='12' WHERE ID='$idGlosa'";
+        $this->Query($sql);
+        $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa='12',observacion_auditor=CONCAT('$ObservacionAnulacion',observacion_auditor) WHERE idGlosa='$idGlosa'";
+        $this->Query($sql);
+    }
+    /**
+     * Actualiza el estado de una factura
+     * @param type $idFactura
+     * @param type $Vector
+     */
+    public function ActualiceEstados($NumFactura,$TipoArchivo,$CodigoActividad,$Vector) {
+                
+        $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura'";
+        $Datos=$this->Query($sql);
+        $Datos= $this->FetchArray($Datos);
+        $EstadoGlosaFactura=$Datos["MinEstado"];
+        if($EstadoGlosaFactura=="" or $EstadoGlosaFactura==12){
+            $EstadoGlosaFactura=8;
+        }
+        $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", $EstadoGlosaFactura, "num_factura", $NumFactura);
+        
+        //Actualizo el estado de las actividades
+        $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura' AND CodigoActividad='$CodigoActividad'";
+        $Datos=$this->Query($sql);
+        $Datos= $this->FetchArray($Datos);
+        $Estado=$Datos["MinEstado"];
+        if($Estado=="" or $Estado==12){
+            $Estado=8;
+        }
+        if($TipoArchivo=="AC"){
+
+            $this->update("salud_archivo_consultas", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_consulta='$CodigoActividad'");
+
+        }
+        if($TipoArchivo=="AP"){
+
+            $this->update("salud_archivo_procedimientos", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_procedimiento='$CodigoActividad'");
+
+        }
+        if($TipoArchivo=="AT"){
+
+            $this->update("salud_archivo_otros_servicios", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_servicio='$CodigoActividad'");
+
+        }
+        if($TipoArchivo=="AM"){
+
+            $this->update("salud_archivo_medicamentos", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_medicamento='$CodigoActividad'");
+
+        }
+    }
+    
+    
+    public function EditaTablaControlRespuestasGlosas($ID,$TipoArchivo,$idGlosa,$idFactura,$CodActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
+        $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
+        //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        
+        $FechaRegistro=date("Y-m-d");
+        $tab="salud_archivo_control_glosas_respuestas";
+        $Datos["ID"]=$ID;               
+        $Datos["num_factura"]=$idFactura;
+        $Datos["idGlosa"]=$idGlosa;
+        $Datos["CuentaGlobal"]=$DatosFactura["CuentaGlobal"];
+        $Datos["CuentaRIPS"]=$DatosFactura["CuentaRIPS"];
+        $Datos["cod_glosa_general"]=substr($CodigoGlosa,0,1);
+        $Datos["cod_glosa_especifico"]=substr($CodigoGlosa,1,2);
+        $Datos["id_cod_glosa"]=$CodigoGlosa;
+        $Datos["CodigoActividad"]=$CodActividad;
+        $Datos["EstadoGlosa"]=$EstadoGlosa;
+        $Datos["FechaIPS"]=$FechaIPS;
+        $Datos["FechaAuditoria"]=$FechaAuditoria;
+        $Datos["valor_actividad"]=$TotalActividad;
+        $Datos["valor_glosado_eps"]=$ValorEPS;
+        $Datos["valor_levantado_eps"]=$ValorLevantado;
+        $Datos["valor_aceptado_ips"]=$ValorAceptado;
+        $Datos["observacion_auditor"]=$Observaciones;
+        $Datos["Soporte"]=$destino;
+        $Datos["fecha_registo"]=$FechaRegistro;
+        $Datos["TipoArchivo"]=$TipoArchivo;
+        $Datos["idUser"]=$idUser;
+        $Datos["DescripcionActividad"]=$NombreActividad;
+        
+        $sql=$this->getSQLReeplace($tab, $Datos);
+                
+        $this->Query($sql);
+               
+    }
+    
+    
+    
+    
     //Fin Clases
 }
