@@ -815,13 +815,21 @@ class Glosas extends conexion{
      * @param type $idGlosa
      * @param type $Vector
      */
-    public function AnularGlosa($idGlosa,$Observaciones,$idUser,$Vector) {
+    public function AnularGlosa($idGlosa,$Observaciones,$idUser,$SoloRespuesta,$Vector) {
         $Fecha=date("Y-m-d H:i:s");
         $ObservacionAnulacion="Glosa Anulada $Fecha por el usuario: $idUser, Motivo: $Observaciones - ";
-        $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='12' WHERE ID='$idGlosa'";
-        $this->Query($sql);
-        $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa='12',observacion_auditor=CONCAT('$ObservacionAnulacion',observacion_auditor) WHERE idGlosa='$idGlosa'";
-        $this->Query($sql);
+        if($SoloRespuesta==0){//Si se desea anular la glosa inicial tambien
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='12' WHERE ID='$idGlosa'";
+            $this->Query($sql);
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa='12',observacion_auditor=CONCAT('$ObservacionAnulacion',observacion_auditor) WHERE idGlosa='$idGlosa'";
+            $this->Query($sql);
+        }
+        if($SoloRespuesta==1){
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa='12',observacion_auditor=CONCAT('$ObservacionAnulacion',observacion_auditor) WHERE ID='$idGlosa'";
+            $this->Query($sql);
+        }
+        
+        
     }
     /**
      * Actualiza el estado de una factura

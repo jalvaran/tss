@@ -434,12 +434,12 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         $jsAnular="AnularGlosa('$idGlosaInicial','$idFactura','$CodActividad','$TipoArchivo')";
                         if($DatosActividad["EstadoGlosa"]==2){
                             $jsEditar="MuestraEditarGlosaRespondida('$idGlosa',13)";
-                            $jsAnular="AnularRespuestaGlosa('$idGlosa','$idFactura','$CodActividad','$TipoArchivo')";
+                            $jsAnular="AnularGlosa('$idGlosa','$idFactura','$CodActividad','$TipoArchivo','1')";
                        
                         }
                         if($DatosActividad["EstadoGlosa"]==3 or $DatosActividad["EstadoGlosa"]==4){
                             $jsEditar="MuestraEditarGlosaRespondida('$idGlosa',14)";
-                            $jsAnular="AnularRespuestaGlosa('$idGlosa','$idFactura','$CodActividad','$TipoArchivo')";
+                            $jsAnular="AnularGlosa('$idGlosa','$idFactura','$CodActividad','$TipoArchivo','1')";
                        
                         }
                         $css->CrearBotonEvento("BtnEditar", "Editar ".$DatosActividad["Estado"], 1, "onClick", $jsEditar, "verde", "");

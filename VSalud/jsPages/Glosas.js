@@ -1189,7 +1189,7 @@ function RefrescarDiv(){
  * @param {type} TipoArchivo
  * @returns {undefined}
  */
-function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo){
+function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0){
     alertify.prompt("Escriba el por qué Anulará esta Glosa", function (e, str) {
             if (e) {
                     if (str != '') {
@@ -1200,6 +1200,7 @@ function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo){
                             form_data.append('idFactura', idFactura); 
                             form_data.append('CodActividad', CodActividad); 
                             form_data.append('TipoArchivo', TipoArchivo); 
+                            form_data.append('SoloRespuesta', SoloRespuesta);
                             form_data.append('Observaciones', str); 
                             $.ajax({
                             async:false,

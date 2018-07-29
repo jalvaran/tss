@@ -395,9 +395,29 @@ if( !empty($_REQUEST["idAccion"]) ){
             $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
             $TipoArchivo=$obGlosas->normalizar($_REQUEST["TipoArchivo"]);
             $Observaciones=$obGlosas->normalizar($_REQUEST["Observaciones"]);
-            //print("Variables: ".$idGlosa." ".$idFactura." ".$CodActividad." ".$TipoArchivo." ".$Observaciones);
-            $obGlosas->AnularGlosa($idGlosa, $Observaciones, $idUser, "");
+            $SoloRespuesta=$obGlosas->normalizar($_REQUEST["SoloRespuesta"]);//Si es 1 solo se anulará la respuesta, si es 0 se anulará tambien la glosa inicial
+            $obGlosas->AnularGlosa($idGlosa, $Observaciones, $idUser,$SoloRespuesta, "");
             $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
+            if($SoloRespuesta==1){
+                $DatosGlosa=$obGlosas->ValorActual("salud_archivo_control_glosas_respuestas", "idGlosa", " ID='$idGlosa'");
+                $idGlosaInicial=$DatosGlosa["idGlosa"];//para consultar cual fue el anterior estado a la anulacion de la respuesta
+                $DatosGlosa=$obGlosas->ValorActual("salud_archivo_control_glosas_respuestas", "MAX(ID) as UltimoID", " EstadoGlosa<>12 AND idGlosa='$idGlosaInicial'");
+                $idGlosaAnterior=$DatosGlosa["UltimoID"]; // para editar la columna Tratado en 0 y poder ver el estado anterior tras una anulacion
+                $DatosGlosa=$obGlosas->ValorActual("salud_archivo_control_glosas_respuestas", "valor_levantado_eps,valor_aceptado_ips,valor_glosado_eps", " ID='$idGlosaAnterior'");//Consultamos los valores del ultimo registro para actualizarlos en la glosa inicial
+                $ValorAceptado=$DatosGlosa["valor_aceptado_ips"];
+                $ValorLevantado=$DatosGlosa["valor_levantado_eps"];
+                $ValorGlosado=$DatosGlosa["valor_glosado_eps"];
+                $ValorXConciliar=$ValorGlosado-$ValorAceptado-$ValorLevantado;
+                $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado='0' "
+                        . "WHERE ID='$idGlosaAnterior'";
+                $obGlosas->Query($sql); //Actualizo la ultima repuesta a tratado 0 para poder visualizarla nuevamente
+                
+                $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosaInicial'";
+                $obGlosas->Query($sql);//Actulizo los valores de la glosa inicial
+                
+                
+            }
+            
             print("Glosa Anulada");
         break;    
         case 14:
