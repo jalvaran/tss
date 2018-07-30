@@ -88,7 +88,7 @@ function LeerArchivo(){
         success: function(data){
             
             if(data==='OK'){
-                var msg="Archivo leido";
+                var msg="Archivo leido y copiado para empezar validaciones";
                 alertify.success(msg); 
                 document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=msg;
                 $('.progress-bar').css('width','2%').attr('aria-valuenow', 2);  

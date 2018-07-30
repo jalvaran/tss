@@ -21,8 +21,11 @@ if( !empty($_REQUEST["idAccion"]) ){
             $Fecha=date("Y-m-d");
             $destino='';
             $Name='';
+            $Extension="";
             if(!empty($_FILES['UpCargaMasivaGlosas']['name'])){
                 
+                $info = new SplFileInfo($_FILES['UpCargaMasivaGlosas']['name']);
+                $Extension=($info->getExtension());
                 $Atras="../";
                 $carpeta="SoportesSalud/CargasMasivasGlosas/";
                 opendir($Atras.$Atras.$carpeta);
@@ -30,7 +33,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['UpCargaMasivaGlosas']['tmp_name'],$Atras.$Atras.$destino);
             }
-            $obGlosas->RegistreArchivoSubido($Fecha, $destino, $idUser);
+            $obGlosas->RegistreArchivoSubido($Fecha, $destino,$Extension, $idUser);
             print("OK");
         break;
         case 2://Borra la carga del ultimo archivo en caso de errores
