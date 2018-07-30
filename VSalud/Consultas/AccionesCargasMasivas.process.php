@@ -39,13 +39,83 @@ if( !empty($_REQUEST["idAccion"]) ){
         case 2://Borra la carga del ultimo archivo en caso de errores
             $sql="DELETE FROM salud_control_glosas_masivas WHERE Analizado=0";
             $obGlosas->Query($sql);
+            $obGlosas->VaciarTabla("salud_glosas_masivas_temp");
             print("Carga Borrada");
         break; 
-        case 3://Leer Archivo y llevarlo a la tabla temporal
-            
+        case 3://Leer Archivo y llevarlo a la tabla temporal            
             $obGlosas->LeerArchivo("");
             print("OK");
         break; 
+        case 4://Se realizan las validaciones
+            $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1);
+            $Errores=0;
+            $sql="SELECT * FROM vista_salud_glosas_masivas";
+            $Datos=$obGlosas->Query($sql);
+            while($DatosCarga=$obGlosas->FetchArray($Datos)){
+                if($DatosCarga["Factura"]==''){ //Si existe la factura en los AF
+                    $css->CrearNotificacionRoja("<br>Error: la factura No existe en los registros AF, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if($DatosCarga["CuentaRIPS"]==''){ //Si existe la factura en los AF
+                    $css->CrearNotificacionRoja("<br>Error: la Factura no está asociada a la CuentaRIPS, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if(($DatosCarga["CodEps"]=='')){ //Si la EPS no está asociada a la factura
+                    $css->CrearNotificacionRoja("<br>Error: la Factura no está asociada a la EPS relacionada, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if(($DatosCarga["NIT"]=='')){ //Si la EPS no está asociada a la factura
+                    $css->CrearNotificacionRoja("<br>Error: El NIT No coincide con la EPS relacionada, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if(($DatosCarga["CodigoGlosa"]=='')){ //Si la EPS no está asociada a la factura
+                    $css->CrearNotificacionRoja("<br>Error: El Codigo de la glosa no existe, Linea: ".$DatosCarga["ID"]);
+                    $Errores=$Errores+1;
+                }
+                if(($DatosCarga["CodigoActividadAM"]=='') AND ($DatosCarga["CodigoActividadAT"]=='') AND ($DatosCarga["CodigoActividadAP"]=='') AND ($DatosCarga["CodigoActividadAC"]=='') ){ //Si la actividad no existe en ninguno de los archivos
+                    $css->CrearNotificacionRoja("<br>Error: La factura no contiene el codigo de la actividad relacionada, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                $TotalActividad=$DatosCarga["TotalAM"]+$DatosCarga["TotalAP"]+$DatosCarga["TotalAC"]+$DatosCarga["TotalAT"];
+                if($DatosCarga["ValorGlosado"]>$TotalActividad){
+                    $css->CrearNotificacionRoja("<br>Error: El Valor Glosado No puede ser superior al total de la actividad, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+               
+                }
+                if(($DatosCarga["idGlosa"]>0)){ //Si la EPS no está asociada a la factura
+                    $css->CrearNotificacionRoja("<br>Error: Ya se registró una Glosa con el código relacionado para la factura y actividad, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if(($DatosCarga["idGlosaTemp"]>0)){ //Si la EPS no está asociada a la factura
+                    $css->CrearNotificacionRoja("<br>Error: Existe una Glosa con el código relacionado para la factura y actividad a la espera de guardarse, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                
+                $Dias=$obGlosas->CalculeDiferenciaFechas($DatosCarga["FechaIPS"], date("Y-m-d"), "");
+                if($Dias["Dias"]>$Parametros["Valor"]){
+                    $css->CrearNotificacionRoja("<br>Error: La Factura Superó el numero de días ($Dias[Dias] de un máximo posible de $Parametros[Valor]) para realizar glosas, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+            }
+            
+            $sql="SELECT COUNT(*) as Repetidos FROM salud_glosas_masivas_temp GROUP BY num_factura,CodigoActividad,CodigoGlosa HAVING COUNT(*) > 1 LIMIT 1";
+            $Datos=$obGlosas->Query($sql);
+            while($DatosCarga=$obGlosas->FetchArray($Datos)){
+                if($DatosCarga["Repetidos"]>1){
+                    $css->CrearNotificacionRoja("<br>Error: El Archivo Subido contiene Registros donde se repiten el Numero de factura, Codigo de Actividad y Codigo de Glosa.",14);
+                    $Errores=$Errores+1;
+                }
+            }
+            if($Errores==0){
+                $obGlosas->update("salud_glosas_masivas_temp", "Analizado", 1, " WHERE Analizado=0");
+                print("OK");
+            }else{
+                print("<br>Total de Errores: $Errores");                   
+                
+            }
+            
+            
+        break;
         
         
     }

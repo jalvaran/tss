@@ -107,3 +107,44 @@ SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administra
 
 FROM `salud_archivo_facturacion_mov_generados`;
 
+
+DROP VIEW IF EXISTS `vista_salud_glosas_masivas`;
+CREATE VIEW vista_salud_glosas_masivas AS 
+SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,
+(SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
+(SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_glosas_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
+(SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_glosas_masivas_temp.`ID_EPS`=salud_archivo_facturacion_mov_generados.cod_enti_administradora AND `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS CodEps,
+(SELECT nit FROM salud_eps WHERE `salud_glosas_masivas_temp`.`NIT_EPS`=salud_eps.nit AND `salud_glosas_masivas_temp`.`ID_EPS`=salud_eps.cod_pagador_min) AS NIT,
+(SELECT cod_glosa FROM salud_archivo_conceptos_glosas WHERE `salud_glosas_masivas_temp`.`CodigoGlosa`=salud_archivo_conceptos_glosas.cod_glosa) AS CodigoGlosa,
+
+(SELECT cod_medicamento FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAM,
+(SELECT SUM(valor_total_medic) FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAM,
+
+(SELECT cod_servicio FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_otros_servicios.cod_servicio=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAT,
+(SELECT SUM(valor_total_material) FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_otros_servicios.cod_servicio=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAT,
+
+(SELECT cod_procedimiento FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_procedimientos.cod_procedimiento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAP,
+
+(SELECT SUM(valor_procedimiento) FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_procedimientos.cod_procedimiento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAP,
+
+
+(SELECT cod_consulta FROM salud_archivo_consultas WHERE salud_archivo_consultas.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_consultas.cod_consulta=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAC,
+(SELECT SUM(valor_consulta) FROM salud_archivo_consultas WHERE salud_archivo_consultas.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_consultas.cod_consulta=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAC,
+
+(SELECT ID FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_glosas_iniciales.CodigoActividad=salud_glosas_masivas_temp.CodigoActividad 
+AND salud_glosas_iniciales.CodigoGlosa=salud_glosas_masivas_temp.CodigoGlosa LIMIT 1) AS idGlosa,
+
+(SELECT ID FROM salud_glosas_iniciales_temp WHERE salud_glosas_iniciales_temp.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_glosas_iniciales_temp.CodigoActividad=salud_glosas_masivas_temp.CodigoActividad 
+AND salud_glosas_iniciales_temp.CodigoGlosa=salud_glosas_masivas_temp.CodigoGlosa LIMIT 1) AS idGlosaTemp
+
+FROM `salud_glosas_masivas_temp`;

@@ -28,8 +28,8 @@ function CargarArchivoGlosasMasivas(){
             
             if(data==='OK'){
                 document.getElementById('EstadoProgresoGlosasMasivas').innerHTML="Archivo Cargado";
-                $('.progress-bar').css('width','1%').attr('aria-valuenow', 1);  
-                document.getElementById('LyProgresoCMG').innerHTML="1%";
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
                 LeerArchivo();
             }else{
                 BorrarCarga();//Elimina los registros de la tabla Control de cargas
@@ -72,7 +72,10 @@ function BorrarCarga(){
           }
       })
 }
-
+/**
+ * Envia la peticion al servidor para leer el archivo e ingresarlo a la tabla temporal
+ * @returns {undefined}
+ */
 function LeerArchivo(){
     var form_data = new FormData();
     form_data.append('idAccion',3);
@@ -91,12 +94,54 @@ function LeerArchivo(){
                 var msg="Archivo leido y copiado para empezar validaciones";
                 alertify.success(msg); 
                 document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=msg;
-                $('.progress-bar').css('width','2%').attr('aria-valuenow', 2);  
-                document.getElementById('LyProgresoCMG').innerHTML="2%";
-                //LeerArchivo();
+                $('.progress-bar').css('width','40%').attr('aria-valuenow', 40);  
+                document.getElementById('LyProgresoCMG').innerHTML="40%";
+                AnalizarRegistros();
             }else{
                 BorrarCarga();//Elimina los registros de la tabla Control de cargas
                 document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=data;
+            }
+            
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de leer el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Realiza las  validaciones en cada registro enviado
+ * @returns {undefined}
+ */
+function AnalizarRegistros(){
+    var form_data = new FormData();
+    form_data.append('idAccion',4);
+    $.ajax({
+        async:false,
+        url: './Consultas/AccionesCargasMasivas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            if(data==='OK'){
+                var msg="Archivo validado Correctamente";
+                alertify.success(msg); 
+                document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=msg;
+                $('.progress-bar').css('width','60%').attr('aria-valuenow', 60);  
+                document.getElementById('LyProgresoCMG').innerHTML="60%";
+                document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                //AnalizarRegistros();
+            }else{
+                BorrarCarga();//Elimina los registros de la tabla Control de cargas
+                document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                alertify.alert("Error");
                 document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=data;
             }
             
