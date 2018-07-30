@@ -137,7 +137,54 @@ function AnalizarRegistros(){
                 $('.progress-bar').css('width','60%').attr('aria-valuenow', 60);  
                 document.getElementById('LyProgresoCMG').innerHTML="60%";
                 document.getElementById('BtnEnviarCargaMasiva').disabled=false;
-                //AnalizarRegistros();
+                RegistraGlosas();
+            }else{
+                BorrarCarga();//Elimina los registros de la tabla Control de cargas
+                document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                alertify.alert("Error");
+                document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=data;
+            }
+            
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de leer el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+function RegistraGlosas(){
+    var form_data = new FormData();
+    form_data.append('idAccion',5);
+    $.ajax({
+        async:false,
+        url: './Consultas/AccionesCargasMasivas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            var respuestas = data.split(';');
+            if(respuestas[0]==='OK'){
+                var Porcentaje = respuestas[3]; 
+                var msg="Registradas "+respuestas[2]+" Glosas de un total de "+respuestas[1]+" para un progreso del "+Porcentaje;
+                Porcentaje=parseInt(Porcentaje)+60;
+                document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=msg;
+                $('.progress-bar').css('width',Porcentaje+'%').attr('aria-valuenow', Porcentaje);  
+                document.getElementById('LyProgresoCMG').innerHTML=Porcentaje+"%";
+                //document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                RegistraGlosas();
+            }else if(respuestas[0]==='FIN'){
+                document.getElementById('EstadoProgresoGlosasMasivas').innerHTML="Las Glosas fueron creadas exitósamente";
+                $('.progress-bar').css('width','100%').attr('aria-valuenow', 100);  
+                document.getElementById('LyProgresoCMG').innerHTML="100%";
+                document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                //BorrarCarga();
+                
             }else{
                 BorrarCarga();//Elimina los registros de la tabla Control de cargas
                 document.getElementById('BtnEnviarCargaMasiva').disabled=false;

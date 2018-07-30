@@ -5,8 +5,8 @@
  * Techno Soluciones SAS en asociacion con SITIS SAS
  * 2018-07-29
  */
-
-class GlosasMasivas extends conexion{
+include_once 'GlosasTSS.class.php';
+class GlosasMasivas extends Glosas{
     /**
      * Registra los archivos subidos para la carga temporal
      * @param type $Fecha

@@ -96,6 +96,19 @@ if( !empty($_REQUEST["idAccion"]) ){
                     $css->CrearNotificacionRoja("<br>Error: La Factura Superó el numero de días ($Dias[Dias] de un máximo posible de $Parametros[Valor]) para realizar glosas, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
                 }
+                $idFactura=$DatosCarga["Factura"];
+                $idActividad=$DatosCarga["CodigoActividad"];
+                $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+            
+                $TotalPorGlosar=$obGlosas->Sume("salud_glosas_masivas_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND GlosaInicial=0");
+                $GlosasTotales=$TotalPorGlosar+$TotalGlosasExistentes;
+                
+                $ValorActividad=$DatosCarga["TotalAM"]+$DatosCarga["TotalAT"]+$DatosCarga["TotalAP"]+$DatosCarga["TotalAC"];
+                
+                if($GlosasTotales>$ValorActividad){
+                    $css->CrearNotificacionRoja("<br>Error: El Valor Total A Glosar Excede al Valor de la actividad, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
             }
             
             $sql="SELECT COUNT(*) as Repetidos FROM salud_glosas_masivas_temp GROUP BY num_factura,CodigoActividad,CodigoGlosa HAVING COUNT(*) > 1 LIMIT 1";
@@ -114,6 +127,51 @@ if( !empty($_REQUEST["idAccion"]) ){
                 
             }
             
+            
+        break;
+        case 5://Crea las glosas iniciales a partir de la tabla temporal de glosas masivas
+            $sql="SELECT COUNT(*) as Total FROM salud_glosas_masivas_temp";
+            $Datos=$obGlosas->Query($sql);
+            $Datos=$obGlosas->FetchArray($Datos);
+            $TotalGlosas=$Datos["Total"];
+            $Datos=$obGlosas->ConsultarTabla("vista_salud_glosas_masivas", "WHERE GlosaInicial=0 LIMIT 1");
+            $DatosGlosa=$obGlosas->FetchArray($Datos);
+            $ValorActividad=$DatosGlosa["TotalAM"]+$DatosGlosa["TotalAT"]+$DatosGlosa["TotalAP"]+$DatosGlosa["TotalAC"];
+            $TipoArchivo="";
+            if($DatosGlosa["CodigoActividadAM"]<>''){
+                $TipoArchivo="AM";
+                $NombreActividad=$DatosGlosa["NombreActividadAM"];
+            }
+            if($DatosGlosa["CodigoActividadAC"]<>''){
+                $TipoArchivo="AC";
+                $NombreActividad=$DatosGlosa["NombreActividad"];
+            }
+            if($DatosGlosa["CodigoActividadAT"]<>''){
+                $TipoArchivo="AT";
+                $NombreActividad=$DatosGlosa["NombreActividadAT"];
+            }
+            if($DatosGlosa["CodigoActividadAP"]<>''){
+                $TipoArchivo="AP";
+                $NombreActividad=$DatosGlosa["NombreActividad"];
+            }
+                       
+            
+            $idGlosa=$obGlosas->RegistrarGlosaInicial($DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $ValorActividad, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, $DatosGlosa["ValorGlosado"], "");
+            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $NombreActividad, $ValorActividad, 1, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["Observaciones"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, 0, $DatosGlosa["ValorGlosado"], "", $idUser, "");
+            $ID=$DatosGlosa["ID"];
+            $obGlosas->update("salud_glosas_masivas_temp", "GlosaInicial", 1, "WHERE ID='$ID'");
+            
+            $sql="SELECT COUNT(*) as Total FROM salud_glosas_masivas_temp WHERE GlosaInicial=1";
+            $Datos=$obGlosas->Query($sql);
+            $Datos=$obGlosas->FetchArray($Datos);
+            $TotalGlosasRegistradas=$Datos["Total"];
+            $Porcentaje=round((40/$TotalGlosas)*$TotalGlosasRegistradas);
+            if($Porcentaje==40){
+                $obGlosas->VaciarTabla("salud_glosas_masivas_temp");
+                print("FIN;");
+            }else{
+                print("OK;$TotalGlosas;$TotalGlosasRegistradas;$Porcentaje");
+            }
             
         break;
         

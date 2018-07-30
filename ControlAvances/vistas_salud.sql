@@ -110,7 +110,7 @@ FROM `salud_archivo_facturacion_mov_generados`;
 
 DROP VIEW IF EXISTS `vista_salud_glosas_masivas`;
 CREATE VIEW vista_salud_glosas_masivas AS 
-SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,
+SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,GlosaInicial,GlosaControlRespuestas,CodigoActividad,Observaciones,
 (SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
 (SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_glosas_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
 (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_glosas_masivas_temp.`ID_EPS`=salud_archivo_facturacion_mov_generados.cod_enti_administradora AND `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS CodEps,
@@ -119,16 +119,23 @@ SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,
 
 (SELECT cod_medicamento FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAM,
+(SELECT nom_medicamento FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividadAM,
 (SELECT SUM(valor_total_medic) FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAM,
 
 (SELECT cod_servicio FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_otros_servicios.cod_servicio=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAT,
+(SELECT nom_servicio FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_glosas_masivas_temp.num_factura 
+AND salud_archivo_otros_servicios.cod_servicio=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividadAT,
+
 (SELECT SUM(valor_total_material) FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_otros_servicios.cod_servicio=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAT,
 
 (SELECT cod_procedimiento FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_procedimientos.cod_procedimiento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAP,
+
+(SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividad,
 
 (SELECT SUM(valor_procedimiento) FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_procedimientos.cod_procedimiento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS TotalAP,
