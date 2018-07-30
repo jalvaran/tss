@@ -1625,6 +1625,13 @@ function Footer(){
                 $this->CerrarDiv();
             $this->CerrarModal();
         }
+        public function ProgressBar($NombreBarra,$NombreLeyenda,$Tipo,$Valor,$Min,$Max,$Ancho,$Leyenda,$Color,$Vector) {
+            print('<div class="progress">
+                    <div id="'.$NombreBarra.'" name="'.$NombreBarra.'" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="'.$Valor.'" aria-valuemin="'.$Min.'" aria-valuemax="'.$Max.'" style="width:'.$Ancho.'%">
+                      <div id="'.$NombreLeyenda.'" name="'.$NombreLeyenda.'"">'.$Leyenda.'</div>
+                    </div>
+                  </div>');
+        }
         //////////////////////////////////FIN
 }
 	

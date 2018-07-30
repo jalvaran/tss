@@ -46,12 +46,27 @@ print("<body>");
     
     $css->CrearTabla();
     $css->FilaTabla(16);
-        $css->ColTabla("<strong>Opciones de Busqueda</strong>", 2);
-        print("<td colspan=2>");
-            print("<strong>Carga Masiva: </strong>");
-            $css->CrearUpload("UpCargaMasiva");
-            
-            $css->CrearBotonEvento("BtnEnviarCargaMasiva", "Cargar", 1, "onClick", "EnviarCargaMasiva()", "rojo", "");
+        $css->ColTabla("<strong>Opciones de Busqueda</strong>", 1);
+        print("<td colspan=3 style='text-align:center'>");
+            $css->ImageOcultarMostrar("ImgOcultaMasivos", "Cargar Glosas: ", "DivMasivos", 30, 30, "");
+            print(" || ");
+            $css->ImageOcultarMostrar("ImgOcultaMasivosConciliaciones", "Cargar Conciliaciones: ", "DivMasivosConciliaciones", 30, 30, "");
+            $css->CrearDiv("DivMasivos", "", "center", 0, 1);
+                print("<br><strong>Carga Masiva de Glosas: </strong>");
+                print("<br><strong>Archivo: </strong>");$css->CrearUpload("UpCargaMasivaGlosas");print("<br>");
+                //print("<strong>Soporte: </strong>");$css->CrearUpload("UpSoporteGlosasMasivas");print("<br>");            
+                $css->CrearBotonEvento("BtnEnviarCargaMasiva", "Cargar Glosas", 1, "onClick", "CargarArchivoGlosasMasivas()", "rojo", "");
+                $css->ProgressBar("PgProgresoCMG", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
+                print("<div id='EstadoProgresoGlosasMasivas'></div>");
+               
+            $css->CerrarDiv();
+            $css->CrearDiv("DivMasivosConciliaciones", "", "center", 0, 1);
+                print("<br><strong>Carga Masiva de Conciliaciones: </strong><br>");
+                print("<strong>Archivo: </strong>");$css->CrearUpload("UpCargaMasivaConciliaciones");
+                           
+                print("<br>");$css->CrearBotonEvento("BtnEnviarCargaMasivaConciliaciones", "Cargar Conciliaciones", 1, "onClick", "EnviarCargaMasivaGlosas()", "rojo", "");
+                $css->ProgressBar("PgProgresoConciliaciones", "LyProgresoConciliaciones", "", 0, 0, 100, 0, "0%", "", "");
+            $css->CerrarDiv();
         print("</td>");
     $css->CierraFilaTabla();
         $css->FilaTabla(16);
@@ -133,6 +148,7 @@ print("<body>");
     $css->AgregaJS(); //Agregamos javascripts
    
     print('<script type="text/javascript" src="jsPages/Glosas.js"></script>');
+    print('<script type="text/javascript" src="jsPages/GlosasMasivas.js"></script>');
     $css->AgregaSubir();
     print('<a style="display:scroll; position:fixed; bottom:345px; right:10px;height:70px;width:60px" href="#" title="Cuentas"><img src="../images/salud_cuentas.png" /></a>');
     print('<a style="display:scroll; position:fixed; bottom:270px; right:10px;height:70px;width:60px" href="#AnclaFacturas" title="Facturas"><img src="../images/salud_facturas.png" /></a>');
