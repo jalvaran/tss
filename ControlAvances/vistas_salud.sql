@@ -110,7 +110,7 @@ FROM `salud_archivo_facturacion_mov_generados`;
 
 DROP VIEW IF EXISTS `vista_salud_glosas_masivas`;
 CREATE VIEW vista_salud_glosas_masivas AS 
-SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,GlosaInicial,GlosaControlRespuestas,CodigoActividad,Observaciones,
+SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,GlosaInicial,GlosaControlRespuestas,CodigoActividad,Observaciones,Soporte,
 (SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
 (SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_glosas_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
 (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_glosas_masivas_temp.`ID_EPS`=salud_archivo_facturacion_mov_generados.cod_enti_administradora AND `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS CodEps,

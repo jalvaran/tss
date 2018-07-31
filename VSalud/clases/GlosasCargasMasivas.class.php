@@ -25,12 +25,21 @@ class GlosasMasivas extends Glosas{
     public function LeerArchivo($Vector) {
         require_once('../../librerias/Excel/PHPExcel.php');
         require_once('../../librerias/Excel/PHPExcel/Reader/Excel2007.php'); 
+        $DatosUpload["Soporte"]="";
         $sql="SELECT Soporte,TipoArchivo FROM salud_control_glosas_masivas WHERE Analizado=0  ORDER BY ID DESC LIMIT 1";
         $consulta=$this->Query($sql);
         $DatosUpload=$this->FetchArray($consulta);
         
         $RutaArchivo="../../".$DatosUpload["Soporte"];
-        $objReader = new PHPExcel_Reader_Excel2007();
+        if($DatosUpload["TipoArchivo"]=="xlsx"){
+            $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+        }else if($DatosUpload["TipoArchivo"]=="xls"){
+            $objReader = PHPExcel_IOFactory::createReader('Excel5');
+        }else{
+            exit("Solo se permiten archivos con extension xls o xlsx");
+        }
+        
+        //$objReader = new PHPExcel_Reader_Excel2007();
         $objPHPExcel = $objReader->load($RutaArchivo);
         $objFecha = new PHPExcel_Shared_Date();       
         $objPHPExcel->setActiveSheetIndex(0);
@@ -51,17 +60,19 @@ class GlosasMasivas extends Glosas{
                 $_DATOS_EXCEL[$i]['CodigoGlosa'] = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
                 $_DATOS_EXCEL[$i]['CuentaGlobal'] = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
                 $_DATOS_EXCEL[$i]['Observaciones'] = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['Soporte']=$DatosUpload["Soporte"];
+                
             }
         } 
         $sql="";
         foreach($_DATOS_EXCEL as $campo => $valor){
-            $sql= "INSERT INTO salud_glosas_masivas_temp (FechaIPS,FechaAuditoria,ID_EPS,NIT_EPS,CuentaRips,num_factura,CodigoActividad,ValorGlosado,CodigoGlosa,CuentaGlobal,Observaciones)  VALUES ('";
+            $sql= "INSERT INTO salud_glosas_masivas_temp (FechaIPS,FechaAuditoria,ID_EPS,NIT_EPS,CuentaRips,num_factura,CodigoActividad,ValorGlosado,CodigoGlosa,CuentaGlobal,Observaciones,Soporte)  VALUES ('";
             foreach ($valor as $campo2 => $valor2){
-                $campo2 == "Observaciones" ? $sql.= $valor2."');" : $sql.= $valor2."','";
+                $campo2 == "Soporte" ? $sql.= $valor2."');" : $sql.= $valor2."','";
             }
             $this->Query($sql);
         }    
-        
+       
         $errores=0;
 
         //print($DatosUpload["Soporte"]);

@@ -29,7 +29,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $Atras="../";
                 $carpeta="SoportesSalud/CargasMasivasGlosas/";
                 opendir($Atras.$Atras.$carpeta);
-                $Name=str_replace(' ','CargaGlosas_',$Fecha."_".$_FILES['UpCargaMasivaGlosas']['name']);
+                $Name=str_replace(' ','_','CargaGlosas_'.$Fecha."_".$_FILES['UpCargaMasivaGlosas']['name']);
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['UpCargaMasivaGlosas']['tmp_name'],$Atras.$Atras.$destino);
             }
@@ -157,7 +157,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                        
             
             $idGlosa=$obGlosas->RegistrarGlosaInicial($DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $ValorActividad, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, $DatosGlosa["ValorGlosado"], "");
-            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $NombreActividad, $ValorActividad, 1, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["Observaciones"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, 0, $DatosGlosa["ValorGlosado"], "", $idUser, "");
+            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $NombreActividad, $ValorActividad, 1, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["Observaciones"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, 0, $DatosGlosa["ValorGlosado"], $DatosGlosa["Soporte"], $idUser, "");
             $ID=$DatosGlosa["ID"];
             $obGlosas->update("salud_glosas_masivas_temp", "GlosaInicial", 1, "WHERE ID='$ID'");
             
