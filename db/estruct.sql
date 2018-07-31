@@ -727,7 +727,7 @@ CREATE TABLE `salud_archivo_medicamentos` (
   `tipo_ident_usuario` enum('CC','CE','PA','RC','TI','AS','MS') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Tipo de identificación del usuario " Ver Alineamientos tecnicos para ips ver pag 14"',
   `num_ident_usuario` bigint(16) NOT NULL COMMENT 'Número de identificación del usuario del sistema " Ver Alineamientos tecnicos para ips ver pag 16"',
   `num_autorizacion` int(15) DEFAULT NULL COMMENT 'Número de autorización " Ver Alineamientos tecnicos para ips ver pag 20" ',
-  `cod_medicamento` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Código del medicamento " Ver Alineamientos tecnicos para ips ver pag 41"',
+  `cod_medicamento` varchar(20) COLLATE utf8_spanish_ci DEFAULT '8' COMMENT 'Código del medicamento &quot; Ver Alineamientos tecnicos para ips ver pag 41&quot;',
   `tipo_medicamento` enum('1','2') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Tipo de medicamento " Ver Alineamientos tecnicos para ips ver pag 41"',
   `forma_farmaceutica` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Forma farmacéutica" Ver Alineamientos tecnicos para ips ver pag 41"',
   `nom_medicamento` varchar(30) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre genérico del medicamento " Ver Alineamientos tecnicos para ips ver pag 41"',
@@ -770,7 +770,7 @@ CREATE TABLE `salud_archivo_medicamentos_temp` (
   `nom_cargue` varchar(20) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del archivo con el que se carga',
   `fecha_cargue` datetime NOT NULL COMMENT 'Fecha en que se carga',
   `idUser` int(11) NOT NULL,
-  `EstadoGlosa` int(2) NOT NULL,
+  `EstadoGlosa` int(2) NOT NULL DEFAULT '8',
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY `id_medicamentos` (`id_medicamentos`),
@@ -1181,6 +1181,38 @@ CREATE TABLE `salud_cobros_prejuridicos_relaciones` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
 
+DROP TABLE IF EXISTS `salud_conciliaciones_masivas_temp`;
+CREATE TABLE `salud_conciliaciones_masivas_temp` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `FechaConciliacion` date NOT NULL,
+  `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
+  `num_factura` varchar(45) NOT NULL,
+  `CodigoActividad` varchar(20) NOT NULL,
+  `ValorLevantado` double NOT NULL,
+  `ValorAceptado` double NOT NULL,
+  `Observaciones` text NOT NULL,
+  `Soporte` varchar(200) NOT NULL,
+  `Conciliada` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `salud_control_glosas_masivas`;
+CREATE TABLE `salud_control_glosas_masivas` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Fecha` date NOT NULL,
+  `Soporte` varchar(200) NOT NULL,
+  `TipoArchivo` varchar(60) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Analizado` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
 DROP TABLE IF EXISTS `salud_cups`;
 CREATE TABLE `salud_cups` (
   `ID` int(20) NOT NULL,
@@ -1308,6 +1340,30 @@ CREATE TABLE `salud_glosas_iniciales_temp` (
   KEY `CodigoActividad` (`CodigoActividad`),
   KEY `CodigoGlosa` (`CodigoGlosa`),
   KEY `EstadoGlosa` (`EstadoGlosa`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+DROP TABLE IF EXISTS `salud_glosas_masivas_temp`;
+CREATE TABLE `salud_glosas_masivas_temp` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FechaIPS` date NOT NULL,
+  `FechaAuditoria` date NOT NULL,
+  `ID_EPS` varchar(45) NOT NULL,
+  `NIT_EPS` varchar(20) NOT NULL,
+  `CuentaRips` int(6) unsigned zerofill NOT NULL,
+  `num_factura` varchar(20) NOT NULL,
+  `CodigoActividad` varchar(45) NOT NULL,
+  `ValorGlosado` double NOT NULL,
+  `CodigoGlosa` int(4) NOT NULL,
+  `CuentaGlobal` varchar(20) NOT NULL,
+  `Observaciones` text NOT NULL,
+  `Soporte` varchar(200) NOT NULL,
+  `Analizado` int(1) NOT NULL,
+  `GlosaInicial` int(1) NOT NULL,
+  `GlosaControlRespuestas` int(1) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
@@ -1625,4 +1681,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-07-26 16:42:34
+-- 2018-07-31 14:23:17
