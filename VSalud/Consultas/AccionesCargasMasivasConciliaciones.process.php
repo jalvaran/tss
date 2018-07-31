@@ -72,7 +72,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 
                 $idFactura=$DatosCarga["Factura"];
                 $idActividad=$DatosCarga["CodigoActividad"];
-                $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+                $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND EstadoGlosa<>13");
                 $TotalConciliacion=$DatosCarga["ValorLevantado"]+$DatosCarga["ValorAceptado"];
                 if($TotalGlosasExistentes<>$TotalConciliacion){
                     $css->CrearNotificacionRoja("<br>Error: El total Glosado no concuerda con el valor conciliado, Linea: ".$DatosCarga["ID"],14);
@@ -123,15 +123,16 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             
         break;
-        case 5://Crea las glosas iniciales a partir de la tabla temporal de glosas masivas
-            $sql="SELECT COUNT(*) as Total FROM salud_glosas_masivas_temp";
+        case 5://Guarda las Consolidaciones
+            $sql="SELECT COUNT(*) as Total FROM salud_conciliaciones_masivas_temp";
             $Datos=$obGlosas->Query($sql);
             $Datos=$obGlosas->FetchArray($Datos);
             $TotalGlosas=$Datos["Total"];
-            $Datos=$obGlosas->ConsultarTabla("vista_salud_glosas_masivas", "WHERE GlosaInicial=0 LIMIT 1");
+            $Datos=$obGlosas->ConsultarTabla("vista_salud_consolidaciones_masivas", "WHERE Conciliada=0 LIMIT 1");
             $DatosGlosa=$obGlosas->FetchArray($Datos);
             $ValorActividad=$DatosGlosa["TotalAM"]+$DatosGlosa["TotalAT"]+$DatosGlosa["TotalAP"]+$DatosGlosa["TotalAC"];
             $TipoArchivo="";
+            
             if($DatosGlosa["CodigoActividadAM"]<>''){
                 $TipoArchivo="AM";
                 $NombreActividad=$DatosGlosa["NombreActividadAM"];
@@ -148,20 +149,29 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $TipoArchivo="AP";
                 $NombreActividad=$DatosGlosa["NombreActividad"];
             }
-                       
+            $idFactura=$DatosGlosa["Factura"];  
+            $idActividad=$DatosGlosa["CodigoActividad"];
+            $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+            $ValorGlosado=$DatosGlosa["ValorAceptado"]+$DatosGlosa["ValorLevantado"];
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'";
+            $obGlosas->Query($sql);
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'";
+            $obGlosas->Query($sql);
             
-            $idGlosa=$obGlosas->RegistrarGlosaInicial($DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $ValorActividad, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, $DatosGlosa["ValorGlosado"], "");
-            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $NombreActividad, $ValorActividad, 1, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["Observaciones"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, 0, $DatosGlosa["ValorGlosado"], $DatosGlosa["Soporte"], $idUser, "");
+            $idGlosa=$obGlosas->RegistrarGlosaInicialConciliada(6, $idFactura, $idActividad, $ValorActividad, $DatosGlosa["FechaConciliacion"], $DatosGlosa["FechaConciliacion"], '', $ValorGlosado, $DatosGlosa["ValorAceptado"], 0, $DatosGlosa["ValorLevantado"], "");
+            $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $idFactura, $idActividad, $NombreActividad, $ValorActividad, 6, $DatosGlosa["FechaConciliacion"], $DatosGlosa["FechaConciliacion"], $DatosGlosa["Observaciones"], '', $ValorGlosado, $DatosGlosa["ValorAceptado"], $DatosGlosa["ValorLevantado"], 0, $DatosGlosa["Soporte"], $idUser, "");
+            $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $idActividad, "");
+            
             $ID=$DatosGlosa["ID"];
-            $obGlosas->update("salud_glosas_masivas_temp", "GlosaInicial", 1, "WHERE ID='$ID'");
+            $obGlosas->update("salud_conciliaciones_masivas_temp", "Conciliada", 1, "WHERE ID='$ID'");
             
-            $sql="SELECT COUNT(*) as Total FROM salud_glosas_masivas_temp WHERE GlosaInicial=1";
+            $sql="SELECT COUNT(*) as Total FROM salud_conciliaciones_masivas_temp WHERE Conciliada=1";
             $Datos=$obGlosas->Query($sql);
             $Datos=$obGlosas->FetchArray($Datos);
             $TotalGlosasRegistradas=$Datos["Total"];
             $Porcentaje=round((40/$TotalGlosas)*$TotalGlosasRegistradas);
             if($Porcentaje==40){
-                $obGlosas->VaciarTabla("salud_glosas_masivas_temp");
+                $obGlosas->VaciarTabla("salud_conciliaciones_masivas_temp");
                 print("FIN;");
             }else{
                 print("OK;$TotalGlosas;$TotalGlosasRegistradas;$Porcentaje");

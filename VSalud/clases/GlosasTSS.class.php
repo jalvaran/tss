@@ -928,7 +928,7 @@ class Glosas extends conexion{
      * @return type
      */
     public function RegistrarGlosaInicialConciliada($EstadoGlosa,$idFactura,$idActividad,$ValorActividad,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorXConciliar,$ValorLevantado,$Vector) {
-        $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+        $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND EstadoGlosa<>13");
         
         if(($TotalGlosasExistentes+$ValorEPS)>$ValorActividad){
             exit("El valor Glosado Excede el total de la actividad.");

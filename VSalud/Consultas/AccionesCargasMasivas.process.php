@@ -103,7 +103,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 }
                 $idFactura=$DatosCarga["Factura"];
                 $idActividad=$DatosCarga["CodigoActividad"];
-                $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
+                $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND EstadoGlosa<>13");
             
                 $TotalPorGlosar=$obGlosas->Sume("salud_glosas_masivas_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND GlosaInicial=0");
                 $GlosasTotales=$TotalPorGlosar+$TotalGlosasExistentes;

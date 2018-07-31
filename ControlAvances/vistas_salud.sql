@@ -160,7 +160,7 @@ FROM `salud_glosas_masivas_temp`;
 
 DROP VIEW IF EXISTS `vista_salud_consolidaciones_masivas`;
 CREATE VIEW vista_salud_consolidaciones_masivas AS 
-SELECT `ID`,FechaConciliacion,CuentaRIPS as CuentaRIPSTemp,num_factura,CodigoActividad,ValorLevantado,ValorAceptado,Observaciones,Soporte,
+SELECT `ID`,FechaConciliacion,CuentaRIPS as CuentaRIPSTemp,num_factura,CodigoActividad,ValorLevantado,ValorAceptado,Observaciones,Soporte,Conciliada,
 (SELECT FechaConciliacion>NOW()) AS Extemporanea,(SELECT ValorLevantado>0) AS ValorLevantadoPositivo,(SELECT ValorAceptado>0) AS ValorAceptadoPositivo,
 (SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
 (SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_conciliaciones_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
@@ -171,6 +171,9 @@ AND salud_archivo_medicamentos.cod_medicamento=salud_conciliaciones_masivas_temp
 AND salud_archivo_medicamentos.cod_medicamento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividadAM,
 (SELECT EstadoGlosa FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_medicamentos.cod_medicamento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS EstadoGlosaAM,
+(SELECT SUM(valor_total_medic) FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
+AND salud_archivo_medicamentos.cod_medicamento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS TotalAM,
+
 
 (SELECT cod_servicio FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_otros_servicios.cod_servicio=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAT,
@@ -178,18 +181,25 @@ AND salud_archivo_otros_servicios.cod_servicio=salud_conciliaciones_masivas_temp
 AND salud_archivo_otros_servicios.cod_servicio=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividadAT,
 (SELECT EstadoGlosa FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_otros_servicios.cod_servicio=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS EstadoGlosaAT,
+(SELECT SUM(valor_total_material) FROM salud_archivo_otros_servicios WHERE salud_archivo_otros_servicios.num_factura=salud_conciliaciones_masivas_temp.num_factura 
+AND salud_archivo_otros_servicios.cod_servicio=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS TotalAT,
 
 
 (SELECT cod_procedimiento FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_procedimientos.cod_procedimiento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAP,
 (SELECT EstadoGlosa FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_procedimientos.cod_procedimiento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS EstadoGlosaAP,
+(SELECT SUM(valor_procedimiento) FROM salud_archivo_procedimientos WHERE salud_archivo_procedimientos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
+AND salud_archivo_procedimientos.cod_procedimiento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS TotalAP,
 
 (SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS NombreActividad,
 
 (SELECT cod_consulta FROM salud_archivo_consultas WHERE salud_archivo_consultas.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_consultas.cod_consulta=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAC,
 (SELECT EstadoGlosa FROM salud_archivo_consultas WHERE salud_archivo_consultas.num_factura=salud_conciliaciones_masivas_temp.num_factura 
-AND salud_archivo_consultas.cod_consulta=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS EstadoGlosaAC
+AND salud_archivo_consultas.cod_consulta=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS EstadoGlosaAC,
+(SELECT SUM(valor_consulta) FROM salud_archivo_consultas WHERE salud_archivo_consultas.num_factura=salud_conciliaciones_masivas_temp.num_factura 
+AND salud_archivo_consultas.cod_consulta=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS TotalAC
+
 
 FROM `salud_conciliaciones_masivas_temp`;

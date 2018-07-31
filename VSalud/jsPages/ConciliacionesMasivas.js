@@ -158,3 +158,53 @@ function AnalizarRegistrosConciliaciones(){
           }
       })
 }
+/**
+ * Registra las conciliaciones
+ * @returns {undefined}
+ */
+function RegistraConciliaciones(){
+    var form_data = new FormData();
+    form_data.append('idAccion',5);
+    $.ajax({
+        async:false,
+        url: './Consultas/AccionesCargasMasivasConciliaciones.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            var respuestas = data.split(';');
+            if(respuestas[0]==='OK'){
+                var Porcentaje = respuestas[3]; 
+                var msg="Registradas "+respuestas[2]+" Glosas de un total de "+respuestas[1]+" para un progreso del "+Porcentaje;
+                Porcentaje=parseInt(Porcentaje)+60;
+                document.getElementById('EstadoProgresoConciliaciones').innerHTML=msg;
+                $('#PgProgresoConciliaciones').css('width',Porcentaje+'%').attr('aria-valuenow', Porcentaje);  
+                document.getElementById('LyProgresoConciliaciones').innerHTML=Porcentaje+"%";
+                //document.getElementById('BtnEnviarCargaMasiva').disabled=false;
+                RegistraConciliaciones();
+            }else if(respuestas[0]==='FIN'){
+                document.getElementById('EstadoProgresoConciliaciones').innerHTML="Las Glosas fueron creadas exitósamente";
+                $('#PgProgresoConciliaciones').css('width','100%').attr('aria-valuenow', 100);  
+                document.getElementById('LyProgresoConciliaciones').innerHTML="100%";
+                document.getElementById('BtnEnviarCargaMasivaConciliaciones').disabled=false;
+               
+                
+            }else{
+                BorrarCargaConciliaciones();//Elimina los registros de la tabla Control de cargas
+                document.getElementById('BtnEnviarCargaMasivaConciliaciones').disabled=false;
+                alertify.alert("Error");
+                document.getElementById('EstadoProgresoConciliaciones').innerHTML=data;
+            }
+            
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de leer el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
