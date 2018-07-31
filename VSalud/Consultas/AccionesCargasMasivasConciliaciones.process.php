@@ -22,16 +22,16 @@ if( !empty($_REQUEST["idAccion"]) ){
             $destino='';
             $Name='';
             $Extension="";
-            if(!empty($_FILES['UpCargaMasivaGlosas']['name'])){
+            if(!empty($_FILES['UpCargaMasivaConciliaciones']['name'])){
                 
-                $info = new SplFileInfo($_FILES['UpCargaMasivaGlosas']['name']);
+                $info = new SplFileInfo($_FILES['UpCargaMasivaConciliaciones']['name']);
                 $Extension=($info->getExtension());
                 $Atras="../";
                 $carpeta="SoportesSalud/CargasMasivasGlosas/";
                 opendir($Atras.$Atras.$carpeta);
-                $Name=str_replace(' ','_','CargaGlosas_'.$Fecha."_".$_FILES['UpCargaMasivaGlosas']['name']);
+                $Name=str_replace(' ','_','Conciliacion_'.$Fecha."_".$_FILES['UpCargaMasivaConciliaciones']['name']);
                 $destino=$carpeta.$Name;
-                move_uploaded_file($_FILES['UpCargaMasivaGlosas']['tmp_name'],$Atras.$Atras.$destino);
+                move_uploaded_file($_FILES['UpCargaMasivaConciliaciones']['tmp_name'],$Atras.$Atras.$destino);
             }
             $obGlosas->RegistreArchivoSubido($Fecha, $destino,$Extension, $idUser);
             print("OK");
@@ -39,19 +39,23 @@ if( !empty($_REQUEST["idAccion"]) ){
         case 2://Borra la carga del ultimo archivo en caso de errores
             $sql="DELETE FROM salud_control_glosas_masivas WHERE Analizado=0";
             $obGlosas->Query($sql);
-            $obGlosas->VaciarTabla("salud_glosas_masivas_temp");
+            $obGlosas->VaciarTabla("salud_conciliaciones_masivas_temp");
             print("Carga Borrada");
         break; 
         case 3://Leer Archivo y llevarlo a la tabla temporal            
-            $obGlosas->LeerArchivo("");
+            $obGlosas->LeerArchivoConciliaciones("");
             print("OK");
         break; 
         case 4://Se realizan las validaciones
             $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1);
             $Errores=0;
-            $sql="SELECT * FROM vista_salud_glosas_masivas";
+            $sql="SELECT * FROM vista_salud_consolidaciones_masivas";
             $Datos=$obGlosas->Query($sql);
             while($DatosCarga=$obGlosas->FetchArray($Datos)){
+                if($DatosCarga["Extemporanea"]==1){ //Si la fecha es mayor a la actual
+                    $css->CrearNotificacionRoja("<br>Error: la Fecha No puede ser mayor a la fecha actual, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
                 if($DatosCarga["Factura"]==''){ //Si existe la factura en los AF
                     $css->CrearNotificacionRoja("<br>Error: la factura No existe en los registros AF, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
@@ -60,67 +64,52 @@ if( !empty($_REQUEST["idAccion"]) ){
                     $css->CrearNotificacionRoja("<br>Error: la Factura no está asociada a la CuentaRIPS, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
                 }
-                if(($DatosCarga["CodEps"]=='')){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: la Factura no está asociada a la EPS relacionada, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-                }
-                if(($DatosCarga["NIT"]=='')){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: El NIT No coincide con la EPS relacionada, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-                }
-                if(($DatosCarga["CodigoGlosa"]=='')){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: El Codigo de la glosa no existe, Linea: ".$DatosCarga["ID"]);
-                    $Errores=$Errores+1;
-                }
+                
                 if(($DatosCarga["CodigoActividadAM"]=='') AND ($DatosCarga["CodigoActividadAT"]=='') AND ($DatosCarga["CodigoActividadAP"]=='') AND ($DatosCarga["CodigoActividadAC"]=='') ){ //Si la actividad no existe en ninguno de los archivos
                     $css->CrearNotificacionRoja("<br>Error: La factura no contiene el codigo de la actividad relacionada, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
                 }
-                $TotalActividad=$DatosCarga["TotalAM"]+$DatosCarga["TotalAP"]+$DatosCarga["TotalAC"]+$DatosCarga["TotalAT"];
-                if($DatosCarga["ValorGlosado"]>$TotalActividad){
-                    $css->CrearNotificacionRoja("<br>Error: El Valor Glosado No puede ser superior al total de la actividad, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-               
-                }
-                if($DatosCarga["ValorGlosado"]<0){
-                    $css->CrearNotificacionRoja("<br>Error: El Valor Glosado No puede negativo, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-               
-                }
-                if(($DatosCarga["idGlosa"]>0)){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: Ya se registró una Glosa con el código relacionado para la factura y actividad, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-                }
-                if(($DatosCarga["idGlosaTemp"]>0)){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: Existe una Glosa con el código relacionado para la factura y actividad a la espera de guardarse, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-                }
                 
-                $Dias=$obGlosas->CalculeDiferenciaFechas($DatosCarga["FechaIPS"], date("Y-m-d"), "");
-                if($Dias["Dias"]>$Parametros["Valor"]){
-                    $css->CrearNotificacionRoja("<br>Error: La Factura Superó el numero de días ($Dias[Dias] de un máximo posible de $Parametros[Valor]) para realizar glosas, Linea: ".$DatosCarga["ID"],14);
-                    $Errores=$Errores+1;
-                }
                 $idFactura=$DatosCarga["Factura"];
                 $idActividad=$DatosCarga["CodigoActividad"];
                 $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
-            
-                $TotalPorGlosar=$obGlosas->Sume("salud_glosas_masivas_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad' AND GlosaInicial=0");
-                $GlosasTotales=$TotalPorGlosar+$TotalGlosasExistentes;
-                
-                $ValorActividad=$DatosCarga["TotalAM"]+$DatosCarga["TotalAT"]+$DatosCarga["TotalAP"]+$DatosCarga["TotalAC"];
-                
-                if($GlosasTotales>$ValorActividad){
-                    $css->CrearNotificacionRoja("<br>Error: El Valor Total A Glosar Excede al Valor de la actividad, Linea: ".$DatosCarga["ID"],14);
+                $TotalConciliacion=$DatosCarga["ValorLevantado"]+$DatosCarga["ValorAceptado"];
+                if($TotalGlosasExistentes<>$TotalConciliacion){
+                    $css->CrearNotificacionRoja("<br>Error: El total Glosado no concuerda con el valor conciliado, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if($DatosCarga["ValorLevantadoPositivo"]==0){ //Si la fecha es mayor a la actual
+                    $css->CrearNotificacionRoja("<br>Error: El Valor levantado no es positivo, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                if($DatosCarga["ValorAceptadoPositivo"]==0){ //Si la fecha es mayor a la actual
+                    $css->CrearNotificacionRoja("<br>Error: El Valor aceptado no es positivo, Linea: ".$DatosCarga["ID"],14);
+                    $Errores=$Errores+1;
+                }
+                $Estado='';
+                if($DatosCarga["CodigoActividadAM"]<>''){ //Si la fecha es mayor a la actual
+                    $Estado=$DatosCarga["EstadoGlosaAM"];
+                }
+                if($DatosCarga["CodigoActividadAP"]<>''){ //Si la fecha es mayor a la actual
+                    $Estado=$DatosCarga["EstadoGlosaAP"];
+                }
+                if($DatosCarga["CodigoActividadAC"]<>''){ //Si la fecha es mayor a la actual
+                    $Estado=$DatosCarga["EstadoGlosaAC"];
+                }
+                if($DatosCarga["CodigoActividadAT"]<>''){ //Si la fecha es mayor a la actual
+                    $Estado=$DatosCarga["EstadoGlosaAT"];
+                }
+                if($Estado>4){ //Se revisa que el estado de la actividad indique si  está glosada o no
+                    $css->CrearNotificacionRoja("<br>Error: La actividad no está Glosada o ya está conciliada, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
                 }
             }
             
-            $sql="SELECT COUNT(*) as Repetidos FROM salud_glosas_masivas_temp GROUP BY num_factura,CodigoActividad,CodigoGlosa HAVING COUNT(*) > 1 LIMIT 1";
+            $sql="SELECT COUNT(*) as Repetidos FROM salud_conciliaciones_masivas_temp GROUP BY num_factura,CodigoActividad HAVING COUNT(*) > 1 LIMIT 1";
             $Datos=$obGlosas->Query($sql);
             while($DatosCarga=$obGlosas->FetchArray($Datos)){
                 if($DatosCarga["Repetidos"]>1){
-                    $css->CrearNotificacionRoja("<br>Error: El Archivo Subido contiene Registros donde se repiten el Numero de factura, Codigo de Actividad y Codigo de Glosa.",14);
+                    $css->CrearNotificacionRoja("<br>Error: El Archivo Subido contiene Registros donde se repiten el Numero de factura y el Codigo de Actividad ",14);
                     $Errores=$Errores+1;
                 }
             }
@@ -139,12 +128,10 @@ if( !empty($_REQUEST["idAccion"]) ){
             $Datos=$obGlosas->Query($sql);
             $Datos=$obGlosas->FetchArray($Datos);
             $TotalGlosas=$Datos["Total"];
-            
             $Datos=$obGlosas->ConsultarTabla("vista_salud_glosas_masivas", "WHERE GlosaInicial=0 LIMIT 1");
             $DatosGlosa=$obGlosas->FetchArray($Datos);
             $ValorActividad=$DatosGlosa["TotalAM"]+$DatosGlosa["TotalAT"]+$DatosGlosa["TotalAP"]+$DatosGlosa["TotalAC"];
             $TipoArchivo="";
-            $NombreActividad='';
             if($DatosGlosa["CodigoActividadAM"]<>''){
                 $TipoArchivo="AM";
                 $NombreActividad=$DatosGlosa["NombreActividadAM"];
@@ -165,7 +152,6 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $idGlosa=$obGlosas->RegistrarGlosaInicial($DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $ValorActividad, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, $DatosGlosa["ValorGlosado"], "");
             $obGlosas->RegistraGlosaRespuesta($TipoArchivo, $idGlosa, $DatosGlosa["Factura"], $DatosGlosa["CodigoActividad"], $NombreActividad, $ValorActividad, 1, $DatosGlosa["FechaIPS"], $DatosGlosa["FechaAuditoria"], $DatosGlosa["Observaciones"], $DatosGlosa["CodigoGlosa"], $DatosGlosa["ValorGlosado"], 0, 0, $DatosGlosa["ValorGlosado"], $DatosGlosa["Soporte"], $idUser, "");
-            $obGlosas->ActualiceEstados($DatosGlosa["Factura"], $TipoArchivo, $DatosGlosa["CodigoActividad"], "");
             $ID=$DatosGlosa["ID"];
             $obGlosas->update("salud_glosas_masivas_temp", "GlosaInicial", 1, "WHERE ID='$ID'");
             
@@ -173,14 +159,9 @@ if( !empty($_REQUEST["idAccion"]) ){
             $Datos=$obGlosas->Query($sql);
             $Datos=$obGlosas->FetchArray($Datos);
             $TotalGlosasRegistradas=$Datos["Total"];
-            if($TotalGlosas==0){
-                $TotalGlosas=1;
-            }
             $Porcentaje=round((40/$TotalGlosas)*$TotalGlosasRegistradas);
-            
             if($Porcentaje==40){
                 $obGlosas->VaciarTabla("salud_glosas_masivas_temp");
-                
                 print("FIN;");
             }else{
                 print("OK;$TotalGlosas;$TotalGlosasRegistradas;$Porcentaje");

@@ -62,7 +62,7 @@ function BorrarCarga(){
         success: function(data){
             
             alertify.error(data); 
-            document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=data;
+            document.getElementById('EstadoProgresoGlosasMasivas').innerHTML=document.getElementById('EstadoProgresoGlosasMasivas').innerHTML+"<br>"+data;
             
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -183,7 +183,7 @@ function RegistraGlosas(){
                 $('.progress-bar').css('width','100%').attr('aria-valuenow', 100);  
                 document.getElementById('LyProgresoCMG').innerHTML="100%";
                 document.getElementById('BtnEnviarCargaMasiva').disabled=false;
-                //BorrarCarga();
+                BorrarCarga();
                 
             }else{
                 BorrarCarga();//Elimina los registros de la tabla Control de cargas

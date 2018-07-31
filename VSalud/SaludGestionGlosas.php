@@ -64,8 +64,10 @@ print("<body>");
                 print("<br><strong>Carga Masiva de Conciliaciones: </strong><br>");
                 print("<strong>Archivo: </strong>");$css->CrearUpload("UpCargaMasivaConciliaciones");
                            
-                print("<br>");$css->CrearBotonEvento("BtnEnviarCargaMasivaConciliaciones", "Cargar Conciliaciones", 1, "onClick", "EnviarCargaMasivaGlosas()", "rojo", "");
+                print("<br>");$css->CrearBotonEvento("BtnEnviarCargaMasivaConciliaciones", "Cargar Conciliaciones", 1, "onClick", "CargarArchivoConciliaciones()", "naranja", "");
+                
                 $css->ProgressBar("PgProgresoConciliaciones", "LyProgresoConciliaciones", "", 0, 0, 100, 0, "0%", "", "");
+                print("<div id='EstadoProgresoConciliaciones'></div>");
             $css->CerrarDiv();
         print("</td>");
     $css->CierraFilaTabla();
@@ -149,6 +151,7 @@ print("<body>");
    
     print('<script type="text/javascript" src="jsPages/Glosas.js"></script>');
     print('<script type="text/javascript" src="jsPages/GlosasMasivas.js"></script>');
+    print('<script type="text/javascript" src="jsPages/ConciliacionesMasivas.js"></script>');
     $css->AgregaSubir();
     print('<a style="display:scroll; position:fixed; bottom:345px; right:10px;height:70px;width:60px" href="#" title="Cuentas"><img src="../images/salud_cuentas.png" /></a>');
     print('<a style="display:scroll; position:fixed; bottom:270px; right:10px;height:70px;width:60px" href="#AnclaFacturas" title="Facturas"><img src="../images/salud_facturas.png" /></a>');
