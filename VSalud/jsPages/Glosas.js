@@ -26,6 +26,9 @@ function ValidarFecha(idTxtFecha){
  * @returns {undefined}
  */
 function BuscarCuentaXCriterio(Criterio=1){
+  document.getElementById("DivFacturas").innerHTML='';  
+  document.getElementById("DivDetallesUsuario").innerHTML='';  
+  document.getElementById("DivActividadesFacturas").innerHTML='';  
   document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
          
   var form_data = new FormData();
@@ -100,7 +103,8 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @returns {undefined}
  */
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
-    
+    document.getElementById("DivDetallesUsuario").innerHTML='';
+    document.getElementById("DivActividadesFacturas").innerHTML='';
     document.location.href = "#AnclaFacturas";
     document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
     var form_data = new FormData();
@@ -163,6 +167,74 @@ function FiltreRangoFechas(){
       })        
 }  
 
+/*
+ * Filtra las cuentas por rango de fechas 
+ * @returns {undefined}
+ */
+function FiltreCuentasRangoFechas(){
+     var form_data = new FormData();
+        form_data.append('idEPS', $('#FiltroFechaInicialCuentas').val());
+        form_data.append('FechaInicial', $('#FiltroFechaInicialCuentas').val());
+        form_data.append('FechaFinal', $('#FiltroFechaFinalCuentas').val());
+        document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+   
+        $.ajax({
+        url: './Consultas/vista_salud_cuentas_rips.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            //console.log(data)
+          if (data != "") { 
+              document.getElementById('DivCuentas').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+/*
+ * Filtra las cuentas por rango de fechas 
+ * @returns {undefined}
+ */
+function FiltreCuentasFechaRadicado(){
+     var form_data = new FormData();
+        form_data.append('idEPS', $('#FiltroFechaInicialCuentas').val());
+        form_data.append('FechaRadicado', $('#FiltroFechaRadicadoCuentas').val());
+        document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+   
+        $.ajax({
+        url: './Consultas/vista_salud_cuentas_rips.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            //console.log(data)
+          if (data != "") { 
+              document.getElementById('DivCuentas').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
 /**
  * Filtra las facturas por estado de la glosa
  * @returns {undefined}

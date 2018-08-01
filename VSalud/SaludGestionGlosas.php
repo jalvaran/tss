@@ -75,7 +75,7 @@ print("<body>");
             $css->ColTabla("<strong>EPS</strong>", 1);
             $css->ColTabla("<strong>Factura</strong>", 1);
             $css->ColTabla("<strong>X Cuentas</strong>", 1);
-            $css->ColTabla("<strong>Estado de Glosas</strong>", 1);
+            $css->ColTabla("<strong>Estado de Glosas en Cuentas</strong>", 1);
         $css->CierraFilaTabla();
         $css->FilaTabla(16);
             print("<td>");

@@ -66,6 +66,51 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
         $idEstadoGlosa=$obGlosas->normalizar($_REQUEST['CmdEstadoGlosa']);
         $statement=" `vista_salud_cuentas_rips` WHERE `idEstadoGlosa`='$idEstadoGlosa'";
     }
+    $FechaInicial=date("Y-m-d");
+    $FechaFinal=date("Y-m-d");
+    if(isset($_REQUEST["FechaInicial"])){
+        $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+        $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+        $statement=" `vista_salud_cuentas_rips` WHERE `FechaDesde`>='$FechaInicial' AND `FechaHasta`<='$FechaFinal'";
+    }
+    $FechaRadicado=date("Y-m-d");
+    if(isset($_REQUEST["FechaRadicado"])){
+        $FechaRadicado=$obGlosas->normalizar($_REQUEST["FechaRadicado"]);
+       
+        $statement=" `vista_salud_cuentas_rips` WHERE `fecha_radicado`='$FechaRadicado'";
+    }
+    
+    $css->CrearTabla();
+            $css->FilaTabla(16);
+                $css->ColTabla("<strong>Criterios de Búsqueda</strong>", 4);
+            $css->CierraFilaTabla();
+            $css->FilaTabla(12);
+                $css->ColTabla("Fecha Inicial", 1);
+                $css->ColTabla("Fecha Final", 2);
+                $css->ColTabla("Fecha de Radicado", 2);
+            $css->CierraFilaTabla();
+            $css->FilaTabla(12);
+                print("<td>");
+                    
+                    $css->CrearInputText("FiltroFechaInicialCuentas", "date", "",$FechaInicial, "", "", "", "", 150, 30, 0, 0);
+                print("</td>");
+                print("<td>");
+                    $css->CrearInputText("FiltroFechaFinalCuentas", "date", "", $FechaFinal, "", "", "", "", 150, 30, 0, 0);
+                print("</td>");
+                print("<td>");
+                    $css->CrearBotonEvento("BtnFiltroFecha", "Filtrar por Rango", 1, "onClick", "FiltreCuentasRangoFechas()", "azul", "");
+                print("</td>");
+                print("<td>");
+                    $css->CrearInputText("FiltroFechaRadicadoCuentas", "date", "", $FechaRadicado, "", "", "", "", 150, 30, 0, 0);
+                print("</td>");
+                print("<td>");    
+                    $css->CrearBotonEvento("BtnFiltroFechaRadicado", "Filtrar por Fecha Radicado", 1, "onClick", "FiltreCuentasFechaRadicado()", "azul", "");
+                
+                print("</td>");
+            $css->CierraFilaTabla();
+        $css->CerrarTabla();
+        
+    
     //Paginacion
     $limit = 10;
     $startpoint = ($NumPage * $limit) - $limit;
@@ -140,6 +185,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
             $css->ColTabla("<strong>Cantidad de Facturas</strong>", 1);
             $css->ColTabla("<strong>Total Cuenta</strong>", 1);
             $css->ColTabla("<strong>Estado Glosa</strong>", 1);
+            $css->ColTabla("<strong>Semaforo</strong>", 1);
             $css->ColTabla("<strong>Abrir</strong>", 1);
             
         $css->CierraFilaTabla();
@@ -158,6 +204,14 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla(number_format($DatosCuenta["NumFacturas"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["Total"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
+                $CuentaRIPS=$DatosCuenta["CuentaRIPS"];
+                print("<td>");
+                    $sql="SELECT MIN (gi.FechaIPS) AS FechaMin FROM salud_glosas_iniciales gi INNER JOIN "
+                            . "salud_archivo_facturacion_mov_generados af ON gi.num_factura=af.num_factura"
+                            . " WHERE af.CuentaRIPS='$CuentaRIPS'";
+                    //$DatosSemaforo=$obGlosas->Query($sql);
+                    //print($DatosSemaforo["FechaMin"]);
+                print("</td>");
                 $CuentaRIPS=$DatosCuenta["CuentaRIPS"];
                 print("<td style='text-align:center'>");
                      $css->CrearBotonEvento("BtnMostrarCuenta_$CuentaRIPS", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]');CambiarColorBtnCuentas('BtnMostrarCuenta_$CuentaRIPS');", "naranja", "");
