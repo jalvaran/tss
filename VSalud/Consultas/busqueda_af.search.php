@@ -38,21 +38,21 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     if(isset($_REQUEST["idFactura"]) and !empty($_REQUEST["idFactura"])){
         $NumFactura=$obGlosas->normalizar($_REQUEST['idFactura']);
         //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
-        $statement=" `salud_archivo_facturacion_mov_generados` WHERE `num_factura`='$NumFactura'";
+        $statement=" `vista_af_semaforo` WHERE `num_factura`='$NumFactura'";
     }
     //Busco por Cuenta RIPS
     if(isset($_REQUEST["CuentaRIPS"]) and !empty($_REQUEST["CuentaRIPS"])){
         $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
-        $statement=" `salud_archivo_facturacion_mov_generados` WHERE `CuentaRIPS`='$CuentaRIPS'";
+        $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS'";
     }
     if(isset($_REQUEST["FechaInicial"])){
         $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
         $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-        $statement=" `salud_archivo_facturacion_mov_generados` WHERE `fecha_factura`>='$FechaInicial' AND `fecha_factura`<='$FechaFinal'";
+        $statement=" `vista_af_semaforo` WHERE `fecha_factura`>='$FechaInicial' AND `fecha_factura`<='$FechaFinal'";
     }
     if(isset($_REQUEST["idEstadoGlosas"])){
         $idEstadoGlosa=$obGlosas->normalizar($_REQUEST["idEstadoGlosas"]);        
-        $statement=" `salud_archivo_facturacion_mov_generados` WHERE `EstadoGlosa`='$idEstadoGlosa'";
+        $statement=" `vista_af_semaforo` WHERE `EstadoGlosa`='$idEstadoGlosa'";
     }
     
     $css->CrearTabla();
@@ -91,11 +91,11 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     $row = $obGlosas->FetchArray($obGlosas->Query($query));
     $ResultadosTotales = $row['num'];
         
-    $statement.=" LIMIT $startpoint,$limit";
+    $statement.=" ORDER BY Dias DESC LIMIT $startpoint,$limit";
     
     
     //print("st:$statement");
-    $query="SELECT cod_prest_servicio,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa as idGlosa,"
+    $query="SELECT cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa as idGlosa,"
             . " (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = `EstadoGlosa`) as EstadoGlosa  ";
     $consulta=$obGlosas->Query("$query FROM $statement");
     if($obGlosas->NumRows($consulta)){
@@ -157,6 +157,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->ColTabla("<strong>Numero de Factura</strong>", 1);
             $css->ColTabla("<strong>Valor</strong>", 1);
             $css->ColTabla("<strong>Estado</strong>", 1);
+            $css->ColTabla("<strong>Semáforo</strong>", 1);
             $css->ColTabla("<strong>Abrir</strong>", 1);
             
             
@@ -172,6 +173,20 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
+                print("<td style='text-align:center'>");
+                    if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 and $DatosCuenta["idGlosa"]==1){
+                        $imagerute="../images/verde.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
+                    if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 and $DatosCuenta["idGlosa"]==1){
+                        $imagerute="../images/naranja.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
+                    if($DatosCuenta["Dias"]>=11 and  $DatosCuenta["idGlosa"]==1){
+                        $imagerute="../images/rojo.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
+                print("</td>");
                 $idFactura=$DatosCuenta["num_factura"];   
                 print("<td style='text-align:center'>");
                      $css->CrearBotonEvento("BtnMostrar_$idFactura", "ver factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
