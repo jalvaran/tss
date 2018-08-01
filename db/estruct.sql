@@ -1,4 +1,4 @@
--- Adminer 4.2.5 MySQL dump
+-- Adminer 4.6.3 MySQL dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -1561,6 +1561,7 @@ CREATE TABLE `salud_rips_facturas_generadas_temp` (
   `fecha_cargue` datetime NOT NULL,
   `idUser` int(11) NOT NULL,
   `LineaArchivo` int(11) NOT NULL,
+  `dias_pactados` int(11) NOT NULL,
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   KEY `id_temp_rips_generados` (`id_temp_rips_generados`)
@@ -1604,6 +1605,7 @@ CREATE TABLE `salud_upload_control` (
   `fecha_cargue` datetime NOT NULL,
   `idUser` int(11) NOT NULL,
   `Analizado` bit(1) NOT NULL,
+  `CargadoTemp` bit(1) NOT NULL,
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_upload_control`),
@@ -1681,4 +1683,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-07-31 14:23:17
+-- 2018-08-01 07:25:09

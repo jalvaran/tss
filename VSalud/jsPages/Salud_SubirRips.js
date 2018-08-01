@@ -121,7 +121,7 @@ function BorrarCarga(){
     var form_data = new FormData();
     form_data.append('idAccion',3);
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -1105,6 +1105,11 @@ function ModificaAutoincrementales(){
                 $('.progress-bar').css('width','100%').attr('aria-valuenow', 100);  
                 document.getElementById('LyProgresoCMG').innerHTML="100%";
                 document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Proceso terminado exitósamente!</h4>";
+                document.getElementById("UpSoporteRadicado").value="";
+                document.getElementById("ArchivosZip").value="";
+                document.getElementById("NumeroRadicado").value="";
+                document.getElementById("CuentaGlobal").value="";
+                document.getElementById("CuentaRIPS").value="";
                 document.getElementById("DivProcess").innerHTML='';
                 document.getElementById('BtnSubirZip').disabled=false;
                 
