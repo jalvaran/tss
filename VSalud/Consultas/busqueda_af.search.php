@@ -172,9 +172,9 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
-                                
+                $idFactura=$DatosCuenta["num_factura"];   
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar", "ver factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]')", "verde", "");
+                     $css->CrearBotonEvento("BtnMostrar_$idFactura", "ver factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }

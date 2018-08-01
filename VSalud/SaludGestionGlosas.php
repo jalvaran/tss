@@ -152,6 +152,7 @@ print("<body>");
     print('<script type="text/javascript" src="jsPages/Glosas.js"></script>');
     print('<script type="text/javascript" src="jsPages/GlosasMasivas.js"></script>');
     print('<script type="text/javascript" src="jsPages/ConciliacionesMasivas.js"></script>');
+    print('<script type="text/javascript" src="jsPages/GlosasDecor.js"></script>');
     $css->AgregaSubir();
     print('<a style="display:scroll; position:fixed; bottom:345px; right:10px;height:70px;width:60px" href="#" title="Cuentas"><img src="../images/salud_cuentas.png" /></a>');
     print('<a style="display:scroll; position:fixed; bottom:270px; right:10px;height:70px;width:60px" href="#AnclaFacturas" title="Facturas"><img src="../images/salud_facturas.png" /></a>');

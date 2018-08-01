@@ -79,7 +79,7 @@ function BuscarCuentaXCriterio(Criterio=1){
     data: form_data,
     type: 'post',
     success: function(data){
-        console.log(data)
+        //console.log(data)
       if (data != "") { 
           document.getElementById('DivCuentas').innerHTML=data;
                 
@@ -100,6 +100,7 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @returns {undefined}
  */
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
+    
     document.location.href = "#AnclaFacturas";
     document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
     var form_data = new FormData();
@@ -114,7 +115,7 @@ function MostrarFacturas(CuentaRIPS,NumFactura=''){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
+            //console.log(data)
           if (data != "") { 
               document.getElementById('DivFacturas').innerHTML=data;
               
@@ -147,7 +148,7 @@ function FiltreRangoFechas(){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
+            //console.log(data)
           if (data != "") { 
               document.getElementById('DivFacturas').innerHTML=data;
               
@@ -181,7 +182,7 @@ function FiltreFacturasXEstadoGlosa(){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
+            //console.log(data)
           if (data != "") { 
               document.getElementById('DivFacturas').innerHTML=data;
               
@@ -227,7 +228,7 @@ function BuscarUsuarioFactura(idFactura){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
+            //console.log(data)
           if (data != "") { 
               document.getElementById('DivDetallesUsuario').innerHTML=data;
               
@@ -259,7 +260,7 @@ function BuscarActividadesFactura(idFactura){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
+            //console.log(data)
           if (data != "") { 
               document.getElementById('DivActividadesFacturas').innerHTML=data;
               
@@ -363,7 +364,7 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
         if(idAccion==2){ //Glosar una actividad inicial
            
             if(ValidarFecha('FechaIPS')==1){
-                console.log(ValidarFecha('FechaIPS'));
+                //console.log(ValidarFecha('FechaIPS'));
                 alertify.alert("La fecha de IPS no puede ser mayor a la de hoy");
                 document.getElementById('FechaIPS').focus();
                 return;
@@ -407,7 +408,7 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
             }
             
             if(idAccion==2){
-                console.log(data);
+                //console.log(data);
                 var datos=JSON.parse(data);
                 if(datos.Error){
                     alertify.alert(datos.msg);
@@ -688,7 +689,7 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
         if(idAccion==4){ //Editar una actividad inicial
            
             if(ValidarFecha('FechaIPS')==1){
-                console.log(ValidarFecha('FechaIPS'));
+                //console.log(ValidarFecha('FechaIPS'));
                 alertify.alert("La fecha de IPS no puede ser mayor a la de hoy");
                 document.getElementById('FechaIPS').focus();
                 return;
@@ -1455,7 +1456,7 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
         success: function(data){
             
             if (data != "") { 
-                
+                document.getElementById("DivHistorialGlosas").innerHTML='Conciliacion realizada';
                 document.getElementById("DivGlosar").innerHTML=data;
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);

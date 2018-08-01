@@ -158,9 +158,9 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla(number_format($DatosCuenta["NumFacturas"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["Total"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
-                
+                $CuentaRIPS=$DatosCuenta["CuentaRIPS"];
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]')", "naranja", "");
+                     $css->CrearBotonEvento("BtnMostrarCuenta_$CuentaRIPS", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]');CambiarColorBtnCuentas('BtnMostrarCuenta_$CuentaRIPS');", "naranja", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }
