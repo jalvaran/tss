@@ -1,9 +1,9 @@
 <?php
 
-$myTabla="vista_af_duplicados";
+$myTabla="vista_af_devueltos";
 $idTabla="ID";
-$myPage="vista_af_duplicados.php";
-$myTitulo="Facturas Cargadas que están duplicadas";
+$myPage="vista_af_devueltos.php";
+$myTitulo="Facturas Cargadas que están duplicadas en estado de devolucion";
 
 /*
  * Opciones en Acciones

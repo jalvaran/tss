@@ -12,28 +12,27 @@ function ValidaCuentaRIPS(){
     var CuentaRIPS = document.getElementById('CuentaRIPS').value;
     var DivDestino =  'DivConsultas';
     var form_data = new FormData();
-        form_data.append('idValidacion', 1)
+        form_data.append('idAccion', 1)
         form_data.append('CuentaRIPS', CuentaRIPS)
                 
         $.ajax({
-        
-        url: 'Consultas/Validaciones.php',
-        dataType: "json",
+        async:false,
+        url: 'Consultas/Salud_SubirRips.process.php',
+        //dataType: "json",
         cache: false,
         processData: false,
         contentType: false,
         data: form_data,
         type: 'POST',
         success: (data) =>{
-            //console.log(data);
-            
-            if(data.msg==='OK'){
+                        
+            if(data==='OK'){
                 
                 document.getElementById('BtnSubirZip').disabled=false;
                                     
             }
             
-            if(data.msg==='Error'){
+            if(data==='Error'){
                 alertify.alert("El numero de Cuenta ya Existe!");
                 document.getElementById('BtnSubirZip').disabled=true;
             }
@@ -61,277 +60,244 @@ function getInfoForm(){
     form_data.append('CmbEscenario', $('#CmbEscenario').val());
     form_data.append('CmbSeparador', $('#CmbSeparador').val());
     form_data.append('CmbTipoNegociacion', $('#CmbTipoNegociacion').val());    
-    form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
-    form_data.append('ArchivosZip', $('#ArchivosZip').prop('files')[0]);
+    
+    
     return form_data;
 }
 /**
- * Envía la informacion 
- * @param {type} event
+ * Enviar El  .zip
  * @returns {undefined}
  */
-function submitInfo(event){
-  document.getElementById('BtnSubirZip').disabled=true; 
-  if($('#idEPS').val()=='' || $('#CuentaRIPS').val()=='' || $('#FechaRadicado').val()=='' || $('#NumeroRadicado').val()=='' || $('#CmbTipoNegociacion').val()=='' || $('#ArchivosZip').val()==''){
-        alertify.alert("Los campos indicados con * son obligatorios");
-        return;
-  }  
-  //event.preventDefault();
-  var form_data = getInfoForm();
-      form_data.append('idAccion', 1);
+function EnviarZIP(){
+    document.getElementById('BtnSubirZip').disabled=true; 
+    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+
+    if($('#idEPS').val()=='' || $('#CuentaRIPS').val()=='' || $('#FechaRadicado').val()=='' || $('#NumeroRadicado').val()=='' || $('#CmbTipoNegociacion').val()=='' || $('#ArchivosZip').val()==''){
+          alertify.alert("Los campos indicados con * son obligatorios");
+          return;
+    } 
+    
+    var form_data = new FormData();
+        form_data.append('idAccion', 2);
+        form_data.append('ArchivosZip', $('#ArchivosZip').prop('files')[0]);
       
-  $.ajax({
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: form_data,
-    type: 'post',
-    success: function(data){
-        //console.log(data);
-        document.getElementById("DivConsultas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
-        if(data.CT == 0){
-           
-            alertify.error("No se recibió ningún archivo CT",0);
-            return;
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
             
-        }
-        if(data.ErrorFecha){
-            document.getElementById("DivConsultas").innerHTML="";
-            alertify.alert("La Fecha de Radicado es mayor a la Actual, por favor selecciona otra fecha");
-            return;         
-        }
-        if(data.msg==='ErrorCuentaRIPS'){ //Si no es igual la cuenta rips escrita con el del archivo
-            document.getElementById("DivConsultas").innerHTML="";
-            alertify.alert("El numero de Cuenta RIP digitado no es igual del del CT: "+data.CuentaRIPSCT);
-            return;            
-        }
-        
-        VerificarCT(data.Separador); //Se verifica que el CT contenga todos los archivos enviados
-        ErroresArchivos=document.getElementById("Parar").value;
-        
-        if(ErroresArchivos==1){
-            document.getElementById("Parar").value=0;
-            return;
-        }
-        
-        for(i=0;i<data.Archivos.length;i++){ //Guarda los archivos en las tablas temporales
-            var prefijo = data.Archivos[i].substr(0,2);
-            
-            if(prefijo!="CT" && prefijo!="AD"){
-
-                GrabarArchivoEnTemporal(data.Archivos[i],0);
-            }
-           
-            
-        }
-        
-        ErroresArchivos=document.getElementById("Parar").value;
-        
-        if(ErroresArchivos==1){
-            document.getElementById("Parar").value=0;
-            return;
-        }
-        
-        //Se valida Si una factura ya está cargada y si es así para y muestra cuales
-        
-        VerificaDuplicados();
-        ErroresArchivos=document.getElementById("Parar").value;
-        
-        if(ErroresArchivos==1){
-            document.getElementById("Parar").value=0;
-            return;
-        }
-        
-        //Se valida Si una factura está duplicada y devuelta dependiendo de la respuesta del usuario se reescribirá o no
-        
-        VerificaDevoluciones();
-        ErroresArchivos=document.getElementById("Parar").value;
-        
-        if(ErroresArchivos==1){
-            document.getElementById("Parar").value=0;
-            return;
-        }
-        
-        //Se va a enviar para guardar en el repositorio final
-        for(i=0;i<data.Archivos.length;i++){
-            var prefijo = data.Archivos[i].substr(0,2);
-                
-            if((data.Archivos.length-1)==i){
-                
-                AnalizaArchivos(data.Archivos[i],1);
-                  
+           if(data==="OK"){
+                $('.progress-bar').css('width','4%').attr('aria-valuenow', 4);  
+                document.getElementById('LyProgresoCMG').innerHTML="4%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>El Archivo Fue Enviado y Extraido</h4>";
+                VerificarCT();
             }else{
-                if(prefijo!="CT" && prefijo!="AD"){
-                    
-                    AnalizaArchivos(data.Archivos[i],0);
-                }
-            }
-            
-            
-        }
-        
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        console.log(thrownError);
-        alert(xhr.status);
-        alert(JSON.parse(thrownError));
-      }
-  })
-}
-
-/**
- * 
- * Verifica los archivos que tenga el CT
- */
-function VerificarCT(Separador){
-    
-    var form_data = new FormData();
-    form_data.append('idAccion', 2);
-    form_data.append('Separador', Separador);
-    form_data.append('CuentaRIPS', $('#CuentaRIPS').val());
-    $.ajax({
-    async:false,
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: form_data,
-    type: 'post',
-    success: function(data){
-        if(data.Errores>0){
-            for(i=1;i<=data.Errores;i++){
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
                 
-                alertify.error("El Archivo "+data.ArchivosNE[i]+" No Existe en los Archivos cargados",0);
-            }
-        document.getElementById("Parar").value=1; 
-        }
-             
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
-      }
-  })
-  
-}
-
-/**
- * 
- * Modificar Autoincrementables
- */
-function ModificaAI(){
-    
-    var form_data = new FormData();
-    form_data.append('idAccion', 5);
-    
-    $.ajax({
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: form_data,
-    type: 'post',
-    success: function(data){
-        
-        if(data.msg==="OK"){        
-            alertify.success("Los autoincrementables se han modificado");
-        }    
-        
-             
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
-      }
-  })
-  
-}
-
-/**
- * 
- * Enviar archivo para grabarlo en temporal
- */
-function GrabarArchivoEnTemporal(Archivo,Fin){
-    
-    var form_data = getInfoForm();
-    form_data.append('idAccion', 3);
-    form_data.append('NombreArchivo', Archivo);
-    $.ajax({
-    async:false,
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: form_data,
-    type: 'post',
-    success: function(data){
-        if(data.msg==='OK'){
-            alertify.success("Archivo "+Archivo+" sin errores");     
-            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Subido a tabla Temporal";
-            if(Fin===1){
-                document.getElementById("GifProcess").innerHTML="";
+                BorrarCarga();
                 document.getElementById('BtnSubirZip').disabled=false;
             }
-        }
-        if(data.msg==='Error'){
-            document.getElementById("Parar").value=1;
-            document.getElementById("GifProcess").innerHTML="";
-            document.getElementById('BtnSubirZip').disabled=false;
-            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Contiene errores";
-           
-            if(data.Error.Pos===1){
-                EliminarCarga();
-                alertify.error("La Prestadora No Existe - Error en las lineas: "+data.Error.Lines,0);
-            }
-            if(data.Error.Pos===9){
-                EliminarCarga();
-                alertify.error("La Aseguradora No Coincide- Error en las lineas: "+data.Error.Lines,0);
-            }
-        }
-             
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
-      }
-  })
-  
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }
-
 /**
- * 
- * Analiza Archivos para Subirlos a los repositorios reales
+ * Borra la ultima carga realizada
+ * @returns {undefined}
+ */
+function BorrarCarga(){
+    var form_data = new FormData();
+    form_data.append('idAccion',3);
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+            alertify.error("Carga Borrada"); 
+            document.getElementById('DivProcess').innerHTML='';
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Verifica Si existe el CT y Si se subieron los archivos allí descritos
+ * @returns {undefined}
+ */
+function VerificarCT(){
+    
+    var form_data = new FormData();
+        form_data.append('idAccion', 4);
+        form_data.append('CuentaRIPS', $('#CuentaRIPS').val());
+      
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','8%').attr('aria-valuenow', 8);  
+                document.getElementById('LyProgresoCMG').innerHTML="8%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Archivo CT Verificado</h4>";
+                VerificaArchivosRelacionadosCT();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Verifica si los archivos relacionados en el CT fueron Subidos
+ * @returns {undefined}
+ */
+function VerificaArchivosRelacionadosCT(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 5);
+        form_data.append('CmbSeparador', $('#CmbSeparador').val());
+      
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','12%').attr('aria-valuenow', 12);  
+                document.getElementById('LyProgresoCMG').innerHTML="12%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Archivos Relacionados en CT listos para Guardar en Temporal</h4>";
+                CargarAF();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Envia la peticion para que sea cargado el AF
+ * @returns {undefined}
+ */
+function CargarAF(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 6);
+        form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
+      
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','16%').attr('aria-valuenow', 16);  
+                document.getElementById('LyProgresoCMG').innerHTML="16%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Subidos a la Tabla Temporal</h4>";
+                VerificaDuplicados();
+                
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Verifica si hay facturas Duplicadas
+ * @returns {undefined}
  */
 function VerificaDuplicados(){
     
     var form_data = new FormData();
-    form_data.append('idAccion', 6);
+    form_data.append('idAccion', 25);
     
     $.ajax({
     async:false,
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
+    url: './Consultas/Salud_SubirRips.process.php',
+    //dataType: 'json',
     cache: false,
     contentType: false,
     processData: false,
     data: form_data,
     type: 'post',
     success: function(data){
-        if(data.msg==="OK"){
+        if(data==="OK"){
             alertify.success("No hay facturas Duplicadas");
-        }
-        if(data.msg==="Error"){
-            document.getElementById("Parar").value=1;
+            VerificaDevoluciones();
+        }else if(data==="Error"){
+            
             document.getElementById("GifProcess").innerHTML="";
             document.getElementById('BtnSubirZip').disabled=false;
             alertify.error("Hay Facturas Duplicadas",0);
-            document.getElementById("DivConsultas").innerHTML="<h2><strong>Hay Facturas Duplicadas, no puede continuar <a href='vista_af_duplicados.php' target='_BLANK'>ver</a></strong><h2>";
-            
+            document.getElementById("DivConsultas").innerHTML="<h2 style='color:red'><strong>Hay Facturas Duplicadas, no puede continuar <a href='vista_af_duplicados.php' target='_BLANK'>ver</a></strong><h2>";
+            BorrarCarga();
+        }else{
+            document.getElementById("DivProcess").innerHTML='';
+            document.getElementById("DivConsultas").innerHTML=data;
+            BorrarCarga();
+            document.getElementById('BtnSubirZip').disabled=false;
         }
              
     },
@@ -343,61 +309,22 @@ function VerificaDuplicados(){
   
 }
 
-
-/**
- * 
- * Analiza Archivos para Subirlos a los repositorios reales
- */
-function AnalizaArchivos(Archivo,Fin){
-    
-    var form_data = new FormData();
-    form_data.append('idAccion', 4);
-    form_data.append('Archivo', Archivo);
-    $.ajax({
-    async:false,
-    url: './Consultas/Salud_SubirRips.info.php',
-    dataType: 'json',
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: form_data,
-    type: 'post',
-    success: function(data){
-        if(data.msg==="OK"){
-            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li>Archivo "+Archivo+" Guardado Correctamente";
-            if(Fin===1){
-                ModificaAI();
-                document.getElementById("GifProcess").innerHTML="";
-                document.getElementById('BtnSubirZip').disabled=false;
-                document.getElementById("Parar").value=0;
-                document.getElementById("DivConsultas").innerHTML="<h3><strong>Archivos Subidos y verificados correctamente</strong></h3>";
-            }
-        }
-             
-    },
-    error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
-      }
-  })
-  
-}
 //Verifica devoluciones
 function VerificaDevoluciones(){
     
     var form_data = new FormData();
-    form_data.append('idValidacion', 2);//hay devoluciones duplicadas?    
+    form_data.append('idAccion', 26);//hay devoluciones duplicadas?    
     $.ajax({
     async:false,
-    url: './Consultas/Validaciones.php',
-    dataType: 'json',
+    url: './Consultas/Salud_SubirRips.process.php',
+    //dataType: 'json',
     cache: false,
     contentType: false,
     processData: false,
     data: form_data,
     type: 'post',
     success: function(data){
-        if(data.msg==="SI"){
+        if(data==="SI"){
             alertify.set({ labels: {
                 ok     : "Actualizar",
                 cancel : "No Cargar"
@@ -405,80 +332,793 @@ function VerificaDevoluciones(){
             alertify.confirm("Hay Facturas Duplicadas en Estado de Devolucion desea actualizarlas?,<br> <a href='vista_af_devueltos.php' target='_blank'>VER RELACION.</a><br> <strong>NOTA: Esta acción es irreversible. <strong>",
             function (e) {
                 if (e) {
-                    document.getElementById("Parar").value=0;
-                    ActualizarFacturasDevueltas();
+                    
+                    ActualizarFacturasDevueltas();                    
                      
                 } else {
                     alertify.error("Se canceló la actualización de las facturas devueltas previamente, no puede continuar");
-                    document.getElementById("Parar").value=1;
+                    
                     document.getElementById("GifProcess").innerHTML="";
                     document.getElementById('BtnSubirZip').disabled=false;
                     document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
-           
+                    BorrarCarga();
                 }
             });
+        }else if(data==="NO"){
+            alertify.success("No hay duplicados en estado devolución");
+            CargarAC();
+        }else{
+            document.getElementById("DivProcess").innerHTML='';
+            document.getElementById("DivConsultas").innerHTML=data;
+            BorrarCarga();
+            document.getElementById('BtnSubirZip').disabled=false;
         }
              
     },
     error: function (xhr, ajaxOptions, thrownError) {
-        document.getElementById("Parar").value=1;
+        
         alert(xhr.status);
         alert(thrownError);
       }
   })
     
 }
-//Se actualizan las facturas devueltas por orden del usuario
+
+/**
+ * Actualiza las Facturas Devueltas
+ * @returns {undefined}
+ */
 function ActualizarFacturasDevueltas(){
+    
     var form_data = new FormData();
-    form_data.append('idValidacion', 3);//hay devoluciones duplicadas?    
+    form_data.append('idAccion', 27);
+    
     $.ajax({
     async:false,
-    url: './Consultas/Validaciones.php',
-    dataType: 'json',
+    url: './Consultas/Salud_SubirRips.process.php',
+    //dataType: 'json',
     cache: false,
     contentType: false,
     processData: false,
     data: form_data,
     type: 'post',
     success: function(data){
-        if(data.msg==="OK"){
-            document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li><strong>Facturas en estado de devolucion Actualizadas</strong>";
-            alertify.success("Se actualizaron las facturas devueltas previamente",0); 
+        if(data==="OK"){
+            alertify.success("Facturas en estado de devolucion Actualizadas");
+            CargarAC();
+        }else{
+            document.getElementById("DivProcess").innerHTML='';
+            document.getElementById("DivConsultas").innerHTML=data;
+            BorrarCarga();
+            document.getElementById('BtnSubirZip').disabled=false;
         }
              
     },
     error: function (xhr, ajaxOptions, thrownError) {
-        document.getElementById("Parar").value=1;
         alert(xhr.status);
         alert(thrownError);
       }
   })
+  
+}
+/**
+ * Carga los AC en la temporal
+ * @returns {undefined}
+ */
+function CargarAC(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 7);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AC Subidos a la Tabla Temporal</h4>";
+                CargarAP();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Carga los AP al temporal
+ * @returns {undefined}
+ */
+function CargarAP(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 8);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','24%').attr('aria-valuenow', 24);  
+                document.getElementById('LyProgresoCMG').innerHTML="24%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AP Subidos a la Tabla Temporal</h4>";
+                CargarAT();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }
 
-function EliminarCarga(){
-    var form_data = new FormData();
-       form_data.append('idValidacion', 3);//hay devoluciones duplicadas?    
-       $.ajax({
-       async:false,
-       url: './Consultas/Salud_SubirRips.info.php',
-       dataType: 'json',
-       cache: false,
-       contentType: false,
-       processData: false,
-       data: form_data,
-       type: 'post',
-       success: function(data){
-           if(data.msg==="OK"){
-               document.getElementById("DivConsultas").innerHTML=document.getElementById("DivConsultas").innerHTML+"<li><strong>Facturas en estado de devolucion Actualizadas</strong>";
-               alertify.success("Se actualizaron las facturas devueltas previamente",0); 
-           }
+/**
+ * Carga los AT al temporal
+ * @returns {undefined}
+ */
+function CargarAT(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 9);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','28%').attr('aria-valuenow', 28);  
+                document.getElementById('LyProgresoCMG').innerHTML="28%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AT Subidos a la Tabla Temporal</h4>";
+                CargarAM();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
 
-       },
-       error: function (xhr, ajaxOptions, thrownError) {
-           document.getElementById("Parar").value=1;
-           alert(xhr.status);
-           alert(thrownError);
-         }
-     })   
+/**
+ * Carga los AT al temporal
+ * @returns {undefined}
+ */
+function CargarAM(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 10);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','32%').attr('aria-valuenow', 32);  
+                document.getElementById('LyProgresoCMG').innerHTML="32%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AM Subidos a la Tabla Temporal</h4>";
+                CargarAH();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Carga los AH al temporal
+ * @returns {undefined}
+ */
+function CargarAH(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 11);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','36%').attr('aria-valuenow', 36);  
+                document.getElementById('LyProgresoCMG').innerHTML="36%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AH Subidos a la Tabla Temporal</h4>";
+                CargarUS();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Carga los US al temporal
+ * @returns {undefined}
+ */
+function CargarUS(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 12);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','40%').attr('aria-valuenow', 40);  
+                document.getElementById('LyProgresoCMG').innerHTML="40%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>US Subidos a la Tabla Temporal</h4>";
+                CargarAN();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Carga los US al temporal
+ * @returns {undefined}
+ */
+function CargarAN(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 13);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','44%').attr('aria-valuenow', 44);  
+                document.getElementById('LyProgresoCMG').innerHTML="44%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AN Subidos a la Tabla Temporal</h4>";
+                CargarAU();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Carga los AU al temporal
+ * @returns {undefined}
+ */
+function CargarAU(){
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 14);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','48%').attr('aria-valuenow', 48);  
+                document.getElementById('LyProgresoCMG').innerHTML="48%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AU Subidos a la Tabla Temporal</h4>";
+                AnalizarAF();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * Analizar los AF 
+ * @returns {undefined}
+ */
+function AnalizarAF(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 15);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','52%').attr('aria-valuenow', 52);  
+                document.getElementById('LyProgresoCMG').innerHTML="52%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Analizados y Guardados</h4>";
+                AnalizarAC();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AC 
+ * @returns {undefined}
+ */
+function AnalizarAC(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 16);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','56%').attr('aria-valuenow', 56);  
+                document.getElementById('LyProgresoCMG').innerHTML="56%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AC Analizados y Guardados</h4>";
+                AnalizarAP();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AP
+ * @returns {undefined}
+ */
+function AnalizarAP(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 17);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','60%').attr('aria-valuenow', 60);  
+                document.getElementById('LyProgresoCMG').innerHTML="60%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AP Analizados y Guardados</h4>";
+                AnalizarAM();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AM
+ * @returns {undefined}
+ */
+function AnalizarAM(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 18);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','64%').attr('aria-valuenow', 64);  
+                document.getElementById('LyProgresoCMG').innerHTML="64%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AM Analizados y Guardados</h4>";
+                AnalizarAT();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AT
+ * @returns {undefined}
+ */
+function AnalizarAT(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 19);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','68%').attr('aria-valuenow', 68);  
+                document.getElementById('LyProgresoCMG').innerHTML="68%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AT Analizados y Guardados</h4>";
+                AnalizarAH();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AH
+ * @returns {undefined}
+ */
+function AnalizarAH(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 20);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','72%').attr('aria-valuenow', 72);  
+                document.getElementById('LyProgresoCMG').innerHTML="72%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AH Analizados y Guardados</h4>";
+                AnalizarUS();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los US
+ * @returns {undefined}
+ */
+function AnalizarUS(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 21);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','76%').attr('aria-valuenow', 76);  
+                document.getElementById('LyProgresoCMG').innerHTML="76%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>US Analizados y Guardados</h4>";
+                AnalizarAN();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AN
+ * @returns {undefined}
+ */
+function AnalizarAN(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 22);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','80%').attr('aria-valuenow', 80);  
+                document.getElementById('LyProgresoCMG').innerHTML="80%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AN Analizados y Guardados</h4>";
+                AnalizarAU();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Analizar los AU
+ * @returns {undefined}
+ */
+function AnalizarAU(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 23);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','84%').attr('aria-valuenow', 84);  
+                document.getElementById('LyProgresoCMG').innerHTML="84%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AU Analizados y Guardados</h4>";
+                ModificaAutoincrementales();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                BorrarCarga();
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * Modifica los AutoIncrementales
+ * @returns {undefined}
+ */
+function ModificaAutoincrementales(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 24);
+              
+    $.ajax({
+        async:false,
+        url: './Consultas/Salud_SubirRips.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','100%').attr('aria-valuenow', 100);  
+                document.getElementById('LyProgresoCMG').innerHTML="100%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Proceso terminado exitósamente!</h4>";
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById('BtnSubirZip').disabled=false;
+                
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;
+                document.getElementById('BtnSubirZip').disabled=false;
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
 }

@@ -37,16 +37,13 @@ print("<body>");
     /////
     $css->CrearInputText("Parar", "hidden", "", 0, "", "", "", "", 100, 30, 0, 1);
      $css->CrearDiv("Secundario", "container", "center",1,1);
-    $css->CrearDiv("DivProcess", "container", "center", 1, 1);
+     $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
     $css->CerrarDiv();
-    
-    
     
     //////////////////////////Se dibujan los campos para la anulacion de la factura
     /////
     /////
     $css->CrearNotificacionAzul("Suba los archivos", 16);
-    $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
         //$css->CrearForm2("FrmArchivosZip", $myPage, "post", "_self");
         $css->CrearTabla();
             $css->FilaTabla(16);
@@ -67,7 +64,7 @@ print("<body>");
                     $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "onBlur", $TxtFuncion, 200, 30, 0, 1);
                 print("</td>");
                 print("<td>");
-                    $css->CrearInputText("FechaRadicado", "date", "", date("Y-m-d"), "Fecha Radicado", "", "", "", 150, 30, 0, 1,"Fecha de Radicado",date("Y-m-d"));
+                    $css->CrearInputText("FechaRadicado", "date", "", date("Y-m-d"), "Fecha Radicado", "", "", "", 150, 30, 0, 1);
               
                 print("</td>");
                 print("<td>");
@@ -114,7 +111,7 @@ print("<body>");
                     $css->CrearUpload("ArchivosZip");
                 print("</td>");
                 print("<td>");
-                    $js="onClick=EnviarZIP();";
+                    $js="onClick=submitInfo();";
                     $css->CrearBotonEvento("BtnSubirZip", "Enviar", 1, "onclick", $js, "naranja", "");
                    // $css->CrearBotonNaranja("BtnSubirZip", "Subir",$js);
                 print("</td>");
@@ -127,8 +124,6 @@ print("<body>");
     $css->CerrarDiv();//Cerramos contenedor Secundario
     
     $css->CerrarDiv();//Cerramos contenedor Principal
-    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
-    $css->CerrarDiv();
     $css->AgregaJS(); //Agregamos javascripts
     print('<script type="text/javascript" src="jsPages/Salud_SubirRips.js"></script>');
     $css->AgregaSubir();

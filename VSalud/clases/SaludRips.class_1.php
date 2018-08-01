@@ -189,7 +189,7 @@ class Rips extends conexion{
             $this->Query($sql);
             fclose($handle); 
             $sql="";
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
                 
     }
     
@@ -250,7 +250,7 @@ class Rips extends conexion{
             $this->Query($sql);
             fclose($handle); 
             $sql="";
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
                 
     }
     
@@ -312,7 +312,7 @@ class Rips extends conexion{
             $this->Query($sql);
             $sql="";
             fclose($handle);
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
             
         
     }
@@ -364,7 +364,7 @@ class Rips extends conexion{
             $this->Query($sql);
             fclose($handle); 
             $sql="";
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
             
         
     }
@@ -400,7 +400,7 @@ class Rips extends conexion{
             $this->Query($sql);
             fclose($handle); 
             $sql="";
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
         
         
     }
@@ -436,7 +436,7 @@ class Rips extends conexion{
             $this->Query($sql);
             fclose($handle); 
             $sql="";
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
         
         
     }
@@ -444,9 +444,6 @@ class Rips extends conexion{
     // insertar Rips de facturas generadas a tabla temporal, despues por medio de un trigger se llevará a la general
     public function InsertarRipsFacturacionGenerada($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser,$destino,$FechaRadicado,$NumeroRadicado,$Escenario,$CuentaGlobal,$CuentaRIPS,$idEPS, $Vector) {
         // si se recibe el archivo
-        $DatosEPS=$this->DevuelveValores("salud_eps", "cod_pagador_min", $idEPS);
-        $Dias=$DatosEPS["dias_convenio"];
-        
         $sql="SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1";
         $consulta=$this->Query($sql);
         $DatosIPS= $this->FetchArray($consulta);
@@ -466,7 +463,7 @@ class Rips extends conexion{
               . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
               . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
                     . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
-                    . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`,`dias_pactados`) VALUES";
+                    . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`) VALUES";
             
             while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
                 $line++;
@@ -533,7 +530,7 @@ class Rips extends conexion{
                             . "'$FechaInicio', '$FechaFinal', '$data[8]', '$data[9]', '$data[10]', '$data[11]', "
                             . "'$data[12]', '$data[13]', '$data[14]', '$data[15]', '$data[16]', '$TipoNegociacion',"
                             . "'$NombreArchivo','$FechaCargue','$idUser','$FechaRadicado','$NumeroRadicado','$destino',"
-                            . "'$Escenario','$CuentaGlobal','$CuentaRIPS','$line','$Dias'),";     
+                            . "'$Escenario','$CuentaGlobal','$CuentaRIPS','$line'),";     
                     if($i==10000){
                         $sql=substr($sql, 0, -1);
                         $this->Query($sql);
@@ -541,7 +538,7 @@ class Rips extends conexion{
                         . "(`id_temp_rips_generados`, `cod_prest_servicio`, `razon_social`, `tipo_ident_prest_servicio`, `num_ident_prest_servicio`, `num_factura`, `fecha_factura`, "
                         . "`fecha_inicio`, `fecha_final`, `cod_enti_administradora`, `nom_enti_administradora`, `num_contrato`, `plan_beneficios`, `num_poliza`, `valor_total_pago`, "
                               . "`valor_comision`, `valor_descuentos`, `valor_neto_pagar`, `tipo_negociacion`, `nom_cargue`, `fecha_cargue`, `idUser`,"
-                              . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`,`dias_pactados`) VALUES";
+                              . "`fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`LineaArchivo`) VALUES";
                        $i=0;
                     }
                 
@@ -550,7 +547,7 @@ class Rips extends conexion{
             $this->Query($sql);
             $sql="";
             fclose($handle); 
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
             return($Mensaje);
     }
      
@@ -588,7 +585,7 @@ class Rips extends conexion{
         $this->Query($sql);
         $sql="";
         fclose($handle); 
-        $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+        $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
         
     }
      // archivo de nacidos
@@ -657,7 +654,7 @@ class Rips extends conexion{
             $this->Query($sql);
             $sql="";
             fclose($handle); 
-            $this->update("salud_upload_control", "CargadoTemp", 1, " WHERE nom_cargue='$NombreArchivo'");
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
         
     }
     //Actualiza Autoincrementables
@@ -780,18 +777,17 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,
-            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`dias_pactados`,`estado`,`eps_radicacion`)
+            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`)
             SELECT `cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,`num_factura`,
             `fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,`nom_enti_administradora`,`num_contrato`,
             `plan_beneficios`,`num_poliza`,`valor_total_pago`,`valor_comision`,`valor_descuentos`,`valor_neto_pagar`,
             `tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,
-            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`dias_pactados`,'RADICADO',`cod_enti_administradora` AS eps_radicacion
+            `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`
             FROM salud_rips_facturas_generadas_temp as t1 WHERE NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
             WHERE t1.`num_factura`=t2.`num_factura`); ";
         
         $this->Query($sql);
-        
     }
     //Copia los registros de la tabla temporal Otros Servicios que no existan en la principal y los inserta
     public function AnaliceInsercionFacturasPagadas($Vector) {
@@ -872,7 +868,7 @@ class Rips extends conexion{
 
             $zip->close();
 	}
-        
+        return $Archivos;
     }
     
     //Subir Circular 030 inicial
@@ -1093,22 +1089,6 @@ class Rips extends conexion{
                 . " AND salud_archivo_facturacion_mov_generados.`nom_cargue`=salud_rips_facturas_generadas_historico.`nom_cargue`)";
         
         $this->Query($sql);
-        
-    }
-    
-    public function VaciarArchivosTemporalesCarga() {
-        $this->BorraReg("salud_upload_control", "Analizado", 0);
-        $this->AjusteAutoIncrement("salud_upload_control", "id_upload_control", "");
-        $this->VaciarTabla("salud_archivo_consultas_temp");
-        $this->VaciarTabla("salud_archivo_hospitalizaciones_temp");
-        $this->VaciarTabla("salud_archivo_medicamentos_temp");
-        $this->VaciarTabla("salud_archivo_nacidos_temp");
-        $this->VaciarTabla("salud_archivo_otros_servicios_temp");
-        $this->VaciarTabla("salud_archivo_procedimientos_temp");
-        $this->VaciarTabla("salud_archivo_urgencias_temp");
-        $this->VaciarTabla("salud_archivo_usuarios_temp");
-        $this->VaciarTabla("salud_rips_facturas_generadas_temp");
-        
         
     }
     //Fin Clases
