@@ -43,7 +43,8 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
         }else{
             $Filtros="WHERE cod_enti_administradora='$idEPS' AND EstadoGlosa<>11";
         }
-        $statement=" vista_salud_cuentas_rips $Filtros ORDER BY Total DESC";
+        $statement=" vista_salud_cuentas_rips $Filtros ORDER BY Dias DESC";
+       
     }
     //Busco por Cuenta Numero de Factura
     if(isset($_REQUEST["idFactura"])){
@@ -204,15 +205,27 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla(number_format($DatosCuenta["NumFacturas"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["Total"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
-                $CuentaRIPS=$DatosCuenta["CuentaRIPS"];
-                print("<td>");
-                    $sql="SELECT MIN (gi.FechaIPS) AS FechaMin FROM salud_glosas_iniciales gi INNER JOIN "
-                            . "salud_archivo_facturacion_mov_generados af ON gi.num_factura=af.num_factura"
-                            . " WHERE af.CuentaRIPS='$CuentaRIPS'";
-                    //$DatosSemaforo=$obGlosas->Query($sql);
-                    //print($DatosSemaforo["FechaMin"]);
+                $CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
+                print("<td style='text-align:center'>");
+                    //print($CuentaRIPS);
+                    $sql="SELECT MAX(DiasTranscurridos) AS Dias FROM vista_glosas_iniciales WHERE CuentaRIPS='$CuentaRIPS' AND EstadoGlosa=1";
+                    $DatosSemaforo=$obGlosas->Query($sql);
+                    $DatosSemaforo=$obGlosas->FetchArray($DatosSemaforo);
+                    
+                    if($DatosSemaforo["Dias"]>=0 and $DatosSemaforo["Dias"]<=5 and $DatosCuenta["idEstadoGlosa"]==1){
+                        $imagerute="../images/verde.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
+                    if($DatosSemaforo["Dias"]>=6 and $DatosSemaforo["Dias"]<=10 and $DatosCuenta["idEstadoGlosa"]==1){
+                        $imagerute="../images/naranja.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
+                    if($DatosSemaforo["Dias"]>=11 and  $DatosCuenta["idEstadoGlosa"]==1){
+                        $imagerute="../images/rojo.png";
+                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                    }
                 print("</td>");
-                $CuentaRIPS=$DatosCuenta["CuentaRIPS"];
+                //$CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
                 print("<td style='text-align:center'>");
                      $css->CrearBotonEvento("BtnMostrarCuenta_$CuentaRIPS", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]');CambiarColorBtnCuentas('BtnMostrarCuenta_$CuentaRIPS');", "naranja", "");
                 print("</td>");
