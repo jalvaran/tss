@@ -228,6 +228,6 @@ SELECT *,
 (SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales 
 WHERE vista_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura 
 AND vista_glosas_iniciales.EstadoGlosa=1) AS Dias
-FROM `salud_archivo_facturacion_mov_generados` ;
+FROM `salud_archivo_facturacion_mov_generados`;
 
 

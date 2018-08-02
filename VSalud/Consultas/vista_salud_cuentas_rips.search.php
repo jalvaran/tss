@@ -201,7 +201,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla($DatosCuenta["FechaDesde"], 1);
                 $css->ColTabla($DatosCuenta["FechaHasta"], 1);
                 $css->ColTabla($DatosCuenta["fecha_radicado"], 1);
-                $css->ColTabla($DatosCuenta["fecha_radicado"], 1);
+                $css->ColTabla($DatosCuenta["numero_radicado"], 1);
                 $css->ColTabla(number_format($DatosCuenta["NumFacturas"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["Total"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);

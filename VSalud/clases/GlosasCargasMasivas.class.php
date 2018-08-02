@@ -51,19 +51,24 @@ class GlosasMasivas extends Glosas{
         $count=0;
         $columnas = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
         $filas = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+        date_default_timezone_set('UTC'); //establecemos la hora local
         for ($i=2;$i<=$filas;$i++){
             if($objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue()<>''){
-                $_DATOS_EXCEL[$i]['FechaIPS'] = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['FechaAuditoria'] = $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['EPS']= $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['NIT']= $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CuentaRIPS'] = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['num_factura'] = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CodigoActividad'] = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['ValorGlosado'] = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CodigoGlosa'] = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CuentaGlobal'] = $objPHPExcel->getActiveSheet()->getCell('L'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['Observaciones'] = $objPHPExcel->getActiveSheet()->getCell('M'.$i)->getCalculatedValue();
+                $data=PHPExcel_Shared_Date::ExcelToPHP($objPHPExcel->getActiveSheet()->getCell('A'.$i)->getValue());
+                $FechaIPS=date("Y-m-d",$data); 
+                $_DATOS_EXCEL[$i]['FechaIPS'] = $FechaIPS;
+                $data=PHPExcel_Shared_Date::ExcelToPHP($objPHPExcel->getActiveSheet()->getCell('B'.$i)->getValue());
+                $FechaAuditoria=date("Y-m-d",$data); 
+                $_DATOS_EXCEL[$i]['FechaAuditoria'] = $FechaAuditoria;
+                $_DATOS_EXCEL[$i]['EPS']= $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['NIT']= $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['CuentaRIPS'] = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['num_factura'] = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['CodigoActividad'] = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['ValorGlosado'] = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['CodigoGlosa'] = $objPHPExcel->getActiveSheet()->getCell('I'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['CuentaGlobal'] = $objPHPExcel->getActiveSheet()->getCell('J'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['Observaciones'] = $objPHPExcel->getActiveSheet()->getCell('K'.$i)->getCalculatedValue();
                 $_DATOS_EXCEL[$i]['Soporte']=$DatosUpload["Soporte"];
                 
             }
@@ -110,15 +115,18 @@ class GlosasMasivas extends Glosas{
         $count=0;
         $columnas = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
         $filas = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+        date_default_timezone_set('UTC'); //establecemos la hora local
         for ($i=2;$i<=$filas;$i++){
             if($objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue()<>''){
-                $_DATOS_EXCEL[$i]['FechaConciliacion'] = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CuentaRIPS'] = $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['num_factura']= $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['CodigoActividad']= $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['ValorLevantado'] = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['ValorAceptado'] = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
-                $_DATOS_EXCEL[$i]['Observaciones'] = $objPHPExcel->getActiveSheet()->getCell('H'.$i)->getCalculatedValue();
+                $data=PHPExcel_Shared_Date::ExcelToPHP($objPHPExcel->getActiveSheet()->getCell('A'.$i)->getValue());
+                $FechaConciliacion=date("Y-m-d",$data); 
+                $_DATOS_EXCEL[$i]['FechaConciliacion'] = $FechaConciliacion;
+                $_DATOS_EXCEL[$i]['CuentaRIPS'] = $objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['num_factura']= $objPHPExcel->getActiveSheet()->getCell('C'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['CodigoActividad']= $objPHPExcel->getActiveSheet()->getCell('D'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['ValorLevantado'] = $objPHPExcel->getActiveSheet()->getCell('E'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['ValorAceptado'] = $objPHPExcel->getActiveSheet()->getCell('F'.$i)->getCalculatedValue();
+                $_DATOS_EXCEL[$i]['Observaciones'] = $objPHPExcel->getActiveSheet()->getCell('G'.$i)->getCalculatedValue();
                 $_DATOS_EXCEL[$i]['Soporte']=$DatosUpload["Soporte"];
                 
             }
