@@ -125,12 +125,12 @@ class CssIni{
 		<link rel='apple-touch-icon-precomposed' sizes='72x72' href='ico/apple-touch-icon-72-precomposed.png'>
                 <link rel='apple-touch-icon-precomposed' href='ico/apple-touch-icon-57-precomposed.png'>
                                            <link rel='shortcut icon' href='../images/technoIco.ico'>
-		<link rel='stylesheet' href='chousen/docsupport/style.css'>
+		
                 <link rel='stylesheet' href='chousen/docsupport/prism.css'>
                 <link rel='stylesheet' href='chousen/source/chosen.css'>
                 <link rel='stylesheet' href='css/calendar.css'>   
-                <link rel='stylesheet' type='text/css' href='css/bootstrap.min.css' />
-                <link rel='stylesheet' type='text/css' href='css/DateTimePicker.css' />
+                
+                
                 <link rel='stylesheet' href='alertify/themes/alertify.core.css' />
                 <link rel='stylesheet' href='alertify/themes/alertify.default.css' id='toggleCSS' />
 		");
@@ -1468,10 +1468,10 @@ function Footer(){
         
         //Multi Select
         
-        public function CrearMultiSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido) {
+        public function CrearMultiSelectTable($Nombre,$tabla,$Condicion,$idItemValue,$OptionDisplay1,$OptionDisplay2,$Evento,$FuncionJS,$idSel,$Requerido,$Ancho="200") {
             $obVenta=new conexion(1);
             
-            print('<select multiple class="form-control" id="'.$Nombre.'" name="'.$Nombre.'[]">');
+            print('<select multiple class="form-control" id="'.$Nombre.'" name="'.$Nombre.'[]" style=" width:'.$Ancho.'px">');
                         
             
             $consulta=$obVenta->ConsultarTabla($tabla, $Condicion);
@@ -1631,6 +1631,13 @@ function Footer(){
                       <div id="'.$NombreLeyenda.'" name="'.$NombreLeyenda.'"">'.$Leyenda.'</div>
                     </div>
                   </div>');
+        }
+        
+        public function AgregaCssJSSelect2() {
+            print("<link rel='stylesheet' type='text/css' href='select2\dist\css/select2.min.css' />");
+            print('<script src="select2\vendor\jquery-2.1.0.js"></script>');
+            print('<script src="select2\dist\js/select2.min.js"></script>');     
+    
         }
         //////////////////////////////////FIN
 }

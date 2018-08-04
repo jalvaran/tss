@@ -36,7 +36,7 @@ if($_REQUEST["idAccion"]){
             if(!empty($_FILES['ArchivosZip']['type'])){
 
                 $carpeta="../archivos/";
-                opendir($carpeta);
+                //opendir($carpeta);
                 $NombreArchivo=str_replace(' ','_',$_FILES['ArchivosZip']['name']); 
 
                 $obRips->VerificarZip($_FILES['ArchivosZip']['tmp_name'],$idUser, "");
@@ -86,29 +86,37 @@ if($_REQUEST["idAccion"]){
             
             $Separador=$_REQUEST["CmbSeparador"];
             $Error=0;
-            $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%'");
+            $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%' ORDER BY id_upload_control DESC");
             while($DatosCT= $obRips->FetchArray($consulta)){
                 //print("Archivo".$DatosCT["nom_cargue"]);
-                $handle = fopen("../archivos/".$DatosCT["nom_cargue"], "r");
-                while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
-                    $NombreArchivo=$data[2].".txt";
-                    $DatosCarga=$obRips->DevuelveValores("salud_upload_control", "nom_cargue", $NombreArchivo);
-                    if($DatosCarga["id_upload_control"]==""){
-                        $Error=1;
-                        $css->CrearNotificacionRoja("<br>El archivo $NombreArchivo relacionado en el CT, No existe en los archivos Subidos", 14);
+                if (file_exists("../archivos/".$DatosCT["nom_cargue"])) {
+                    $handle = fopen("../archivos/".$DatosCT["nom_cargue"], "r");
+                    while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                        $NombreArchivo=$data[2].".txt";
+                        $DatosCarga=$obRips->DevuelveValores("salud_upload_control", "nom_cargue", $NombreArchivo);
+                        if($DatosCarga["id_upload_control"]==""){
+                            $Error=1;
+                            $css->CrearNotificacionRoja("<br>El archivo $NombreArchivo relacionado en el CT, No existe en los archivos Subidos", 14);
+                        }
                     }
+                    fclose($handle); 
+                }else{
+                    exit("No existe el archivo ../archivos/".$DatosCT["nom_cargue"]);
                 }
-                fclose($handle); 
+                                
             }
             $ArchivoCT=$DatosCT["nom_cargue"];
             //$sql="DELETE FROM salud_upload_control WHERE nom_cargue LIKE 'CT%'";
             //$obCon->Query($sql);
             if($Error==0){
                 print("OK");
+            }else{
+                print("Error");
             }
             
         break;  
         case 6://Cargo temporal AF
+            //print("entra");
             $Error=0;  
             $ErrorAF=1;
             $idEPS=$obRips->normalizar($_REQUEST["idEPS"]);
@@ -135,7 +143,7 @@ if($_REQUEST["idAccion"]){
             $TipoNegociacion=$obRips->normalizar($_REQUEST["CmbTipoNegociacion"]);
             $FechaCargue=date("Y-m-d H:i:s");
             
-            $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE CargadoTemp='0' AND nom_cargue LIKE 'AF%'");
+            $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE CargadoTemp='0' AND nom_cargue LIKE 'AF%' ORDER BY id_upload_control DESC");
             while($DatosArchivo=$obCon->FetchArray($consulta)){
                 $Prefijo=substr($DatosArchivo["nom_cargue"], 0, 2); 
                 if($Prefijo=="AF"){

@@ -456,6 +456,9 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
+        if (!file_exists("../archivos/".$NombreArchivo)) {
+           exit('Archivo no exsite'); 
+        }
         $handle = fopen("../archivos/".$NombreArchivo, "r");
             $i=0;
             $line=0;
@@ -863,7 +866,7 @@ class Rips extends conexion{
                 $Archivos[$i]=$nombresFichZIP['name'][$i];
                 $DatosArchivos= $this->DevuelveValores("salud_upload_control", "nom_cargue", $nombresFichZIP['name'][$i]);
                 
-                if($DatosArchivos==''){
+                if($DatosArchivos["nom_cargue"]==''){
                     $this->RegistreUpload($nombresFichZIP['name'][$i], $Fecha, $idUser, "");
                 }
                
@@ -871,7 +874,9 @@ class Rips extends conexion{
             
 
             $zip->close();
-	}
+	}else{
+            exit("No se recibio .zip");
+        }
         
     }
     

@@ -74,7 +74,8 @@ function EnviarZIP(){
 
     if($('#idEPS').val()=='' || $('#CuentaRIPS').val()=='' || $('#FechaRadicado').val()=='' || $('#NumeroRadicado').val()=='' || $('#CmbTipoNegociacion').val()=='' || $('#ArchivosZip').val()==''){
           alertify.alert("Los campos indicados con * son obligatorios");
-          return;
+          BorrarCarga();
+            return;
     } 
     
     var form_data = new FormData();
@@ -228,26 +229,63 @@ function VerificaArchivosRelacionadosCT(){
  * @returns {undefined}
  */
 function CargarAF(){
+    
+    
     var form_data = getInfoForm();
         form_data.append('idAccion', 6);
         form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
-      
+        
+        if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                httpEdicion = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                httpEdicion = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            httpEdicion.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var data=this.responseText;
+                    if(data=="OK"){
+                        $('.progress-bar').css('width','16%').attr('aria-valuenow', 16);  
+                        document.getElementById('LyProgresoCMG').innerHTML="16%";
+                        document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Subidos a la Tabla Temporal</h4>";
+                        VerificaDuplicados();
+
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                        document.getElementById("DivConsultas").innerHTML=data;
+                        BorrarCarga();
+                        document.getElementById('BtnSubirZip').disabled=false;
+                    }
+                    
+                }else{
+                    document.getElementById("DivConsultas").innerHTML=this.responseText;
+                }
+            };
+        
+        httpEdicion.open("POST",'./Consultas/Salud_SubirRips.process.php',true);
+        httpEdicion.send(form_data);
+        
+        /*
+      console.log('entra a ajax');
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
-        //dataType: 'json',
+        //dataType: 'html',
         cache: false,
         contentType: false,
+         
         processData: false,
         data: form_data,
         type: 'post',
         success: function(data){
-            
-           if(data==="OK"){
+            console.log('entra a envio');
+            console.log(data);
+           if(data=="OK"){
                 $('.progress-bar').css('width','16%').attr('aria-valuenow', 16);  
                 document.getElementById('LyProgresoCMG').innerHTML="16%";
                 document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Subidos a la Tabla Temporal</h4>";
-                VerificaDuplicados();
+                //VerificaDuplicados();
                 
             }else{
                 document.getElementById("DivProcess").innerHTML='';
@@ -263,6 +301,9 @@ function CargarAF(){
             alert(thrownError);
           }
       })
+    */
+   
+   
 }
 /**
  * Verifica si hay facturas Duplicadas
@@ -274,7 +315,7 @@ function VerificaDuplicados(){
     form_data.append('idAccion', 25);
     
     $.ajax({
-    async:false,
+    //async:false,
     url: './Consultas/Salud_SubirRips.process.php',
     //dataType: 'json',
     cache: false,
@@ -315,7 +356,7 @@ function VerificaDevoluciones(){
     var form_data = new FormData();
     form_data.append('idAccion', 26);//hay devoluciones duplicadas?    
     $.ajax({
-    async:false,
+    //async:false,
     url: './Consultas/Salud_SubirRips.process.php',
     //dataType: 'json',
     cache: false,
@@ -374,7 +415,7 @@ function ActualizarFacturasDevueltas(){
     form_data.append('idAccion', 27);
     
     $.ajax({
-    async:false,
+    //async:false,
     url: './Consultas/Salud_SubirRips.process.php',
     //dataType: 'json',
     cache: false,
@@ -410,7 +451,7 @@ function CargarAC(){
         form_data.append('idAccion', 7);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -449,7 +490,7 @@ function CargarAP(){
         form_data.append('idAccion', 8);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -489,7 +530,7 @@ function CargarAT(){
         form_data.append('idAccion', 9);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -529,7 +570,7 @@ function CargarAM(){
         form_data.append('idAccion', 10);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -569,7 +610,7 @@ function CargarAH(){
         form_data.append('idAccion', 11);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -609,7 +650,7 @@ function CargarUS(){
         form_data.append('idAccion', 12);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -649,7 +690,7 @@ function CargarAN(){
         form_data.append('idAccion', 13);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -689,7 +730,7 @@ function CargarAU(){
         form_data.append('idAccion', 14);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -730,7 +771,7 @@ function AnalizarAF(){
         form_data.append('idAccion', 15);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -770,7 +811,7 @@ function AnalizarAC(){
         form_data.append('idAccion', 16);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -810,7 +851,7 @@ function AnalizarAP(){
         form_data.append('idAccion', 17);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -850,7 +891,7 @@ function AnalizarAM(){
         form_data.append('idAccion', 18);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -890,7 +931,7 @@ function AnalizarAT(){
         form_data.append('idAccion', 19);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -930,7 +971,7 @@ function AnalizarAH(){
         form_data.append('idAccion', 20);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -970,7 +1011,7 @@ function AnalizarUS(){
         form_data.append('idAccion', 21);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -1010,7 +1051,7 @@ function AnalizarAN(){
         form_data.append('idAccion', 22);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -1050,7 +1091,7 @@ function AnalizarAU(){
         form_data.append('idAccion', 23);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
@@ -1091,7 +1132,7 @@ function ModificaAutoincrementales(){
         form_data.append('idAccion', 24);
               
     $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/Salud_SubirRips.process.php',
         //dataType: 'json',
         cache: false,
