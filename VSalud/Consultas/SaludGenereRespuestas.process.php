@@ -62,10 +62,9 @@ if($_REQUEST["idAccion"]){
             $DatosFacturas=$obCon->FetchArray($consulta);
             $TotalFacturas=$DatosFacturas["Total"];
             
-            $consulta=$obCon->ConsultarTabla("salud_control_generacion_respuestas_excel", "WHERE Generada=0 LIMIT 1");
-            $DatosFacturas=$obCon->FetchArray($consulta);
+            
             $NombreArchivo="Respuestas.xlsx";
-            $obCon->RegistreRespuestasFacturaExcel($NombreArchivo,$DatosFacturas["num_factura"],"");
+            $obCon->RegistreRespuestasFacturaExcel($NombreArchivo,"");
             
             $sql="SELECT COUNT(*) as Total FROM salud_control_generacion_respuestas_excel WHERE Generada=1";
             $consulta=$obCon->Query($sql);

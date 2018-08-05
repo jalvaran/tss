@@ -15,8 +15,7 @@ print("</head>");
 print("<body>");
   
     
-    $css->CabeceraIni("Respuestas"); //Inicia la cabecera de la pagina
-    
+    $css->CabeceraIni("Respuestas"); //Inicia la cabecera de la pagina    
     $css->CabeceraFin(); 
     ///////////////Creamos el contenedor
     /////
