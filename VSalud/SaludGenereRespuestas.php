@@ -21,8 +21,14 @@ print("<body>");
     ///////////////Creamos el contenedor
     /////
     /////
+    
     $css->CrearDiv("DivPrincipal", "container", "center", 1, 1);
-       
+    $css->CrearDiv("DivProcess", "container", "center", 1, 1);
+    $css->CerrarDiv();
+    
+    $css->CrearNotificacionAzul("Seleccione el tipo de Respuesta que desea", 16);
+    $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
+    
             $css->CrearTabla();
                 $css->FilaTabla(16);
                     $css->ColTabla("<strong>Generar reporte por cuentas</strong>", 1);
@@ -36,7 +42,9 @@ print("<body>");
                         print('</select>');
                         //$css->CrearMultiSelectTable("Cuentas", "vista_salud_cuentas_rips", "", "CuentaRIPS", "CuentaRIPS", "nom_enti_administradora", "", "", "", 1,900);
                     print("</td>");
-                    $css->ColTabla("<strong>Acción</strong>", 1);
+                    print("<td>");
+                        $css->CrearBotonEvento("BtnRespuestaXCuenta", "Generar", 1, "onClick", "EnviarCuentas()", "naranja", "");
+                    print("</td>");
                     
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
@@ -68,7 +76,8 @@ print("<body>");
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         
-        
+    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
+    $css->CerrarDiv();    
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts
     $css->AgregaCssJSSelect2(); //Agregamos CSS y JS de Select2

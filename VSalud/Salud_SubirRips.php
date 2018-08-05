@@ -57,8 +57,7 @@ print("<body>");
                 $css->ColTabla("<strong>Fecha de Radicado *</strong>", 1);
                 $css->ColTabla("<strong>No. de Radicado *</strong>", 1);
                 $css->ColTabla("<strong>Cuenta Global</strong>", 1);
-                $css->ColTabla("<strong>Escenario *</strong>", 1);
-            $css->CierraFilaTabla(); 
+            $css->CierraFilaTabla();
             $css->FilaTabla(16);
                 print("<td>");
                     $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 200, 1, "EPS", "");
@@ -68,7 +67,6 @@ print("<body>");
                 print("</td>");
                 print("<td>");
                     $css->CrearInputText("FechaRadicado", "date", "", date("Y-m-d"), "Fecha Radicado", "", "", "", 150, 30, 0, 1,"Fecha de Radicado",date("Y-m-d"));
-              
                 print("</td>");
                 print("<td>");
                     $css->CrearInputText("NumeroRadicado", "text", "", "", "No. Radicado", "", "", "", 150, 30, 0, 1);
@@ -76,6 +74,15 @@ print("<body>");
                 print("<td>");
                     $css->CrearInputText("CuentaGlobal", "text", "", "", "CuentaGlobal", "", "", "", 150, 30, 0, 1);
                 print("</td>");
+            $css->CierraFilaTabla();
+            $css->FilaTabla(16);
+                $css->ColTabla("<strong>Escenario *</strong>", 1);
+                $css->ColTabla("<strong>Soporte Radicado</strong>", 1);
+                $css->ColTabla("<strong>Separador *</strong>", 1);
+                $css->ColTabla("<strong>Tipo de Negociacion *</strong>", 1);
+            $css->CierraFilaTabla();       
+                $css->FilaTabla(16);
+                
                 print("<td>");
                     $css->CrearSelect("CmbEscenario", "");
                         $css->CrearOptionSelect("NA", "No Aplica", 1);
@@ -83,16 +90,6 @@ print("<body>");
                         $css->CrearOptionSelect("Recuperacion", "Recuperacion", 0);
                     $css->CerrarSelect();
                 print("</td>");
-            $css->CierraFilaTabla();     
-            $css->FilaTabla(16);
-                
-                $css->ColTabla("<strong>Soporte Radicado</strong>", 1);
-                $css->ColTabla("<strong>Separador *</strong>", 1);
-                $css->ColTabla("<strong>Tipo de Negociacion *</strong>", 1);
-                $css->ColTabla("<strong>ZIP *</strong>", 1);
-                $css->ColTabla("<strong>Enviar</strong>", 1);
-            $css->CierraFilaTabla();   
-            $css->FilaTabla(16);
                 print("<td>");
                     $css->CrearUpload("UpSoporteRadicado");
                 print("</td>");
@@ -110,17 +107,25 @@ print("<body>");
                     $css->CrearOptionSelect("capita", "Capita", 0);
                 $css->CerrarSelect();
                 print("</td>");
-                print("<td>");
+            $css->CierraFilaTabla();     
+                 
+            $css->FilaTabla(16);
+                $css->ColTabla("<strong>ZIP de Archivos *</strong>", 2);
+              //  print("<td colspan=2 style='text-align:center'>");
+                $css->ColTabla("<strong>Enviar</strong>", 2);
+              //  print("</td>");
+            $css->CierraFilaTabla(); 
+            
+            $css->FilaTabla(16);                
+                print("<td colspan=2 >");
                     $css->CrearUpload("ArchivosZip");
                 print("</td>");
-                print("<td>");
+                print("<td colspan=2 >");
                     $js="onClick=EnviarZIP();";
                     $css->CrearBotonEvento("BtnSubirZip", "Enviar", 1, "onclick", $js, "naranja", "");
                    // $css->CrearBotonNaranja("BtnSubirZip", "Subir",$js);
                 print("</td>");
-                
-               
-            $css->CierraFilaTabla();   
+                    $css->CierraFilaTabla();   
             $css->CerrarTabla();
         //$css->CerrarForm();
             
