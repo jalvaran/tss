@@ -76,12 +76,15 @@ $html.=$DatosFormatos["CuerpoFormato"];
         }
         if($idReporte==2){
             $Documento="Glosas Pendientes por Contestar";
+            $html= $this->ReportesHTML_PendientesXConciliar($st);
         }
         if($idReporte==3){
             $Documento="Porcentajes de valores Glosados definidos Eps";
+            $html= $this->ReportesHTML_PorcentajesGlosados($st);
         }
         if($idReporte==4){
             $Documento="Porcentajes de valores Glosados definidos IPS";
+            $html=$this->ReportesHTML_PorcentajesGlosadosIPS($st);
         }
         if($idReporte==5){
             $Documento="Reporte 2193";
@@ -165,6 +168,145 @@ $html.=$DatosFormatos["CuerpoFormato"];
                     $html.="</td>";
                     $html.="<td>";
                     $html.=$DatosRespuestas["descripcion_estado"];
+                    $html.="</td>";
+                $html.="</tr>";
+            }
+        $html.="</tabla>";
+        return($html);
+    }
+    /**
+     * HTML porcentajes Glosados
+     * @param type $st
+     * @return type
+     */
+    public function ReportesHTML_PorcentajesGlosados($st) {
+        
+        $Back="#CEE3F6";
+        $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
+            $html.="<tr>";
+                $html.='<td>';
+                $html.="<strong>CODIGO ENTIDAD</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>NOMBRE ENTIDAD</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>NIT</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL FACTURADO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL GLOSADO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>PORCENTAJE</strong>";
+                $html.="</td>";
+            $html.="</tr>";
+            
+            $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
+                   . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
+                   . "SUM(valor_glosado_eps) AS TotalGlosado ";
+            $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_administrador");
+            $h=0;
+            while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
+                if($h==0){
+                    $Back="#f2f2f2";
+                    $h=1;
+                }else{
+                    $Back="white";
+                    $h=0;
+                }
+                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],2);
+                               
+                $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["cod_administrador"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= utf8_encode($DatosRespuestas["nombre_administrador"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["nit_administrador"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=number_format($DatosRespuestas["TotalFacturado"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= number_format($DatosRespuestas["TotalGlosado"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=$Porcentaje."%";
+                    $html.="</td>";
+                $html.="</tr>";
+            }
+        $html.="</tabla>";
+        return($html);
+    }
+    
+    /**
+     * HTML porcentajes Glosados
+     * @param type $st
+     * @return type
+     */
+    public function ReportesHTML_PorcentajesGlosadosIPS($st) {
+        
+        $Back="#CEE3F6";
+        $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
+            $html.="<tr>";
+                $html.='<td>';
+                $html.="<strong>ENTIDAD PRESTADORA</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>NOMBRE ENTIDAD</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>NIT</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL FACTURADO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL GLOSADO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>PORCENTAJE</strong>";
+                $html.="</td>";
+            $html.="</tr>";
+            
+            $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
+                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
+                    . "SUM(valor_glosado_eps) AS TotalGlosado ";
+            $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_prestador");
+            $h=0;
+            while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
+                if($h==0){
+                    $Back="#f2f2f2";
+                    $h=1;
+                }else{
+                    $Back="white";
+                    $h=0;
+                }
+                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],2);
+                               
+                $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["cod_prestador"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= utf8_encode($DatosRespuestas["nombre_prestador"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["nit_prestador"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=number_format($DatosRespuestas["TotalFacturado"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= number_format($DatosRespuestas["TotalGlosado"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=$Porcentaje."%";
                     $html.="</td>";
                 $html.="</tr>";
             }
