@@ -23,7 +23,26 @@ class Reportes extends conexion{
         
     }
     
+    public function BorrarCarga() {
+        
+        $directorio="../ArchivosTemporales/Reportes/";
+        $files = glob($directorio.'*'); //obtenemos todos los nombres de los ficheros
+        foreach($files as $file){
+            if(is_file($file))
+            unlink($file); //elimino el fichero
+        }
+        $directorio="../ArchivosTemporales/Reportes/Soportes/";
+        $files = glob($directorio.'*'); //obtenemos todos los nombres de los ficheros
+        foreach($files as $file){
+            if(is_file($file))
+            unlink($file); //elimino el fichero
+        }
+    }
+    
     public function CrearArchivoRespuestas($Nombre,$Soportes,$Vector) {
+        $this->BorrarCarga();
+        $directorio="../ArchivosTemporales/Reportes/";
+        
         require_once '../../librerias/Excel/PHPExcel.php';        
         $objPHPExcel = new PHPExcel(); 
         $objPHPExcel->
@@ -38,7 +57,7 @@ class Reportes extends conexion{
 
         
         $objWriter=PHPExcel_IOFactory::createWriter($objPHPExcel,'Excel2007');
-        $objWriter->save("../ArchivosTemporales/Reportes/$Nombre");
+        $objWriter->save($directorio.$Nombre);
         
     }
     
@@ -66,7 +85,7 @@ class Reportes extends conexion{
         $EncabezadoInforme=1;
         while($DatosFacturas=$this->FetchArray($consulta)){
             $idFactura=$DatosFacturas["num_factura"];
-            $sql="SELECT * FROM vista_salud_respuestas WHERE factura='$idFactura' AND cod_estado=2 or cod_estado=4";
+            $sql="SELECT * FROM vista_salud_respuestas WHERE factura='$idFactura' AND (cod_estado=2 or cod_estado=4)";
             $Datos= $this->Query($sql);
             $EncabezadoFacturas=1;
             $EncabezadoDatosFacturas=1;
@@ -205,7 +224,108 @@ class Reportes extends conexion{
 	
     }
     
-   
+    public function PrepareSoportes() {
+        $sql="SELECT re.idEPS,num_factura,nombre_completo,direccion,telefonos,email FROM salud_control_generacion_respuestas_excel re "
+                . "INNER JOIN salud_eps se ON cod_pagador_min=idEPS WHERE re.Soportes=0";
+        $consulta= $this->Query($sql);
+        while ($DatosFacturas=$this->FetchAssoc($consulta)){
+            $idFactura=$DatosFacturas["num_factura"];
+            $sql="SELECT Soporte,factura,cod_actividad,cod_glosa_inicial,cod_glosa_respuesta "
+                    . "FROM vista_salud_respuestas "
+                    . "WHERE factura='$idFactura' AND (cod_estado=2 or cod_estado=4) AND Soporte<>''";
+            $Datos= $this->Query($sql);
+            while($DatosSoportes= $this->FetchAssoc($Datos)){
+                $CodActividad=$DatosSoportes["cod_actividad"];
+                $CodGlosaInicial=$DatosSoportes["cod_glosa_inicial"];
+                $CodGlosaRespuesta=$DatosSoportes["cod_glosa_respuesta"];
+                $SoporteArchivo="../../".$DatosSoportes["Soporte"];
+                $info = new SplFileInfo($SoporteArchivo);
+                $Extension=($info->getExtension());
+                $SoporteRespuesta="../ArchivosTemporales/Reportes/Soportes/".$idFactura."_".$CodActividad."_".$CodGlosaInicial."_".$CodGlosaRespuesta.".$Extension";
+                $SoporteRespuesta=str_replace(' ','_',$SoporteRespuesta); 
+                //print($SoporteArchivo);
+                copy($SoporteArchivo, $SoporteRespuesta);
+            }
+        }
+    }
+    /**
+     * Agrega Toda una carpeta a un .zip
+     * @param type $dir
+     * @param type $zip
+     */
+    function agregar_zip($dir, $zip) {
+        //verificamos si $dir es un directorio
+        if (is_dir($dir)) {
+          //abrimos el directorio y lo asignamos a $da
+          if ($da = opendir($dir)) {
+            //leemos del directorio hasta que termine
+            while (($archivo = readdir($da)) !== false) {
+              /*Si es un directorio imprimimos la ruta
+               * y llamamos recursivamente esta función
+               * para que verifique dentro del nuevo directorio
+               * por mas directorios o archivos
+               */
+              if (is_dir($dir . $archivo) && $archivo != "." && $archivo != "..") {
+                //echo "<strong>Creando directorio: $dir$archivo</strong><br/>";
+                agregar_zip($dir . $archivo . "/", $zip);
+
+                /*si encuentra un archivo imprimimos la ruta donde se encuentra
+                 * y agregamos el archivo al zip junto con su ruta 
+                 */
+              } elseif (is_file($dir . $archivo) && $archivo != "." && $archivo != "..") {
+                //echo "Agregando archivo: $dir$archivo <br/>";
+                $zip->addFile($dir . $archivo, "Soportes/".$archivo);
+              }
+            }
+            //cerramos el directorio abierto en el momento
+            closedir($da);
+          }
+        }
+    }
+    /**
+     * Comprime las respuestas y archivos que se generaron
+     * @param type $NombreArchivo
+     */
+    public function ComprimaRespuesta($NombreArchivo,$Soportes) {
+        //creamos una instancia de ZipArchive
+        $zip = new ZipArchive();
+
+        /*directorio a comprimir
+         * la barra inclinada al final es importante
+         * la ruta debe ser relativa no absoluta
+         */
+        $dir = '../ArchivosTemporales/Reportes/Soportes/';
+
+        //ruta donde guardar los archivos zip, ya debe existir
+        $rutaFinal = "../ArchivosTemporales/Reportes/";
+
+        if(!file_exists($rutaFinal)){
+          mkdir($rutaFinal);
+        }
+
+        $archivoZip = $NombreArchivo;
+        $RespuestaExcel=$rutaFinal."Respuestas.xlsx";
+        if ($zip->open($archivoZip, ZIPARCHIVE::CREATE) === true) {
+            if($Soportes==1){
+                $this->agregar_zip($dir, $zip);
+            }
+          
+            $zip->addFile($RespuestaExcel, "Respuestas.xlsx");
+            $zip->close();
+
+          //Muevo el archivo a una ruta
+          //donde no se mezcle los zip con los demas archivos
+          rename($archivoZip, "$rutaFinal/$archivoZip");
+
+          //Hasta aqui el archivo zip ya esta creado
+          //Verifico si el archivo ha sido creado
+          if (file_exists($rutaFinal. "/" . $archivoZip)) {
+            return("OK");
+          } else {
+            return("Error");
+          }
+        }
+    }
    //Fin Clases
 }
     

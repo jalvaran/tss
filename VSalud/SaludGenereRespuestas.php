@@ -30,9 +30,20 @@ print("<body>");
     
             $css->CrearTabla();
                 $css->FilaTabla(16);
+                    print("<td  colspan=2 style='text-align:center'>");
+                        print("<strong>Desea Incluir Soportes?: </strong>");
+                        $css->CrearSelect("CmbSoportes", "",80);
+                            $css->CrearOptionSelect("0", "NO", 1);
+                            $css->CrearOptionSelect("1", "SI", 0);
+                        $css->CerrarSelect();
+                    print("</td>");
+            $css->CierraFilaTabla();  
+            $css->CerrarTabla();
+                $css->CrearTabla();
+                $css->FilaTabla(16);
                     $css->ColTabla("<strong>Generar reporte por cuentas</strong>", 1);
-                    $css->ColTabla("<strong>Acción</strong>", 1);
                     
+                    $css->ColTabla("<strong>Acción</strong>", 1);                    
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
                     print("<td>");
@@ -41,6 +52,7 @@ print("<body>");
                         print('</select>');
                         //$css->CrearMultiSelectTable("Cuentas", "vista_salud_cuentas_rips", "", "CuentaRIPS", "CuentaRIPS", "nom_enti_administradora", "", "", "", 1,900);
                     print("</td>");
+                    
                     print("<td>");
                         $css->CrearBotonEvento("BtnRespuestaXCuenta", "Generar", 1, "onClick", "EnviarCuentas()", "naranja", "");
                     print("</td>");

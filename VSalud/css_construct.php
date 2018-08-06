@@ -724,7 +724,7 @@ class CssIni{
 		print('</ul></li></ul></div>');
 	}
 	
-	function CrearImageLink($page,$imagerute,$target,$Alto,$Ancho){
+	function CrearImageLink($page,$imagerute,$target,$Alto=200,$Ancho=200){
 		print('<a href="'.$page.'" target="'.$target.'"><img src="'.$imagerute.'" style="cursor:pointer;height:'.$Alto.'px; width:'.$Ancho.'px"></a>');
 	}
         function CrearImage($Nombre,$imagerute,$Alterno,$Alto,$Ancho,$Javascript=""){

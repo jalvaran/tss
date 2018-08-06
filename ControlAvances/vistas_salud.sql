@@ -270,7 +270,8 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        salud_archivo_control_glosas_respuestas.valor_aceptado_ips,
        (salud_archivo_control_glosas_respuestas.valor_glosado_eps-salud_archivo_control_glosas_respuestas.valor_levantado_eps-salud_archivo_control_glosas_respuestas.valor_aceptado_ips) AS valor_x_conciliar,
        salud_archivo_control_glosas_respuestas.observacion_auditor,
-       salud_archivo_control_glosas_respuestas.fecha_registo as fecha_respuesta
+       salud_archivo_control_glosas_respuestas.fecha_registo as fecha_respuesta,
+       salud_archivo_control_glosas_respuestas.Soporte as Soporte
 FROM salud_archivo_control_glosas_respuestas
 INNER JOIN salud_archivo_facturacion_mov_generados
 ON salud_archivo_control_glosas_respuestas.num_factura=salud_archivo_facturacion_mov_generados.num_factura

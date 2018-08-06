@@ -30,6 +30,7 @@ $(document).ready(function() {
  * @returns {undefined}
  */
 function BorrarCarga(){
+    document.getElementById("GifProcess").innerHTML="";
     var form_data = new FormData();
         form_data.append('idAccion', 2);
         
@@ -47,7 +48,7 @@ function BorrarCarga(){
             
            if(data==="OK"){
                 
-                document.getElementById("DivProcess").innerHTML="Carga Borrada";
+                //document.getElementById("DivConsultas").innerHTML="Carga Borrada";
                 alertify.error("Carga Borrada");
             }else{
                 document.getElementById("DivProcess").innerHTML="No se pudo borrar la carga";
@@ -68,7 +69,8 @@ function BorrarCarga(){
  * @returns {undefined}
  */
 function EnviarCuentas(){
-    
+    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+
     if($('#Cuentas').val()==null || $('#Cuentas').val()==''){
           alertify.alert("por favor seleccione una o varias cuentas");          
           return;
@@ -91,8 +93,8 @@ function EnviarCuentas(){
         success: function(data){
             
            if(data==="OK"){
-                $('.progress-bar').css('width','4%').attr('aria-valuenow', 4);  
-                document.getElementById('LyProgresoCMG').innerHTML="4%";
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
                 document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Se recibieron las cuentas solicitadas</h4>";
                 CrearArchivoRespuestas();
             }else{
@@ -132,8 +134,8 @@ function CrearArchivoRespuestas(){
         success: function(data){
             
            if(data==="OK"){
-                $('.progress-bar').css('width','8%').attr('aria-valuenow', 8);  
-                document.getElementById('LyProgresoCMG').innerHTML="8%";
+                $('.progress-bar').css('width','40%').attr('aria-valuenow',40);  
+                document.getElementById('LyProgresoCMG').innerHTML="40%";
                 document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Archivo de Respuestas Preparado</h4>";
                 EscribaRespuestasFacturasEnExcel();
             }else{
@@ -170,21 +172,105 @@ function EscribaRespuestasFacturasEnExcel(){
         data: form_data,
         type: 'post',
         success: function(data){
-           var respuestas = data.split(';');
-           if(respuestas[0]==="OK"){
-                var Porcentaje = respuestas[3]; 
-                var msg="Registradas "+respuestas[2]+" Respuestas de un total de "+respuestas[1];
-                Porcentaje=parseInt(Porcentaje)+8;
-                document.getElementById('DivConsultas').innerHTML=msg;
-                $('.progress-bar').css('width',Porcentaje+'%').attr('aria-valuenow', Porcentaje);  
-                document.getElementById('LyProgresoCMG').innerHTML=Porcentaje+"%";                
-                //EscribaRespuestasFacturasEnExcel();
+           
+           if(data==="OK"){                
+                document.getElementById('DivConsultas').innerHTML="Registrando Facturas en Excel";
+                $('.progress-bar').css('width','60%').attr('aria-valuenow', 60);  
+                document.getElementById('LyProgresoCMG').innerHTML="60%";                
+                VerifiqueSoportes();
+            
             }else{
                 document.getElementById("DivProcess").innerHTML='';
                 document.getElementById("DivConsultas").innerHTML=data;                
                 BorrarCarga();
                 
             }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Mira si se solicita con soportes y arma los copia a la respectiva carpeta
+ * @returns {undefined}
+ */
+function VerifiqueSoportes(){
+    var Soportes = document.getElementById('CmbSoportes').value;
+    
+    if(Soportes=='0'){
+        ComprimirRespuestas();
+        return;
+    }
+    
+    var form_data = new FormData();
+        form_data.append('idAccion', 5);
+        
+      
+    $.ajax({
+        //async:false,
+        url: './Consultas/SaludGenereRespuestas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+           if(data==="OK"){
+                
+                document.getElementById('DivConsultas').innerHTML="Soportes preparados";
+                $('.progress-bar').css('width','80%').attr('aria-valuenow', '80');  
+                document.getElementById('LyProgresoCMG').innerHTML="80%";                
+                ComprimirRespuestas();
+            
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;                
+                BorrarCarga();
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Comprime la carpeta con las respuestas
+ * @returns {undefined}
+ */
+function ComprimirRespuestas(){
+    var Soportes = document.getElementById('CmbSoportes').value;
+    
+    var form_data = new FormData();
+        form_data.append('idAccion', 6);
+        form_data.append('Soportes', Soportes);
+      
+    $.ajax({
+        //async:false,
+        url: './Consultas/SaludGenereRespuestas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+                
+            
+            $('.progress-bar').css('width','100%').attr('aria-valuenow', '100');  
+            document.getElementById('LyProgresoCMG').innerHTML="100%";
+            document.getElementById("DivProcess").innerHTML=data;
+            document.getElementById("DivConsultas").innerHTML='Proceso Terminado';                
+            BorrarCarga();
             
         },
         error: function (xhr, ajaxOptions, thrownError) {

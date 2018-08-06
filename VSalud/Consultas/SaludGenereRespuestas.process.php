@@ -47,7 +47,8 @@ if($_REQUEST["idAccion"]){
         break;
         
         case 2://Se borra el control de respuestas en caso de que ocurra un error
-            $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
+            $this->VaciarTabla("salud_control_generacion_respuestas_excel");
+            $obCon->BorrarCarga();
             print("OK");
         break;
     
@@ -57,35 +58,36 @@ if($_REQUEST["idAccion"]){
         break;
         
         case 4://Crear las respuestas para cada Factura
-            $sql="SELECT count(num_factura) as Total FROM salud_control_generacion_respuestas_excel";
-            $consulta=$obCon->Query($sql);
-            $DatosFacturas=$obCon->FetchArray($consulta);
-            $TotalFacturas=$DatosFacturas["Total"];
-            
-            
+                 
             $NombreArchivo="Respuestas.xlsx";
             $obCon->RegistreRespuestasFacturaExcel($NombreArchivo,"");
-            
-            $sql="SELECT COUNT(*) as Total FROM salud_control_generacion_respuestas_excel WHERE Generada=1";
-            $consulta=$obCon->Query($sql);
-            $DatosFacturas=$obCon->FetchArray($consulta);
-            $TotalFacturasRegistradas=$DatosFacturas["Total"];
-            if($TotalFacturasRegistradas==0){
-                $TotalFacturasRegistradas=1;
-            }
-            $Porcentaje=round((50/$TotalFacturas)*$TotalFacturasRegistradas);
-            
-            if($Porcentaje==50){
-                               
-                print("FIN;");
-            }else{
-                print("OK;$TotalFacturas;$TotalFacturasRegistradas;$Porcentaje");
-            }
-            
+            print("OK");
             
         break;
-        
-               
+        case 5://Crear las respuestas para cada Factura
+            $obCon->PrepareSoportes();
+            print("OK");
+        break; 
+        case 6://Comprimir Archivos
+            $Soportes=$obCon->normalizar($_REQUEST["Soportes"]);
+            $Fecha=date("Y-m-d");
+            $sql="SELECT re.idEPS,se.nombre_completo FROM salud_control_generacion_respuestas_excel re "
+                    . " INNER JOIN salud_eps se ON cod_pagador_min=idEPS"
+                    . " WHERE Generada=1 LIMIT 1";                
+            $consulta= $obCon->Query($sql);
+            $Datos=$obCon->FetchAssoc($consulta);
+            $idEPS=$obCon->QuitarAcentos(utf8_encode($Datos["nombre_completo"]));
+            $idEPS=str_replace(' ','_',$idEPS); 
+            
+            $NombreArchivo=$idEPS."_".$Fecha."_ReporteXCuentas.zip";
+            $Respuesta=$obCon->ComprimaRespuesta($NombreArchivo,$Soportes);
+            
+            $imagerute="../images/download.gif";
+            $page="ArchivosTemporales/Reportes/$NombreArchivo";
+            
+            $css->CrearImageLink($page, $imagerute, "_blank");
+            $this->VaciarTabla("salud_control_generacion_respuestas_excel");
+        break; 
     }
     
 }else{
