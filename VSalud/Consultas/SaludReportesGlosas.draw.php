@@ -42,7 +42,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE `cod_estado`< 5 ";
+            $Condicional=" WHERE `cod_estado`= 1 or `cod_estado`= 3 ";
             if($idEPS<>''){
                 $Condicional=$Condicional." AND cod_administrador='$idEPS'";
             }
@@ -192,7 +192,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_estado`= 1 or `cod_estado`= 3 or `cod_estado`= 9) ";
+            $Condicional=" WHERE (`cod_estado`= 1 or `cod_estado`= 3 or `cod_estado`= 9) AND Tratado=0";
             if($idEPS<>''){
                 $Condicional=$Condicional." AND cod_administrador='$idEPS'";
             }
