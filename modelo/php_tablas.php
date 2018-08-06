@@ -3254,7 +3254,7 @@ $tbl = <<<EOD
     </tr>
     <tr>
        <td style="text-align: center;" >Fecha<br></td>
-       <td style="font-size:6px;"> $DatosFormatoCalidad[Fecha]</td> 
+       <td > $DatosFormatoCalidad[Fecha]</td> 
     </tr>
 </table>
 EOD;
@@ -3264,7 +3264,7 @@ $txt="<h3>".$DatosEmpresaPro["RazonSocial"]."<br>NIT ".$DatosEmpresaPro["NIT"]."
 $this->PDF->MultiCell(62, 5, $txt, 0, 'L', 1, 0, '', '', true,0, true, true, 10, 'M');
 $txt=$DatosEmpresaPro["Direccion"]."<br>".$DatosEmpresaPro["Telefono"]."<br>".$DatosEmpresaPro["Ciudad"]."<br>".$DatosEmpresaPro["WEB"];
 $this->PDF->MultiCell(62, 5, $txt, 0, 'C', 1, 0, '', '', true,0, true, true, 10, 'M');
-$Documento="<strong>$NumeracionDocumento</strong><br><h5>Impreso por TS5, Techno Soluciones SAS <BR>NIT 900.833.180 3177740609</h5><br>";
+$Documento="<strong>$NumeracionDocumento</strong><br><h5>Impreso por TSS</h5><br>";
 $this->PDF->MultiCell(62, 5, $Documento, 0, 'R', 1, 0, '', '', true,0, true ,true, 10, 'M');
 $this->PDF->writeHTML("<br>", true, false, false, false, '');
 //Close and output PDF document

@@ -339,3 +339,5 @@ INNER JOIN salud_archivo_usuarios
 ON vista_salud_facturas_usuarios.num_ident_usuario = salud_archivo_usuarios.num_ident_usuario
 INNER JOIN salud_eps
 ON salud_archivo_facturacion_mov_generados.cod_enti_administradora = salud_eps.cod_pagador_min;
+
+

@@ -1,0 +1,101 @@
+<?php 
+$myPage="SaludGenereResportes.php";
+include_once("../sesiones/php_control.php");
+//include_once("clases/Glosas.class.php");
+include_once("css_construct.php");
+$obGlosas = new conexion($idUser);
+//////Si recibo un cliente
+$NumFactura="";
+
+print("<html>");
+print("<head>");
+$css =  new CssIni("Glosas");
+
+print("</head>");
+print("<body>");
+  
+    
+    $css->CabeceraIni("Reportes"); //Inicia la cabecera de la pagina    
+    $css->CabeceraFin(); 
+    ///////////////Creamos el contenedor
+    /////
+    /////
+    $css->CrearDiv("DivButtons", "", "", 0, 0);
+    
+        $css->CreaBotonDesplegable("ModalDescargar", "Abrir","BtnModalDescargas");
+                
+    $css->CerrarDiv();
+    $css->CrearDiv("DivPrincipal", "container", "center", 1, 1);
+    $css->CrearDiv("DivProcess", "container", "center", 1, 1);
+    $css->CerrarDiv();
+    $css->CrearModal("ModalDescargar", "Descargar", "");
+        $css->CrearDiv("DivDescargas", "", "center", 1, 1);
+        $css->CerrarDiv();
+    $css->CerrarModal();
+    $css->CrearNotificacionNaranja("Reportes", 16);
+    $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
+    
+            $css->CrearTabla();
+                $css->FilaTabla(16);
+                    $css->ColTabla("<strong>Tipo de Reporte</strong>", 2);
+                    $css->ColTabla("<strong>EPS</strong>", 2);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td colspan=2 style='text-align:center' >");
+                        
+                        $css->CrearSelect("TipoReporte", "HabiliteEPS()",300);
+                            $css->CrearOptionSelect("1", "Glosas Pendientes por Conciliar", 1);
+                            $css->CrearOptionSelect("2", "Glosas Pendientes por Contestar", 0);
+                            $css->CrearOptionSelect("3", "Porcentajes de valores Glosados definidos Eps", 0);
+                            $css->CrearOptionSelect("4", "Porcentajes de valores Glosados definidos IPS", 0);
+                            $css->CrearOptionSelect("5", "Reporte 2193", 0);
+                            $css->CrearOptionSelect("6", "Reporte de concepto de glosas mas frecuente", 0);
+                        $css->CerrarSelect();
+                    print("</td>");
+                    print("<td colspan=2 style='text-align:center' >");
+                        $css->CrearDiv("DivEPS", "", "center", 1, "");
+                            $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
+                        $css->CerrarDiv();
+                    print("</td>");
+                    
+            $css->CierraFilaTabla();  
+            
+                $css->FilaTabla(16);
+                    $css->ColTabla("<strong>Fecha Inicial</strong>", 1);
+                    $css->ColTabla("<strong>Fecha Final</strong>", 1);   
+                    $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
+                    $css->ColTabla("<strong>Generar</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td>");
+                        $css->CrearInputText("FechaInicial", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                    print("</td>");
+                     print("<td>");
+                        $css->CrearInputText("FechaFinal", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));
+                    print("</td>");
+                     print("<td>");
+                        $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "", "", 150, 30, 0, 0,"Seleccione una Cuenta RIPS");
+                    print("</td>");
+                    
+                    print("<td>");
+                        $css->CrearBotonEvento("BtnReporte", "Generar", 1, "onClick", "DibujeReporte()", "naranja", "");
+                    print("</td>");
+                    
+                $css->CierraFilaTabla();
+            $css->CerrarTabla();
+       
+        
+        
+    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
+    $css->CerrarDiv();    
+    $css->CerrarDiv();//Cerramos contenedor Principal
+    $css->AgregaJS(); //Agregamos javascripts
+    
+    print('<script type="text/javascript" src="jsPages/SaludGenereReportes.js"></script>');
+    $css->AgregaSubir();
+    		
+    $css->Footer();
+    
+    print("</body></html>");
+    ob_end_flush();
+?>
