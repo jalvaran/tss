@@ -30,8 +30,16 @@ print("<body>");
     
             $css->CrearTabla();
                 $css->FilaTabla(16);
-                    print("<td  colspan=2 style='text-align:center'>");
-                        print("<strong>Desea Incluir Soportes?: </strong>");
+                    $css->ColTabla("<strong>EPS</strong>", 1);
+                    $css->ColTabla("<strong>Soportes?</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td style='text-align:center'>");
+                        $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
+                    
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        
                         $css->CrearSelect("CmbSoportes", "",80);
                             $css->CrearOptionSelect("0", "NO", 1);
                             $css->CrearOptionSelect("1", "SI", 0);
@@ -86,8 +94,20 @@ print("<body>");
         
             $css->CrearTabla();
                 $css->FilaTabla(16);
-                    $css->ColTabla("<strong>Generar por rango de fecha de Facturas</strong>", 1);
+                    $css->ColTabla("<strong>Generar por rango de fecha de Facturas</strong>", 2);
                     $css->ColTabla("<strong>Acción</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td>");
+                        $css->CrearInputText("FechaFacturaInicial", "date", "<strong>Fecha Inicial: </strong>", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                    print("</td>");   
+                    print("<td>");
+                        $css->CrearInputText("FechaFacturaFinal", "date", "<strong>Fecha Final: </strong>", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                    print("</td>");   
+                    print("<td>");
+                        $css->CrearBotonEvento("BtnRespuestaXRangoFechasFacturas", "Generar", 1, "onClick", "EnviarFacturasRangoFecha()", "verde", "");
+                    
+                    print("</td>");   
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         
@@ -95,8 +115,20 @@ print("<body>");
         
             $css->CrearTabla();
                 $css->FilaTabla(16);
-                    $css->ColTabla("<strong>Generar por rango de fecha de Radicado</strong>", 1);
+                    $css->ColTabla("<strong>Generar por rango de fecha de Radicado</strong>", 2);
                     $css->ColTabla("<strong>Acción</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td>");
+                        $css->CrearInputText("FechaRadicadoInicial", "date", "<strong>Fecha Inicial: </strong>", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                    print("</td>");   
+                    print("<td>");
+                        $css->CrearInputText("FechaRadicadoFinal", "date", "<strong>Fecha Final: </strong>", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                    print("</td>");   
+                    print("<td>");
+                        $css->CrearBotonEvento("BtnRespuestaXRangoFechasRadicados", "Generar", 1, "onClick", "EnviarFacturasRangoFechaRadicado()", "azul", "");
+                    
+                    print("</td>");   
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         

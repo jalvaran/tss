@@ -223,7 +223,9 @@ class Reportes extends conexion{
 	$objWriter->save($NombreArchivo);
 	
     }
-    
+    /**
+     * Prepara y copia los soportes de las respuestas
+     */
     public function PrepareSoportes() {
         $sql="SELECT re.idEPS,num_factura,nombre_completo,direccion,telefonos,email FROM salud_control_generacion_respuestas_excel re "
                 . "INNER JOIN salud_eps se ON cod_pagador_min=idEPS WHERE re.Soportes=0";

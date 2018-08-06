@@ -116,6 +116,68 @@ if($_REQUEST["idAccion"]){
             }
             
         break;
+        
+        case 8://Se recibe un rango de fechas de facturas
+            
+            $FechaInicial=$obCon->normalizar($_REQUEST["FechaFacturaInicial"]);
+            $FechaFinal=$obCon->normalizar($_REQUEST["FechaFacturaFinal"]);
+            $idEPS=$obCon->normalizar($_REQUEST["idEPS"]);
+                $sql="SELECT gi.num_factura,af.cod_enti_administradora as idEPS,af.CuentaRIPS"
+                        
+                        . " FROM salud_glosas_iniciales gi INNER JOIN salud_archivo_facturacion_mov_generados af "
+                        . "ON gi.num_factura=af.num_factura WHERE (gi.EstadoGlosa='2' or gi.EstadoGlosa='4')"
+                        . " AND af.fecha_factura>='$FechaInicial' "
+                        . " AND af.fecha_factura<='$FechaFinal' AND af.cod_enti_administradora='$idEPS' GROUP BY gi.num_factura";
+                $consulta=$obCon->Query($sql);
+                while($DatosFacturas=$obCon->FetchArray($consulta)){
+                    $obCon->CargaFacturasAResponder("",$DatosFacturas["num_factura"], $DatosFacturas["idEPS"], "");
+                }
+               
+            
+            $sql="SELECT idEPS FROM salud_control_generacion_respuestas_excel GROUP BY idEPS";
+            $consulta=$obCon->Query($sql);
+            
+            if($obCon->NumRows($consulta)==1){
+                print("OK");
+            }else if($obCon->NumRows($consulta)==0){
+                print("<h4 style='color:orange'>No se encontraron respuestas para las facturas asociadas a las cuentas seleccionadas</h4>");
+            }else{
+                print("<h4 style='color:red'>Se seleccionaron cuentas de dos o mas EPS, Sólo es posible seleccionar cuentas de una EPS</h4>");
+           
+            }
+            
+        break;
+        
+        case 9://Se recibe un rango de fechas de radicado
+            
+            $FechaInicial=$obCon->normalizar($_REQUEST["FechaRadicadoInicial"]);
+            $FechaFinal=$obCon->normalizar($_REQUEST["FechaRadicadoFinal"]);
+            $idEPS=$obCon->normalizar($_REQUEST["idEPS"]);
+                $sql="SELECT gi.num_factura,af.cod_enti_administradora as idEPS,af.CuentaRIPS"
+                        
+                        . " FROM salud_glosas_iniciales gi INNER JOIN salud_archivo_facturacion_mov_generados af "
+                        . "ON gi.num_factura=af.num_factura WHERE (gi.EstadoGlosa='2' or gi.EstadoGlosa='4')"
+                        . " AND af.fecha_radicado>='$FechaInicial' "
+                        . " AND af.fecha_radicado<='$FechaFinal' AND af.cod_enti_administradora='$idEPS' GROUP BY gi.num_factura";
+                $consulta=$obCon->Query($sql);
+                while($DatosFacturas=$obCon->FetchArray($consulta)){
+                    $obCon->CargaFacturasAResponder("",$DatosFacturas["num_factura"], $DatosFacturas["idEPS"], "");
+                }
+               
+            
+            $sql="SELECT idEPS FROM salud_control_generacion_respuestas_excel GROUP BY idEPS";
+            $consulta=$obCon->Query($sql);
+            
+            if($obCon->NumRows($consulta)==1){
+                print("OK");
+            }else if($obCon->NumRows($consulta)==0){
+                print("<h4 style='color:orange'>No se encontraron respuestas para las facturas asociadas a las cuentas seleccionadas</h4>");
+            }else{
+                print("<h4 style='color:red'>Se seleccionaron cuentas de dos o mas EPS, Sólo es posible seleccionar cuentas de una EPS</h4>");
+           
+            }
+            
+        break;
     }
     
 }else{

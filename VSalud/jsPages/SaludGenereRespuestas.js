@@ -183,6 +183,109 @@ function EnviarFacturas(){
 }
 
 /**
+ * Envia las facturas x rango de fecha para analizarlas
+ * @returns {undefined}
+ */
+function EnviarFacturasRangoFecha(){
+    
+    if($('#idEPS').val()==null || $('#idEPS').val()=='' || $('#FechaFacturaInicial').val()==null || $('#FechaFacturaInicial').val()=='' || $('#FechaFacturaFinal').val()==null || $('#FechaFacturaFinal').val()==''){
+        alertify.alert("por favor seleccione una EPS y un rango de fechas valido");          
+        return;
+    } 
+    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+ 
+    var form_data = new FormData();
+        form_data.append('idAccion', 8);
+        form_data.append('FechaFacturaInicial', $('#FechaFacturaInicial').val());
+        form_data.append('FechaFacturaFinal', $('#FechaFacturaFinal').val());
+        form_data.append('idEPS', $('#idEPS').val());
+      
+    $.ajax({
+        //async:false,
+        url: './Consultas/SaludGenereRespuestas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Se recibieron las facturas solicitadas</h4>";
+                CrearArchivoRespuestas();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;                
+                BorrarCarga();
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+    
+}
+
+
+/**
+ * Envia las facturas x rango de fecha para analizarlas
+ * @returns {undefined}
+ */
+function EnviarFacturasRangoFechaRadicado(){
+    
+    if($('#idEPS').val()==null || $('#idEPS').val()=='' || $('#FechaRadicadoInicial').val()==null || $('#FechaRadicadoInicial').val()=='' || $('#FechaRadicadoFinal').val()==null || $('#FechaRadicadoFinal').val()==''){
+        alertify.alert("por favor seleccione una EPS y un rango de fechas valido");          
+        return;
+    } 
+    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+ 
+    var form_data = new FormData();
+        form_data.append('idAccion', 9);
+        form_data.append('FechaRadicadoInicial', $('#FechaRadicadoInicial').val());
+        form_data.append('FechaRadicadoFinal', $('#FechaRadicadoFinal').val());
+        form_data.append('idEPS', $('#idEPS').val());
+      
+    $.ajax({
+        //async:false,
+        url: './Consultas/SaludGenereRespuestas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Se recibieron las facturas solicitadas</h4>";
+                CrearArchivoRespuestas();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;                
+                BorrarCarga();
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+    
+}
+
+/**
  * Crea el archivo donde se van a almacenar todas las respuestas
  * @returns {undefined}
  */
