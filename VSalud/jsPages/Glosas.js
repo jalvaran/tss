@@ -105,6 +105,9 @@ function BuscarCuentaXCriterio(Criterio=1){
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
     document.getElementById("DivDetallesUsuario").innerHTML='';
     document.getElementById("DivActividadesFacturas").innerHTML='';
+    document.getElementById("DivHistoricoGlosas").innerHTML='';
+    document.getElementById("DivFormRespuestasGlosas").innerHTML='';
+    document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
     document.location.href = "#AnclaFacturas";
     document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
     var form_data = new FormData();

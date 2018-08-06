@@ -20,11 +20,18 @@ print("<body>");
     ///////////////Creamos el contenedor
     /////
     /////
+    $css->CrearDiv("DivButtons", "", "", 0, 0);
     
+        $css->CreaBotonDesplegable("ModalDescargar", "Abrir","BtnModalDescargas");
+                
+    $css->CerrarDiv();
     $css->CrearDiv("DivPrincipal", "container", "center", 1, 1);
     $css->CrearDiv("DivProcess", "container", "center", 1, 1);
     $css->CerrarDiv();
-    
+    $css->CrearModal("ModalDescargar", "Descargar", "");
+        $css->CrearDiv("DivDescargas", "", "center", 1, 1);
+        $css->CerrarDiv();
+    $css->CerrarModal();
     $css->CrearNotificacionAzul("Seleccione el tipo de Respuesta que desea", 16);
     $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
     
@@ -90,7 +97,7 @@ print("<body>");
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         
-        
+            
         
             $css->CrearTabla();
                 $css->FilaTabla(16);

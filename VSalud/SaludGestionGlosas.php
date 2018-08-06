@@ -48,6 +48,8 @@ print("<body>");
     $css->FilaTabla(16);
         $css->ColTabla("<strong>Opciones de Busqueda</strong>", 1);
         print("<td colspan=3 style='text-align:center'>");
+            $css->CrearLink("SaludGenereRespuestas.php", "_blank", "<strong>Generar Respuestas</strong>");
+            print(" || ");
             $css->ImageOcultarMostrar("ImgOcultaMasivos", "Cargar Glosas: ", "DivMasivos", 30, 30, "");
             print(" || ");
             $css->ImageOcultarMostrar("ImgOcultaMasivosConciliaciones", "Cargar Conciliaciones: ", "DivMasivosConciliaciones", 30, 30, "");
