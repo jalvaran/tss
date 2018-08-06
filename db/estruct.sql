@@ -16,6 +16,17 @@ CREATE TABLE `centrocosto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
+DROP TABLE IF EXISTS `cierres_contables`;
+CREATE TABLE `cierres_contables` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Fecha` date NOT NULL,
+  `idUsuario` bigint(20) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+
 DROP TABLE IF EXISTS `ciuu`;
 CREATE TABLE `ciuu` (
   `Codigo` int(11) NOT NULL,
@@ -1199,6 +1210,18 @@ CREATE TABLE `salud_conciliaciones_masivas_temp` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 
+DROP TABLE IF EXISTS `salud_control_generacion_respuestas_excel`;
+CREATE TABLE `salud_control_generacion_respuestas_excel` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CuentaRIPS` int(6) unsigned zerofill NOT NULL,
+  `idEPS` varchar(20) COLLATE utf8_spanish_ci NOT NULL,
+  `num_factura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `Generada` int(11) NOT NULL,
+  `Soportes` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+
 DROP TABLE IF EXISTS `salud_control_glosas_masivas`;
 CREATE TABLE `salud_control_glosas_masivas` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1251,6 +1274,9 @@ CREATE TABLE `salud_eps` (
   `nit` bigint(20) NOT NULL,
   `sigla_nombre` varchar(120) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre corto del pagador del servicio salud',
   `nombre_completo` varchar(50) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre completo del pagador del servicio',
+  `direccion` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `telefonos` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8_spanish_ci NOT NULL,
   `tipo_regimen` enum('SUBSIDIADO','CONTRIBUTIVO','REGIMEN ESPECIAL','ENTE TERRITORIAL','ENTE MUNICIPAL','OTRAS ENTIDADES','ENTIDAD EN LIQUIDACION') COLLATE utf8_spanish_ci NOT NULL COMMENT 'Tipo de regimen',
   `dias_convenio` int(11) NOT NULL,
   `Nombre_gerente` varchar(50) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Nombre del gerente del pagador',
@@ -1683,4 +1709,11 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
--- 2018-08-01 07:25:09
+DROP VIEW IF EXISTS `vista_salud_procesos_gerenciales`;
+CREATE TABLE `vista_salud_procesos_gerenciales` (`ID` bigint(20), `idProceso` int(11), `Fecha` date, `EPS` varchar(50), `NombreProceso` text, `Concepto` varchar(45), `Observaciones` text, `Soporte` varchar(200));
+
+
+DROP TABLE IF EXISTS `vista_salud_procesos_gerenciales`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_salud_procesos_gerenciales` AS select `t1`.`ID` AS `ID`,`t1`.`idProceso` AS `idProceso`,`t1`.`Fecha` AS `Fecha`,(select `salud_eps`.`nombre_completo` from `salud_eps` where (`salud_eps`.`cod_pagador_min` = `t2`.`EPS`)) AS `EPS`,`t2`.`NombreProceso` AS `NombreProceso`,`t2`.`Concepto` AS `Concepto`,`t1`.`Observaciones` AS `Observaciones`,`t1`.`Soporte` AS `Soporte` from (`salud_procesos_gerenciales_archivos` `t1` join `salud_procesos_gerenciales` `t2` on((`t1`.`idProceso` = `t2`.`ID`)));
+
+-- 2018-08-06 17:33:29
