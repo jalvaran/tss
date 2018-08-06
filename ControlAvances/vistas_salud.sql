@@ -236,10 +236,11 @@ FROM `salud_archivo_facturacion_mov_generados`;
 
 DROP VIEW IF EXISTS `vista_salud_facturas_usuarios`;
 CREATE VIEW vista_salud_facturas_usuarios AS 
-SELECT num_factura, num_ident_usuario FROM salud_archivo_consultas UNION
-SELECT num_factura, num_ident_usuario FROM salud_archivo_procedimientos UNION
-SELECT num_factura, num_ident_usuario FROM salud_archivo_otros_servicios UNION
-SELECT num_factura, num_ident_usuario FROM salud_archivo_medicamentos;
+SELECT num_factura, num_ident_usuario FROM salud_archivo_consultas GROUP BY num_factura UNION
+SELECT num_factura, num_ident_usuario FROM salud_archivo_procedimientos GROUP BY num_factura UNION
+SELECT num_factura, num_ident_usuario FROM salud_archivo_otros_servicios GROUP BY num_factura UNION
+SELECT num_factura, num_ident_usuario FROM salud_archivo_medicamentos GROUP BY num_factura;
+
 
 DROP VIEW IF EXISTS `vista_salud_respuestas`;
 CREATE VIEW vista_salud_respuestas AS 
@@ -259,10 +260,11 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        salud_archivo_control_glosas_respuestas.DescripcionActividad as descripcion_actividad,
        salud_archivo_control_glosas_respuestas.valor_actividad as valor_total_actividad,
        salud_archivo_control_glosas_respuestas.idGlosa as id_glosa_inicial,
-       salud_glosas_iniciales.CodigoGlosa as cod_glosa_inicial,
-       salud_archivo_conceptos_glosas.descrpcion_concep_especifico as descripcion_glosa_inicial,
+       
+       (SELECT CodigoGlosa FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.ID=salud_archivo_control_glosas_respuestas.idGlosa) as cod_glosa_inicial,
+       (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE (SELECT cod_glosa_inicial) = salud_archivo_conceptos_glosas.cod_glosa LIMIT 1) as descripcion_glosa_inicial,
        salud_archivo_control_glosas_respuestas.id_cod_glosa as cod_glosa_respuesta,
-       (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE salud_archivo_conceptos_glosas.cod_glosa= salud_archivo_control_glosas_respuestas.id_cod_glosa LIMIT 1) as descripcion_glosa_respuesta,
+       (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE salud_archivo_conceptos_glosas.cod_glosa= salud_archivo_control_glosas_respuestas.id_cod_glosa AND (salud_archivo_control_glosas_respuestas.EstadoGlosa=2 or salud_archivo_control_glosas_respuestas.EstadoGlosa=4) LIMIT 1) as descripcion_glosa_respuesta,
        salud_archivo_control_glosas_respuestas.EstadoGlosa as cod_estado,
        salud_estado_glosas.Estado_glosa as descripcion_estado,
        salud_archivo_control_glosas_respuestas.valor_glosado_eps,
@@ -271,20 +273,26 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        (salud_archivo_control_glosas_respuestas.valor_glosado_eps-salud_archivo_control_glosas_respuestas.valor_levantado_eps-salud_archivo_control_glosas_respuestas.valor_aceptado_ips) AS valor_x_conciliar,
        salud_archivo_control_glosas_respuestas.observacion_auditor,
        salud_archivo_control_glosas_respuestas.fecha_registo as fecha_respuesta,
-       salud_archivo_control_glosas_respuestas.Soporte as Soporte
-FROM salud_archivo_control_glosas_respuestas
+       salud_archivo_facturacion_mov_generados.cod_enti_administradora as cod_administrador,
+       salud_archivo_facturacion_mov_generados.nom_enti_administradora as nombre_administrador,
+       salud_eps.nit as nit_administrador,
+       salud_eps.tipo_regimen as regimen_eps,
+       salud_archivo_facturacion_mov_generados.cod_prest_servicio as cod_prestador,
+       salud_archivo_facturacion_mov_generados.razon_social as nombre_prestador,
+       salud_archivo_facturacion_mov_generados.num_ident_prest_servicio as nit_prestador
+       
+FROM salud_archivo_control_glosas_respuestas  
 INNER JOIN salud_archivo_facturacion_mov_generados
 ON salud_archivo_control_glosas_respuestas.num_factura=salud_archivo_facturacion_mov_generados.num_factura
 INNER JOIN vista_salud_facturas_usuarios
 ON salud_archivo_control_glosas_respuestas.num_factura=vista_salud_facturas_usuarios.num_factura
-INNER JOIN salud_glosas_iniciales
-ON salud_archivo_control_glosas_respuestas.idGlosa = salud_glosas_iniciales.ID
-INNER JOIN salud_archivo_conceptos_glosas 
-ON salud_glosas_iniciales.CodigoGlosa = salud_archivo_conceptos_glosas.cod_glosa
+
 INNER JOIN salud_estado_glosas 
 ON salud_archivo_control_glosas_respuestas.EstadoGlosa = salud_estado_glosas.ID
 INNER JOIN salud_archivo_usuarios
-ON vista_salud_facturas_usuarios.num_ident_usuario = salud_archivo_usuarios.num_ident_usuario;
+ON vista_salud_facturas_usuarios.num_ident_usuario = salud_archivo_usuarios.num_ident_usuario
+INNER JOIN salud_eps
+ON salud_archivo_facturacion_mov_generados.cod_enti_administradora = salud_eps.cod_pagador_min;
 
 
 DROP VIEW IF EXISTS `vista_salud_respuestas`;
@@ -305,7 +313,8 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        salud_archivo_control_glosas_respuestas.DescripcionActividad as descripcion_actividad,
        salud_archivo_control_glosas_respuestas.valor_actividad as valor_total_actividad,
        salud_archivo_control_glosas_respuestas.idGlosa as id_glosa_inicial,
-       salud_glosas_iniciales.CodigoGlosa as cod_glosa_inicial,
+       -- salud_glosas_iniciales.CodigoGlosa as cod_glosa_inicial,
+       (SELECT CodigoGlosa FROM salud_glosas_iniciales WHERE salud_archivo_control_glosas_respuestas.idGlosa=salud_glosas_iniciales.ID) AS cod_glosa_inicial,
        salud_archivo_conceptos_glosas.descrpcion_concep_especifico as descripcion_glosa_inicial,
        salud_archivo_control_glosas_respuestas.id_cod_glosa as cod_glosa_respuesta,
        (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE salud_archivo_conceptos_glosas.cod_glosa= salud_archivo_control_glosas_respuestas.id_cod_glosa LIMIT 1) as descripcion_glosa_respuesta,
@@ -329,10 +338,10 @@ INNER JOIN salud_archivo_facturacion_mov_generados
 ON salud_archivo_control_glosas_respuestas.num_factura=salud_archivo_facturacion_mov_generados.num_factura
 INNER JOIN vista_salud_facturas_usuarios
 ON salud_archivo_control_glosas_respuestas.num_factura=vista_salud_facturas_usuarios.num_factura
-INNER JOIN salud_glosas_iniciales
-ON salud_archivo_control_glosas_respuestas.idGlosa = salud_glosas_iniciales.ID
+-- INNER JOIN salud_glosas_iniciales
+-- ON salud_archivo_control_glosas_respuestas.idGlosa = salud_glosas_iniciales.ID
 INNER JOIN salud_archivo_conceptos_glosas 
-ON salud_glosas_iniciales.CodigoGlosa = salud_archivo_conceptos_glosas.cod_glosa
+ON salud_archivo_control_glosas_respuestas.id_cod_glosa = salud_archivo_conceptos_glosas.cod_glosa
 INNER JOIN salud_estado_glosas 
 ON salud_archivo_control_glosas_respuestas.EstadoGlosa = salud_estado_glosas.ID
 INNER JOIN salud_archivo_usuarios

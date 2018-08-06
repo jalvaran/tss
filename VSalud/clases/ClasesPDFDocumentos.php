@@ -79,18 +79,20 @@ $html.=$DatosFormatos["CuerpoFormato"];
             $html= $this->ReportesHTML_PendientesXConciliar($st);
         }
         if($idReporte==3){
-            $Documento="Porcentajes de valores Glosados definidos Eps";
+            $Documento="Porcentaje de valor Glosado definitivo X EPS";
             $html= $this->ReportesHTML_PorcentajesGlosados($st);
         }
         if($idReporte==4){
-            $Documento="Porcentajes de valores Glosados definidos IPS";
+            $Documento="Porcentaje de valor Glosado definitivo X IPS";
             $html=$this->ReportesHTML_PorcentajesGlosadosIPS($st);
         }
         if($idReporte==5){
             $Documento="Reporte 2193";
+            $html=$this->ReportesHTML_Reporte_2193($st);
         }
         if($idReporte==6){
             $Documento="Reporte de concepto de glosas mas frecuente";
+            $html=$this->ReportesHTML_GlosasFrecuentes($st);
         }
         
         $this->PDF_Ini($Documento, 8,""); 
@@ -206,7 +208,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
             
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
-                   . "SUM(valor_glosado_eps) AS TotalGlosado ";
+                   . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_administrador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -276,7 +278,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
             
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
-                    . "SUM(valor_glosado_eps) AS TotalGlosado ";
+                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_prestador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -314,6 +316,118 @@ $html.=$DatosFormatos["CuerpoFormato"];
         return($html);
     }
     
+    /**
+     * HTML reporte 2193
+     * * @param type $st
+     * @return type
+     */
+    public function ReportesHTML_Reporte_2193($st) {
+        
+        $Back="#CEE3F6";
+        $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
+            $html.="<tr>";
+                $html.='<td>';
+                $html.="<strong>REGIMEN</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL GLOSADO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>TOTAL GLOSADO DEFINITIVO</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>DIFERENCIA</strong>";
+                $html.="</td>";
+                
+            $html.="</tr>";
+            
+            $query="SELECT regimen_eps,"
+                    . "SUM(valor_glosado_eps) AS TotalGlosado,"
+                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosadoDefinitivo ";
+            $consulta= $this->obCon->Query("$query FROM $st GROUP BY regimen_eps");
+            $h=0;
+            while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
+                if($h==0){
+                    $Back="#f2f2f2";
+                    $h=1;
+                }else{
+                    $Back="white";
+                    $h=0;
+                }
+                               
+                $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["regimen_eps"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= number_format($DatosRespuestas["TotalGlosado"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=number_format($DatosRespuestas["TotalGlosadoDefinitivo"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=number_format($DatosRespuestas["TotalGlosado"]-$DatosRespuestas["TotalGlosadoDefinitivo"]);
+                    $html.="</td>";
+                    
+                $html.="</tr>";
+            }
+        $html.="</tabla>";
+        return($html);
+    }
+    
+    
+    /**
+     * HTML reporte Glosas Frecuentes
+     * * @param type $st
+     * @return type
+     */
+    public function ReportesHTML_GlosasFrecuentes($st) {
+        
+        $Back="#CEE3F6";
+        $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
+            $html.="<tr>";
+                $html.='<td>';
+                $html.="<strong>CODIGO GLOSA</strong>";
+                $html.="</td>";
+                $html.="<td>";
+                $html.="<strong>DESCRIPCION</strong>";
+                $html.="</td>";
+                $html.="<td style='text-align:center'>";
+                $html.="<strong>TOTAL</strong>";
+                $html.="</td>";
+                
+                
+            $html.="</tr>";
+            
+            $query="SELECT cod_glosa_inicial, descripcion_glosa_inicial,"
+                    . "COUNT(cod_glosa_inicial) AS Cantidad ";
+            $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC");
+            $h=0;
+            while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
+                if($h==0){
+                    $Back="#f2f2f2";
+                    $h=1;
+                }else{
+                    $Back="white";
+                    $h=0;
+                }
+                               
+                $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
+                    $html.="<td>";
+                    $html.=$DatosRespuestas["cod_glosa_inicial"];
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.= utf8_encode($DatosRespuestas["descripcion_glosa_inicial"]);
+                    $html.="</td>";
+                    $html.="<td>";
+                    $html.=number_format($DatosRespuestas["Cantidad"]);
+                    $html.="</td>";
+                                        
+                $html.="</tr>";
+            }
+        $html.="</tabla>";
+        return($html);
+    }
     public function FooterHTMLReportes($idUser) {
         $DatosUsuario= $this->obCon->DevuelveValores("usuarios","idUsuarios",$idUser);
         $Fecha=date("Y-m-d H:i:s");

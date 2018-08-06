@@ -43,11 +43,11 @@ print("<body>");
                 $css->FilaTabla(16);
                     print("<td colspan=2 style='text-align:center' >");
                         
-                        $css->CrearSelect("TipoReporte", "HabiliteEPS()",300);
+                        $css->CrearSelect("TipoReporte", "HabiliteEPS()",350);
                             $css->CrearOptionSelect("1", "Glosas Pendientes por Conciliar", 1);
                             $css->CrearOptionSelect("2", "Glosas Pendientes por Contestar", 0);
-                            $css->CrearOptionSelect("3", "Porcentajes de valores Glosados definidos Eps", 0);
-                            $css->CrearOptionSelect("4", "Porcentajes de valores Glosados definidos IPS", 0);
+                            $css->CrearOptionSelect("3", "Porcentaje de valor Glosado definitivo X EPS", 0);
+                            $css->CrearOptionSelect("4", "Porcentaje de valor Glosado definitivo X IPS", 0);
                             $css->CrearOptionSelect("5", "Reporte 2193", 0);
                             $css->CrearOptionSelect("6", "Reporte de concepto de glosas mas frecuente", 0);
                         $css->CerrarSelect();
