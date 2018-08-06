@@ -47,7 +47,7 @@ if($_REQUEST["idAccion"]){
         break;
         
         case 2://Se borra el control de respuestas en caso de que ocurra un error
-            $this->VaciarTabla("salud_control_generacion_respuestas_excel");
+            $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
             $obCon->BorrarCarga();
             print("OK");
         break;
@@ -86,8 +86,36 @@ if($_REQUEST["idAccion"]){
             $page="ArchivosTemporales/Reportes/$NombreArchivo";
             
             $css->CrearImageLink($page, $imagerute, "_blank");
-            $this->VaciarTabla("salud_control_generacion_respuestas_excel");
+            $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
         break; 
+        case 7://Se reciben las facturas y se llenan con respuestas a la tabla para iniciar el proceso de consulta de respuestas y registro en el excel
+                        
+            $Facturas=explode(",",$obCon->normalizar($_REQUEST["CmbFacturas"]));
+           
+            foreach ($Facturas as $key){
+                $sql="SELECT num_factura,"
+                        . " (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados"
+                        . " WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_glosas_iniciales.num_factura) as idEPS"
+                        . " FROM salud_glosas_iniciales WHERE num_factura='$key' and (EstadoGlosa='2' or EstadoGlosa='4') GROUP BY num_factura";
+                $consulta=$obCon->Query($sql);
+                while($DatosFacturas=$obCon->FetchArray($consulta)){
+                    $obCon->CargaFacturasAResponder("",$DatosFacturas["num_factura"], $DatosFacturas["idEPS"], "");
+                }
+               
+            }
+            $sql="SELECT idEPS FROM salud_control_generacion_respuestas_excel GROUP BY idEPS";
+            $consulta=$obCon->Query($sql);
+            
+            if($obCon->NumRows($consulta)==1){
+                print("OK");
+            }else if($obCon->NumRows($consulta)==0){
+                print("<h4 style='color:orange'>No se encontraron respuestas para las facturas asociadas a las cuentas seleccionadas</h4>");
+            }else{
+                print("<h4 style='color:red'>Se seleccionaron cuentas de dos o mas EPS, Sólo es posible seleccionar cuentas de una EPS</h4>");
+           
+            }
+            
+        break;
     }
     
 }else{

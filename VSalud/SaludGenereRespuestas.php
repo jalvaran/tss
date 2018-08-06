@@ -47,7 +47,7 @@ print("<body>");
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
                     print("<td>");
-                        print('<select class="js-example-basic-multiple" name="Cuentas[]" id="Cuentas" multiple="multiple" style=width:900px;>');
+                        print('<select name="Cuentas[]" id="Cuentas" multiple="multiple" style=width:900px;>');
                             print('<option value=""></option>');
                         print('</select>');
                         //$css->CrearMultiSelectTable("Cuentas", "vista_salud_cuentas_rips", "", "CuentaRIPS", "CuentaRIPS", "nom_enti_administradora", "", "", "", 1,900);
@@ -66,6 +66,19 @@ print("<body>");
                 $css->FilaTabla(16);
                     $css->ColTabla("<strong>Generar reporte por facturas</strong>", 1);
                     $css->ColTabla("<strong>Acción</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td>");
+                        print('<select name="CmbFacturas[]" id="CmbFacturas" multiple="multiple" style=width:900px;>');
+                            print('<option value=""></option>');
+                        print('</select>');
+                        //$css->CrearMultiSelectTable("Cuentas", "vista_salud_cuentas_rips", "", "CuentaRIPS", "CuentaRIPS", "nom_enti_administradora", "", "", "", 1,900);
+                    print("</td>");
+                    
+                    print("<td>");
+                        $css->CrearBotonEvento("BtnRespuestaXFacturas", "Generar", 1, "onClick", "EnviarFacturas()", "naranja", "");
+                    print("</td>");
+                    
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         

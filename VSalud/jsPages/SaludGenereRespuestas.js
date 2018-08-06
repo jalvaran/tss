@@ -24,13 +24,32 @@ $(document).ready(function() {
                   cache: true
                 }
               });
+              
+    $('#CmbFacturas').select2({
+		  
+                placeholder: 'Busque una o varias Facturas',
+                ajax: {
+                  url: './buscadores/Facturas.querys.php',
+                  dataType: 'json',
+                  delay: 250,
+                  processResults: function (data) {
+                    return {
+                      results: data
+                    };
+                  },
+                  cache: true
+                }
+              });          
 });
 /**
  * Borra la ultima carga en caso de no pasar alguna validacion o que e produzca algun error
  * @returns {undefined}
  */
 function BorrarCarga(){
-    document.getElementById("GifProcess").innerHTML="";
+    if($("#GifProcess").length > 0){
+        document.getElementById("GifProcess").innerHTML="";
+    }
+    
     var form_data = new FormData();
         form_data.append('idAccion', 2);
         
@@ -51,7 +70,7 @@ function BorrarCarga(){
                 //document.getElementById("DivConsultas").innerHTML="Carga Borrada";
                 alertify.error("Carga Borrada");
             }else{
-                document.getElementById("DivProcess").innerHTML="No se pudo borrar la carga";
+                document.getElementById("DivProcess").innerHTML=data;
                 
             }
             
@@ -113,6 +132,56 @@ function EnviarCuentas(){
       })
     
 }
+/**
+ * Envia las facturas para analizarlas
+ * @returns {undefined}
+ */
+function EnviarFacturas(){
+    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+
+    if($('#CmbFacturas').val()==null || $('#CmbFacturas').val()==''){
+        alertify.alert("por favor seleccione una o varias facturas");          
+        return;
+    } 
+    
+    
+    var form_data = new FormData();
+        form_data.append('idAccion', 7);
+        form_data.append('CmbFacturas', $('#CmbFacturas').val());
+      
+    $.ajax({
+        //async:false,
+        url: './Consultas/SaludGenereRespuestas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+           if(data==="OK"){
+                $('.progress-bar').css('width','20%').attr('aria-valuenow', 20);  
+                document.getElementById('LyProgresoCMG').innerHTML="20%";
+                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Se recibieron las facturas solicitadas</h4>";
+                CrearArchivoRespuestas();
+            }else{
+                document.getElementById("DivProcess").innerHTML='';
+                document.getElementById("DivConsultas").innerHTML=data;                
+                BorrarCarga();
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+    
+}
+
 /**
  * Crea el archivo donde se van a almacenar todas las respuestas
  * @returns {undefined}
@@ -270,7 +339,7 @@ function ComprimirRespuestas(){
             document.getElementById('LyProgresoCMG').innerHTML="100%";
             document.getElementById("DivProcess").innerHTML=data;
             document.getElementById("DivConsultas").innerHTML='Proceso Terminado';                
-            BorrarCarga();
+            
             
         },
         error: function (xhr, ajaxOptions, thrownError) {
