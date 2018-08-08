@@ -17,15 +17,15 @@ include_once ('funciones/function.php');  //En esta funcion está la paginacion
 
 include_once("Configuraciones/vista_salud_facturas_diferencias.ini.php");  //Clases de donde se escribirán las tablas
 $obTabla = new Tabla($db);
-$obVenta=new conexion($idUser);
+$obCon=new conexion($idUser);
 $statement = $obTabla->CreeFiltro($Vector);
 $Vector2["Tabla"]="salud_archivo_facturacion_mov_generados";
 $statement2 = $obTabla->CreeFiltro($Vector2);
 $pos = strpos($statement2, "WHERE");
 $FitroAdicional="";
 if(isset($_REQUEST["TxtFechaInicialRango"])){
-    $FechaIni=$obVenta->normalizar($_REQUEST["TxtFechaInicialRango"]);
-    $FechaFin=$obVenta->normalizar($_REQUEST["TxtFechaFinalRango"]);
+    $FechaIni=$obCon->normalizar($_REQUEST["TxtFechaInicialRango"]);
+    $FechaFin=$obCon->normalizar($_REQUEST["TxtFechaFinalRango"]);
     $FitroAdicional=" AND fecha_factura >= '$FechaIni' AND fecha_factura <= '$FechaFin'";
 }
 if($pos === FALSE){
@@ -70,8 +70,8 @@ $css->CrearImageLink("../VMenu/MnuInventarios.php", "../images/historial3.png", 
 
 if($TipoUser=="administrador"){
     $statement2= str_replace ("vista_salud_facturas_diferencias","salud_archivo_facturacion_mov_generados",$statement2);
-    $Consulta=$obVenta->Query("SELECT  (SELECT SUM(`valor_neto_pagar`) FROM $statement2) as Total,SUM(valor_pagado) as ValorPagado FROM $statement  ");
-    $DatosFacturacion=$obVenta->FetchArray($Consulta);
+    $Consulta=$obCon->Query("SELECT  (SELECT SUM(`valor_neto_pagar`) FROM $statement2) as Total,SUM(valor_pagado) as ValorPagado FROM $statement  ");
+    $DatosFacturacion=$obCon->FetchArray($Consulta);
     $Total=  number_format($DatosFacturacion["Total"]);
     $ValorPagado=  number_format($DatosFacturacion["ValorPagado"]);
     $Diferencia=number_format($DatosFacturacion["Total"]-$DatosFacturacion["ValorPagado"]);

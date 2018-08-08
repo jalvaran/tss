@@ -295,6 +295,7 @@ function BuscarUsuarioFactura(idFactura){
         form_data.append('idFactura', idFactura);
         document.getElementById('DivDetallesUsuario').innerHTML="Buscando Paciente...";
         $.ajax({
+        async:false,    
         url: './Consultas/PacienteFactura.search.php',
         //dataType: 'json',
         cache: false,
@@ -327,6 +328,7 @@ function BuscarActividadesFactura(idFactura){
         form_data.append('idFactura', idFactura);
         document.getElementById('DivActividadesFacturas').innerHTML="Buscando Actividades...";
         $.ajax({
+        async:false,     
         url: './Consultas/ActividadesFactura.search.php',
         //dataType: 'json',
         cache: false,

@@ -51,8 +51,8 @@ $statement=$obTabla->FiltroRangoFechas("fecha_factura", $statement, "");
 $Vector["statement"]=$statement;   //Filtro necesario para la paginacion
 
 if($TipoUser=="administrador"){
-    $Consulta=$obVenta->Query("SELECT SUM(valor_neto_pagar) as Total FROM $statement");
-    $DatosFacturacion=$obVenta->FetchArray($Consulta);
+    $Consulta=$obCon->Query("SELECT SUM(valor_neto_pagar) as Total FROM $statement");
+    $DatosFacturacion=$obCon->FetchArray($Consulta);
     $Total=  number_format($DatosFacturacion["Total"]);
     $css->CrearNotificacionAzul("Total = $Total", 16);
 }

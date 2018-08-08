@@ -223,7 +223,7 @@ SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administra
 (SELECT MAX(`fecha_factura`)) AS FechaHasta,`fecha_radicado`,`numero_radicado`, 
 (COUNT(`id_fac_mov_generados`)) AS NumFacturas,sum(`valor_neto_pagar`) as Total, MIN(EstadoGlosa) as idEstadoGlosa,
 (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = MIN(`EstadoGlosa`)) as EstadoGlosa,
-(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS=salud_archivo_facturacion_mov_generados.CuentaRIPS) as Dias
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS = salud_archivo_facturacion_mov_generados.CuentaRIPS) as Dias
 FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
 
 DROP VIEW IF EXISTS `vista_af_semaforo`;
@@ -248,6 +248,7 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        salud_archivo_control_glosas_respuestas.CuentaRIPS as cuenta,
        salud_archivo_control_glosas_respuestas.num_factura as factura,
        salud_archivo_control_glosas_respuestas.Tratado as Tratado,
+       salud_archivo_control_glosas_respuestas.Soporte as Soporte,
        fecha_factura ,
        numero_radicado,
        fecha_radicado,

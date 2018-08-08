@@ -83,12 +83,12 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
     
     $css->CrearTabla();
             $css->FilaTabla(16);
-                $css->ColTabla("<strong>Criterios de Búsqueda</strong>", 4);
+                $css->ColTabla("<strong>Criterios de Búsqueda</strong>", 5,'C');
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
-                $css->ColTabla("Fecha Inicial", 1);
-                $css->ColTabla("Fecha Final", 2);
-                $css->ColTabla("Fecha de Radicado", 2);
+                $css->ColTabla("<strong>Fecha Inicial</strong>", 1);
+                $css->ColTabla("<strong>Fecha Final</strong>", 2);
+                $css->ColTabla("<strong>Fecha de Radicado</strong>", 2);
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
                 print("<td>");
@@ -140,13 +140,13 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                     $Page="Consultas/vista_salud_cuentas_rips.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivCuentas`,`5`);return false ;";
                     
-                    $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                    $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
                     
                 }
                 print("</td>");
                 $TotalPaginas= ceil($ResultadosTotales/$limit);
                 print("<td colspan=5 style=text-align:center>");
-                print("<strong>Pagina: </strong>");
+                print("<strong>Página: </strong>");
                                 
                 $Page="Consultas/vista_salud_cuentas_rips.search.php?st=$st&Page=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivCuentas`,`5`);return false ;";
@@ -168,26 +168,26 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                     $NumPage1=$NumPage+1;
                     $Page="Consultas/vista_salud_cuentas_rips.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivCuentas`,`5`);return false ;";
-                    $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                    $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                 }
                 print("</td>");
                $css->CierraFilaTabla(); 
             }
         }   
         $css->FilaTabla(12);
-            $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
-            $css->ColTabla("<strong>Cuenta Global</strong>", 1);
-            $css->ColTabla("<strong>Cod EPS</strong>", 1);
-            $css->ColTabla("<strong>Nombre</strong>", 1);
-            $css->ColTabla("<strong>Fecha Inicial</strong>", 1);
-            $css->ColTabla("<strong>Fecha Final</strong>", 1);
-            $css->ColTabla("<strong>Fecha de Radicado</strong>", 1);
-            $css->ColTabla("<strong>Numero de Radicado</strong>", 1);
-            $css->ColTabla("<strong>Cantidad de Facturas</strong>", 1);
-            $css->ColTabla("<strong>Total Cuenta</strong>", 1);
-            $css->ColTabla("<strong>Estado Glosa</strong>", 1);
-            $css->ColTabla("<strong>Semaforo</strong>", 1);
-            $css->ColTabla("<strong>Abrir</strong>", 1);
+            $css->ColTabla("<strong>Cuenta RIPS</strong>", 1,'C');
+            $css->ColTabla("<strong>Cuenta Global</strong>", 1,'C');
+            $css->ColTabla("<strong>Código EPS</strong>", 1,'C');
+            $css->ColTabla("<strong>Nombre</strong>", 1,'C');
+            $css->ColTabla("<strong>Fecha Inicial</strong>", 1,'C');
+            $css->ColTabla("<strong>Fecha Final</strong>", 1,'C');
+            $css->ColTabla("<strong>Fecha de Radicado</strong>", 1,'C');
+            $css->ColTabla("<strong>Numero de Radicado</strong>", 1,'C');
+            $css->ColTabla("<strong>Cantidad de Facturas</strong>", 1,'C');
+            $css->ColTabla("<strong>Total Cuenta</strong>", 1,'C');
+            $css->ColTabla("<strong>Estado Glosa</strong>", 1,'C');
+            $css->ColTabla("<strong>Semaforo</strong>", 1,'C');
+            $css->ColTabla("<strong>Abrir</strong>", 1,'C');
             
         $css->CierraFilaTabla();
         

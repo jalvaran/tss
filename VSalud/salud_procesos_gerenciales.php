@@ -64,7 +64,7 @@ $css->CerrarCuadroDeDialogo();
 //Formulario para agregar soporte a proceso existente
 
 $css->CrearCuadroDeDialogo("DialAgregarSoporte", "Agregar Soporte a un Proceso Existente");
-    $id=$obVenta->ObtenerMAX("salud_procesos_gerenciales", "ID", 1, "");
+    $id=$obCon->ObtenerMAX("salud_procesos_gerenciales", "ID", 1, "");
     $css->CrearForm2("FrmAgregar", $myPage, "post", "_self");
         $css->CrearInputNumber("idProceso", "number", "<strong>ID del proceso:</strong><br>", 0, "ID", "", "", "", 100, 30, 0, 1, 1, $id, 1);
         $css->CrearInputText("TxtFecha", "date", "<br><strong>Fecha:</strong><br>", date("Y-m-d"), "Fecha", "", "", "", 200, 30, 0, 1);

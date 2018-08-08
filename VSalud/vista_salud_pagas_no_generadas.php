@@ -53,8 +53,8 @@ $css->CrearImageLink("../VMenu/MnuInventarios.php", "../images/factura3.png", "_
 
 
 if($TipoUser=="administrador"){
-    $Consulta=$obVenta->Query("SELECT SUM(valor_pagado) as Total FROM $statement");
-    $DatosFacturacion=$obVenta->FetchArray($Consulta);
+    $Consulta=$obCon->Query("SELECT SUM(valor_pagado) as Total FROM $statement");
+    $DatosFacturacion=$obCon->FetchArray($Consulta);
     $Total=  number_format($DatosFacturacion["Total"]);
     $css->CrearNotificacionAzul("Total = $Total", 16);
 }
