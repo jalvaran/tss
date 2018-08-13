@@ -122,9 +122,9 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla(number_format($DatosFactura["valor_total_pago"]), 1);                
                 $css->ColTabla(number_format($DatosFactura["valor_neto_pagar"]+$DatosFactura["valor_total_pago"]), 1);
                 print("<td>");
-                    $Enable=1;
-                    if($DatosFactura["EstadoGlosa"]==9){
-                        $Enable=0;
+                    $Enable=0;
+                    if($DatosFactura["EstadoGlosa"]==8){
+                        $Enable=1;
                     }
                     $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFactura["fecha_radicado"], date("Y-m-d"), "");
                     $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1); //Verifico cuantos dias hay parametrizados para poder registrar glosas o devolver una factura

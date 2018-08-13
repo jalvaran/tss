@@ -1319,8 +1319,8 @@ CREATE TABLE `salud_glosas_iniciales` (
   `FechaAuditoria` date NOT NULL,
   `FechaRegistro` date NOT NULL,
   `CodigoGlosa` int(3) NOT NULL,
-  `num_factura` varchar(20) NOT NULL,
-  `CodigoActividad` varchar(20) NOT NULL,
+  `num_factura` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `CodigoActividad` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `EstadoGlosa` int(11) NOT NULL,
   `ValorActividad` double NOT NULL,
   `ValorGlosado` double NOT NULL,
@@ -1709,11 +1709,4 @@ CREATE TABLE `usuarios_tipo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
 
-DROP VIEW IF EXISTS `vista_salud_procesos_gerenciales`;
-CREATE TABLE `vista_salud_procesos_gerenciales` (`ID` bigint(20), `idProceso` int(11), `Fecha` date, `EPS` varchar(50), `NombreProceso` text, `Concepto` varchar(45), `Observaciones` text, `Soporte` varchar(200));
-
-
-DROP TABLE IF EXISTS `vista_salud_procesos_gerenciales`;
-CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `vista_salud_procesos_gerenciales` AS select `t1`.`ID` AS `ID`,`t1`.`idProceso` AS `idProceso`,`t1`.`Fecha` AS `Fecha`,(select `salud_eps`.`nombre_completo` from `salud_eps` where (`salud_eps`.`cod_pagador_min` = `t2`.`EPS`)) AS `EPS`,`t2`.`NombreProceso` AS `NombreProceso`,`t2`.`Concepto` AS `Concepto`,`t1`.`Observaciones` AS `Observaciones`,`t1`.`Soporte` AS `Soporte` from (`salud_procesos_gerenciales_archivos` `t1` join `salud_procesos_gerenciales` `t2` on((`t1`.`idProceso` = `t2`.`ID`)));
-
--- 2018-08-06 17:33:29
+-- 2018-08-09 22:57:22

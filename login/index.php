@@ -35,7 +35,7 @@
                 	
                 <div class="row">
                     <div class="col-sm-8 col-sm-offset-2 text">
-                        <h1>Iniciar Sesión en Plataforma TS5</h1>
+                        <h1>Iniciar Sesión en Plataforma TSS</h1>
                         <div class="description">
                         	<p>
 	                         	Plataforma de Control de Procesos Empresariales 
@@ -74,7 +74,7 @@
 							<div class="col-sm-2 icon"><i class="fa fa-cog fa-spin fa-fw"></i></div>
 							<div class="col-sm-10">
 								<h3>Integración de todos los procesos de su Compañía</h3>
-								<p>Gestión de Calidad, Gestión Comercial, Servicio al Cliente, Gestión del Talento Humano, Compras, Inventarios, Gestión Administrativa y Financiera.</p>
+								<p>Gestión de Calidad, Gestión Comercial, Gestión de los servicos en la salud, Servicio al Cliente, Gestión del Talento Humano, Compras, Inventarios, Gestión Administrativa y Financiera.</p>
 							</div>
 						</div>
 						<div class="row">

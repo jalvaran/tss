@@ -1000,7 +1000,10 @@ function Footer(){
 		print('<footer>    
   <div style="text-align: center">
     <div>
-       <a href="../VMenu/Menu.php" class="f_logo"><img src="../images/header-logo.png" alt=""></a>
+    <div>
+       <a href="../VMenu/Menu.php" class="f_logo"><img src="../images/header-logo1.png" alt=""></a><a href="../VMenu/Menu.php" class="f_logo"><img src="../images/header-logo.png" alt=""></a>
+    </div>  
+    
       <div class="copy">
       &copy; '.$Year.' | <a href="#">Privacy Policy</a> <br> Software  designed by <a href="http://technosoluciones.com.co/" rel="nofollow" target="_blank">Techno Soluciones SAS</a>
       </div>
