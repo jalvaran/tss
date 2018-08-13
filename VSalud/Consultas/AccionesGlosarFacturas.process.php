@@ -18,9 +18,11 @@ if( !empty($_REQUEST["idAccion"]) ){
     
     switch ($_REQUEST["idAccion"]) {
         case 1: //Registra la devolucion de una factura
-            if(!empty($_REQUEST["idFactura"]) or !empty($_REQUEST["FechaDevolucion"]) or !empty($_REQUEST["FechaAuditoria"]) or !empty($_REQUEST["Observaciones"]) or !empty($_REQUEST["CodigoGlosa"]) ){
+            if(empty($_REQUEST["idFactura"]) or empty($_REQUEST["FechaDevolucion"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["CodigoGlosa"]) ){
+                
                 exit("No se recibieron los valores esperados");
             }
+            
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
             $FechaDevolucion=$obGlosas->normalizar($_REQUEST["FechaDevolucion"]);
             $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
@@ -38,7 +40,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
             $obGlosas->DevolverFactura($idFactura,$ValorFactura, $FechaDevolucion,$FechaAuditoria, $Observaciones, $CodigoGlosa, $idUser, $destino, "");
-        
+            print("<strong>Devolucion realizada</strong>");
         break;
         
         case 2: //Registra las glosas iniciales en la tabla temporal

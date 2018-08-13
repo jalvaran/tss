@@ -476,8 +476,9 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
         data: form_data,
         type: 'post',
         success: function(data){
+            
             if(idAccion==1){
-                document.getElementById("DivGlosar").innerHTML="<strong>Devolucion Realizada!</strong>";
+                document.getElementById("DivGlosar").innerHTML=data;
                 //document.getElementById('BtnModalGlosar').click();
                 BuscarUsuarioFactura(idFactura);
                 BuscarActividadesFactura(idFactura);
