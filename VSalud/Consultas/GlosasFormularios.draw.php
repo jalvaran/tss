@@ -887,7 +887,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     //print("</td>");
                 
                     print("<td style='text-align:center' colspan=3>");
-                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
+                         $css->CrearDiv("DivChousen", "", "center", 0, 1);
                             $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Conciliación:");
                         $css->CerrarDiv();                        
                     print("</td>");
@@ -1293,7 +1293,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     //print("</td>");
                 
                     print("<td style='text-align:center' colspan=3>");
-                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
+                         $css->CrearDiv("DivChousen", "", "center", 0, 1);
                             $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Conciliación:");
                         $css->CerrarDiv();                        
                     print("</td>");

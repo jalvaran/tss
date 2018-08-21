@@ -42,20 +42,22 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE `cod_estado`= 1 or `cod_estado`= 3 ";
+            $Condicional=" WHERE (`cod_estado`= '2' OR `cod_estado`= '4') ";
+            $Condicional2="";
             if($idEPS<>''){
-                $Condicional=$Condicional." AND cod_administrador='$idEPS'";
+                $Condicional2=" AND cod_administrador='$idEPS'";
             }
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2.=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2.=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
-                $Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
+                $Condicional2.=$Condicional2." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -100,13 +102,13 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                                 $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=3 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
@@ -128,7 +130,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                                 $NumPage1=$NumPage+1;
                                 $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
@@ -166,7 +168,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 }
         break;
     
-        case 2: //Formulario para el registro de una glosa
+        case 2: //Glosas pendientes por responder
             $TipoReporte=$obGlosas->normalizar($_REQUEST["TipoReporte"]);
             $idEPS="";
             if(isset($_REQUEST["idEPS"])){
@@ -193,19 +195,20 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $NumPage=1;
             }
             $Condicional=" WHERE (`cod_estado`= 1 or `cod_estado`= 3 or `cod_estado`= 9) AND Tratado=0";
+            $Condicional2="";
             if($idEPS<>''){
-                $Condicional=$Condicional." AND cod_administrador='$idEPS'";
+                $Condicional2.=$Condicional2." AND cod_administrador='$idEPS'";
             }
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2.=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2.=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
-                $Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
+                $Condicional2.=$Condicional2." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -250,13 +253,13 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                                 $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=3 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
@@ -278,7 +281,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                                 $NumPage1=$NumPage+1;
                                 $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
@@ -317,7 +320,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
            
         break;
         
-        case 3: //Formulario para ver la tabla temporal de glosas iniciales
+        case 3: //porcentaje de valor glosado definivo por eps
             $TipoReporte=$obGlosas->normalizar($_REQUEST["TipoReporte"]);
             $idEPS="";
             if(isset($_REQUEST["idEPS"])){
@@ -344,24 +347,24 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $NumPage=1;
             }
             $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
-            
+            $Condicional2="";
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2.=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
                 $statement= base64_decode($_REQUEST['st']);
                 //print($statement);
             }
-            $limit = 10;
+            $limit = 1;
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
@@ -370,7 +373,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $ResultadosTotales = $row['num'];
             $st_reporte=$statement;
             $statement.=" GROUP BY cod_administrador LIMIT $startpoint,$limit";
-            
+            //print($statement);
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
                     . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
@@ -398,18 +401,18 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='2' style=text-align:center>");
                             if($NumPage>1){
                                 $NumPage1=$NumPage-1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=2 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
-                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
+                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
                             $css->CrearSelect("CmbPage", $FuncionJS,70);
                                 for($p=1;$p<=$TotalPaginas;$p++){
@@ -427,9 +430,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='2' style=text-align:center>");
                             if($ResultadosTotales>($startpoint+$limit)){
                                 $NumPage1=$NumPage+1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
@@ -468,7 +471,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 }
         break;
         
-        case 4: //Formulario para la edicion de una glosa temporal
+        case 4: //porcentaje de valor glosado definivo por ips
             
             $TipoReporte=$obGlosas->normalizar($_REQUEST["TipoReporte"]);
             $idEPS="";
@@ -496,24 +499,24 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $NumPage=1;
             }
             $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
-            
+            $Condicional2='';
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
                 $statement= base64_decode($_REQUEST['st']);
                 //print($statement);
             }
-            $limit = 10;
+            $limit = 1;
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
@@ -550,18 +553,18 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='2' style=text-align:center>");
                             if($NumPage>1){
                                 $NumPage1=$NumPage-1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=2 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
-                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
+                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
                             $css->CrearSelect("CmbPage", $FuncionJS,70);
                                 for($p=1;$p<=$TotalPaginas;$p++){
@@ -579,9 +582,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='2' style=text-align:center>");
                             if($ResultadosTotales>($startpoint+$limit)){
                                 $NumPage1=$NumPage+1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
@@ -647,17 +650,17 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $NumPage=1;
             }
             $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
-            
+            $Condicional2='';
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -668,10 +671,12 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
+            $st_reporte=$statement;
+            //$statement.="   ";
             $query = "SELECT COUNT(*) as `num` FROM {$statement}";
             $row = $obGlosas->FetchArray($obGlosas->Query($query));
             $ResultadosTotales = $row['num'];
-            $st_reporte=$statement;
+            
             $statement.=" GROUP BY regimen_eps LIMIT $startpoint,$limit";
             
             $query="SELECT regimen_eps,"
@@ -701,18 +706,18 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='1' style=text-align:center>");
                             if($NumPage>1){
                                 $NumPage1=$NumPage-1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=2 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
-                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
+                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
                             $css->CrearSelect("CmbPage", $FuncionJS,70);
                                 for($p=1;$p<=$TotalPaginas;$p++){
@@ -730,9 +735,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='1' style=text-align:center>");
                             if($ResultadosTotales>($startpoint+$limit)){
                                 $NumPage1=$NumPage+1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
@@ -794,17 +799,17 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $NumPage=1;
             }
             $Condicional=" WHERE (`cod_glosa_inicial`<>'') ";
-            
+            $Condicional2='';
             if($FechaInicial<>''){
-                $Condicional=$Condicional." AND fecha_factura >= '$FechaInicial' ";
+                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
-                $Condicional=$Condicional." AND fecha_factura <= '$FechaFinal' ";
+                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional ";
+            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -815,11 +820,14 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
+            $st_reporte=$statement;
+            $statement.=" GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC ";
             $query = "SELECT COUNT(*) as `num` FROM {$statement}";
+            
             $row = $obGlosas->FetchArray($obGlosas->Query($query));
             $ResultadosTotales = $row['num'];
-            $st_reporte=$statement;
-            $statement.=" GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC LIMIT $startpoint,$limit";
+            
+            $statement.="  LIMIT $startpoint,$limit";
             
             $query="SELECT cod_glosa_inicial, descripcion_glosa_inicial,"
                     . "COUNT(cod_glosa_inicial) AS Cantidad ";
@@ -848,18 +856,18 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='1' style=text-align:center>");
                             if($NumPage>1){
                                 $NumPage1=$NumPage-1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
 
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
 
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
                             print("<td colspan=1 style=text-align:center>");
-                            print("<strong>Pagina: </strong>");
+                            print("<strong>Página: </strong>");
 
-                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
+                            $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&TipoReporte=$TipoReporte&Page=";
                             $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
                             $css->CrearSelect("CmbPage", $FuncionJS,70);
                                 for($p=1;$p<=$TotalPaginas;$p++){
@@ -877,9 +885,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             print("<td colspan='1' style=text-align:center>");
                             if($ResultadosTotales>($startpoint+$limit)){
                                 $NumPage1=$NumPage+1;
-                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $Page="Consultas/SaludReportesGlosas.draw.php?st=$st1&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
                                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
-                                $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                             }
                             print("</td>");
                            $css->CierraFilaTabla(); 
