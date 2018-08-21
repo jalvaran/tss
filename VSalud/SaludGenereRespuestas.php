@@ -35,25 +35,7 @@ print("<body>");
     $css->CrearNotificacionAzul("Seleccione el tipo de Respuesta que desea", 16);
     $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
     
-            $css->CrearTabla();
-                $css->FilaTabla(16);
-                    $css->ColTabla("<strong>EPS</strong>", 1);
-                    $css->ColTabla("<strong>Soportes?</strong>", 1);
-                $css->CierraFilaTabla();
-                $css->FilaTabla(16);
-                    print("<td style='text-align:center'>");
-                        $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
-                    
-                    print("</td>");
-                    print("<td style='text-align:center'>");
-                        
-                        $css->CrearSelect("CmbSoportes", "",80);
-                            $css->CrearOptionSelect("0", "NO", 1);
-                            $css->CrearOptionSelect("1", "SI", 0);
-                        $css->CerrarSelect();
-                    print("</td>");
-            $css->CierraFilaTabla();  
-            $css->CerrarTabla();
+            
                 $css->CrearTabla();
                 $css->FilaTabla(16);
                     $css->ColTabla("<strong>Generar reporte por cuentas</strong>", 1);
@@ -97,7 +79,25 @@ print("<body>");
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
         
-            
+            $css->CrearTabla();
+                $css->FilaTabla(16);
+                    $css->ColTabla("<strong>EPS</strong>", 1);
+                    $css->ColTabla("<strong>Soportes?</strong>", 1);
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    print("<td style='text-align:center'>");
+                        $css->CrearTableChosen("idEPS", "salud_eps", "", "cod_pagador_min", "nombre_completo", "nit", "cod_pagador_min", 400, 1, "EPS", "");
+                    
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        
+                        $css->CrearSelect("CmbSoportes", "",80);
+                            $css->CrearOptionSelect("0", "NO", 1);
+                            $css->CrearOptionSelect("1", "SI", 0);
+                        $css->CerrarSelect();
+                    print("</td>");
+            $css->CierraFilaTabla();  
+            $css->CerrarTabla();
         
             $css->CrearTabla();
                 $css->FilaTabla(16);
