@@ -333,7 +333,7 @@ function VerificaDuplicados(){
             document.getElementById('BtnSubirZip').disabled=false;
             alertify.error("Hay Facturas Duplicadas",0);
             document.getElementById("DivConsultas").innerHTML="<h2 style='color:red'><strong>Hay Facturas Duplicadas, no puede continuar <a href='vista_af_duplicados.php' target='_BLANK'>ver</a></strong><h2>";
-            BorrarCarga();
+            //BorrarCarga();
         }else{
             document.getElementById("DivProcess").innerHTML='';
             document.getElementById("DivConsultas").innerHTML=data;
