@@ -6,7 +6,7 @@ include_once("css_construct.php");
 $obTabla = new Tabla($db);
 $sql="";
 
-
+$obCon = new conexion($idUser);
 
 print("<html>");
 print("<head>");
@@ -30,13 +30,57 @@ $idLink=0;
      
      
     $css->CrearDiv("principal", "container", "center",1,1);
-    
+    if(isset($_REQUEST["BtnReiniciaTablasSalud"])){
+        $sql="TRUNCATE `salud_archivo_consultas`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_consultas_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_facturacion_mov_generados`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_hospitalizaciones`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_hospitalizaciones_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_medicamentos`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_medicamentos_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_nacidos`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_nacidos_temp`;";
+        $obCon->Query($sql);
+        
+        $sql="TRUNCATE `salud_archivo_otros_servicios`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_otros_servicios_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_procedimientos`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_procedimientos_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_urgencias`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_urgencias_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_usuarios`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_archivo_usuarios_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_rips_facturas_generadas_temp`;";
+        $obCon->Query($sql);
+        $sql="TRUNCATE `salud_upload_control`;";
+        $obCon->Query($sql);
+        $css->CrearNotificacionRoja("Tablas Borradas", 16);
+        
+    }
     print("<strong>Click para Modificar</strong><br>");
     $css->CrearImageLink($myPage."?LkSubir=1", "../images/reparar.png", "_self", 200, 200);
     $css->CrearForm2("FormFunciones", $myPage, "post", "_self");
     $css->CrearBotonConfirmado("BtnVaciarTablas", "Inicializar las Tablas para crearlas en el servidor Externo");
     print("<br><br>");
     $css->CrearBotonConfirmado("BtnIniciaSync", "Actualizar Sincronizacion de Todas las tablas");
+    print("<br><br>");
+    $css->CrearBotonConfirmado("BtnReiniciaTablasSalud", "Inicializar la informacion de Salud");
     $css->CerrarForm();
     $css->CrearDiv("Secundario", "container", "center",1,1);
     $css->Creartabla();

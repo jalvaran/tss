@@ -447,10 +447,15 @@ class Rips extends conexion{
         $DatosEPS=$this->DevuelveValores("salud_eps", "cod_pagador_min", $idEPS);
         $Dias=$DatosEPS["dias_convenio"];
         
-        $sql="SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1";
+        $sql="SELECT CodigoPrestadora FROM empresapro";
         $consulta=$this->Query($sql);
-        $DatosIPS= $this->FetchArray($consulta);
-        $CodigoIPS=$DatosIPS["CodigoPrestadora"];
+        $i=0;
+        while ($DatosIPS=$this->FetchArray($consulta)){
+            $CodigosIPS[$i]= $DatosIPS["CodigoPrestadora"];
+            $i++;
+        }
+        
+        //$CodigoIPS=$DatosIPS["CodigoPrestadora"];
         if($Separador==1){
            $Separador=";"; 
         }else{
@@ -473,16 +478,24 @@ class Rips extends conexion{
             
             while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
                 $line++;
-                if($data[0]<>$CodigoIPS){
+                $ErrorXIPS=1;
+                foreach ($CodigosIPS as $CodigoIPS){
+                    if($data[0]==$CodigoIPS){
+                        $ErrorXIPS=0;
+                    }
+                    
+                }
+                if($ErrorXIPS==1){
                     $Mensaje["Errores"]++;
                     $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
                     $Mensaje["PosError"]=1;
                     if($Mensaje["Errores"]>50){
                         $Mensaje["LineasError"]="N";
-                        
+
                     }
-                    
+
                 }
+                
                 if($data[8]<>$idEPS){
                     $Mensaje["Errores"]++;
                     $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
