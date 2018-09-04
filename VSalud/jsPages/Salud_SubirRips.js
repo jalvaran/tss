@@ -69,13 +69,18 @@ function getInfoForm(){
  * @returns {undefined}
  */
 function EnviarZIP(){
+    
     document.getElementById('BtnSubirZip').disabled=true; 
+    
     document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
 
     if($('#idEPS').val()=='' || $('#CuentaRIPS').val()=='' || $('#FechaRadicado').val()=='' || $('#NumeroRadicado').val()=='' || $('#CmbTipoNegociacion').val()=='' || $('#ArchivosZip').val()==''){
           alertify.alert("Los campos indicados con * son obligatorios");
           BorrarCarga();
-            return;
+          if($('#idEPS').val()==''){
+            document.getElementById('BtnSubirZip').disabled=false; 
+          }
+          return;
     } 
     
     var form_data = new FormData();
