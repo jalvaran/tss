@@ -1153,11 +1153,12 @@ function ModificaAutoincrementales(){
                 document.getElementById("CuentaRIPS").value="";
                 document.getElementById("DivProcess").innerHTML='';
                 document.getElementById('BtnSubirZip').disabled=false;
-                
+                BorrarCarga();
             }else{
                 document.getElementById("DivProcess").innerHTML='';
                 document.getElementById("DivConsultas").innerHTML=data;
                 document.getElementById('BtnSubirZip').disabled=false;
+                BorrarCarga();
             }
             
         },
