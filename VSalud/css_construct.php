@@ -449,7 +449,7 @@ class CssIni{
 	
 	function CrearModalAmplio($id,$title,$Vector){
 		
-            print('<div id="'.$id.'" class="modal fade" role="dialog" style="width:90%;left:5%;margin:0">');
+            print('<div id="'.$id.'" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="width:90%;left:5%;margin:0">');
 		
             print('<div class="modal-dialog">');
             
