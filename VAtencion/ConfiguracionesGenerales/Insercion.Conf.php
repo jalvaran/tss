@@ -8,4 +8,7 @@ $TablaConfig="usuarios";
 $VarInsert[$TablaConfig]["Password"]["TipoText"]="password";
 
 
+
+
+
 ?>

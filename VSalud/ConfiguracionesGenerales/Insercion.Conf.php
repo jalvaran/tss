@@ -4,16 +4,17 @@
  * Tabla productos venta
  * Columnas excluidas
  */
-$TablaConfig="productosventa";
-$VarInsert[$TablaConfig]["CodigoBarras"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["Existencias"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["Kit"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["idProductosVenta"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["CostoTotal"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["ImagenesProductos_idImagenesProductos"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["Kit"]["Excluir"]=1;
-$VarInsert[$TablaConfig]["Especial"]["Excluir"]=1;
-
+$TablaConfig="salud_archivo_conceptos_glosas";
+$VarInsert[$TablaConfig]["cod_glosa"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["cod_concepto_general"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["cod_concepto_especifico"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["cod_glosa"]["Required"]=1;
+$VarInsert[$TablaConfig]["cod_concepto_general"]["Required"]=1;
+$VarInsert[$TablaConfig]["descripcion_concepto_general"]["Required"]=1;
+$VarInsert[$TablaConfig]["tipo_concepto_general"]["Required"]=1;
+$VarInsert[$TablaConfig]["aplicacion_concepto_general"]["Required"]=1;
+$VarInsert[$TablaConfig]["cod_concepto_especifico"]["Required"]=1;
+$VarInsert[$TablaConfig]["descrpcion_concep_especifico"]["Required"]=1;
 
 /*
  * Tabla SERVICIOS

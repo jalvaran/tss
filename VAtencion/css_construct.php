@@ -387,12 +387,12 @@ class CssIni{
 			$ReadOnly="readonly";
 		else
 			$ReadOnly="";
-		$Required="";
+		$Required="Required";
 		if($Required==1)
-			$Required="required";
+			$Required="Required";
                 
                 print("<strong style= 'color:$color'>$label<textarea name='$nombre' id='$nombre' placeholder='$placeh' $TxtEvento = '$TxtFuncion'" 
-                ." $ReadOnly  autocomplete='off' style='width: ".$Ancho."px; height: ".$Alto."px;border-top-width:".$BorderWidth."px;border-left-width:".$BorderWidth."px;border-right-width:".$BorderWidth."px;border-bottom-width:".$BorderWidth."px;' $Required>".$value."</textarea></strong>");
+                ." $ReadOnly ".$Required." autocomplete='off' style='width: ".$Ancho."px; height: ".$Alto."px;border-top-width:".$BorderWidth."px;border-left-width:".$BorderWidth."px;border-right-width:".$BorderWidth."px;border-bottom-width:".$BorderWidth."px;' >".$value."</textarea></strong>");
 
 			
 		

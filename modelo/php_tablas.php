@@ -1038,8 +1038,8 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
         if(!$excluir){  //Si la columna no está excluida
            $DateBox=0;
            $lengCampo=preg_replace('/[^0-9]+/', '', $ColumnasInfo["Type"][$i]); //Determinamos la longitud del campo
-           if($lengCampo<1){
-               $lengCampo=45;
+           if($lengCampo<10){
+               $lengCampo=20;
            }
            if($ColumnasInfo["Type"][$i]=="text"){
                $lengCampo=100;
@@ -1091,7 +1091,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                         if($Parametros->$NombreCol->Predeterminado==$Opciones[$IDTabla]){
                             $pre=1;
                         }
-                        $this->css->CrearOptionSelect($Opciones[$IDTabla], $Opciones[$IDTabla]." - ".$Opciones[$Display]." - ".$Opciones[2], $pre);              
+                        $this->css->CrearOptionSelect($Opciones[$IDTabla], $Opciones[$Display], $pre);              
                     }
                     $this->css->CerrarSelect(); 
                 }else{
@@ -1230,7 +1230,7 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                     if($Value==$Opciones[$IDTabla]){
                         $pre=1;
                     }
-                    $this->css->CrearOptionSelect($Opciones[$IDTabla], $Opciones[$IDTabla]."-".$Opciones[$Display]."-".$Opciones[2], $pre);              
+                    $this->css->CrearOptionSelect($Opciones[$IDTabla], $Opciones[$Display], $pre);              
                 }
                 $this->css->CerrarSelect(); 
                 

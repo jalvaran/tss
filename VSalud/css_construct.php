@@ -7,8 +7,7 @@
 
 class CssIni{
 	private $Titulo;
-	
-	
+		
 	function __construct($Titulo,$Headers=1){
             if($Headers==1){
                 ?> <style> #ventana-flotante {
@@ -326,18 +325,18 @@ class CssIni{
 	
 	/////////////////////Crea un text area
 	
-	function CrearTextArea($nombre,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$BorderWidth=1){
+	function CrearTextArea($nombre,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required=1,$BorderWidth=1){
 		
 		if($ReadOnly==1)
 			$ReadOnly="readonly";
 		else
 			$ReadOnly="";
-		$Required="";
+		$RequiredTipo="required";
 		if($Required==1)
-			$Required="required";
+			$RequiredTipo="required";
                 
                 print("<strong style= 'color:$color'>$label<textarea name='$nombre' id='$nombre' placeholder='$placeh' $TxtEvento = '$TxtFuncion'" 
-                ." $ReadOnly  autocomplete='off' style='width: ".$Ancho."px; height: ".$Alto."px;border-top-width:".$BorderWidth."px;border-left-width:".$BorderWidth."px;border-right-width:".$BorderWidth."px;border-bottom-width:".$BorderWidth."px;' $Required>".$value."</textarea></strong>");
+                ." $ReadOnly  autocomplete='off' $RequiredTipo style='width: ".$Ancho."px; height: ".$Alto."px;border-top-width:".$BorderWidth."px;border-left-width:".$BorderWidth."px;border-right-width:".$BorderWidth."px;border-bottom-width:".$BorderWidth."px;' >".$value."</textarea></strong>");
 
 			
 		
