@@ -14,7 +14,8 @@
         <link rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
 		<link rel="stylesheet" href="assets/css/form-elements.css">
         <link rel="stylesheet" href="assets/css/style.css">
-
+        <link rel='stylesheet' href='../VSalud//alertify/themes/alertify.core.css' />
+        <link rel='stylesheet' href='../VSalud/alertify/themes/alertify.default.css' id='toggleCSS' />
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -28,7 +29,33 @@
     </head>
 
     <body>
+        <div id="divBoton" style='display:none'>
+        <a href="#ModalConfirmacion" id="BtnModalConfirmacion"  role="button" class="btn" data-toggle="modal" title="Erroe">
+			<span class="badge badge-success">Boton Error</span></a>
+         </div>               
+        <div id="ModalConfirmacion" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Error</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="DivMensajesErrores">
+                            Error
+                        </div>
+                            
+                    </div>
+                </div>
+                
+                    <div class="modal-footer">
+                      <button type="button" id="BtnModalConfirmacion" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+            </div>
 
+        </div>
+            
+        
         <!-- Top content -->
         <div class="top-content">
         	<div class="container">
@@ -56,17 +83,17 @@
                 
                 <div class="row register-form">
                     <div class="col-sm-4 col-sm-offset-1">
-                        <form role="form" action="../verificar.php" method="post" class="l-form">
+                        
 	                    	<div class="form-group">
 	                    		<label class="sr-only" for="l-form-username">Username</label>
-	                        	<input type="text" name="user" placeholder="Usuario..." class="l-form-username form-control" id="l-form-username" autocomplete="off">
+	                        	<input type="text" name="user" placeholder="Usuario..." class="l-form-username form-control" id="l-form-username" autocomplete="off" onkeypress="validar(event)">
 	                        </div>
 	                        <div class="form-group">
 	                        	<label class="sr-only" for="l-form-password">Password</label>
-                                        <input type="password" name="pw" placeholder="Password..." class="l-form-password form-control" id="l-form-password" autocomplete="off">
+                                        <input type="password" name="pw" placeholder="Password..." class="l-form-password form-control" id="l-form-password" autocomplete="off" onkeypress="validar(event)">
 	                        </div>
-				            <button type="submit" class="btn">Entrar..!</button>
-				    	</form>
+                        <button type="submit" class="btn" onclick="VerificaInicioSesion()">Entrar..!</button>
+				    	
 				    	
                     </div>
                     <div class="col-sm-6 forms-right-icons">
@@ -122,6 +149,8 @@
         <script src="assets/bootstrap/js/bootstrap.min.js"></script>
         <script src="assets/js/jquery.backstretch.min.js"></script>
         <script src="assets/js/scripts.js"></script>
+        <script src="../VSalud/alertify/lib/alertify.min.js"></script>
+        <script src="js/index.js"></script>
         
         <!--[if lt IE 10]>
             <script src="assets/js/placeholder.js"></script>
