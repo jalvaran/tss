@@ -90,7 +90,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     $query = "SELECT COUNT(*) as `num` FROM {$statement}";
     $row = $obGlosas->FetchArray($obGlosas->Query($query));
     $ResultadosTotales = $row['num'];
-        
+    $statementPage=$statement;
     $statement.=" ORDER BY Dias DESC LIMIT $startpoint,$limit";
     
     
@@ -106,7 +106,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
         //Paginacion
         if($Resultados){
             
-            $st= base64_encode($statement);
+            $st= base64_encode($statementPage);
             if($ResultadosTotales>$limit){
                 
                 $css->FilaTabla(16);
@@ -116,13 +116,13 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                     $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
                     
-                    $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+                    $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
                     
                 }
                 print("</td>");
                 $TotalPaginas= ceil($ResultadosTotales/$limit);
-                print("<td colspan=4 style=text-align:center>");
-                print("<strong>Pagina: </strong>");
+                print("<td colspan=5 style=text-align:center>");
+                print("<strong>Página: </strong>");
                                 
                 $Page="Consultas/busqueda_af.search.php?st=$st&Page=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivFacturas`,`5`);return false ;";
@@ -143,7 +143,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                     $NumPage1=$NumPage+1;
                     $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
-                    $css->CrearBotonEvento("BtnMas", "Page $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                    $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                 }
                 print("</td>");
                $css->CierraFilaTabla(); 
