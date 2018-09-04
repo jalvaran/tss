@@ -16,33 +16,43 @@ if(isset($_REQUEST["Opcion"])){
     $Opcion=$_REQUEST["Opcion"];
     
     switch ($Opcion){
-        case 1: //Balance de comprobacion
+        case 1: //Exportar CSV 
             
             unlink($Link);
             $Tabla=$obVenta->normalizar(base64_decode($_REQUEST["TxtT"]));
-            $statement=$obVenta->normalizar(base64_decode($_REQUEST["TxtL"]));
+            $statement=$obVenta->normalizar(urldecode($_REQUEST["TxtL"]));
             $Columnas=$obVenta->ShowColums($Tabla);
             $sqlColumnas="SELECT ";
+            $CamposShow="";
             foreach($Columnas["Field"] as $Campo){
-                $sqlColumnas.="'$Campo',";
+                $consulta=$obVenta->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$Tabla' AND Campo='$Campo'");
+                $DatosCampo=$obVenta->FetchArray($consulta);
+                if($DatosCampo["Visible"]=='' or $DatosCampo["Visible"]=='1'){
+                    $sqlColumnas.="'$Campo',";
+                    $CamposShow.="`$Campo`,";
+                }
+                
             }
             $sqlColumnas=substr($sqlColumnas, 0, -1);
+            $CamposShow=substr($CamposShow, 0, -1);
             $sqlColumnas.=" UNION ALL ";
             $Indice=$Columnas["Field"][0];
-            $sql=$sqlColumnas."SELECT * FROM $statement ORDER BY $Indice DESC INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY ';' $Enclosed LINES TERMINATED BY '\r\n';";
+            //print($Indice);
+            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY ';' $Enclosed LINES TERMINATED BY '\r\n';";
             $obVenta->Query($sql);
-            print("Tabla $Tabla exportada exitosamente <a href='$Link'>Abrir</a>");
+            print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
         case 2:   //Resumen de facturacion agrupado por referencia en un periodo de tiempo
             unlink($Link);
             $FechaIni=$obVenta->normalizar($_REQUEST["TxtFechaIni"]);
             $FechaFin=$obVenta->normalizar($_REQUEST["TxtFechaFin"]);
-            $sql="SELECT 'ID', 'FECHA', 'REFERENCIA','NOMBRE', 'DEPARTAMENTO', 'SUB1', 'SUB2','SUB3', 'SUB4','SUB5', 'CANTIDAD','TOTAL VENTA','COSTOS' UNION ALL ";
+            $sql="SELECT 'ID', 'FECHA', 'REFERENCIA','NOMBRE', 'DEPARTAMENTO', 'SUB1', 'SUB2','SUB3', 'SUB4','SUB5', 'CANTIDAD','TOTAL VENTA','COSTOS','EXISTENCIA' UNION ALL ";
             $sql.="SELECT ID,`FechaFactura`, `Referencia`,`Nombre`,`Departamento`,`SubGrupo1`,`SubGrupo2`,"
-                . "`SubGrupo3`,`SubGrupo4`,`SubGrupo5`,SUM(`Cantidad`) as Cantidad,round(SUM(`TotalItem`),2) as TotalVenta,"
-                . "round(SUM(`SubtotalCosto`),2) as Costo FROM `facturas_items` "
+                . "`SubGrupo3`,`SubGrupo4`,`SubGrupo5`,SUM(`Cantidad`) as Cantidad,round(SUM(`TotalItem`)) as TotalVenta,"
+                . "round(SUM(`SubtotalCosto`)) as Costo,(SELECT Existencias FROM productosventa WHERE productosventa.Referencia=facturas_items.Referencia) as Existencias"
+                    . " FROM `facturas_items` "
                 . "WHERE `FechaFactura`>='$FechaIni' AND `FechaFactura`<='$FechaFin' "
-                . "GROUP BY `Referencia`,`FechaFactura` "
+                . "GROUP BY `Referencia` "
                 . " INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY ';' $Enclosed LINES TERMINATED BY '\r\n';";
             $obVenta->Query($sql);
             print("Resumen de Facturacion Generado exitosamente <a href='$Link'>Abrir</a>");

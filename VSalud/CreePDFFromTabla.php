@@ -6,7 +6,7 @@ $obVenta = new conexion($idUser);
 $obTabla = new Tabla($db);
 $Fecha="Y-m-d";
 if(isset($_REQUEST["BtnVerPDF"])){
-    $statement=  base64_decode($_REQUEST["TxtL"]);
+    $statement=  urldecode($_REQUEST["TxtL"]);
     $Tabla=base64_decode($_REQUEST["TxtT"]);
     $TablaConfig=$Tabla;
     $Tabla2=substr($Tabla, 0, 26);
