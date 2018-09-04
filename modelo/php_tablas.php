@@ -1096,7 +1096,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $this->css->CerrarSelect(); 
                 }else{
                     
-                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreCol", "black", "", "", $lengCampo."0", 30, 1, $Required);
+                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreCol", "black", "", "", $lengCampo."0", 30, 1, $Required,"Digite $NombreCol",$lengCampo);
                         
                 }
             }else{
@@ -1105,7 +1105,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                         $this->css->CrearUpload($NombreCol);
                     }else{
                         if($DateBox==0){
-                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required);    
+                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol",$lengCampo);    
                         }
                         if($DateBox==1){
                             $this->css->CrearInputFecha("", $NombreCol, date("Y-m-d"), 100, 30, "");

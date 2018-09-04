@@ -29,33 +29,7 @@
     </head>
 
     <body>
-        <div id="divBoton" style='display:none'>
-        <a href="#ModalConfirmacion" id="BtnModalConfirmacion"  role="button" class="btn" data-toggle="modal" title="Erroe">
-			<span class="badge badge-success">Boton Error</span></a>
-         </div>               
-        <div id="ModalConfirmacion" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Error</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id="DivMensajesErrores">
-                            Error
-                        </div>
-                            
-                    </div>
-                </div>
                 
-                    <div class="modal-footer">
-                      <button type="button" id="BtnModalConfirmacion" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-            </div>
-
-        </div>
-            
-        
         <!-- Top content -->
         <div class="top-content">
         	<div class="container">

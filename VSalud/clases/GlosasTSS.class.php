@@ -429,7 +429,7 @@ class Glosas extends conexion{
      */
     public function EditaGlosaInicial($idGlosaInicial,$idFactura,$CodActividad,$ValorActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
-        //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        $DatosGlosaInicial= $this->DevuelveValores("salud_glosas_iniciales", "ID", $idGlosaInicial);
         
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales";
@@ -451,8 +451,73 @@ class Glosas extends conexion{
                
         $sql=$this->getSQLReeplace($tab, $Datos);
         $this->Query($sql);
-               
+        $this->RegistreEdicionesGlosasIniciales($DatosGlosaInicial,$Datos,"ID = $idGlosaInicial",$idUser);
+          
+        
     }
+    /**
+     * Registra las ediciones realizadas sobre las glosas 
+     * @param type $DatosIniciales
+     * @param type $DatosNuevos
+     */
+    public function RegistreEdicionesGlosasIniciales($DatosIniciales,$DatosNuevos,$Consulta,$idUser) {
+        if($DatosIniciales["FechaIPS"]<>$DatosNuevos["FechaIPS"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "FechaIPS", $DatosIniciales["FechaIPS"], $DatosNuevos["FechaIPS"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["FechaAuditoria"]<>$DatosNuevos["FechaAuditoria"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "FechaAuditoria", $DatosIniciales["FechaAuditoria"], $DatosNuevos["FechaAuditoria"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["FechaRegistro"]<>$DatosNuevos["FechaRegistro"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "FechaRegistro", $DatosIniciales["FechaRegistro"], $DatosNuevos["FechaRegistro"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["ValorGlosado"]<>$DatosNuevos["ValorGlosado"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "ValorGlosado", $DatosIniciales["ValorGlosado"], $DatosNuevos["ValorGlosado"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["ValorLevantado"]<>$DatosNuevos["ValorLevantado"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "ValorLevantado", $DatosIniciales["ValorLevantado"], $DatosNuevos["ValorLevantado"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["ValorAceptado"]<>$DatosNuevos["ValorAceptado"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "ValorAceptado", $DatosIniciales["ValorAceptado"], $DatosNuevos["ValorAceptado"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["ValorXConciliar"]<>$DatosNuevos["ValorXConciliar"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "ValorXConciliar", $DatosIniciales["ValorXConciliar"], $DatosNuevos["ValorXConciliar"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["ValorConciliado"]<>$DatosNuevos["ValorConciliado"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "ValorConciliado", $DatosIniciales["ValorConciliado"], $DatosNuevos["ValorConciliado"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["EstadoGlosa"]<>$DatosNuevos["EstadoGlosa"]){
+            $this->RegistraEdiciones("salud_glosas_iniciales", "EstadoGlosa", $DatosIniciales["EstadoGlosa"], $DatosNuevos["EstadoGlosa"], $Consulta, "");
+        }
+    }
+    
+    /**
+     * Registra ediciones en las tablas
+     * @param type $param
+     */
+    public function RegistraEdiciones($tabla,$campo,$ValorAnterior,$ValorNuevo,$Consulta,$Vector) {
+        $tab="registra_ediciones";
+        $NumRegistros=8;
+
+        $Columnas[0]="Fecha";               $Valores[0]=date("Y-m-d");
+        $Columnas[1]="Hora";                $Valores[1]=date("H:i:s");
+        $Columnas[2]="Tabla";               $Valores[2]=$tabla;
+        $Columnas[3]="Campo";               $Valores[3]=$campo;
+        $Columnas[4]="ValorAnterior";       $Valores[4]=$ValorAnterior;
+        $Columnas[5]="ValorNuevo";	    $Valores[5]=$ValorNuevo;
+        $Columnas[6]="ConsultaRealizada";   $Valores[6]=$Consulta;
+        $Columnas[7]="idUsuario";	    $Valores[7]=$_SESSION["idUser"];
+
+        $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
+    }
+    
     /**
      * Guarda las respuestas de las glosas que estan en la temporal a la real
      * @param type $idUser
@@ -880,7 +945,7 @@ class Glosas extends conexion{
     
     public function EditaTablaControlRespuestasGlosas($ID,$TipoArchivo,$idGlosa,$idFactura,$CodActividad,$NombreActividad,$TotalActividad,$EstadoGlosa,$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,$ValorLevantado,$ValorConciliar,$destino,$idUser,$Vector) {
         $DatosFactura= $this->ValorActual("salud_archivo_facturacion_mov_generados", " CuentaGlobal,CuentaRIPS ", " num_factura='$idFactura'");
-        //$DatosGlosaInicial= $this->ValorActual("salud_glosas_iniciales", " ValorXConciliar ", " ID='$idGlosa'");
+        $DatosGlosaControlRespuesta= $this->DevuelveValores("salud_archivo_control_glosas_respuestas", "ID", $ID);
         
         $FechaRegistro=date("Y-m-d");
         $tab="salud_archivo_control_glosas_respuestas";
@@ -910,7 +975,57 @@ class Glosas extends conexion{
         $sql=$this->getSQLReeplace($tab, $Datos);
                 
         $this->Query($sql);
-               
+        $this->RegistreEdicionesGlosasControlRespuestas($DatosGlosaControlRespuesta, $Datos, "ID = $ID", $idUser);  
+    }
+    
+    /**
+     * registra las ediciones en el control de respuestas
+     * @param type $DatosIniciales
+     * @param type $DatosNuevos
+     * @param type $Consulta
+     * @param type $idUser
+     */
+    public function RegistreEdicionesGlosasControlRespuestas($DatosIniciales,$DatosNuevos,$Consulta,$idUser) {
+        if($DatosIniciales["id_cod_glosa"]<>$DatosNuevos["id_cod_glosa"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "id_cod_glosa", $DatosIniciales["id_cod_glosa"], $DatosNuevos["id_cod_glosa"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["EstadoGlosa"]<>$DatosNuevos["EstadoGlosa"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "EstadoGlosa", $DatosIniciales["EstadoGlosa"], $DatosNuevos["EstadoGlosa"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["FechaIPS"]<>$DatosNuevos["FechaIPS"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "FechaIPS", $DatosIniciales["FechaIPS"], $DatosNuevos["FechaIPS"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["FechaAuditoria"]<>$DatosNuevos["FechaAuditoria"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "FechaAuditoria", $DatosIniciales["FechaAuditoria"], $DatosNuevos["FechaAuditoria"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["valor_glosado_eps"]<>$DatosNuevos["valor_glosado_eps"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "valor_glosado_eps", $DatosIniciales["valor_glosado_eps"], $DatosNuevos["valor_glosado_eps"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["valor_levantado_eps"]<>$DatosNuevos["valor_levantado_eps"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "valor_levantado_eps", $DatosIniciales["valor_levantado_eps"], $DatosNuevos["valor_levantado_eps"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["valor_aceptado_ips"]<>$DatosNuevos["valor_aceptado_ips"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "valor_aceptado_ips", $DatosIniciales["valor_aceptado_ips"], $DatosNuevos["valor_aceptado_ips"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["observacion_auditor"]<>$DatosNuevos["observacion_auditor"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "observacion_auditor", $DatosIniciales["observacion_auditor"], $DatosNuevos["observacion_auditor"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["Soporte"]<>$DatosNuevos["Soporte"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "Soporte", $DatosIniciales["Soporte"], $DatosNuevos["Soporte"], $Consulta, "");
+        }
+        
+        if($DatosIniciales["fecha_registo"]<>$DatosNuevos["fecha_registo"]){
+            $this->RegistraEdiciones("salud_archivo_control_glosas_respuestas", "fecha_registo", $DatosIniciales["fecha_registo"], $DatosNuevos["fecha_registo"], $Consulta, "");
+        }
+        
     }
     /**
      * Registra Glosa inicial Conciliada
