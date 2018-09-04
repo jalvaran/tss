@@ -825,7 +825,7 @@ public function VerifiqueExport($Vector)  {
                 if(isset($VisualizarRegistro[$i])){
                     if(!isset($VinculoRegistro[$i]["Vinculado"])){
                         $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($this->Campos[$a].$c,$DatosTabla->$NombreCol);
+                        ->setCellValue($this->Campos[$a].$c, ($DatosTabla->$NombreCol));
                     }else{
                         $TablaVinculo=$VinculoRegistro[$i]["TablaVinculo"];
                         $ColDisplay=$VinculoRegistro[$i]["Display"];
@@ -836,7 +836,7 @@ public function VerifiqueExport($Vector)  {
                         $Consul=$this->obCon->Query($sql1);
                         $DatosVinculo=  $this->obCon->FetchArray($Consul);
                         $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($this->Campos[$a].$c,$DatosVinculo[$ColDisplay]);
+                        ->setCellValue($this->Campos[$a].$c,($DatosVinculo[$ColDisplay]));
                     }
                     $a++;
                     
