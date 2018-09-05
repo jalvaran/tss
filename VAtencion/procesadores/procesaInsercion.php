@@ -133,6 +133,7 @@ if(!empty($_REQUEST["BtnGuardarRegistro"])){
     }
     
     
+    
     /*
      * Si se crea una sucursal
      */
