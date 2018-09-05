@@ -56,10 +56,10 @@ if( !empty($_REQUEST["idFactura"]) ){
             
             $sql2="SELECT 'AP' as Archivo, id_procedimiento as idArchivo,cod_procedimiento as Codigo,"
                     . "(SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=salud_archivo_procedimientos.cod_procedimiento) as Descripcion,"
-                    . "`valor_procedimiento` as ValorUnitario, "
-                    . "'1' as Cantidad, `valor_procedimiento` as Total,EstadoGlosa, "
+                    . " SUM(`valor_procedimiento`)/COUNT(id_procedimiento) as ValorUnitario, "
+                    . " COUNT(id_procedimiento) as Cantidad, SUM(`valor_procedimiento`)  as Total,EstadoGlosa, "
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=salud_archivo_procedimientos.EstadoGlosa) as Estado "
-                    . "FROM `salud_archivo_procedimientos` WHERE `num_factura`='$idFactura'";
+                    . "FROM `salud_archivo_procedimientos` WHERE `num_factura`='$idFactura' GROUP BY cod_procedimiento";
             
             $sql3="SELECT 'AT' as Archivo,id_otro_servicios as idArchivo,cod_servicio as Codigo,"
                     . "nom_servicio as Descripcion,"
