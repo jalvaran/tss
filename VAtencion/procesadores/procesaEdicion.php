@@ -90,6 +90,14 @@ if(!empty($_REQUEST["BtnEditarRegistro"])){
         exit();
     }
     
+    if($tab=="usuarios"){
+        
+        $Vector["Tabla"]="usuarios";        
+        $DatosUsuario=$obVenta->ValorActual($tab, "Password", " idUsuarios='$IDEdit'");        
+        $obVenta->ActualizaRegistro($tab, "Password", md5($DatosUsuario["Password"]), "idUsuarios", $IDEdit);
+        
+    }
+    
     //$obVenta->ActualizaRegistro($tab, "Updated", date("Y-m-d H:i:s"), $NombresColumnas[0], $IDEdit);
     
     header("location:../$myPage.php");

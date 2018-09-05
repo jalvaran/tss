@@ -122,6 +122,17 @@ if(!empty($_REQUEST["BtnGuardarRegistro"])){
         
     }
     
+    if($tab=="usuarios"){
+        
+        $Vector["Tabla"]="usuarios";
+        $ID=$obTabla->ObtengaAutoIncrement($Vector);
+        $ID=$ID-1;
+        $DatosUsuario=$obVenta->ValorActual($tab, "Password", " idUsuarios='$ID'");        
+        $obVenta->ActualizaRegistro($tab, "Password", md5($DatosUsuario["Password"]), "idUsuarios", $ID);
+        
+    }
+    
+    
     /*
      * Si se crea una sucursal
      */
