@@ -23,6 +23,10 @@ include("../modelo/php_conexion.php");
 		  
 		
 		if($Pass == $sesion["Password"] ){
+                    if($sesion["Habilitado"]<>'SI'){
+                        print("El Usuario se encuentra deshabilitado");
+                        exit();
+                    }
 			$_SESSION['username'] = $User;
 			$_SESSION['nombre'] = $sesion["Nombre"];
 			$_SESSION['apellido'] = $sesion["Apellido"];
