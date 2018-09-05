@@ -1510,6 +1510,7 @@ function EditarRespuestaGlosa(idGlosa){
  * @returns {undefined}
  */
 function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodActividad){
+    document.getElementById('DivHistorialGlosas').innerHTML='';
     document.getElementById('DivHistoricoGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
@@ -1534,7 +1535,7 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
         success: function(data){
             
             if (data != "") { 
-                document.getElementById("DivHistorialGlosas").innerHTML='Conciliacion realizada';
+                //document.getElementById("DivHistorialGlosas").innerHTML='Conciliacion';
                 document.getElementById("DivGlosar").innerHTML=data;
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
