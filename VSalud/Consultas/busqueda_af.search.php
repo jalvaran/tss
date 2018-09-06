@@ -33,52 +33,64 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     }
     
     //////////////////
-    
+    $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
+    $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
+        
+    $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS' ";
     //Busco por Cuenta Numero de Factura
     if(isset($_REQUEST["idFactura"]) and !empty($_REQUEST["idFactura"])){
         $NumFactura=$obGlosas->normalizar($_REQUEST['idFactura']);
         //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
         $statement=" `vista_af_semaforo` WHERE `num_factura`='$NumFactura'";
     }
-    //Busco por Cuenta RIPS
+    /*
     if(isset($_REQUEST["CuentaRIPS"]) and !empty($_REQUEST["CuentaRIPS"])){
         $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
+        $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
         $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS'";
     }
+     * 
+     */
+    $FechaInicial=date("Y-m-d");
+    $FechaFinal=date("Y-m-d");
     if(isset($_REQUEST["FechaInicial"])){
         $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
         $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-        $statement=" `vista_af_semaforo` WHERE `fecha_factura`>='$FechaInicial' AND `fecha_factura`<='$FechaFinal'";
+        $statement.=" AND `fecha_factura`>='$FechaInicial' AND `fecha_factura`<='$FechaFinal'";
     }
-    if(isset($_REQUEST["idEstadoGlosas"])){
+    $idEstadoGlosa='';
+    if(isset($_REQUEST["idEstadoGlosas"]) and !empty($_REQUEST["idEstadoGlosas"])){
         $idEstadoGlosa=$obGlosas->normalizar($_REQUEST["idEstadoGlosas"]);        
-        $statement=" `vista_af_semaforo` WHERE `EstadoGlosa`='$idEstadoGlosa'";
+        $statement.=" AND `EstadoGlosa`=$idEstadoGlosa";
     }
-    
+    //print($statement);
     $css->CrearTabla();
             $css->FilaTabla(16);
                 $css->ColTabla("<strong>Criterios de Búsqueda</strong>", 3);
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
-                $css->ColTabla("Fecha Inicial", 1);
-                $css->ColTabla("Fecha Final", 2);
-                $css->ColTabla("Filtrar por Estado de Glosas", 1);
+                $css->ColTabla("<strong>Fecha Inicial</strong>", 1);
+                $css->ColTabla("<strong>Fecha Final</strong>", 1);
+                $css->ColTabla("<strong>Filtrar por Estado de Glosas</strong>", 1);
+                $css->ColTabla("<strong>Filtrar</strong>", 1);
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
                 print("<td>");
                     
-                    $css->CrearInputText("FiltroFechaInicial", "date", "", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0);
+                    $css->CrearInputText("FiltroFechaInicial", "date", "", $FechaInicial, "", "", "", "", 150, 30, 0, 0);
                 print("</td>");
                 print("<td>");
-                    $css->CrearInputText("FiltroFechaFinal", "date", "", date("Y-m-d"), "", "", "", "", 150, 30, 0, 0);
-                print("</td>");
-                print("<td>");
-                    $css->CrearBotonEvento("BtnFiltroFecha", "Filtrar por Rango", 1, "onClick", "FiltreRangoFechas()", "naranja", "");
+                    $css->CrearInputText("FiltroFechaFinal", "date", "", $FechaFinal, "", "", "", "", 150, 30, 0, 0);
                 print("</td>");
                 print("<td>");
                 //$css->CrearTableChosen("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "ID", 200, 0, "", "");
-                $css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "onChange", "FiltreFacturasXEstadoGlosa()", "", 0);
+                //$css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "onChange", "FiltreFacturasXEstadoGlosa()", "", 0);
+                $css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "", "", "", $idEstadoGlosa);
                 print("</td>");
+                print("<td>");
+                    $css->CrearBotonEvento("BtnFiltroFecha", "Filtrar", 1, "onClick", "FiltreRangoFechas()", "naranja", "");
+                print("</td>");
+                
             $css->CierraFilaTabla();
         $css->CerrarTabla();
         //print($statement);
