@@ -78,7 +78,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla("Sexo", 1);
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
-                $css->ColTabla($NombreUsuario, 1);
+                $css->ColTabla(utf8_encode($NombreUsuario), 1);
                 $css->ColTabla($DatosUsuario["tipo_ident_usuario"], 1);
                 $css->ColTabla($DatosUsuario["num_ident_usuario"], 1);
                 $css->ColTabla($DatosUsuario["edad"], 1);
