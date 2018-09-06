@@ -103,6 +103,7 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @returns {undefined}
  */
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
+    document.getElementById("TxtBuscarCuentaRIPS").value=CuentaRIPS;
     document.getElementById("DivDetallesUsuario").innerHTML='';
     document.getElementById("DivActividadesFacturas").innerHTML='';
     document.getElementById("DivHistoricoGlosas").innerHTML='';
@@ -144,6 +145,9 @@ function FiltreRangoFechas(){
      var form_data = new FormData();
         form_data.append('FechaInicial', $('#FiltroFechaInicial').val());
         form_data.append('FechaFinal', $('#FiltroFechaFinal').val());
+        form_data.append('idEPS', $('#idEPS').val());
+        form_data.append('CuentaRIPS', $('#TxtBuscarCuentaRIPS').val());
+        form_data.append('idEstadoGlosas', $('#CmbEstadoGlosaFacturas').val());
         document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
    
         $.ajax({
