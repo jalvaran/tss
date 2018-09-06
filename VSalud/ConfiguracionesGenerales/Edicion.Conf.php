@@ -257,4 +257,24 @@ $Vector[$TablaConfig]["TipoItem"]["TablaVinculo"]="respuestas_tipo_item";  //tab
 $Vector[$TablaConfig]["TipoItem"]["IDTabla"]="Valor"; //id de la tabla que se vincula
 $Vector[$TablaConfig]["TipoItem"]["Display"]="Valor"; 
 $Vector[$TablaConfig]["TipoItem"]["Predeterminado"]=1;
+
+$TablaConfig="salud_archivo_conceptos_glosas";
+$Vector[$TablaConfig]["Excluir"]["cod_concepto_general"]=1;
+$Vector[$TablaConfig]["Excluir"]["descripcion_concepto_general"]=1;
+$Vector[$TablaConfig]["Excluir"]["tipo_concepto_general"]=1;
+$Vector[$TablaConfig]["Excluir"]["aplicacion_concepto_general"]=1;
+
+
+$Vector[$TablaConfig]["cod_glosa"]["TipoText"]="number";
+$Vector[$TablaConfig]["cod_concepto_general"]["TipoText"]="number";
+$Vector[$TablaConfig]["cod_concepto_especifico"]["TipoText"]="number";
+$Vector[$TablaConfig]["cod_glosa"]["Required"]=1;
+$Vector[$TablaConfig]["cod_concepto_general"]["Required"]=1;
+$Vector[$TablaConfig]["descripcion_concepto_general"]["Required"]=1;
+$Vector[$TablaConfig]["tipo_concepto_general"]["Required"]=1;
+$Vector[$TablaConfig]["aplicacion_concepto_general"]["Required"]=1;
+$Vector[$TablaConfig]["cod_concepto_especifico"]["Required"]=1;
+$Vector[$TablaConfig]["descrpcion_concep_especifico"]["Required"]=1;
+
+
 ?>

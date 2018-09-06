@@ -29,5 +29,10 @@ $VarInsert[$TablaConfig]["Regimen"]["Required"]=1;
 $VarInsert[$TablaConfig]["Email"]["Required"]=1;
 $VarInsert[$TablaConfig]["WEB"]["Required"]=1;
 
+$TablaConfig="salud_archivo_conceptos_glosas";
+$Vector[$TablaConfig]["cod_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
 
 ?>

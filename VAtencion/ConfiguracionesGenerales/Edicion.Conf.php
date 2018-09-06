@@ -1,5 +1,11 @@
 <?php
 
+$TablaConfig="salud_archivo_conceptos_glosas";
+$Vector[$TablaConfig]["cod_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
+$Vector[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
+
 $TablaConfig="usuarios";
 $Vector[$TablaConfig]["Password"]["TipoText"]="password";
 

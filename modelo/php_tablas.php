@@ -1177,12 +1177,12 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
         if(isset($VarEdit[$tbl][$NombreCol]["TipoText"])){
             $TipoText=$VarEdit[$tbl][$NombreCol]["TipoText"];
         }
-        if(isset($VarEdit[$tbl]["Excluir"][$NombreCol])){
+        if(isset($VarEdit[$tbl]["Excluir"][$NombreCol]) or $NombreCol=="Updated" or $NombreCol=="Sync"){
             $excluir=1;
         }
         if(!$excluir){  //Si la columna no está excluida
            $lengCampo=preg_replace('/[^0-9]+/', '', $ColumnasInfo["Type"][$i]); //Determinamos la longitud del campo
-           if($lengCampo<1){
+           if($lengCampo<10){
                $lengCampo=45;
            }
            if($ColumnasInfo["Type"][$i]=="text"){

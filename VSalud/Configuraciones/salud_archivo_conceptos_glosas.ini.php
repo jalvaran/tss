@@ -21,6 +21,11 @@ $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
  * 
  */
 
+$Vector["Excluir"]["cod_concepto_general"]=1;   //Indico que esta columna no se mostrará
+$Vector["Excluir"]["descripcion_concepto_general"]=1;   //Indico que esta columna no se mostrará
+$Vector["Excluir"]["aplicacion_concepto_general"]=1;   //Indico que esta columna no se mostrará
+
+
         
 $Vector["VerRegistro"]["Deshabilitado"]=1; 
 ///Filtros y orden

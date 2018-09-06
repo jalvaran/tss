@@ -149,4 +149,10 @@ $VarInsert[$TablaConfig]["Estado"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["Facturado"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["NumFactura"]["Excluir"]=1;
 
+$TablaConfig="salud_archivo_conceptos_glosas";
+$VarInsert[$TablaConfig]["cod_concepto_general"]["Excluir"]=1;
+$VarInsert[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
+$VarInsert[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
+$VarInsert[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
+
 ?>
