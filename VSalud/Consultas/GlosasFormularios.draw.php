@@ -195,9 +195,13 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $Consulta=$obGlosas->Query($sql);
             $css->CrearTabla();
                 $css->FilaTabla(12);
+                $GuardarHabilitado=0;
+                if($obGlosas->NumRows($Consulta)>=1){
+                    $GuardarHabilitado=1;
+                }
                     $css->ColTabla("<strong>Glosas Iniciales Agregadas</strong>", 6);
                     print("<td colspan='3' style='text-align:center'>");
-                        $css->CrearBotonEvento("BtnRegistrarGlosas", "Guardar todas las Glosas", 1, "onClick", "GuadarGlosasTemporales('$idFactura')", "azulclaro", "");
+                        $css->CrearBotonEvento("BtnRegistrarGlosas", "Guardar todas las Glosas", $GuardarHabilitado, "onClick", "GuadarGlosasTemporales('$idFactura')", "azulclaro", "");
                     print("</td>");
                 $css->CierraFilaTabla();    
             
