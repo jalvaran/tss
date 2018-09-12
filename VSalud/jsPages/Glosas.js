@@ -977,18 +977,49 @@ function ValidaValorLevantado(){
     document.getElementById('ValorConciliar').value=ValorXConciliar;
     return 0;
 }
+
+function Numeros(string){//Solo numeros
+    var out = '';
+    var filtro = '1234567890';//Caracteres validos
+	
+    //Recorrer el texto y verificar si el caracter se encuentra en la lista de validos 
+    for (var i=0; i<string.length; i++)
+       if (filtro.indexOf(string.charAt(i)) != -1) 
+             //Se añaden a la salida los caracteres validos
+	     out += string.charAt(i);
+	
+    //Retornar valor filtrado
+    return out;
+} 
 /**
  * Valida valores de conciliacion
  * @returns {Number}
  */
 function ValidaValoresConciliacion(){
+       
+    document.getElementById('BtnConciliarGlosa').disabled=false;
+    var ValorLevantado =Numeros(document.getElementById('ValorLevantado').value);
+    if(ValorLevantado==''){
+        ValorLevantado=0;
+    }
+    document.getElementById('ValorLevantado').value=ValorLevantado;
+    /*
+    alert(val(document.getElementById('ValorLevantado').value));
+    if(val(document.getElementById('ValorLevantado').value)<0){
+        document.getElementById('BtnConciliarGlosa').disabled=true;
+        alertify.alert("El valor levantado no puede contener letras");
+        return;
+    }
+    */
     var ValorLevantado = Math.round(document.getElementById('ValorLevantado').value);
     var ValorGlosado = Math.round(document.getElementById('ValorEPS').value);
-    var ValorAceptadoIPS = Math.round(document.getElementById('ValorAceptado').value);
-    
+    var ValorAceptadoIPS = ValorGlosado-ValorLevantado;
+    document.getElementById('ValorAceptado').value=ValorAceptadoIPS;
     var ValorXConciliar=ValorGlosado-ValorAceptadoIPS-ValorLevantado;
     document.getElementById('ValorConciliar').value=ValorXConciliar;
+    
     if(ValorLevantado > ValorGlosado){
+        document.getElementById('BtnConciliarGlosa').disabled=true;
         alertify.alert("El valor levantado no puede ser mayor al Valor Glosado");
         //document.getElementById('ValorConciliar').value='';
         return 1;

@@ -908,7 +908,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         
                         print("</td>");
                         print("<td style='text-align:center'>");
-                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["valor_aceptado_ips"], "Valor Aceptado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $DatosGlosa["valor_aceptado_ips"], "Valor Aceptado IPS", "", "onChange", "", 150, 30, 1, 1, 0, $DatosGlosa["valor_glosado_eps"], 1);
                         
                         print("</td>");
                         
@@ -923,7 +923,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         print("<br>");
-                        $css->CrearBotonEvento("BtnConciliarGlosa", "Contra Glosar", 1, "onClick", "AgregarRespuestaGlosaTemporal('$idGlosa','12')", "naranja", "");
+                        $css->CrearBotonEvento("BtnConciliarGlosa", "Conciliar", 1, "onClick", "AgregarRespuestaGlosaTemporal('$idGlosa','12')", "naranja", "");
                         
                     print("</td>");
                 $css->CierraFilaTabla();
