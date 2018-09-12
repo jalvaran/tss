@@ -492,9 +492,20 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
-            $obGlosas->EditaTablaControlRespuestasGlosas($idGlosa, $TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $DatosGlosa["EstadoGlosa"], $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
+            $Estado=$DatosGlosa["EstadoGlosa"];
+            if($ValorConciliar==0){
+                
+                $Estado=5;
+               
+            }
+            $obGlosas->EditaTablaControlRespuestasGlosas($idGlosa, $TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $Estado, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
+            
+            $Estado=$obGlosas->CalcularEstadoActividad($DatosGlosa["num_factura"], $DatosGlosa["CodigoActividad"], "");
+            if($Estado==''){
+                $Estado=5;
+            }
             $idGlosaInicial=$DatosGlosa["idGlosa"];
-            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
+            $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
             $obGlosas->Query($sql);
             print("<h4 style='color:orange'>Edicion Realizada</h4>");
         break;
