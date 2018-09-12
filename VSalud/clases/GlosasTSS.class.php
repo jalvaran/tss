@@ -565,20 +565,30 @@ class Glosas extends conexion{
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
-            $ValorGlosado=$DatosTemp["valor_glosado_eps"];
-            $Estado=2;
-            if($ValorAceptadoIPS==$ValorGlosado){
-                $Estado=7;
-            }
             $NumFactura=$DatosTemp["num_factura"];
             $CodigoActividad=$DatosTemp["CodigoActividad"];
-            $idGlosa=$DatosTemp["idGlosa"];
+            $ValorGlosado=$DatosTemp["valor_glosado_eps"];
+            //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
+            $idGlosa=$DatosTemp["idGlosa"];            
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=1";
+            $this->Query($sql);
+            
+            $Estado= $this->CalcularEstadoActividad($NumFactura, $CodigoActividad, "");
+            
+            if($Estado==''){
+                $Estado=2;
+                if($ValorAceptadoIPS==$ValorGlosado){
+                    $Estado=7;
+                }
+             
+            }
+            
+            
             //Actualizo los datos de las glosas iniciales
             $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar=ValorGlosado-ValorAceptado WHERE ID='$idGlosa'";
             $this->Query($sql);
-            //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
-            $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=1";
-            $this->Query($sql);
+            
+            
             //Actualizo el estado de las facturas
             $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND Tratado=0";
             $Datos=$this->Query($sql);
@@ -613,6 +623,18 @@ class Glosas extends conexion{
         //$this->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
         
        }
+       
+       /**
+        * Calcula el estado de una actividad
+        */
+       public function CalcularEstadoActividad($NumFactura,$CodigoActividad,$Vector) {
+           $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND CodigoActividad='$CodigoActividad' AND Tratado=0";
+           $consulta=$this->Query($sql);
+           $Datos= $this->FetchArray($consulta);
+           $Estado=$Datos["MinEstado"];
+           
+           return($Estado);
+       }   
      /**
      * Guarda las  contra glosas que estan en la temporal a la real
      * @param type $idUser
@@ -659,22 +681,31 @@ class Glosas extends conexion{
         $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=3 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
+            $NumFactura=$DatosTemp["num_factura"];
+            $CodigoActividad=$DatosTemp["CodigoActividad"];
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
             $ValorGlosado=$DatosTemp["valor_glosado_eps"];
             $ValorLevantado=$DatosTemp["valor_levantado_eps"];
-            $Estado=3;
-            if($ValorLevantado == $ValorGlosado-$ValorAceptadoIPS){
-                $Estado=5;
-            }
-            $ValorXConciliar=$ValorGlosado-$ValorAceptadoIPS-$ValorLevantado;
-            $NumFactura=$DatosTemp["num_factura"];
-            $CodigoActividad=$DatosTemp["CodigoActividad"];
             $idGlosa=$DatosTemp["idGlosa"];
-            //Actualizo los datos de las glosas iniciales
-            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosa'";
-            $this->Query($sql);
             //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
             $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=2";
+            $this->Query($sql);
+           
+            
+            $Estado= $this->CalcularEstadoActividad($NumFactura, $CodigoActividad, "");
+            
+            if($Estado==''){
+                $Estado=3;
+                if($ValorLevantado == $ValorGlosado-$ValorAceptadoIPS){
+                    $Estado=5;
+                }
+            }
+            $ValorXConciliar=$ValorGlosado-$ValorAceptadoIPS-$ValorLevantado;
+            
+            
+            
+             //Actualizo los datos de las glosas iniciales
+            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosa'";
             $this->Query($sql);
             //Actualizo el estado de las facturas
             $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND Tratado=0";
@@ -756,23 +787,34 @@ class Glosas extends conexion{
         $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=4 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
+            $NumFactura=$DatosTemp["num_factura"];
+            $CodigoActividad=$DatosTemp["CodigoActividad"];
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
             $ValorGlosado=$DatosTemp["valor_glosado_eps"];
             $ValorLevantado=$DatosTemp["valor_levantado_eps"];
-            $Estado=4;
-            if($ValorLevantado == $ValorGlosado-$ValorAceptadoIPS){
-                $Estado=5;
+            
+            $idGlosa=$DatosTemp["idGlosa"];
+            //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
+            
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=3";
+            $this->Query($sql);
+           
+            
+            $Estado= $this->CalcularEstadoActividad($NumFactura, $CodigoActividad, "");
+            
+            if($Estado==''){            
+                $Estado=4;
+                if($ValorLevantado == $ValorGlosado-$ValorAceptadoIPS){
+                    $Estado=5;
+                }
             }
             $ValorXConciliar=$ValorGlosado-$ValorAceptadoIPS-$ValorLevantado;
-            $NumFactura=$DatosTemp["num_factura"];
-            $CodigoActividad=$DatosTemp["CodigoActividad"];
-            $idGlosa=$DatosTemp["idGlosa"];
+            
+            
             //Actualizo los datos de las glosas iniciales
             $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosa'";
             $this->Query($sql);
-            //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
-            $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=3";
-            $this->Query($sql);
+            
             //Actualizo el estado de las facturas
             $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND Tratado=0";
             $Datos=$this->Query($sql);
@@ -831,18 +873,26 @@ class Glosas extends conexion{
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
             $ValorGlosado=$DatosTemp["valor_glosado_eps"];
             $ValorLevantado=$DatosTemp["valor_levantado_eps"];
-            $Estado=5;
-            
-            $ValorXConciliar=0;
             $NumFactura=$DatosTemp["num_factura"];
             $CodigoActividad=$DatosTemp["CodigoActividad"];
             $idGlosa=$DatosTemp["idGlosa"];
-            //Actualizo los datos de las glosas iniciales
-            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosa'";
-            $this->Query($sql);
             //Actualizo la columna tratado de las respuestas para saber que ya se trató ese registro
             $sql="UPDATE salud_archivo_control_glosas_respuestas SET Tratado=1 WHERE idGlosa='$idGlosa' AND EstadoGlosa=4";
             $this->Query($sql);
+            
+            $Estado= $this->CalcularEstadoActividad($NumFactura, $CodigoActividad, "");
+            
+            if($Estado==''){
+                $Estado=5;
+            }
+            
+            
+            $ValorXConciliar=0;
+            
+            //Actualizo los datos de las glosas iniciales
+            $sql="UPDATE salud_glosas_iniciales SET ValorLevantado='$ValorLevantado',EstadoGlosa='$Estado',ValorAceptado='$ValorAceptadoIPS',ValorXConciliar='$ValorXConciliar' WHERE ID='$idGlosa'";
+            $this->Query($sql);
+            
             //Actualizo el estado de las facturas
             $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_archivo_control_glosas_respuestas WHERE num_factura='$NumFactura' AND Tratado=0";
             $Datos=$this->Query($sql);
