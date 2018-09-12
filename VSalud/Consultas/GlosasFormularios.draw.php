@@ -1298,7 +1298,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 0, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Conciliación:");
+                            //$css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Conciliación:");
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -1314,12 +1314,12 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         
                         print("</td>");
                         print("<td style='text-align:center'>");
-                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", 0, "Valor Aceptado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0,$TotalGlosado, 1);
+                        $css->CrearInputNumber("ValorAceptado", "number", "Valor Aceptado X IPS:<br>", $TotalGlosado, "Valor Aceptado EPS", "", "", "", 150, 30, 1, 1, 0,$TotalGlosado, 1);
                         
                         print("</td>");
                         
                         print("<td style='text-align:center' colspan=2>");
-                        $css->CrearInputNumber("ValorConciliar", "number", "Valor X Conciliar<br>", $TotalGlosado, "Valor Conciliar", "", "", "", 150, 30, 1, 1, 0, $TotalGlosado, 1);
+                        $css->CrearInputNumber("ValorConciliar", "number", "Valor X Conciliar<br>", 0, "Valor Conciliar", "", "", "", 150, 30, 1, 1, 0, $TotalGlosado, 1);
                         
                     print("</td>");
                 
