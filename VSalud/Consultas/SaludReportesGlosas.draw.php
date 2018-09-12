@@ -364,15 +364,18 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $statement= base64_decode($_REQUEST['st']);
                 //print($statement);
             }
-            $limit = 1;
+            $limit = 10;
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
-            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
-            $row = $obGlosas->FetchArray($obGlosas->Query($query));
-            $ResultadosTotales = $row['num'];
+            
             $st_reporte=$statement;
-            $statement.=" GROUP BY cod_administrador LIMIT $startpoint,$limit";
+            $statement.=" GROUP BY cod_administrador ";
+            
+            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
+            $row = $obGlosas->NumRows($obGlosas->Query($query));
+            $ResultadosTotales = $row;
+            $statement.=" LIMIT $startpoint,$limit";
             //print($statement);
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
@@ -516,16 +519,17 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $statement= base64_decode($_REQUEST['st']);
                 //print($statement);
             }
-            $limit = 1;
+            $limit = 10;
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
-            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
-            $row = $obGlosas->FetchArray($obGlosas->Query($query));
-            $ResultadosTotales = $row['num'];
-            $st_reporte=$statement;
-            $statement.=" GROUP BY cod_prestador LIMIT $startpoint,$limit";
             
+            $st_reporte=$statement;
+            $statement.=" GROUP BY cod_prestador ";
+            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
+            $row = $obGlosas->NumRows($obGlosas->Query($query));
+            $ResultadosTotales = $row;
+            $statement.=" LIMIT $startpoint,$limit";
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
                     . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
@@ -623,7 +627,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 }
             
         break;
-        case 5:
+        case 5: //2193
             $TipoReporte=$obGlosas->normalizar($_REQUEST["TipoReporte"]);
             $idEPS="";
             if(isset($_REQUEST["idEPS"])){
@@ -673,11 +677,15 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement = $VectorST[0]; 
             $st_reporte=$statement;
             //$statement.="   ";
-            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
-            $row = $obGlosas->FetchArray($obGlosas->Query($query));
-            $ResultadosTotales = $row['num'];
             
-            $statement.=" GROUP BY regimen_eps LIMIT $startpoint,$limit";
+            
+            $statement.=" GROUP BY regimen_eps ";
+            
+            $query = "SELECT COUNT(*) as `num` FROM {$statement}";
+            $row = $obGlosas->NumRows($obGlosas->Query($query));
+            $ResultadosTotales = $row;
+            
+            $statement.=" LIMIT $startpoint,$limit";
             
             $query="SELECT regimen_eps,"
                     . "SUM(valor_glosado_eps) AS TotalGlosado,"
@@ -824,10 +832,10 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement.=" GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC ";
             $query = "SELECT COUNT(*) as `num` FROM {$statement}";
             
-            $row = $obGlosas->FetchArray($obGlosas->Query($query));
-            $ResultadosTotales = $row['num'];
-            
-            $statement.="  LIMIT $startpoint,$limit";
+            $row = $obGlosas->NumRows($obGlosas->Query($query));
+            $ResultadosTotales = $row;
+            //print($ResultadosTotales);
+            $statement.=" LIMIT $startpoint,$limit";
             
             $query="SELECT cod_glosa_inicial, descripcion_glosa_inicial,"
                     . "COUNT(cod_glosa_inicial) AS Cantidad ";
