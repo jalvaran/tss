@@ -619,26 +619,21 @@ function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormula
  * Captura la informacion del Formulario de devoluciones
  */
 function getInfoFormGlosasRespuestas(Opciones=0){
-    if(Opciones==0){
-        if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
-            alertify.set({ labels: {
-                    ok     : "OK",
-                    cancel : "Cancelar"
-                } });
+    if ($('#CodigoGlosa').length) {
+        if($('#CodigoGlosa').val()==''){
             alertify.alert("Todos los campos son obligatorios");
             return 0;
         }
-    }
+    } 
     
-    if(Opciones==1){
-        if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#Observaciones').val()==''){
-            alertify.set({ labels: {
-                    ok     : "OK",
-                    cancel : "Cancelar"
-                } });
-            alertify.alert("Todos los campos son obligatorios");
-            return 0;
-        }
+    
+    if($('#FechaIPS').val()=='' || $('#FechaAuditoria').val()=='' || $('#ValorEPS').val()=='' || $('#ValorAceptado').val()=='' || $('#Observaciones').val()==''){
+        alertify.set({ labels: {
+                ok     : "OK",
+                cancel : "Cancelar"
+            } });
+        alertify.alert("Todos los campos son obligatorios");
+        return 0;
     }
     
     if ($('#ValorLevantado').length) { //Verifico que existe el campo de texto Valor Levantado
@@ -1020,7 +1015,8 @@ function ValidaValoresConciliacion(){
  * @returns {undefined}
  */
 function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
-    var form_data = getInfoFormGlosasRespuestas(1);        
+    
+    var form_data = getInfoFormGlosasRespuestas();        
         form_data.append('idAccion', idAccion); //6 respuesta a Glosa temporal, 10 Contra Glosar
         form_data.append('idGlosa', idGlosa); //id de la Glosa a agregar
         var Valida=0;

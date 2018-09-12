@@ -367,10 +367,10 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);             
             $CodActividad=$obGlosas->normalizar($_REQUEST["CodActividad"]);
             $sql="SELECT TipoArchivo,ID,num_factura,FechaIPS,id_cod_glosa AS CodigoGlosa,CodigoActividad,observacion_auditor,idGlosa,"
-                    . "(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa ) AS DescripcionGlosa,"
+                    . "(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa,"
                     . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,EstadoGlosa,"
                     . "(SELECT valor_glosado_eps-valor_aceptado_ips-valor_levantado_eps) AS ValorXConciliar,"
-                    . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=EstadoGlosa) as Estado "
+                    . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=EstadoGlosa ) as Estado "
                     . "FROM salud_archivo_control_glosas_respuestas "
                     . "WHERE "
                     . "  num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<5 AND Tratado=0 ORDER BY ID LIMIT 100";
@@ -569,7 +569,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $idFactura="";
                 $idActividad='';
             //$Consulta=$obGlosas->ConsultarTabla("salud_archivo_control_glosas_respuestas_temp", $Condicion);
-            $sql="SELECT *, (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa ) AS DescripcionGlosa "
+            $sql="SELECT *, (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa "
                     . "FROM salud_archivo_control_glosas_respuestas_temp $Condicion";
             $Consulta=$obGlosas->Query($sql);
             while($DatosActividad=$obGlosas->FetchArray($Consulta)){
