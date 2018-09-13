@@ -9,3 +9,5 @@ ALTER TABLE `salud_archivo_conceptos_glosas` ADD `aplicacion_concepto_general` T
 
 ALTER TABLE `usuarios` ADD `Habilitado` VARCHAR(2) NOT NULL DEFAULT 'SI' AFTER `Email`;
 
+ALTER TABLE `salud_glosas_iniciales_temp` ADD `idUser` INT NOT NULL AFTER `Soporte`;
+
