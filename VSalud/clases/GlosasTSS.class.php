@@ -57,7 +57,7 @@ class Glosas extends conexion{
      * 
      * @param type $Vector
      */
-    public function RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino,$Vector) {
+    public function RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino,$idUser,$Vector) {
         $TotalGlosasExistentes=$this->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
         $TotalGlosasTemporal=$this->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$idActividad'");
         $TotalGlosasExistentes=$TotalGlosasExistentes+$TotalGlosasTemporal;
@@ -107,7 +107,7 @@ class Glosas extends conexion{
         }
         $FechaRegistro=date("Y-m-d");
         $tab="salud_glosas_iniciales_temp";
-        $NumRegistros=18;
+        $NumRegistros=19;
 
         $Columnas[0]="FechaIPS";                $Valores[0]=$FechaIPS;
         $Columnas[1]="FechaAuditoria";          $Valores[1]=$FechaAuditoria;
@@ -127,6 +127,7 @@ class Glosas extends conexion{
         $Columnas[15]="Soporte";                $Valores[15]=$destino;
         $Columnas[16]="idArchivo";              $Valores[16]=$idActividad;
         $Columnas[17]="NombreActividad";        $Valores[17]=$Descripcion;
+        $Columnas[18]="idUser";                 $Valores[18]= $idUser;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $idGlosa=$this->ObtenerMAX($tab, "ID", 1, "");
@@ -245,7 +246,7 @@ class Glosas extends conexion{
      * @param type $Vector
      */
     public function GuardaGlosasTemporalesAIniciales($idUser,$Vector) {
-        $consulta=$this->ConsultarTabla("salud_glosas_iniciales_temp", "");
+        $consulta=$this->ConsultarTabla("salud_glosas_iniciales_temp", " WHERE idUser='$idUser'");
         $Estado=12;
         while($DatosGlosaTemporal=$this->FetchArray($consulta)){
             $NumFactura=$DatosGlosaTemporal["num_factura"];
@@ -291,7 +292,7 @@ class Glosas extends conexion{
             
        
         }
-        $this->VaciarTabla("salud_glosas_iniciales_temp");
+        //$this->VaciarTabla("salud_glosas_iniciales_temp");
         
     }
     /**
@@ -533,7 +534,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps <> valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=2 AND valor_glosado_eps <> valor_aceptado_ips" ;
         
         $this->Query($sql);
         //Copio las respuestas en estado 2 (respondida) cuyo valor Glosado sea igual al aceptado pero con la columna tratado =1
@@ -544,7 +545,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'2',FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser,'1' "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
         
         $this->Query($sql);
         
@@ -557,11 +558,11 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'7',FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=2 AND valor_glosado_eps=valor_aceptado_ips" ;
         
         $this->Query($sql);
         
-        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=2 ";
+        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=2 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];
@@ -650,7 +651,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=3 AND valor_levantado_eps <> valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=3 AND valor_levantado_eps <> valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         //Copio las contra Glosas en estado 3 (ContraGlosado) cuando el valor x conciliar sea cero, pero con la columna tratado =1
@@ -661,7 +662,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser,'1' "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=3 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=3 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         
@@ -674,11 +675,11 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'5',FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=3 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=3 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         
-        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=3 ";
+        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=3 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $NumFactura=$DatosTemp["num_factura"];
@@ -756,7 +757,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=4 AND valor_levantado_eps <> valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=4 AND valor_levantado_eps <> valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         //Copio las contra Glosas en estado 4 (ReesputaContraGlosa) cuando el valor x conciliar sea cero, pero con la columna tratado =1
@@ -767,7 +768,7 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser,'1' "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=4 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=4 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         
@@ -780,11 +781,11 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,'5',FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=4 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=4 AND valor_levantado_eps=valor_glosado_eps-valor_aceptado_ips" ;
         
         $this->Query($sql);
         
-        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=4 ";
+        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=4 ";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $NumFactura=$DatosTemp["num_factura"];
@@ -863,11 +864,11 @@ class Glosas extends conexion{
                 . "num_factura, idGlosa,CuentaGlobal,CuentaRIPS,cod_glosa_general,"
                 . "cod_glosa_especifico,id_cod_glosa,CodigoActividad,DescripcionActividad,EstadoGlosa,FechaIPS,FechaAuditoria,valor_actividad,"
                 . "valor_glosado_eps,valor_levantado_eps,valor_aceptado_ips,observacion_auditor,Soporte,fecha_registo,TipoArchivo,idUser "
-                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=5 AND valor_glosado_eps = valor_levantado_eps+valor_aceptado_ips" ;
+                . "FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=5 AND valor_glosado_eps = valor_levantado_eps+valor_aceptado_ips" ;
         
         $this->Query($sql);
                 
-        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE EstadoGlosa=5 AND valor_glosado_eps = valor_levantado_eps+valor_aceptado_ips";
+        $sql="SELECT *,valor_aceptado_ips AS ValorIPS FROM salud_archivo_control_glosas_respuestas_temp WHERE idUser='$idUser' AND EstadoGlosa=5 AND valor_glosado_eps = valor_levantado_eps+valor_aceptado_ips";
         $consulta= $this->Query($sql);
         while($DatosTemp=$this->FetchArray($consulta)){
             $ValorAceptadoIPS=$DatosTemp["ValorIPS"];

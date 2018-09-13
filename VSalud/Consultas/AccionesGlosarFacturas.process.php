@@ -74,7 +74,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
             
-            $Mensaje=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, "");
+            $Mensaje=$obGlosas->RegistrarGlosaInicialTemporal($TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino,$idUser, "");
             print(json_encode($Mensaje));
         break;
         case 3://eliminar un registro de la tabla temporal de glosas
@@ -225,8 +225,9 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->GuardaRespuestaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaRespuestasGlosasTemporalAReal($idUser, "");
-            $obGlosas->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
-            print("Respuestas a Glosas Registradas");
+            $obGlosas->BorraReg("salud_archivo_control_glosas_respuestas_temp", "idUser", $idUser);
+            //$obGlosas->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
+            print("Acciones Realizadas");
         break;
     
         case 10:// Guarda contra glosa a la tabla temporal de respuestas

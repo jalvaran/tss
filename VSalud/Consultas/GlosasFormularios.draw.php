@@ -191,7 +191,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
             $sql="SELECT ID,CodigoGlosa,ValorGlosado,ValorXConciliar,FechaIPS,num_factura,CodigoActividad,"
                     . "(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=CodigoGlosa ) AS DescripcionGlosa "
-                    . "FROM salud_glosas_iniciales_temp ORDER BY ID DESC";
+                    . "FROM salud_glosas_iniciales_temp WHERE idUser='$idUser' ORDER BY ID DESC";
             $Consulta=$obGlosas->Query($sql);
             $css->CrearTabla();
                 $css->FilaTabla(12);
@@ -537,13 +537,20 @@ if( !empty($_REQUEST["idFormulario"]) ){
         case 7: //Respuestas agregadas a la tabla temporal
                         
             $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
-            $Condicion="";
+            $Condicion=" WHERE idUser='$idUser' ";
             if($idGlosa<>""){
-                $Condicion=" WHERE idGlosa='$idGlosa'";
+                $Condicion=" AND idGlosa='$idGlosa'";
             }
             
             
-            $css->CrearTabla();
+            
+            //$Consulta=$obGlosas->ConsultarTabla("salud_archivo_control_glosas_respuestas_temp", $Condicion);
+            $sql="SELECT *, (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa "
+                    . "FROM salud_archivo_control_glosas_respuestas_temp $Condicion";
+            $Consulta=$obGlosas->Query($sql);
+            
+            if($obGlosas->NumRows($Consulta)){
+                $css->CrearTabla();
                 $css->FilaTabla(12);
                     $css->ColTabla("<strong>Respuestas a Glosas Agregadas a la Tabla Temporal</strong>", 6);
                     print("<td colspan='3' style='text-align:center'>");
@@ -568,38 +575,36 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $css->CierraFilaTabla();
                 $idFactura="";
                 $idActividad='';
-            //$Consulta=$obGlosas->ConsultarTabla("salud_archivo_control_glosas_respuestas_temp", $Condicion);
-            $sql="SELECT *, (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa "
-                    . "FROM salud_archivo_control_glosas_respuestas_temp $Condicion";
-            $Consulta=$obGlosas->Query($sql);
-            while($DatosActividad=$obGlosas->FetchArray($Consulta)){
-                $idGlosaTemp=$DatosActividad["ID"];
                 
-                $css->FilaTabla(12);
-                    $idFactura=$DatosActividad["num_factura"];
-                    $idActividad=$DatosActividad["CodigoActividad"];
-                    $css->ColTabla($DatosActividad["FechaIPS"], 1);
-                    $css->ColTabla($DatosActividad["num_factura"], 1);
-                    $css->ColTabla($DatosActividad["CodigoActividad"], 1);
-                    $css->ColTabla($DatosActividad["id_cod_glosa"], 1);
-                    $css->ColTabla(utf8_encode($DatosActividad["DescripcionGlosa"]), 1);
-                    $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]), 1);
-                    $css->ColTabla(number_format($DatosActividad["valor_levantado_eps"]), 1);
-                    $css->ColTabla(number_format($DatosActividad["valor_aceptado_ips"]), 1);
-                    $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]-$DatosActividad["valor_aceptado_ips"]-$DatosActividad["valor_levantado_eps"]), 1);
-                    $css->ColTabla(number_format($DatosActividad["EstadoGlosa"]), 1);
-                    print("<td>");
-                        $css->CrearBotonEvento("EditarGlosaTemp", "Editar", 1, "onClick", "DibujeFormularioEdicionRespuestas('$idGlosaTemp','8')", "verde", "");
-                    print("</td>");
-                    print("<td>");
-                        $css->CrearBotonEvento("DelGlosaTemp", "X", 1, "onClick", "EliminarRepuestaGlosaTemporal('$idGlosaTemp','7')", "rojo", "");
-                    print("</td>");
-                $css->CierraFilaTabla();
-            }
-                           
-            $css->CerrarTabla();
-            $css->CrearInputText("TxtNumFactura", "hidden", "", $idFactura, "", "", "", "", 100, 30, 0, 0);
-            $css->CrearInputText("TxtCodActividad", "hidden", "", $idActividad, "", "", "", "", 100, 30, 0, 0);
+                while($DatosActividad=$obGlosas->FetchArray($Consulta)){
+                    $idGlosaTemp=$DatosActividad["ID"];
+
+                    $css->FilaTabla(12);
+                        $idFactura=$DatosActividad["num_factura"];
+                        $idActividad=$DatosActividad["CodigoActividad"];
+                        $css->ColTabla($DatosActividad["FechaIPS"], 1);
+                        $css->ColTabla($DatosActividad["num_factura"], 1);
+                        $css->ColTabla($DatosActividad["CodigoActividad"], 1);
+                        $css->ColTabla($DatosActividad["id_cod_glosa"], 1);
+                        $css->ColTabla(utf8_encode($DatosActividad["DescripcionGlosa"]), 1);
+                        $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]), 1);
+                        $css->ColTabla(number_format($DatosActividad["valor_levantado_eps"]), 1);
+                        $css->ColTabla(number_format($DatosActividad["valor_aceptado_ips"]), 1);
+                        $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]-$DatosActividad["valor_aceptado_ips"]-$DatosActividad["valor_levantado_eps"]), 1);
+                        $css->ColTabla(number_format($DatosActividad["EstadoGlosa"]), 1);
+                        print("<td>");
+                            $css->CrearBotonEvento("EditarGlosaTemp", "Editar", 1, "onClick", "DibujeFormularioEdicionRespuestas('$idGlosaTemp','8')", "verde", "");
+                        print("</td>");
+                        print("<td>");
+                            $css->CrearBotonEvento("DelGlosaTemp", "X", 1, "onClick", "EliminarRepuestaGlosaTemporal('$idGlosaTemp','7')", "rojo", "");
+                        print("</td>");
+                    $css->CierraFilaTabla();
+                }
+                $css->CerrarTabla();
+                $css->CrearInputText("TxtNumFactura", "hidden", "", $idFactura, "", "", "", "", 100, 30, 0, 0);
+                $css->CrearInputText("TxtCodActividad", "hidden", "", $idActividad, "", "", "", "", 100, 30, 0, 0);
+            }           
+            
              
         break;
         case 8: //Edicion de una respuesta a una glosa
