@@ -295,6 +295,10 @@ $TablaConfig="salud_eps";
 $Vector[$TablaConfig]["nit"]["TipoText"]="number";
 $Vector[$TablaConfig]["salud_eps"]["TipoText"]="number";
 $Vector[$TablaConfig]["dias_convenio"]["TipoText"]="number";
-
+$Vector[$TablaConfig]["tipo_regimen"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector[$TablaConfig]["tipo_regimen"]["TablaVinculo"]="salud_regimen";  //tabla de donde se vincula
+$Vector[$TablaConfig]["tipo_regimen"]["IDTabla"]="Regimen"; //id de la tabla que se vincula
+$Vector[$TablaConfig]["tipo_regimen"]["Display"]="Regimen";                    //Columna que quiero mostrar
+$Vector[$TablaConfig]["tipo_regimen"]["Predeterminado"]="N";
 
 ?>
