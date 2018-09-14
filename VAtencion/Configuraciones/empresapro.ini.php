@@ -26,7 +26,18 @@ $Vector["Ciudad"]["Display"]="Ciudad";
  * 
  */
 
+$Vector["FacturaSinInventario"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector["FacturaSinInventario"]["TablaVinculo"]="respuestas_condicional";  //tabla de donde se vincula
+$Vector["FacturaSinInventario"]["IDTabla"]="Valor"; //id de la tabla que se vincula
+$Vector["FacturaSinInventario"]["Display"]="Valor"; 
+$Vector["FacturaSinInventario"]["Predeterminado"]=1;
         
+$Vector["CXPAutomaticas"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector["CXPAutomaticas"]["TablaVinculo"]="respuestas_condicional";  //tabla de donde se vincula
+$Vector["CXPAutomaticas"]["IDTabla"]="Valor"; //id de la tabla que se vincula
+$Vector["CXPAutomaticas"]["Display"]="Valor"; 
+$Vector["CXPAutomaticas"]["Predeterminado"]=1;
+
 $Vector["VerRegistro"]["Deshabilitado"]=1; 
 ///Filtros y orden
 $Vector["Order"]=" $idTabla DESC ";   //Orden

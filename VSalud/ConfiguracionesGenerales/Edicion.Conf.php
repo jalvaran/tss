@@ -291,4 +291,10 @@ $Vector[$TablaConfig]["descripcion_cups"]["Required"]=1;
 $Vector[$TablaConfig]["observacion"]["Required"]=1;
 
 
+$TablaConfig="salud_eps";
+$Vector[$TablaConfig]["nit"]["TipoText"]="number";
+$Vector[$TablaConfig]["salud_eps"]["TipoText"]="number";
+$Vector[$TablaConfig]["dias_convenio"]["TipoText"]="number";
+
+
 ?>

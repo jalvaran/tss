@@ -47,7 +47,7 @@ $css->DivNotificacionesJS();
 ///////////////Creamos la imagen representativa de la pagina
     /////
     /////	
-$css->CrearImageLink("../VMenu/MnuInventarios.php", "../images/eps.png", "_self",100,100);
+$css->CrearImageLink("../VMenu/Menu.php", "../images/eps.png", "_self",100,100);
 
 
 

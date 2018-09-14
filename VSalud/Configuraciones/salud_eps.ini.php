@@ -31,7 +31,12 @@ $Vector["VerRegistro"]["Deshabilitado"]=1;
  * 
  */
 
-
+$Vector["tipo_regimen"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector["tipo_regimen"]["TablaVinculo"]="salud_regimen";  //tabla de donde se vincula
+$Vector["tipo_regimen"]["IDTabla"]="Regimen"; //id de la tabla que se vincula
+$Vector["tipo_regimen"]["Display"]="Regimen"; 
+$Vector["tipo_regimen"]["Predeterminado"]=1;
+        
 /*
  * 
  * Requeridos

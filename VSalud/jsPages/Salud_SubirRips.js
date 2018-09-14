@@ -137,7 +137,7 @@ function BorrarCarga(){
         type: 'post',
         success: function(data){
             
-            alertify.error("Carga Borrada"); 
+            alertify.error("Temporales borrados"); 
             document.getElementById('DivProcess').innerHTML='';
             
         },

@@ -505,7 +505,7 @@ class CssIni{
 	
 	function CrearModal($id,$title,$Vector){
 		
-            print('<div id="'.$id.'" class="modal fade" role="dialog">');
+            print('<div id="'.$id.'" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">');
 		
             print('<div class="modal-dialog">');
             
@@ -1054,7 +1054,7 @@ function Footer(){
 /////////////////////Crear una Chosen
 	
 	function CrearSelectChosen($Nombre, $VarSelect){
-          $Ancho=200; 
+          $Ancho='200px'; 
           $PlaceHolder="Seleccione una opcion"; 
           if(isset($VarSelect["Ancho"])){
              $Ancho=$VarSelect["Ancho"];
@@ -1074,7 +1074,9 @@ function Footer(){
            if(isset($VarSelect["Title"]) and !empty($VarSelect["Title"])){
                 print("<strong>$VarSelect[Title]</strong><br>");
            }
-           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="2" name="'.$Nombre.'" '.$Required.' style="width:200px;">';
+           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="1" name="'.$Nombre.'" '.$Required.' style="width:'.$Ancho.';">';
+           
+           //echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="2" name="'.$Nombre.'" '.$Required.' style="width:200px;">';
            
        	
 	}   

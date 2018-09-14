@@ -168,4 +168,9 @@ $VarInsert[$TablaConfig]["codigo_sistema"]["Required"]=1;
 $VarInsert[$TablaConfig]["descripcion_cups"]["Required"]=1;
 $VarInsert[$TablaConfig]["observacion"]["Required"]=1;
 
+
+$TablaConfig="salud_eps";
+$VarInsert[$TablaConfig]["nit"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["salud_eps"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["dias_convenio"]["TipoText"]="number";
 ?>

@@ -17,3 +17,46 @@ INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`,
 
 UPDATE `menu_submenus` SET `Image` = 'historial2.png' WHERE `menu_submenus`.`ID` = 11;
 UPDATE `menu_submenus` SET `Nombre` = 'Consolidado de Politicas de Acceso' WHERE `menu_submenus`.`ID` = 11;
+
+DELETE FROM `menu_submenus` WHERE `menu_submenus`.`ID` = 2 
+
+ALTER TABLE `salud_eps`
+  DROP `saldo_inicial`,
+  DROP `fecha_saldo_inicial`;
+
+ALTER TABLE `salud_eps` ADD `RepresentanteLegal` VARCHAR(45) NOT NULL AFTER `Nombre_gerente`, ADD `NumeroRepresentanteLegal` VARCHAR(45) NOT NULL AFTER `RepresentanteLegal`;
+
+DROP TABLE IF EXISTS `salud_manuales_tarifarios`;
+CREATE TABLE `salud_manuales_tarifarios` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `salud_manuales_tarifarios` (`ID`, `Nombre`) VALUES
+(1,	'SOAT'),
+(2,	'CUPS'),
+(3,	'ISS 2004'),
+(4,	'Medicamentos'),
+(5,	'Insumos'),
+(6,	'ISS'),
+(7,	'Act propias');
+
+
+DROP TABLE IF EXISTS `salud_regimen`;
+CREATE TABLE `salud_regimen` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Regimen` varchar(45) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `salud_regimen` (`ID`, `Regimen`) VALUES
+(1,	'CONTRIBUTIVO'),
+(2,	'SUBSIDIADO'),
+(3,	'OTRAS ENTIDADES'),
+(4,	'ENTE TERRITORIAL'),
+(5,	'ENTE MUNICIPAL'),
+(6,	'ENTIDAD EN LIQUIDACION');
+
+
+

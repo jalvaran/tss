@@ -35,6 +35,20 @@ $Vector[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
 $Vector[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
 $Vector[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
 
+$TablaConfig="usuarios_tipo";
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+
+$TablaConfig="empresapro";
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
+
+
 
 
 

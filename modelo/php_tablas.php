@@ -428,7 +428,7 @@ public function DibujeTabla($Vector){
         $target="#DialTabla";
         $this->css->CrearBotonImagen($Titulo,$Nombre,$target,$RutaImage,"",80,80,"fixed","left:10px;top:50",$VectorBim);
         
-        $this->css->CrearCuadroDeDialogo("DialTabla", "Opciones para $tbl");
+        $this->css->CrearModal("DialTabla", "Opciones para $tbl","");
             $this->css->CrearDiv("DivUpdateCampo", "", "center", 1, 1);
             $this->css->CerrarDiv();
             $this->css->CrearTabla();
@@ -465,7 +465,7 @@ public function DibujeTabla($Vector){
                 
             $this->css->CerrarTabla();
             
-        $this->css->CerrarCuadroDeDialogo();
+        $this->css->CerrarModal();
     }
     print("</td>");
     $this->css->CierraFilaTabla();
@@ -1051,7 +1051,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                $DateBox=1;
            }
            $Value=$ColumnasInfo["Default"][$i];
-           $Required=0;
+           $Required=1;
            $ReadOnly=0;
            if($ColumnasInfo["Key"][$i]=="PRI"){ //Verificamos si la llave es primaria
                 
@@ -1086,8 +1086,13 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $VectorSel["Required"]=$Required;
                     $VarSelect["Ancho"]=100;
                     $VarSelect["PlaceHolder"]="Seleccione una opcion";
-                    //$this->css->CrearSelect2($VectorSel);
-                    $this->css->CrearSelectChosen($NombreCol, $VarSelect);
+                    if($tbl=="salud_eps"){
+                        $this->css->CrearSelect2($VectorSel);
+                    }else{
+                        $this->css->CrearSelectChosen($NombreCol, $VarSelect);
+                    }
+                    
+                    
                     $this->css->CrearOptionSelect("", "Seleccione Una Opcion", 0);
                     while($Opciones=$this->obCon->FetchArray($Consulta)){
                         $pre=0;
@@ -1196,7 +1201,7 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
            $SelColumnas=$NombreCol;
            $DatosRegistro =  $this->obCon->ValorActual($tbl, $SelColumnas, $Condicion);
            $Value=$DatosRegistro[$NombreCol];
-           $Required=0;
+           $Required=1;
            $ReadOnly=0;
            if($ColumnasInfo["Key"][$i]=="PRI"){ //Verificamos si la llave es primaria
                 $Required=1;

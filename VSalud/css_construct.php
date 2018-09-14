@@ -464,7 +464,7 @@ class CssIni{
         
         function CrearModal($id,$title,$Vector){
 		
-            print('<div id="'.$id.'" class="modal fade" role="dialog">');
+            print('<div id="'.$id.'" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">');
 		
             print('<div class="modal-dialog">');
             
