@@ -545,16 +545,17 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
             
             //$Consulta=$obGlosas->ConsultarTabla("salud_archivo_control_glosas_respuestas_temp", $Condicion);
-            $sql="SELECT *, (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa "
+            $sql="SELECT *,(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=salud_archivo_control_glosas_respuestas_temp.EstadoGlosa LIMIT 1) AS DescripcionEstadoGlosa, "
+                    . " (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE cod_glosa=id_cod_glosa LIMIT 1) AS DescripcionGlosa "
                     . "FROM salud_archivo_control_glosas_respuestas_temp $Condicion";
             $Consulta=$obGlosas->Query($sql);
             
             if($obGlosas->NumRows($Consulta)){
                 $css->CrearTabla();
                 $css->FilaTabla(12);
-                    $css->ColTabla("<strong>Respuestas a Glosas Agregadas a la Tabla Temporal</strong>", 6);
-                    print("<td colspan='3' style='text-align:center'>");
-                        $css->CrearBotonEvento("BtnRegistrarRepuestasGlosas", "Guardar todas las Respuestas", 1, "onClick", "GuadarRespuestasTemporales('$idGlosa')", "azulclaro", "");
+                    $css->ColTabla("<strong>Acciones Pendientes por Grabar</strong>", 6);
+                    print("<td colspan='6' style='text-align:center'>");
+                        $css->CrearBotonEvento("BtnRegistrarRepuestasGlosas", "Guardar todas las Acciones", 1, "onClick", "GuadarRespuestasTemporales('$idGlosa')", "azulclaro", "");
                     print("</td>");
                 $css->CierraFilaTabla();    
             
@@ -562,10 +563,10 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->ColTabla("<strong>Fecha</strong>", 1);
                     $css->ColTabla("<strong>Numero de Factura</strong>", 1);
                     $css->ColTabla("<strong>Codigo de Actividad</strong>", 1);
-                    $css->ColTabla("<strong>Codigo Glosa</strong>", 1);
-                    $css->ColTabla("<strong>Descripcion Glosa</strong>", 1);
+                    $css->ColTabla("<strong>Código</strong>", 1);
+                    $css->ColTabla("<strong>Descripción</strong>", 1);
                     $css->ColTabla("<strong>Valor Glosado</strong>", 1);
-                    $css->ColTabla("<strong>Valor Levantada</strong>", 1);
+                    $css->ColTabla("<strong>Valor Levantado</strong>", 1);
                     $css->ColTabla("<strong>Valor Aceptado</strong>", 1);
                     
                     $css->ColTabla("<strong>Valor X Conciliar</strong>", 1);
@@ -591,7 +592,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         $css->ColTabla(number_format($DatosActividad["valor_levantado_eps"]), 1);
                         $css->ColTabla(number_format($DatosActividad["valor_aceptado_ips"]), 1);
                         $css->ColTabla(number_format($DatosActividad["valor_glosado_eps"]-$DatosActividad["valor_aceptado_ips"]-$DatosActividad["valor_levantado_eps"]), 1);
-                        $css->ColTabla(number_format($DatosActividad["EstadoGlosa"]), 1);
+                        $css->ColTabla(($DatosActividad["DescripcionEstadoGlosa"]), 1);
                         print("<td>");
                             $css->CrearBotonEvento("EditarGlosaTemp", "Editar", 1, "onClick", "DibujeFormularioEdicionRespuestas('$idGlosaTemp','8')", "verde", "");
                         print("</td>");
