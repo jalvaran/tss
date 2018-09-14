@@ -437,11 +437,11 @@ function ComprimirRespuestas(){
         type: 'post',
         success: function(data){
                 
-            document.getElementById('BtnModalDescargas').click();
+            //document.getElementById('BtnModalDescargas').click();
             $('.progress-bar').css('width','100%').attr('aria-valuenow', '100');  
             document.getElementById('LyProgresoCMG').innerHTML="100%";
-            document.getElementById("DivDescargas").innerHTML=data;
-            document.getElementById("DivProcess").innerHTML='';
+            //document.getElementById("DivDescargas").innerHTML=data;
+            document.getElementById("DivProcess").innerHTML=data;
             document.getElementById("DivConsultas").innerHTML='Proceso Terminado';                
             
             

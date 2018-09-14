@@ -71,12 +71,13 @@ if($_REQUEST["idAccion"]){
         case 6://Comprimir Archivos
             $Soportes=$obCon->normalizar($_REQUEST["Soportes"]);
             $Fecha=date("Y-m-d");
-            $sql="SELECT re.idEPS,se.nombre_completo FROM salud_control_generacion_respuestas_excel re "
+            $sql="SELECT re.idEPS,se.cod_pagador_min FROM salud_control_generacion_respuestas_excel re "
                     . " INNER JOIN salud_eps se ON cod_pagador_min=idEPS"
                     . " WHERE Generada=1 LIMIT 1";                
             $consulta= $obCon->Query($sql);
             $Datos=$obCon->FetchAssoc($consulta);
-            $idEPS=$obCon->QuitarAcentos(utf8_encode($Datos["nombre_completo"]));
+            $idEPS=(htmlentities($Datos["cod_pagador_min"]));
+            $idEPS=preg_replace('/\&(.)[^;]*;/', '\\1',$idEPS);
             $idEPS=str_replace(' ','_',$idEPS); 
             
             $NombreArchivo=$idEPS."_".$Fecha."_ReporteXCuentas.zip";
