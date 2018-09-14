@@ -735,7 +735,7 @@ public function DibujeTabla($Vector){
                             $this->css->CrearLink("../".$DatosVinculo[$ColDisplay], "_blank", $DatosVinculo[$ColDisplay]);
                         }else{
                             
-                            print("$DatosVinculo[$ColDisplay]");
+                            print($DatosVinculo[$ColDisplay]);
                             
                         }
                         print("</td>");
@@ -1231,11 +1231,13 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                 $VectorSel["Evento"]="";
                 $VectorSel["Funcion"]="";
                 $VectorSel["Required"]=$Required;
-                $this->css->CrearSelect2($VectorSel);
+                print("campos obligatorios * <br>");
+                $this->css->CrearSelectChosen($NombreCol, $VectorSel);
+                //$this->css->CrearSelect2($VectorSel);
                 $this->css->CrearOptionSelect("", "Seleccione Una Opcion", 0);
                 while($Opciones=$this->obCon->FetchArray($Consulta)){
                     $pre=0;
-                    if($Value==$Opciones[$IDTabla]){
+                    if($Value=="$Opciones[$IDTabla]"){
                         $pre=1;
                     }
                     $this->css->CrearOptionSelect($Opciones[$IDTabla], $Opciones[$Display], $pre);              

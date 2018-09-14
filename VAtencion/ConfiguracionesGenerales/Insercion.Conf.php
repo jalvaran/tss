@@ -5,6 +5,7 @@
  * Tipo de Texto
  */
 $TablaConfig="usuarios";
+$VarInsert[$TablaConfig]["Role"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["Password"]["TipoText"]="password";
 $VarInsert[$TablaConfig]["Nombre"]["Required"]=1;
 $VarInsert[$TablaConfig]["Apellido"]["Required"]=1;
@@ -38,15 +39,6 @@ $Vector[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
 $TablaConfig="usuarios_tipo";
 $VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
 
-$TablaConfig="empresapro";
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
-$VarInsert[$TablaConfig]["Tipo"]["Required"]=1;
 
 
 
