@@ -308,7 +308,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->CrearInputText("ValorXGlosarMax", "hidden", "", $TotalXGlosar, "", "", "", "", 0, 0, 0, 0);
               
                     
-                    $css->ColTabla("<h4 style='color:green'><strong>Editar la Glosa de la actividad $DatosActividad[Codigo] $Descripcion.</strong></h4>", 5);
+                    $css->ColTabla("<h4 style='color:green'><strong>Editar Acción de la actividad $DatosActividad[Codigo] $Descripcion.</strong></h4>", 5);
                     $css->ColTabla("Total Actividad: <strong>".number_format($TotalActividad)."</strong><br>Total Glosado X Ahora: <strong>".number_format($TotalGlosado)."</strong><br>Total Disponible X Glosar: <strong>".number_format($TotalXGlosar)."</strong>",1);
                     
                 $css->CierraFilaTabla();
@@ -354,7 +354,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         print("<br>");
-                        $css->CrearBotonEvento("BtnEditarGlosa", "Editar esta Glosa", 1, "onClick", "EditarGlosaTemporal('$idGlosaTemp',4,'$TipoArchivo','$idActividad','$idFactura')", "verde", "");
+                        $css->CrearBotonEvento("BtnEditarGlosa", "Editar", 1, "onClick", "EditarGlosaTemporal('$idGlosaTemp',4,'$TipoArchivo','$idActividad','$idFactura')", "verde", "");
                         
                     print("</td>");
                 $css->CierraFilaTabla();
