@@ -74,7 +74,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $statement.=" LIMIT $startpoint,$limit";
             
-            $query="SELECT cuenta,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado ";
+            $query="SELECT cuenta,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado,cod_glosa_inicial,cod_actividad ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -107,7 +107,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
-                            print("<td colspan=3 style=text-align:center>");
+                            print("<td colspan=5 style=text-align:center>");
                             print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
@@ -143,6 +143,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
                         $css->ColTabla("<strong>NUMERO DE FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
+                        $css->ColTabla("<strong>CODIGO GLOSA</strong>", 1);
                         $css->ColTabla("<strong>IDENTIFICACION</strong>", 1);
                         $css->ColTabla("<strong>ESTADO</strong>", 1);
                         
@@ -155,6 +157,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_factura"], 1);
                             $css->ColTabla($DatosConsulta["cod_prestador"], 1);
                             $css->ColTabla($DatosConsulta["factura"], 1);
+                            $css->ColTabla($DatosConsulta["cod_actividad"], 1);
+                            $css->ColTabla($DatosConsulta["cod_glosa_inicial"], 1);
                             $css->ColTabla($DatosConsulta["identificacion"], 1);
                             $css->ColTabla($DatosConsulta["descripcion_estado"], 1);
                         
@@ -225,7 +229,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $statement.=" LIMIT $startpoint,$limit";
             
-            $query="SELECT cuenta,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado ";
+            $query="SELECT cuenta,cod_actividad,cod_glosa_inicial,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -258,7 +262,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
-                            print("<td colspan=3 style=text-align:center>");
+                            print("<td colspan=5 style=text-align:center>");
                             print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesGlosas.draw.php?st=$st&TipoReporte=$TipoReporte&Page=";
@@ -294,6 +298,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
                         $css->ColTabla("<strong>NUMERO DE FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
+                        $css->ColTabla("<strong>CODIGO GLOSA</strong>", 1);
                         $css->ColTabla("<strong>IDENTIFICACION</strong>", 1);
                         $css->ColTabla("<strong>ESTADO</strong>", 1);
                         
@@ -306,6 +312,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_factura"], 1);
                             $css->ColTabla($DatosConsulta["cod_prestador"], 1);
                             $css->ColTabla($DatosConsulta["factura"], 1);
+                            $css->ColTabla($DatosConsulta["cod_actividad"], 1);
+                            $css->ColTabla($DatosConsulta["cod_glosa_inicial"], 1);
                             $css->ColTabla($DatosConsulta["identificacion"], 1);
                             $css->ColTabla($DatosConsulta["descripcion_estado"], 1);
                         
@@ -806,13 +814,16 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_glosa_inicial`<>'') ";
+            $Condicional=" WHERE (`cod_glosa_inicial`<>'') AND cod_estado<9 ";
             $Condicional2='';
             if($FechaInicial<>''){
                 $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
             }
             if($FechaFinal<>''){
                 $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
+            }
+            if($idEPS<>''){
+                $Condicional2=$Condicional2." AND cod_administrador = '$idEPS' ";
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
