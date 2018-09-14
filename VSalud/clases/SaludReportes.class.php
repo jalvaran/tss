@@ -100,10 +100,10 @@ class Reportes extends conexion{
                     $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosIPS["NIT"]);
                     $i++;
                     $objPHPExcel->getActiveSheet()->getStyle("D$i")->getFont()->setSize(10)->setBold(true); 
-                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosIPS["Direccion"]);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", utf8_encode($DatosIPS["Direccion"]));
                     $i++;
                     $objPHPExcel->getActiveSheet()->getStyle("D$i")->getFont()->setSize(10)->setBold(true); 
-                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosIPS["Telefono"]);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", utf8_encode($DatosIPS["Telefono"]));
                     $i++;
                     $objPHPExcel->getActiveSheet()->getStyle("D$i")->getFont()->setSize(10)->setBold(true); 
                     $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosIPS["Email"]);
