@@ -6,6 +6,7 @@
  * 
  * Funcion para validar si existe una cuenta RIPS
  */
+document.getElementById("ArchivosZip").addEventListener("change", ValidaCuentaRIPS); 
 var ErroresArchivos=0;
 function ValidaCuentaRIPS(){
     
