@@ -68,7 +68,8 @@ print("<body>");
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
                     print("<td>");
-                        $css->CrearInputText("FechaInicial", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                        
+                        $css->CrearInputText("FechaInicial", "date", "", "", "", "", "onChange", "CambiarFechaFinal()", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
                     print("</td>");
                      print("<td>");
                         $css->CrearInputText("FechaFinal", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));

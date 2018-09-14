@@ -22,6 +22,14 @@ function getInfoForm(){
     return form_data;
 }
 /**
+ * Cambia el la fecha minima para seleccionar en una fecha final
+ * @returns {undefined}
+ */
+function CambiarFechaFinal(){
+    var FechaInicial = document.getElementById("FechaInicial").value;
+    $('#FechaFinal').attr("min", FechaInicial); 
+}
+/**
  * Envia las facturas para analizarlas
  * @returns {undefined}
  */
