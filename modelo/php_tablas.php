@@ -707,10 +707,13 @@ public function DibujeTabla($Vector){
                                 if($i>0 and $Columnas[$i]<>"Sync" and $Columnas[$i]<>"Updated" and !isset($Vector[$tbl]["Excluir"][$NomCol]) and !isset($Vector["EditarRegistro"]["Deshabilitado"])){
                                     $idElement="TxtDatos_".$tbl."_".$Columnas[$i]."_".$DatosProducto[0];
                                     $idEdit=$DatosProducto[0];
-                                    $this->css->CrearTextArea($idElement, "", $DatosProducto[$i], "", "", "onChange", "EditeRegistro(`$tbl`,`$NomCol`,`$idTabla`,`$idEdit`,`$idElement`)", "", "", 0, 1,0);
+                                    //Descomentar para habilitar la edicion en linea
+                                    //$this->css->CrearTextArea($idElement, "", $DatosProducto[$i], "", "", "onChange", "EditeRegistro(`$tbl`,`$NomCol`,`$idTabla`,`$idEdit`,`$idElement`)", "", "", 0, 1,0);
+                                
+                                    print(utf8_encode($DatosProducto[$i])); 
                                 }else{
                                 //$this->css->CrearInputText("TxtDatos$DatosProducto[0]", "text", "", $DatosProducto[$i], "", "", "Evento", "JS", "", "", 0, 1);
-                                    print("$DatosProducto[$i]"); 
+                                    print(utf8_encode($DatosProducto[$i])); 
                                 }
                             }
                         }
@@ -825,7 +828,7 @@ public function VerifiqueExport($Vector)  {
                 if(isset($VisualizarRegistro[$i])){
                     if(!isset($VinculoRegistro[$i]["Vinculado"])){
                         $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($this->Campos[$a].$c, ($DatosTabla->$NombreCol));
+                        ->setCellValue($this->Campos[$a].$c, (utf8_encode($DatosTabla->$NombreCol)));
                     }else{
                         $TablaVinculo=$VinculoRegistro[$i]["TablaVinculo"];
                         $ColDisplay=$VinculoRegistro[$i]["Display"];
@@ -836,7 +839,7 @@ public function VerifiqueExport($Vector)  {
                         $Consul=$this->obCon->Query($sql1);
                         $DatosVinculo=  $this->obCon->FetchArray($Consul);
                         $objPHPExcel->setActiveSheetIndex(0)
-                        ->setCellValue($this->Campos[$a].$c,($DatosVinculo[$ColDisplay]));
+                        ->setCellValue($this->Campos[$a].$c,(utf8_encode($DatosVinculo[$ColDisplay])));
                     }
                     $a++;
                     
