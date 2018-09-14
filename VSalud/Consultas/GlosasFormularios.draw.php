@@ -703,8 +703,8 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         print("<br>");
-                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar esta Respuesta", 1, "onClick", "EditarRespuestaGlosaTemporal('$idGlosa')", "naranja", "");
-                        print("<h4 style='color:orange'>Modo Edicion</h4>");
+                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar", 1, "onClick", "EditarRespuestaGlosaTemporal('$idGlosa')", "naranja", "");
+                        print("<h4 style='color:orange'>Modo Edición</h4>");
                     print("</td>");
                 $css->CierraFilaTabla();
                 
@@ -1111,8 +1111,8 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         print("<br>");
-                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar esta Respuesta", 1, "onClick", "EditarRespuestaGlosa('$idGlosa')", "naranja", "");
-                        print("<h4 style='color:orange'>Modo Edicion</h4>");
+                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar", 1, "onClick", "EditarRespuestaGlosa('$idGlosa')", "naranja", "");
+                        print("<h4 style='color:orange'>Modo Edición</h4>");
                     print("</td>");
                 $css->CierraFilaTabla();
                 
@@ -1137,7 +1137,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $css->FilaTabla(14);
                     $css->CrearInputText("idGlosa", "hidden", "", $idGlosa, "", "", "", "", 0, 0, 0, 0);
                     $css->CrearInputText("TotalGlosado", "hidden", "", $TotalGlosado, "", "", "", "", 0, 0, 0, 0);
-                    $css->ColTabla("<h4 style='color:orange'><strong>Editar respuesta a Glosa de la actividad $CodActividad $Descripcion.</strong></h4>", 5);
+                    $css->ColTabla("<h4 style='color:orange'><strong>Editar Acción de la actividad $CodActividad $Descripcion.</strong></h4>", 5);
                     //$css->ColTabla("Total Glosado: <strong>".number_format($TotalGlosado)."</strong><br>Valor X Conciliar: <strong>".number_format($TotalXGlosar)."</strong>",1);
                     
                 $css->CierraFilaTabla();
@@ -1214,8 +1214,8 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                         
                         print("<br>");
-                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar esta Respuesta", 1, "onClick", "EditarRespuestaGlosa('$idGlosa')", "naranja", "");
-                        print("<h4 style='color:orange'>Modo Edicion</h4>");
+                        $css->CrearBotonEvento("BtnResponderGlosa", "Editar", 1, "onClick", "EditarRespuestaGlosa('$idGlosa')", "naranja", "");
+                        print("<h4 style='color:orange'>Modo Edición</h4>");
                     print("</td>");
                 $css->CierraFilaTabla();
                 
