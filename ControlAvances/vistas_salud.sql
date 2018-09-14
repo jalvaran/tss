@@ -229,7 +229,7 @@ FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
 DROP VIEW IF EXISTS `vista_af_semaforo`;
 CREATE VIEW vista_af_semaforo AS
 SELECT *,
-(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales 
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales
 WHERE vista_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura 
 AND vista_glosas_iniciales.EstadoGlosa=1) AS Dias
 FROM `salud_archivo_facturacion_mov_generados`;
@@ -349,4 +349,17 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
 FROM salud_archivo_control_glosas_respuestas;
  
 
+
+DROP VIEW IF EXISTS `vista_af_semaforo`;
+CREATE VIEW vista_af_semaforo AS
+SELECT *,
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales
+WHERE vista_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura 
+AND vista_glosas_iniciales.EstadoGlosa=1) AS Dias,
+
+(SELECT num_ident_usuario FROM vista_salud_facturas_usuarios 
+WHERE vista_salud_facturas_usuarios.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1)
+ AS identificacion_usuario 
+
+FROM `salud_archivo_facturacion_mov_generados`;
 

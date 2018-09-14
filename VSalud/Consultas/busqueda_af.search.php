@@ -107,7 +107,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     
     
     //print("st:$statement");
-    $query="SELECT cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa as idGlosa,"
+    $query="SELECT identificacion_usuario,cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa as idGlosa,"
             . " (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = `EstadoGlosa`) as EstadoGlosa  ";
     $consulta=$obGlosas->Query("$query FROM $statement");
     if($obGlosas->NumRows($consulta)){
@@ -176,6 +176,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
             $css->ColTabla("<strong>Cuenta Global</strong>", 1);
             $css->ColTabla("<strong>Numero de Factura</strong>", 1);
+            $css->ColTabla("<strong>Identificación</strong>", 1);
             $css->ColTabla("<strong>Valor</strong>", 1);
             $css->ColTabla("<strong>Estado</strong>", 1);
             $css->ColTabla("<strong>Semáforo</strong>", 1);
@@ -192,6 +193,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["CuentaRIPS"], 1);
                 $css->ColTabla($DatosCuenta["CuentaGlobal"], 1);
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
+                $css->ColTabla($DatosCuenta["identificacion_usuario"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
                 $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
                 print("<td style='text-align:center'>");
