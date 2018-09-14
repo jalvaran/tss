@@ -35,4 +35,7 @@ $Vector[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
 $Vector[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
 $Vector[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
 
+
+
+
 ?>

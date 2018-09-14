@@ -277,4 +277,18 @@ $Vector[$TablaConfig]["cod_concepto_especifico"]["Required"]=1;
 $Vector[$TablaConfig]["descrpcion_concep_especifico"]["Required"]=1;
 
 
+$TablaConfig="salud_cups";
+$Vector[$TablaConfig]["Excluir"]["user"]=1;
+$Vector[$TablaConfig]["Excluir"]["fecha_hora_registro"]=1;
+
+$Vector[$TablaConfig]["grupo"]["Required"]=1;
+$Vector[$TablaConfig]["subgrupo"]["Required"]=1;
+$Vector[$TablaConfig]["categoria"]["Required"]=1;
+$Vector[$TablaConfig]["subcategoria"]["Required"]=1;
+$Vector[$TablaConfig]["codigo_ley"]["Required"]=1;
+$Vector[$TablaConfig]["codigo_sistema"]["Required"]=1;
+$Vector[$TablaConfig]["descripcion_cups"]["Required"]=1;
+$Vector[$TablaConfig]["observacion"]["Required"]=1;
+
+
 ?>

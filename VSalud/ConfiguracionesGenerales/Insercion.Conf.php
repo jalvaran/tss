@@ -155,4 +155,17 @@ $VarInsert[$TablaConfig]["descripcion_concepto_general"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["tipo_concepto_general"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["aplicacion_concepto_general"]["Excluir"]=1;
 
+$TablaConfig="salud_cups";
+$VarInsert[$TablaConfig]["user"]["Excluir"]=1;
+$VarInsert[$TablaConfig]["fecha_hora_registro"]["Excluir"]=1;
+$VarInsert[$TablaConfig]["ID"]["Required"]=1;
+$VarInsert[$TablaConfig]["grupo"]["Required"]=1;
+$VarInsert[$TablaConfig]["subgrupo"]["Required"]=1;
+$VarInsert[$TablaConfig]["categoria"]["Required"]=1;
+$VarInsert[$TablaConfig]["subcategoria"]["Required"]=1;
+$VarInsert[$TablaConfig]["codigo_ley"]["Required"]=1;
+$VarInsert[$TablaConfig]["codigo_sistema"]["Required"]=1;
+$VarInsert[$TablaConfig]["descripcion_cups"]["Required"]=1;
+$VarInsert[$TablaConfig]["observacion"]["Required"]=1;
+
 ?>

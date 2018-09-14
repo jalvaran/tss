@@ -21,7 +21,9 @@ $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
  * 
  */
 
-        
+$Vector["Excluir"]["fecha_hora_registro"]=1;   //Indico que esta columna no se mostrará
+$Vector["Excluir"]["user"]=1;   //Indico que esta columna no se mostrará
+       
 $Vector["VerRegistro"]["Deshabilitado"]=1; 
 ///Filtros y orden
 $Vector["Order"]=" $idTabla DESC ";   //Orden
