@@ -301,4 +301,17 @@ $Vector[$TablaConfig]["tipo_regimen"]["IDTabla"]="Regimen"; //id de la tabla que
 $Vector[$TablaConfig]["tipo_regimen"]["Display"]="Regimen";                    //Columna que quiero mostrar
 $Vector[$TablaConfig]["tipo_regimen"]["Predeterminado"]="N";
 
+$TablaConfig="salud_cups";
+$Vector[$TablaConfig]["Excluir"]["grupo"]=1;
+$Vector[$TablaConfig]["Excluir"]["categoria"]=1;
+$Vector[$TablaConfig]["Excluir"]["subcategoria"]=1;
+$Vector[$TablaConfig]["Excluir"]["codigo_ley"]=1;
+$Vector[$TablaConfig]["Excluir"]["subgrupo"]=1;
+
+$Vector[$TablaConfig]["Manual"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector[$TablaConfig]["Manual"]["TablaVinculo"]="salud_manuales_tarifarios";  //tabla de donde se vincula
+$Vector[$TablaConfig]["Manual"]["IDTabla"]="ID"; //id de la tabla que se vincula
+$Vector[$TablaConfig]["Manual"]["Display"]="Nombre";                    //Columna que quiero mostrar
+$Vector[$TablaConfig]["Manual"]["Predeterminado"]="N";
+
 ?>

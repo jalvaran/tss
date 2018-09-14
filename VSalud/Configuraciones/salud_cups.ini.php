@@ -16,6 +16,7 @@ $Vector["Titulo"]=$myTitulo;        //Titulo
 $Vector["VerDesde"]=$startpoint;    //Punto desde donde empieza
 $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
 
+$Vector["VerRegistro"]["Deshabilitado"]=1; 
 /*
  * Deshabilito Acciones
  * 
@@ -24,7 +25,12 @@ $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
 $Vector["Excluir"]["fecha_hora_registro"]=1;   //Indico que esta columna no se mostrará
 $Vector["Excluir"]["user"]=1;   //Indico que esta columna no se mostrará
        
-$Vector["VerRegistro"]["Deshabilitado"]=1; 
+$Vector["Manual"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector["Manual"]["TablaVinculo"]="salud_manuales_tarifarios";  //tabla de donde se vincula
+$Vector["Manual"]["IDTabla"]="ID"; //id de la tabla que se vincula
+$Vector["Manual"]["Display"]="Nombre"; 
+$Vector["Manual"]["Predeterminado"]=1;
+
 ///Filtros y orden
 $Vector["Order"]=" $idTabla DESC ";   //Orden
 ?>

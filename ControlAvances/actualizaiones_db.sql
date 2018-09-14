@@ -42,6 +42,7 @@ INSERT INTO `salud_manuales_tarifarios` (`ID`, `Nombre`) VALUES
 (6,	'ISS'),
 (7,	'Act propias');
 
+ALTER TABLE `salud_cups` ADD `Manual` INT NOT NULL DEFAULT '2' AFTER `descripcion_cups`;
 
 DROP TABLE IF EXISTS `salud_regimen`;
 CREATE TABLE `salud_regimen` (

@@ -381,7 +381,7 @@ class CssIni{
 	
 	function CrearCuadroDeDialogo($id,$title){
 		
-		print(' <div id="'.$id.'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+		print(' <div id="'.$id.'" class="modal hide fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="myModalLabel" aria-hidden="true" >
        
           	
             <div class="modal-header">
@@ -463,7 +463,7 @@ class CssIni{
 	}
         
         function CrearModal($id,$title,$Vector){
-		
+            
             print('<div id="'.$id.'" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">');
 		
             print('<div class="modal-dialog">');
@@ -485,7 +485,10 @@ class CssIni{
                   </div>
 
                 </div>
+               </div>
+               
               </div>');
+            
         }
         
         /////////////////////Cierra un Cuadro de Dialogo

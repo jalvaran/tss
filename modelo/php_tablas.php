@@ -428,7 +428,7 @@ public function DibujeTabla($Vector){
         $target="#DialTabla";
         $this->css->CrearBotonImagen($Titulo,$Nombre,$target,$RutaImage,"",80,80,"fixed","left:10px;top:50",$VectorBim);
         
-        $this->css->CrearModal("DialTabla", "Opciones para $tbl","");
+        $this->css->CrearCuadroDeDialogo("DialTabla", "Opciones para $tbl");
             $this->css->CrearDiv("DivUpdateCampo", "", "center", 1, 1);
             $this->css->CerrarDiv();
             $this->css->CrearTabla();
@@ -465,7 +465,7 @@ public function DibujeTabla($Vector){
                 
             $this->css->CerrarTabla();
             
-        $this->css->CerrarModal();
+        $this->css->CerrarCuadroDeDialogo();
     }
     print("</td>");
     $this->css->CierraFilaTabla();
@@ -1086,7 +1086,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $VectorSel["Required"]=$Required;
                     $VarSelect["Ancho"]=100;
                     $VarSelect["PlaceHolder"]="Seleccione una opcion";
-                    if($tbl=="salud_eps"){
+                    if($tbl=="salud_eps" or $tbl=="salud_cups"){
                         $this->css->CrearSelect2($VectorSel);
                     }else{
                         $this->css->CrearSelectChosen($NombreCol, $VarSelect);
