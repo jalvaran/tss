@@ -131,6 +131,11 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
         //Paginacion
         if($Resultados){
             $st= base64_encode($statement);
+            $css->CrearDiv("DivActualizarCuentas", "", "center", 0, 1);
+                $Page="Consultas/vista_salud_cuentas_rips.search.php?st=$st&Page=1&Carry=";
+                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivCuentas`,`5`);return false ;";
+                $css->CrearBotonEvento("BtnActualizarCuentas", "Actualizar Cuentas", 1, "onclick", $FuncionJS, "rojo", "");
+            $css->CerrarDiv();
             if($ResultadosTotales>$limit){
                 
                 $css->FilaTabla(16);

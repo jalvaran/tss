@@ -1304,6 +1304,11 @@ function RefrescarDiv(){
     //alert("Refrescando"+CodActividad+Factura);
     VerDetallesActividad(CodActividad,Factura);
     MostrarActividades(Factura);
+    var idBotonFactura = 'BtnMostrar_'+Factura;
+    document.getElementById("BtnActualizarFacturas").click();
+    document.getElementById("BtnActualizarCuentas").click();
+    //document.location.href = "#AnclaDetalleFacturas";
+    //document.getElementById(idBotonFactura).click();
 }
 /**
  * Anula una glosa

@@ -119,13 +119,22 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
         if($Resultados){
             
             $st= base64_encode($statementPage);
+            $css->CrearDiv("DivActualizar", "", "center", 0, 1);
+                $Page="Consultas/busqueda_af.search.php?st=$st&Page=1&CuentaRIPS=$CuentaRIPS&Carry=";
+                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
+
+                $css->CrearBotonEvento("BtnActualizarFacturas", "Actualizar", 1, "onclick", $FuncionJS, "naranja", "");
+            $css->CerrarDiv();
+            
             if($ResultadosTotales>$limit){
                 
                 $css->FilaTabla(16);
                 print("<td colspan='2' style=text-align:center>");
                 if($NumPage>1){
+                    
+                    
                     $NumPage1=$NumPage-1;
-                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
+                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&CuentaRIPS=$CuentaRIPS&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
                     
                     $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
@@ -136,7 +145,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("<td colspan=5 style=text-align:center>");
                 print("<strong>Página: </strong>");
                                 
-                $Page="Consultas/busqueda_af.search.php?st=$st&Page=";
+                $Page="Consultas/busqueda_af.search.php?st=$st&CuentaRIPS=$CuentaRIPS&Page=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivFacturas`,`5`);return false ;";
                 $css->CrearSelect("CmbPage", $FuncionJS,70);
                     for($p=1;$p<=$TotalPaginas;$p++){
@@ -153,7 +162,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("<td colspan='2' style=text-align:center>");
                 if($ResultadosTotales>($startpoint+$limit)){
                     $NumPage1=$NumPage+1;
-                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
+                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&CuentaRIPS=$CuentaRIPS&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
                     $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                 }
