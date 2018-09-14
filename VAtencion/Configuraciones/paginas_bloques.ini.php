@@ -20,6 +20,8 @@ $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
  */
  
 $Vector["VerRegistro"]["Deshabilitado"]=1;       
+$Vector["NuevoRegistro"]["Deshabilitado"]=1;  
+$Vector["EditarRegistro"]["Deshabilitado"]=1;   
 
 $Vector["Excluir"]["Kit"]=1;
 ///Columnas requeridas al momento de una insercion

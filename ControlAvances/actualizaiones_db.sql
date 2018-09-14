@@ -13,3 +13,7 @@ ALTER TABLE `salud_glosas_iniciales_temp` ADD `idUser` INT NOT NULL AFTER `Sopor
 
 ALTER TABLE `salud_cups` CHANGE `ID` `ID` INT(20) NOT NULL AUTO_INCREMENT;
 
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (65, 'Crear politicas de Acceso', '2', '3', 'CrearPoliticasAcceso.php', '_SELF', b'1', 'seguridadinformatica.png', '5', '2018-07-13 15:42:34', '2018-07-13 15:42:34');
+
+UPDATE `menu_submenus` SET `Image` = 'historial2.png' WHERE `menu_submenus`.`ID` = 11;
+UPDATE `menu_submenus` SET `Nombre` = 'Consolidado de Politicas de Acceso' WHERE `menu_submenus`.`ID` = 11;

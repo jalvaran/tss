@@ -1412,7 +1412,7 @@ function Footer(){
                 if($DatosConsulta[$idItemValue]==$idSel){
                   $Sel=1;  
                 }
-                $this->CrearOptionSelect($DatosConsulta[$idItemValue], "$DatosConsulta[$OptionDisplay1] $DatosConsulta[$OptionDisplay2]", $Sel);
+                $this->CrearOptionSelect($DatosConsulta[$idItemValue], utf8_encode($DatosConsulta[$OptionDisplay1])." ".utf8_encode($DatosConsulta[$OptionDisplay2]), $Sel);
             }
             $this->CerrarSelect();
         }
@@ -1604,7 +1604,7 @@ function Footer(){
                 $JavaScript="";
             }
                 
-            $this->CrearImage($Nombre, $imagerute, $Alterno, 60, 100, $JavaScript);
+            $this->CrearImage($Nombre, $imagerute, $Alterno, 50, 90, $JavaScript);
         }
         
         //Cuadro de dialogo para crear tercero
@@ -1655,6 +1655,28 @@ function Footer(){
                 $this->CerrarDiv();
             $this->CerrarModal();
         }
+        
+        /////////////////////Crea un Cuadro de Dialogo
+	
+	function CrearModalAmplio($id,$title,$Vector){
+		
+            print('<div id="'.$id.'" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="width:90%;left:5%;margin:0">');
+		
+            print('<div class="modal-dialog">');
+            
+            print('<div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">'.$title.'</h4>
+                    </div>
+                    <div class="modal-body">');
+		
+	}
+        
+        
+        
+        
+        
         //////////////////////////////////FIN
 }
 	

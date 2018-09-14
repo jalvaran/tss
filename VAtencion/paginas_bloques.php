@@ -34,18 +34,26 @@ print("</head>");
 print("<body>");
 //Cabecera
 $css->CabeceraIni($myTitulo); //Inicia la cabecera de la pagina
+    
+    
 $css->CabeceraFin(); 
+
 
 ///////////////Creamos el contenedor
     /////
     /////
+
+
+
 $css->CrearDiv("principal", "container", "center",1,1);
+
+
 $css->DivNotificacionesJS();
 //print($statement);
 ///////////////Creamos la imagen representativa de la pagina
     /////
     /////	
-$css->CrearImageLink("../VMenu/Menu.php", "../images/seguridadinformatica.png", "_self",200,200);
+//$css->CrearImageLink("../VMenu/Menu.php", "../images/seguridadinformatica.png", "_self",200,200);
 
 
 ////Paginacion
