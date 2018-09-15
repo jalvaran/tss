@@ -5,6 +5,18 @@
  * 317 774 0609
  */
 
+// Solo permite ingresar numeros.
+
+function CampoNumerico(e){
+    //var no_digito = /\D/g;
+    //this.value = this.value.replace(no_digito , '');
+    
+	var key = window.Event ? e.which : e.keyCode
+
+	return ((key >= 48 && key <= 57) || key == 8)
+
+}
+
 function ValidarFecha(idTxtFecha){
     var FechaValidar = document.getElementById(idTxtFecha).value;
     var hoy             = new Date();
@@ -601,7 +613,8 @@ function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormula
                 $(selector).chosen(config[selector]);
             }
             
-            document.getElementById("CodigoGlosa_chosen").style.width = "400px";      
+            document.getElementById("CodigoGlosa_chosen").style.width = "400px";  
+            document.getElementById("ValorEPS").onkeypress= CampoNumerico;
         }
             
         },
@@ -929,8 +942,10 @@ function RespuestaGlosa(idGlosa,idFormulario=6){
                     $(selector).chosen(config[selector]);
                 }
             
-                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
                 
+                document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
+                document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
+                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
                 DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
             }
             
@@ -1399,7 +1414,7 @@ function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
                 }
-            
+                document.getElementById("ValorEPS").onkeypress= CampoNumerico;
                 document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
             }
             
@@ -1483,11 +1498,23 @@ function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
             if (data != "") { 
                 
                 document.getElementById("DivGlosar").innerHTML=data;
+                if ($('#ValorAceptado').length) {
+                    document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
+                }
+                if ($('#ValorLevantado').length) {
+                    document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
+                }
+                if ($('#ValorEPS').length) {
+                    document.getElementById("ValorEPS").onkeypress= CampoNumerico;
+                }
+                
+                
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
                 }
-            
-                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+                if ($('#CodigoGlosa_chosen').length) {
+                    document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+                }
             }
             
         },
@@ -1576,7 +1603,7 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
                 }
-            
+                document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
                 document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
             }
             
