@@ -403,7 +403,7 @@ function DevolverFactura(idFactura){
     function (e) {
         if (e) {
             if(ValidarFecha('FechaDevolucion')){
-                alertify.error("La fecha de devolucion seleccionada es mayor a la actual, por favor seleccione una fecha válida");
+                alertify.error("La fecha de devolución seleccionada es mayor a la actual, por favor seleccione una fecha válida");
                 return;
             }
             if(ValidarFecha('FechaAuditoria')){
@@ -413,7 +413,7 @@ function DevolverFactura(idFactura){
             AccionesGlosarFacturas(idFactura,1);
                         
         } else {
-            alertify.error("Se canceló la devolucion de la factura"+idFactura);
+            alertify.error("Se canceló la devolución de la factura"+idFactura);
 
         }
     });
@@ -520,7 +520,8 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
                 //document.getElementById('BtnModalGlosar').click();
                 BuscarUsuarioFactura(idFactura);
                 BuscarActividadesFactura(idFactura);
-                alertify.success("Se realizó la devolucion de la factura "+idFactura);
+                RefrescarDiv();
+                alertify.success("Se realizó la devolución de la factura "+idFactura);
             }
             
             if(idAccion==2){

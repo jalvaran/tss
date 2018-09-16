@@ -40,7 +40,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $sql="DELETE FROM salud_control_glosas_masivas WHERE Analizado=0";
             $obGlosas->Query($sql);
             $obGlosas->VaciarTabla("salud_conciliaciones_masivas_temp");
-            print("Carga Borrada");
+            print("Temporales borrados");
         break; 
         case 3://Leer Archivo y llevarlo a la tabla temporal            
             $obGlosas->LeerArchivoConciliaciones("");

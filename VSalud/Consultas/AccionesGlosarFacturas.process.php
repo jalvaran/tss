@@ -40,7 +40,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
             $obGlosas->DevolverFactura($idFactura,$ValorFactura, $FechaDevolucion,$FechaAuditoria, $Observaciones, $CodigoGlosa, $idUser, $destino, "");
-            print("<strong>Devolucion realizada</strong>");
+            print("<strong>Devolución realizada</strong>");
         break;
         
         case 2: //Registra las glosas iniciales en la tabla temporal
