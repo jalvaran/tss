@@ -171,6 +171,7 @@ $VarInsert[$TablaConfig]["observacion"]["Required"]=1;
 
 $TablaConfig="salud_eps";
 $VarInsert[$TablaConfig]["nit"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["Genera030"]["Excluir"]=1;
 $VarInsert[$TablaConfig]["salud_eps"]["TipoText"]="number";
 $VarInsert[$TablaConfig]["dias_convenio"]["TipoText"]="number";
 ?>

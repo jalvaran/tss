@@ -47,6 +47,7 @@ $obTabla->FormularioInsertRegistro($Parametros,$VarInsert);
 $css->CerrarDiv();//Cerramos contenedor Principal
 
 $css->AgregaJS(); //Agregamos javascripts
+print('<script type="text/javascript" src="jsPages/InsertarRegistro.js"></script>');
 $css->AgregaSubir();    
 ////Fin HTML  
 ///Verifico si hay peticiones para exportar

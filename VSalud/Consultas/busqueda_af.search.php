@@ -13,24 +13,12 @@ include_once("../../modelo/php_conexion.php");
 include_once("../css_construct.php");
 
 
-if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty($_REQUEST["FechaInicial"]) or !empty($_REQUEST["FechaFinal"]) or !empty($_REQUEST["idEstadoGlosas"]) or !empty($_REQUEST["Page"]) ){
+if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty($_REQUEST["FechaInicial"]) or !empty($_REQUEST["FechaFinal"]) or !empty($_REQUEST["idEstadoGlosas"]) or !empty($_REQUEST["Page"]) or !empty($_REQUEST["st"]) ){
     $css =  new CssIni("id",0);
     $obGlosas = new conexion($idUser);
         
     // Consultas enviadas a traves de la URL
     $statement="";
-    if(isset($_REQUEST['st'])){
-
-        $statement= base64_decode($_REQUEST['st']);
-        //print($statement);
-    }
-    
-    //Paginacion
-    if(isset($_REQUEST['Page'])){
-        $NumPage=$obGlosas->normalizar($_REQUEST['Page']);
-    }else{
-        $NumPage=1;
-    }
     
     //////////////////
     $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
@@ -95,6 +83,21 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
         $css->CerrarTabla();
         //print($statement);
     //Paginacion
+        
+        
+    if(isset($_REQUEST['st'])){
+
+        $statement= base64_decode($_REQUEST['st']);
+        //print($statement);
+    }
+    
+    //Paginacion
+    if(isset($_REQUEST['Page'])){
+        $NumPage=$obGlosas->normalizar($_REQUEST['Page']);
+    }else{
+        $NumPage=1;
+    }
+    
     $limit = 10;
     $startpoint = ($NumPage * $limit) - $limit;
     $VectorST = explode("LIMIT", $statement);

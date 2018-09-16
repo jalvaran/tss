@@ -32,7 +32,7 @@ if($_REQUEST["idAccion"]){
             
         break;
         case 2: //Subir al servidor el .zip con los archivos
-                        
+            $obCon->VaciarArchivosTemporalesCarga();            
             if(!empty($_FILES['ArchivosZip']['type'])){
 
                 $carpeta="../archivos/";
@@ -160,7 +160,7 @@ if($_REQUEST["idAccion"]){
                 
             }
             if($ErrorAF==1){
-                $css->CrearNotificacionRoja("Error No existe ningun archivo AF", 14);
+                $css->CrearNotificacionRoja("Error, la CuentaRIPS no corresponde al paquete enviado o no existe ningún archivo AF", 14);
                 exit();
             }
             if($Error==0){

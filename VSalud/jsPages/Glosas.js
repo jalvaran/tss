@@ -879,7 +879,7 @@ function GuadarGlosasTemporales(idFactura){
             document.getElementById('DivGlosar').innerHTML=data;
             document.getElementById('DivHistorialGlosas').innerHTML='';
             
-            MostrarActividades(idFactura);
+            //MostrarActividades(idFactura);
             RefrescarDiv();
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -1335,15 +1335,28 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
  * @returns {undefined}
  */
 function RefrescarDiv(){
+    document.getElementById("DivFormRespuestasGlosas").innerHTML="";
+    document.getElementById("DivRespuestasGlosasTemporal").innerHTML="";
+    document.getElementById("DivHistoricoGlosas").innerHTML="";
     
-    var CodActividad = document.getElementById("TxtActividadActiva").value;
-    var Factura = document.getElementById("TxtFacturaActiva").value;
+    if ($('#BtnActualizarFacturas').length) {
+        document.getElementById("BtnActualizarFacturas").click();
+    }
+    if ($('#BtnActualizarCuentas').length) {
+        document.getElementById("BtnActualizarCuentas").click();
+    }
+    if ($('#BtnActualizarActividades').length) {
+        document.getElementById("BtnActualizarActividades").click();
+    }
+    
+    //var CodActividad = document.getElementById("TxtActividadActiva").value;
+    //var Factura = document.getElementById("TxtFacturaActiva").value;
+    //var idBotonFactura = 'BtnMostrar_'+Factura;
     //alert("Refrescando"+CodActividad+Factura);
-    VerDetallesActividad(CodActividad,Factura);
-    MostrarActividades(Factura);
-    var idBotonFactura = 'BtnMostrar_'+Factura;
-    document.getElementById("BtnActualizarFacturas").click();
-    document.getElementById("BtnActualizarCuentas").click();
+    //VerDetallesActividad(CodActividad,Factura);
+    //MostrarActividades(Factura);
+    
+    
     //document.location.href = "#AnclaDetalleFacturas";
     //document.getElementById(idBotonFactura).click();
 }

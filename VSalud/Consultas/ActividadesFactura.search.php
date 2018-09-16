@@ -17,35 +17,22 @@ include_once("../css_construct.php");
 if( !empty($_REQUEST["idFactura"]) ){
     $css =  new CssIni("id",0);
     $obGlosas = new conexion($idUser);
+    // Consultas enviadas a traves de la URL
+    $statement="";
+    
+    
+    //Paginacion
+    if(isset($_REQUEST['Page'])){
+        $NumPage=$obGlosas->normalizar($_REQUEST['Page']);
+    }else{
+        $NumPage=1;
+    }
     
     $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
     //$css->CrearNotificacionAzul("Factura No. $idFactura", 14);
     $css->CrearInputText("TxtFacturaActiva", "hidden", "", $idFactura, "", "", "", "", 150, 30, 0, 0);
     $css->CrearInputText("TxtActividadActiva", "hidden", "", "", "", "", "", "", 150, 30, 0, 0);
-    $css->CrearTabla();
-            $css->FilaTabla(16);
-                $css->ColTabla("<strong>Actividades</strong>", 6);
-            $css->CierraFilaTabla();
-            $css->FilaTabla(12);
-                $css->ColTabla("Archivo", 1);
-                $css->ColTabla("Codigo", 1);
-                $css->ColTabla("Descripcion", 1);
-                $css->ColTabla("Valor Unitario", 1);
-                $css->ColTabla("Cantidad", 1);
-                $css->ColTabla("Valor Contratado", 1);
-                $css->ColTabla("Valor Total", 1);
-                $css->ColTabla("Número de Glosas", 1);
-                $css->ColTabla("Valor Glosado", 1);
-                $css->ColTabla("Valor Levantado", 1);
-                $css->ColTabla("Valor Aceptado", 1);
-                $css->ColTabla("Valor X Conciliar", 1);
-                $css->ColTabla("Valor A Pagar", 1);
-                $css->ColTabla("Estado", 1);
-                $css->ColTabla("Glosar", 1);
-                $css->ColTabla("Responder", 1);
-                
-                
-            $css->CierraFilaTabla();
+    
             
             $sql1="SELECT 'AC' as Archivo,id_consultas  as idArchivo,cod_consulta as Codigo,"
                     . "(SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=salud_archivo_consultas.cod_consulta) as Descripcion,"
@@ -73,9 +60,115 @@ if( !empty($_REQUEST["idFactura"]) ){
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=salud_archivo_medicamentos.EstadoGlosa) as Estado "
                     . "FROM `salud_archivo_medicamentos` WHERE `num_factura`='$idFactura' GROUP BY cod_medicamento";
             
-            $sql=$sql1." UNION ".$sql2." UNION ".$sql3." UNION ".$sql4;
-            $Consulta=$obGlosas->Query($sql); 
+            $QueryVista=$sql1." UNION ".$sql2." UNION ".$sql3." UNION ".$sql4;
             
+            $vista="DROP VIEW IF EXISTS `vista_temporal_actividades_af`";
+            $obGlosas->Query($vista);  
+            
+            $vista="CREATE VIEW vista_temporal_actividades_af AS $QueryVista";
+            $obGlosas->Query($vista);
+            
+            
+            
+            if(isset($_REQUEST['st'])){
+
+                $statement= base64_decode($_REQUEST['st']);
+                //print($statement);
+            }
+               
+            $statement=" vista_temporal_actividades_af ";
+            //Paginacion
+            $limit = 10;
+            $startpoint = ($NumPage * $limit) - $limit;
+            $VectorST = explode("LIMIT", $statement);
+            $statement = $VectorST[0]; 
+            $query = "SELECT COUNT(EstadoGlosa) as num FROM ".$statement;
+            
+            $row = $obGlosas->Query($query);
+            $row = $obGlosas->FetchAssoc($row);
+            $ResultadosTotales = $row['num'];
+
+            $statement.=" LIMIT $startpoint,$limit";
+            
+            $Consulta=$obGlosas->Query("SELECT * FROM ".$statement); 
+            
+            if($obGlosas->NumRows($Consulta)){
+                
+                $css->CrearTabla();
+                
+                $st= base64_encode($statement);
+                    $css->CrearDiv("DivActualizarCuentas", "", "center", 0, 1);
+                        $Page="Consultas/ActividadesFactura.search.php?st=$st&idFactura=$idFactura&Page=$NumPage&Carry=";
+                        $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivActividadesFacturas`,`5`);return false ;";
+                        $css->CrearBotonEvento("BtnActualizarActividades", "Actualizar Actividades", 1, "onclick", $FuncionJS, "rojo", "");
+                    $css->CerrarDiv();
+                    if($ResultadosTotales>$limit){
+
+                        $css->FilaTabla(16);
+                        print("<td colspan='4' style=text-align:center>");
+                        if($NumPage>1){
+                            $NumPage1=$NumPage-1;
+                            $Page="Consultas/ActividadesFactura.search.php?st=$st&idFactura=$idFactura&Page=$NumPage1&Carry=";
+                            $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivActividadesFacturas`,`5`);return false ;";
+
+                            $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+
+                        }
+                        print("</td>");
+                        $TotalPaginas= ceil($ResultadosTotales/$limit);
+                        print("<td colspan=9 style=text-align:center>");
+                        print("<strong>Página: </strong>");
+
+                        $Page="Consultas/ActividadesFactura.search.php?st=$st&idFactura=$idFactura&Page=";
+                        $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPageActv`,`DivActividadesFacturas`,`5`);return false ;";
+                        $css->CrearSelect("CmbPageActv", $FuncionJS,70);
+                            for($p=1;$p<=$TotalPaginas;$p++){
+                                if($p==$NumPage){
+                                    $sel=1;
+                                }else{
+                                    $sel=0;
+                                }
+                                $css->CrearOptionSelect($p, "$p", $sel);
+                            }
+
+                        $css->CerrarSelect();
+
+                        print("</td>");
+                        print("<td colspan='4' style=text-align:center>");
+                        if($ResultadosTotales>($startpoint+$limit)){
+                            $NumPage1=$NumPage+1;
+                            $Page="Consultas/ActividadesFactura.search.php?st=$st&idFactura=$idFactura&Page=$NumPage1&Carry=";
+                            $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivActividadesFacturas`,`5`);return false ;";
+                            $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                        }
+                        print("</td>");
+                       $css->CierraFilaTabla(); 
+                    }
+                
+                    $css->FilaTabla(16);
+                        $css->ColTabla("<strong>Actividades</strong>", 16);
+                    $css->CierraFilaTabla();
+                    $css->FilaTabla(12);
+                        $css->ColTabla("Archivo", 1);
+                        $css->ColTabla("Codigo", 1);
+                        $css->ColTabla("Descripcion", 1);
+                        $css->ColTabla("Valor Unitario", 1);
+                        $css->ColTabla("Cantidad", 1);
+                        $css->ColTabla("Valor Contratado", 1);
+                        $css->ColTabla("Valor Total", 1);
+                        $css->ColTabla("Número de Glosas", 1);
+                        $css->ColTabla("Valor Glosado", 1);
+                        $css->ColTabla("Valor Levantado", 1);
+                        $css->ColTabla("Valor Aceptado", 1);
+                        $css->ColTabla("Valor X Conciliar", 1);
+                        $css->ColTabla("Valor A Pagar", 1);
+                        $css->ColTabla("Estado", 1);
+                        $css->ColTabla("Glosar", 1);
+                        $css->ColTabla("Responder", 1);
+
+
+                    $css->CierraFilaTabla();
+                
             while($DatosFactura=$obGlosas->FetchArray($Consulta)){
                 $CodActividad=$DatosFactura["Codigo"];
                 $sqlGlosas="SELECT COUNT(ID) AS NumGlosas,ValorActividad,SUM(ValorGlosado) AS ValorGlosado,SUM(ValorLevantado) as ValorLevantado,SUM(ValorAceptado) as ValorAceptado ,SUM(ValorXConciliar) as ValorXConciliar,"
@@ -137,10 +230,11 @@ if( !empty($_REQUEST["idFactura"]) ){
                     
                 $css->CierraFilaTabla();
             }
-            
+       
+        
         $css->CerrarTabla();
         
-        
+        }
           
 }else{
     print("No se enviaron parametros");
