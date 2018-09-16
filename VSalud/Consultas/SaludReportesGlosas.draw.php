@@ -140,12 +140,12 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA</strong>", 1);
                         $css->ColTabla("<strong>ENTIDAD</strong>", 1);
-                        $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>FECHA FÁCTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
-                        $css->ColTabla("<strong>NUMERO DE FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>NÚMERO DE FÁCTURA</strong>", 1);
                         $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
-                        $css->ColTabla("<strong>CODIGO GLOSA</strong>", 1);
-                        $css->ColTabla("<strong>IDENTIFICACION</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO GLOSA</strong>", 1);
+                        $css->ColTabla("<strong>IDENTIFICACIÓN</strong>", 1);
                         $css->ColTabla("<strong>ESTADO</strong>", 1);
                         
                     $css->CierraFilaTabla();
@@ -295,12 +295,12 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA</strong>", 1);
                         $css->ColTabla("<strong>ENTIDAD</strong>", 1);
-                        $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>FECHA FÁCTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
-                        $css->ColTabla("<strong>NUMERO DE FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>NUMERO DE FÁCTURA</strong>", 1);
                         $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
-                        $css->ColTabla("<strong>CODIGO GLOSA</strong>", 1);
-                        $css->ColTabla("<strong>IDENTIFICACION</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO GLOSA</strong>", 1);
+                        $css->ColTabla("<strong>IDENTIFICACIÓN</strong>", 1);
                         $css->ColTabla("<strong>ESTADO</strong>", 1);
                         
                     $css->CierraFilaTabla();

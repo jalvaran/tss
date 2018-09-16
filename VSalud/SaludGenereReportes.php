@@ -26,12 +26,14 @@ print("<body>");
                 
     $css->CerrarDiv();
     $css->CrearDiv("DivPrincipal", "container", "center", 1, 1);
-    $css->CrearDiv("DivProcess", "container", "center", 1, 1);
+    $css->CrearDiv("DivProcess", "", "center", 1, 1);
     $css->CerrarDiv();
+    
     $css->CrearModal("ModalDescargar", "Descargar", "");
         $css->CrearDiv("DivDescargas", "", "center", 1, 1);
         $css->CerrarDiv();
     $css->CerrarModal();
+    
     $css->CrearNotificacionNaranja("Reportes", 16);
     $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
     
