@@ -43,7 +43,18 @@ function BuscarCuentaXCriterio(Criterio=1){
   document.getElementById("DivActividadesFacturas").innerHTML='';  
   document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
          
+  if(Criterio==1){
+        MostrarFacturas('',$('#TxtBuscarFact').val());
+    }       
   var form_data = new FormData();
+    form_data.append('idFactura', $('#TxtBuscarFact').val());
+    form_data.append('CuentaRIPS', $('#TxtBuscarCuentaRIPS').val());
+    form_data.append('CuentaGlobal', $('#TxtBuscarCuentaGlobal').val());
+    form_data.append('CmdEstadoGlosa', $('#CmdEstadoGlosa').val());
+    form_data.append('idEPS', $('#idEPS').val());
+    
+    
+    /*
      if(Criterio==1){//Si se busca por numero de factura
          form_data.append('idFactura', $('#TxtBuscarFact').val());
          MostrarFacturas('',$('#TxtBuscarFact').val());
@@ -85,6 +96,8 @@ function BuscarCuentaXCriterio(Criterio=1){
          document.getElementById("CmdEstadoGlosa").value="";
          
      }
+    */
+   
   $.ajax({
     url: './Consultas/vista_salud_cuentas_rips.search.php',
     //dataType: 'json',
@@ -191,10 +204,16 @@ function FiltreRangoFechas(){
  * @returns {undefined}
  */
 function FiltreCuentasRangoFechas(){
+    
      var form_data = new FormData();
-        form_data.append('idEPS', $('#FiltroFechaInicialCuentas').val());
+        form_data.append('idEPS', $('#idEPS').val());
         form_data.append('FechaInicial', $('#FiltroFechaInicialCuentas').val());
         form_data.append('FechaFinal', $('#FiltroFechaFinalCuentas').val());
+        form_data.append('idFactura', $('#TxtBuscarFact').val());
+        form_data.append('CuentaRIPS', $('#TxtBuscarCuentaRIPS').val());
+        form_data.append('CuentaGlobal', $('#TxtBuscarCuentaGlobal').val());
+        form_data.append('CmdEstadoGlosa', $('#CmdEstadoGlosa').val());
+        
         document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
    
         $.ajax({
@@ -227,7 +246,10 @@ function FiltreCuentasRangoFechas(){
  */
 function FiltreCuentasFechaRadicado(){
      var form_data = new FormData();
-        form_data.append('idEPS', $('#FiltroFechaInicialCuentas').val());
+        form_data.append('idEPS', $('#idEPS').val());
+        form_data.append('CuentaRIPS', $('#TxtBuscarCuentaRIPS').val());
+        form_data.append('CuentaGlobal', $('#TxtBuscarCuentaGlobal').val());
+        form_data.append('CmdEstadoGlosa', $('#CmdEstadoGlosa').val());
         form_data.append('FechaRadicado', $('#FiltroFechaRadicadoCuentas').val());
         document.getElementById("DivCuentas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
    

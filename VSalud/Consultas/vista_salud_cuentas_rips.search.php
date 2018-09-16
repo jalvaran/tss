@@ -19,11 +19,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
     
     // Consultas enviadas a traves de la URL
     $statement="";
-    if(isset($_REQUEST['st'])){
-
-        $statement= base64_decode($_REQUEST['st']);
-        //print($statement);
-    }
+    
     
     //Paginacion
     if(isset($_REQUEST['Page'])){
@@ -43,14 +39,58 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
         }else{
             $Filtros="WHERE cod_enti_administradora='$idEPS' AND EstadoGlosa<>11";
         }
-        $statement=" vista_salud_cuentas_rips $Filtros ORDER BY Dias DESC";
+        $statement=" vista_salud_cuentas_rips $Filtros ";
        
     }
+    // por numero de factura
+    if(!empty($_REQUEST["idFactura"])){
+        $NumFactura=$obGlosas->normalizar($_REQUEST['idFactura']);
+        //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
+        $statement.="  AND `CuentaRIPS`=(SELECT CuentaRIPS FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$NumFactura' limit 1)";
+    }
+    
+    //Busco por Cuenta RIPS
+    if(!empty($_REQUEST["CuentaRIPS"])){
+        $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
+        $statement.=" AND `CuentaRIPS`='$CuentaRIPS'";
+    }
+    
+    //Busco por Cuenta Global
+    if(!empty($_REQUEST["CuentaGlobal"])){
+        $CuentaGlobal=$obGlosas->normalizar($_REQUEST['CuentaGlobal']);
+        $statement.=" AND `CuentaGlobal`='$CuentaGlobal'";
+    }
+    
+    //Busco por Estado de Glosa
+    
+    if(!empty($_REQUEST["CmdEstadoGlosa"])){
+        $idEstadoGlosa=$obGlosas->normalizar($_REQUEST['CmdEstadoGlosa']);
+        $statement.="  AND `idEstadoGlosa`='$idEstadoGlosa'";
+    }
+    
+    
+    $FechaInicial=date("Y-m-d");
+    $FechaFinal=date("Y-m-d");
+    if(!empty($_REQUEST["FechaInicial"])){
+        $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+        $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+        $statement.=" AND `FechaDesde`>='$FechaInicial' AND `FechaHasta`<='$FechaFinal'";
+    }
+    $FechaRadicado=date("Y-m-d");
+    if(!empty($_REQUEST["FechaRadicado"])){
+        $FechaRadicado=$obGlosas->normalizar($_REQUEST["FechaRadicado"]);
+       
+        $statement.=" AND `fecha_radicado`='$FechaRadicado'";
+    }
+    
+    $statement.=" ORDER BY Dias DESC ";
+    //print($statement);
+    /*
     //Busco por Cuenta Numero de Factura
     if(isset($_REQUEST["idFactura"])){
         $NumFactura=$obGlosas->normalizar($_REQUEST['idFactura']);
         //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
-        $statement=" `vista_salud_cuentas_rips` WHERE `CuentaRIPS`=(SELECT CuentaRIPS FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$NumFactura')";
+        $statement=" `vista_salud_cuentas_rips` WHERE `CuentaRIPS`=(SELECT CuentaRIPS FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$NumFactura' limit 1)";
     }
     //Busco por Cuenta RIPS
     if(isset($_REQUEST["CuentaRIPS"])){
@@ -79,6 +119,12 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
         $FechaRadicado=$obGlosas->normalizar($_REQUEST["FechaRadicado"]);
        
         $statement=" `vista_salud_cuentas_rips` WHERE `fecha_radicado`='$FechaRadicado'";
+    }
+    */
+    if(isset($_REQUEST['st'])){
+
+        $statement= base64_decode($_REQUEST['st']);
+        //print($statement);
     }
     
     $css->CrearTabla();
@@ -139,7 +185,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
             if($ResultadosTotales>$limit){
                 
                 $css->FilaTabla(16);
-                print("<td colspan='3' style=text-align:center>");
+                print("<td colspan='4' style=text-align:center>");
                 if($NumPage>1){
                     $NumPage1=$NumPage-1;
                     $Page="Consultas/vista_salud_cuentas_rips.search.php?st=$st&Page=$NumPage1&Carry=";
