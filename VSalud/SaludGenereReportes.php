@@ -45,7 +45,7 @@ print("<body>");
                 $css->FilaTabla(16);
                     print("<td colspan=2 style='text-align:center' >");
                         
-                        $css->CrearSelect("TipoReporte", "HabiliteEPS()",350);
+                        $css->CrearSelect("TipoReporte", "OcultarMostrarFiltros()",350);
                             $css->CrearOptionSelect("1", "Glosas Pendientes por Conciliar", 1);
                             $css->CrearOptionSelect("2", "Glosas Pendientes por Contestar", 0);
                             $css->CrearOptionSelect("3", "Porcentaje de valor Glosado definitivo X EPS", 0);
@@ -70,14 +70,19 @@ print("<body>");
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
                     print("<td>");
-                        
-                        $css->CrearInputText("FechaInicial", "date", "", "", "", "", "onChange", "CambiarFechaFinal()", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                        $css->CrearDiv("DivFechaInicial", "", "center", 1, 1);
+                            $css->CrearInputText("FechaInicial", "date", "", "", "", "", "onChange", "CambiarFechaFinal()", 150, 30, 0, 0,"Seleccione una Fecha Inicial",date("Y-m-d"));
+                        $css->CerrarDiv();
                     print("</td>");
                      print("<td>");
-                        $css->CrearInputText("FechaFinal", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));
+                        $css->CrearDiv("DivFechaFinal", "", "center", 1, 1);
+                            $css->CrearInputText("FechaFinal", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));
+                        $css->CerrarDiv();    
                     print("</td>");
                      print("<td>");
-                        $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "", "", 150, 30, 0, 0,"Seleccione una Cuenta RIPS");
+                        $css->CrearDiv("DivCuentaRIPS", "", "center", 1, 1);
+                            $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "", "", 150, 30, 0, 0,"Seleccione una Cuenta RIPS");
+                        $css->CerrarDiv();
                     print("</td>");
                     
                     print("<td>");

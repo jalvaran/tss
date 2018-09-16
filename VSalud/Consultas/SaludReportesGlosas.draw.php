@@ -140,9 +140,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA</strong>", 1);
                         $css->ColTabla("<strong>ENTIDAD</strong>", 1);
-                        $css->ColTabla("<strong>FECHA FÁCTURA</strong>", 1);
+                        $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
-                        $css->ColTabla("<strong>NÚMERO DE FÁCTURA</strong>", 1);
+                        $css->ColTabla("<strong>NÚMERO DE FACTURA</strong>", 1);
                         $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
                         $css->ColTabla("<strong>CÓDIGO GLOSA</strong>", 1);
                         $css->ColTabla("<strong>IDENTIFICACIÓN</strong>", 1);
@@ -295,9 +295,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA</strong>", 1);
                         $css->ColTabla("<strong>ENTIDAD</strong>", 1);
-                        $css->ColTabla("<strong>FECHA FÁCTURA</strong>", 1);
+                        $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
                         $css->ColTabla("<strong>PRESTADOR</strong>", 1);
-                        $css->ColTabla("<strong>NUMERO DE FÁCTURA</strong>", 1);
+                        $css->ColTabla("<strong>NÚMERO DE FACTURA</strong>", 1);
                         $css->ColTabla("<strong>ACTIVIDAD</strong>", 1);
                         $css->ColTabla("<strong>CÓDIGO GLOSA</strong>", 1);
                         $css->ColTabla("<strong>IDENTIFICACIÓN</strong>", 1);
@@ -451,7 +451,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     }   
                     
                     $css->FilaTabla(14);
-                        $css->ColTabla("<strong>CODIGO ENTIDAD</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO ENTIDAD</strong>", 1);
                         $css->ColTabla("<strong>NOMBRE ENTIDAD</strong>", 1);
                         $css->ColTabla("<strong>NIT</strong>", 1);
                         $css->ColTabla("<strong>TOTAL FACTURADO</strong>", 1);
@@ -604,7 +604,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     }   
                     
                     $css->FilaTabla(14);
-                        $css->ColTabla("<strong>CODIGO PRESTADOR</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO PRESTADOR</strong>", 1);
                         $css->ColTabla("<strong>NOMBRE PRESTADOR</strong>", 1);
                         $css->ColTabla("<strong>NIT</strong>", 1);
                         $css->ColTabla("<strong>TOTAL FACTURADO IPS</strong>", 1);
@@ -761,7 +761,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     }   
                     
                     $css->FilaTabla(14);
-                        $css->ColTabla("<strong>REGIMEN</strong>", 1);
+                        $css->ColTabla("<strong>RÉGIMEN</strong>", 1);
                         $css->ColTabla("<strong>TOTAL GLOSADO</strong>", 1);
                         $css->ColTabla("<strong>TOTAL GLOSADO DEFINITIVO</strong>", 1);
                         $css->ColTabla("<strong>DIFERENCIA</strong>", 1);
@@ -914,8 +914,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     }   
                     
                     $css->FilaTabla(14);
-                        $css->ColTabla("<strong>CODIGO GLOSA</strong>", 1);
-                        $css->ColTabla("<strong>DESCRIPCION</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO GLOSA</strong>", 1);
+                        $css->ColTabla("<strong>DESCRIPCIÓN</strong>", 1);
                         $css->ColTabla("<strong>CANTIDAD</strong>", 1);
                         
                                                 

@@ -61,3 +61,37 @@ function DibujeReporte(){
     
 }
 
+function OcultarMostrarFiltros(){
+    var TipoReporte= document.getElementById("TipoReporte").value;
+    if(TipoReporte==1){
+        document.getElementById("DivEPS").style.display="block";
+        document.getElementById("DivFechaInicial").style.display="block";
+        document.getElementById("DivFechaFinal").style.display="block";
+        document.getElementById("DivCuentaRIPS").style.display="block";
+    }
+    
+    if(TipoReporte==2){
+        document.getElementById("DivEPS").style.display="block";
+        document.getElementById("DivFechaInicial").style.display="block";
+        document.getElementById("DivFechaFinal").style.display="block";
+        document.getElementById("DivCuentaRIPS").style.display="block";
+    }
+    
+    if(TipoReporte >= 3 && TipoReporte <= 5){
+        document.getElementById("DivEPS").style.display="none";
+        document.getElementById("DivFechaInicial").style.display="none";
+        document.getElementById("DivFechaFinal").style.display="none";
+        document.getElementById("DivCuentaRIPS").style.display="none";
+    }
+    
+    if(TipoReporte==6){
+        document.getElementById("DivEPS").style.display="block";
+        document.getElementById("DivFechaInicial").style.display="none";
+        document.getElementById("DivFechaFinal").style.display="none";
+        document.getElementById("DivCuentaRIPS").style.display="none";
+    }
+    
+    
+    
+}
+

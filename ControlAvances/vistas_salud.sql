@@ -327,8 +327,8 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        (SELECT razon_social FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as nombre_prestador, 
        (SELECT num_ident_prest_servicio FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as nit_prestador, 
        
-       (SELECT nit FROM salud_eps WHERE salud_eps.nit=(SELECT cod_prestador) LIMIT 1) as nit_administrador,
-       (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.nit=(SELECT cod_prestador) LIMIT 1) as regimen_eps,
+       (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) as nit_administrador,
+       (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) as regimen_eps,
        
        (SELECT num_ident_usuario FROM vista_salud_facturas_usuarios WHERE vista_salud_facturas_usuarios.num_factura=(SELECT factura) LIMIT 1) as identificacion,
        
