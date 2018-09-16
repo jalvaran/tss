@@ -1055,7 +1055,7 @@ function Footer(){
 	
 	function CrearSelectChosen($Nombre, $VarSelect){
           $Ancho='200px'; 
-          $PlaceHolder="Seleccione una opcion"; 
+          $PlaceHolder="Seleccione una opción"; 
           if(isset($VarSelect["Ancho"])){
              $Ancho=$VarSelect["Ancho"];
           }

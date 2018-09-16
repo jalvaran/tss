@@ -14,3 +14,15 @@ if(isset($_REQUEST['Login'])){
         print("OK");
     }
 }
+
+if(isset($_REQUEST['Tipo'])){
+    $key=$obCon->normalizar($_REQUEST['Tipo']);
+    $sql="SELECT Tipo FROM usuarios_tipo WHERE Tipo LIKE '$key'";
+    $consulta=$obCon->Query($sql);
+    $Datos=$obCon->FetchArray($consulta);
+    if($Datos["Tipo"]<>''){
+        print("Error");
+    }else{
+        print("OK");
+    }
+}

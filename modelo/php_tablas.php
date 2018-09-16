@@ -1035,8 +1035,17 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
             $excluir=1;
         }
         $TipoText="text";
+        $Min="";
+        $Max="";
+        $Step="";
         if(isset($VarInsert[$tbl][$NombreCol]["TipoText"])){
             $TipoText=$VarInsert[$tbl][$NombreCol]["TipoText"];
+            if($TipoText=='number'){
+                if(isset($VarInsert[$tbl][$NombreCol]["Min"])){
+                    $Min=$VarInsert[$tbl][$NombreCol]["Min"];
+                }
+                
+            }
         }
         if(!$excluir){  //Si la columna no está excluida
            $DateBox=0;
@@ -1113,7 +1122,17 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                         $this->css->CrearUpload($NombreCol);
                     }else{
                         if($DateBox==0){
-                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");    
+                            
+                            if($TipoText=="number"){
+                            
+                                $this->css->CrearInputNumber($NombreCol, $TipoText, "", $Value, $NombreCol, "", "", "", $lengCampo."0", 30, $ReadOnly, $Required, $Min, $Max, $Step);
+                            }else{
+
+                                $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");
+
+                            }
+                            
+                            //$this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");    
                         }
                         if($DateBox==1){
                             $this->css->CrearInputFecha("", $NombreCol, date("Y-m-d"), 100, 30, "");
@@ -1182,9 +1201,19 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
         $this->css->FilaTabla(14);
         $excluir=0;
         $TipoText="text";
+        $Min="";
+        $Max="";
+        $Step="";
         if(isset($VarEdit[$tbl][$NombreCol]["TipoText"])){
             $TipoText=$VarEdit[$tbl][$NombreCol]["TipoText"];
+            if($TipoText=='number'){
+                if(isset($VarEdit[$tbl][$NombreCol]["Min"])){
+                    $Min=$VarEdit[$tbl][$NombreCol]["Min"];
+                }
+                
+            }
         }
+        
         if(isset($VarEdit[$tbl]["Excluir"][$NombreCol]) or $NombreCol=="Updated" or $NombreCol=="Sync"){
             $excluir=1;
         }
@@ -1231,7 +1260,7 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                 $VectorSel["Evento"]="";
                 $VectorSel["Funcion"]="";
                 $VectorSel["Required"]=$Required;
-                print("campos obligatorios * <br>");
+                print("campo obligatorio * <br>");
                 $this->css->CrearSelectChosen($NombreCol, $VectorSel);
                 //$this->css->CrearSelect2($VectorSel);
                 $this->css->CrearOptionSelect("", "Seleccione Una Opcion", 0);
@@ -1249,7 +1278,14 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                     $this->css->CrearUpload($NombreCol);
                 }else{
                     if($lengCampo<100){
-                        $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required);
+                        if($TipoText=="number"){
+                            
+                            $this->css->CrearInputNumber($NombreCol, $TipoText, "", $Value, $NombreCol, "", "", "", $lengCampo."0", 30, $ReadOnly, $Required, $Min, $Max, $Step);
+                        }else{
+                             
+                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required);
+                  
+                        }
                     }else{
                         $this->css->CrearTextArea("$NombreCol", "", $Value, "", "$NombreCol", "black", "", "","100",$lengCampo."0", $ReadOnly, 1);
                     }

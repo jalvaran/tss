@@ -15,11 +15,16 @@ $VarInsert[$TablaConfig]["Login"]["Required"]=1;
 $VarInsert[$TablaConfig]["Password"]["Required"]=1;
 $VarInsert[$TablaConfig]["TipoUser"]["Required"]=1;
 
-$TablaConfig="empresa_pro";
+$TablaConfig="empresapro";
 
 $VarInsert[$TablaConfig]["RazonSocial"]["Required"]=1;
 $VarInsert[$TablaConfig]["NIT"]["Required"]=1;
+$VarInsert[$TablaConfig]["NIT"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["CodigoPrestadora"]["TipoText"]="number";
+$VarInsert[$TablaConfig]["CodigoPrestadora"]["Min"]=0;
+$VarInsert[$TablaConfig]["NIT"]["Min"]=0;
 $VarInsert[$TablaConfig]["CodigoPrestadora"]["Required"]=1;
+
 $VarInsert[$TablaConfig]["Direccion"]["Required"]=1;
 $VarInsert[$TablaConfig]["Telefono"]["Required"]=1;
 $VarInsert[$TablaConfig]["Celular"]["Required"]=1;

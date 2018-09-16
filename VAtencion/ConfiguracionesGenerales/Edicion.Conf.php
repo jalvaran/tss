@@ -38,5 +38,21 @@ $Vector[$TablaConfig]["Ciudad"]["Vinculo"]=1;   //Indico que esta columna tendra
 $Vector[$TablaConfig]["Ciudad"]["TablaVinculo"]="cod_municipios_dptos";  //tabla de donde se vincula
 $Vector[$TablaConfig]["Ciudad"]["IDTabla"]="Ciudad"; //id de la tabla que se vincula
 $Vector[$TablaConfig]["Ciudad"]["Display"]="Ciudad"; //Columna que quiero mostrar
+
+$Vector[$TablaConfig]["FacturaSinInventario"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector[$TablaConfig]["FacturaSinInventario"]["TablaVinculo"]="respuestas_condicional";  //tabla de donde se vincula
+$Vector[$TablaConfig]["FacturaSinInventario"]["IDTabla"]="Valor"; //id de la tabla que se vincula
+$Vector[$TablaConfig]["FacturaSinInventario"]["Display"]="Valor"; //Columna que quiero mostrar
  
+
+$Vector[$TablaConfig]["CXPAutomaticas"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector[$TablaConfig]["CXPAutomaticas"]["TablaVinculo"]="respuestas_condicional";  //tabla de donde se vincula
+$Vector[$TablaConfig]["CXPAutomaticas"]["IDTabla"]="Valor"; //id de la tabla que se vincula
+$Vector[$TablaConfig]["CXPAutomaticas"]["Display"]="Valor"; //Columna que quiero mostrar
+ 
+
+$Vector[$TablaConfig]["NIT"]["TipoText"]="number";
+$Vector[$TablaConfig]["CodigoPrestadora"]["TipoText"]="number";
+$Vector[$TablaConfig]["CodigoPrestadora"]["Min"]=0;
+$Vector[$TablaConfig]["NIT"]["Min"]=0;
 ?>
