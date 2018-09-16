@@ -5,6 +5,12 @@ if ($('#Login').length) {
     
 }
 
+if ($('#RutaImagen').length) {
+    
+    document.getElementById("RutaImagen").addEventListener("change", ValideImagenEmpresa);
+    
+}
+
 function VerificaLogin(){
     var form_data = new FormData();
         form_data.append('idAccion', 1);
@@ -36,4 +42,20 @@ function VerificaLogin(){
             alert(thrownError);
           }
       })
+}
+
+
+function ValideImagenEmpresa(){
+    var fileInput = document.getElementById('RutaImagen');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        alertify.alert('Solo se permiten archivos con extension .jpeg/.jpg/.png/.gif');
+        fileInput.value = '';
+        document.getElementById('BtnGuardarRegistro').disabled=true;
+        return false;
+    }else{
+        document.getElementById('BtnGuardarRegistro').disabled=false;
+        alertify.success("Imagen permitida");
+    }
 }

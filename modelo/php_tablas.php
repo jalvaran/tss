@@ -1084,9 +1084,9 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $VectorSel["Evento"]="";
                     $VectorSel["Funcion"]="";
                     $VectorSel["Required"]=$Required;
-                    $VarSelect["Ancho"]=100;
+                    $VarSelect["Ancho"]=300;
                     $VarSelect["PlaceHolder"]="Seleccione una opcion";
-                    if($tbl=="salud_eps" or $tbl=="salud_cups"){
+                    if($tbl=="salud_eps" OR $tbl=="salud_cups"){
                         $this->css->CrearSelect2($VectorSel);
                     }else{
                         $this->css->CrearSelectChosen($NombreCol, $VarSelect);
@@ -1104,7 +1104,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $this->css->CerrarSelect(); 
                 }else{
                     
-                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreCol", "black", "", "", $lengCampo."0", 30, 1, $Required,"Digite $NombreCol",$lengCampo);
+                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreCol", "black", "", "", $lengCampo."0", 30, 1, $Required,"Digite $NombreCol","");
                         
                 }
             }else{
@@ -1113,7 +1113,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                         $this->css->CrearUpload($NombreCol);
                     }else{
                         if($DateBox==0){
-                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol",$lengCampo);    
+                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");    
                         }
                         if($DateBox==1){
                             $this->css->CrearInputFecha("", $NombreCol, date("Y-m-d"), 100, 30, "");

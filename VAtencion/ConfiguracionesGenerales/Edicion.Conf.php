@@ -33,11 +33,10 @@ $Vector[$TablaConfig]["Regimen"]["Vinculo"]=1;   //Indico que esta columna tendr
 $Vector[$TablaConfig]["Regimen"]["TablaVinculo"]="empresapro_regimenes";  //tabla de donde se vincula
 $Vector[$TablaConfig]["Regimen"]["IDTabla"]="Regimen"; //id de la tabla que se vincula
 $Vector[$TablaConfig]["Regimen"]["Display"]="Regimen"; //Columna que quiero mostrar
-/*
+
 $Vector[$TablaConfig]["Ciudad"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
 $Vector[$TablaConfig]["Ciudad"]["TablaVinculo"]="cod_municipios_dptos";  //tabla de donde se vincula
 $Vector[$TablaConfig]["Ciudad"]["IDTabla"]="Ciudad"; //id de la tabla que se vincula
 $Vector[$TablaConfig]["Ciudad"]["Display"]="Ciudad"; //Columna que quiero mostrar
- * 
- */
+ 
 ?>

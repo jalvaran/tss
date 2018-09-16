@@ -275,9 +275,9 @@ class CssIni{
 	function CrearOptionSelect($value,$label,$selected){
 		
 		if($selected==1)
-			print('<option value='.$value.' selected>'.$label.'</option>');
+			print('<option value="'.$value.'" selected>'.$label.'</option>');
 		else
-			print('<option value='.$value.'>'.$label.'</option>');
+			print('<option value="'.$value.'">'.$label.'</option>');
 		
 	}
         
@@ -286,9 +286,9 @@ class CssIni{
 	function CrearOptionSelect2($value,$label,$javascript,$selected){
 		
 		if($selected==1)
-			print('<option value='.$value.'  selected '.$javascript.'>'.$label.'</option>');
+			print('<option value="'.$value.'"  selected '.$javascript.'>'.$label.'</option>');
 		else
-			print('<option value='.$value.' '.$javascript.'>'.$label.' </option>');
+			print('<option value="'.$value.'" '.$javascript.'>'.$label.' </option>');
 		
 	}
 	
