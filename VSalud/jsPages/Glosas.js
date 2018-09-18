@@ -1489,7 +1489,8 @@ function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
         type: 'post',
         success: function(data){
 
-            alertify.alert(data);            
+            alertify.alert(data);  
+            document.getElementById("DivGlosar").innerHTML=data;
             RefrescarDiv();
 
         },

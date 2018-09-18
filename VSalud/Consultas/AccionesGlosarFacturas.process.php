@@ -115,7 +115,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $idGlosa=$obGlosas->EditaGlosaRespuestaTemporal($idGlosaTemp,$TipoArchivo,$DatosGlosaTemp["idArchivo"],$idFactura,$DatosGlosaTemp["CodigoActividad"],$DatosGlosaTemp["NombreActividad"],$TotalActividad,$DatosGlosaTemp["EstadoGlosa"],$FechaIPS,$FechaAuditoria,$Observaciones,$CodigoGlosa,$ValorEPS,$ValorAceptado,0,$ValorConciliar,$destino,$idUser,"");
             //$idGlosa=$obGlosas->RegistraGlosaRespuestaTemporal($idGlosaTemp,$TipoArchivo,$idFactura, $idActividad,$TotalActividad, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorConciliar,$Observaciones,$destino, $idUser,"");
             //$obGlosas->EliminarGlosaTemporal($idGlosaTemp);
-            print("Glosa inicial editada en la tabla temporal");
+            print("Edición Realizada con éxito");
         break;
         
         case 5:// Guarda las glosas de la tabla temporal a la real
@@ -457,7 +457,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             }
             $obGlosas->EditaGlosaInicial($idGlosaInicial, $idFactura, $CodActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             $obGlosas->EditaTablaControlRespuestasGlosas($idGlosaRespuesta, $DatosGlosaRespuesta["TipoArchivo"], $idGlosaInicial, $idFactura, $CodActividad, $DatosGlosaRespuesta["DescripcionActividad"], $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, 0, 0, $ValorEPS, $destino, $idUser, "");
-            print("Glosa inicial editada en la tabla temporal");
+            print("Edición realizada con éxito");
         break; 
         
         case 15:// Edita las repuestas a glosas  
@@ -496,19 +496,20 @@ if( !empty($_REQUEST["idAccion"]) ){
             $Estado=$DatosGlosa["EstadoGlosa"];
             if($ValorConciliar==0){
                 
-                $Estado=5;
+                $Estado=7;
                
             }
             $obGlosas->EditaTablaControlRespuestasGlosas($idGlosa, $TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $Estado, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
             $Estado=$obGlosas->CalcularEstadoActividad($DatosGlosa["num_factura"], $DatosGlosa["CodigoActividad"], "");
             if($Estado==''){
-                $Estado=5;
+                $Estado=7;
             }
             $idGlosaInicial=$DatosGlosa["idGlosa"];
             $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
             $obGlosas->Query($sql);
-            print("<h4 style='color:orange'>Edicion Realizada</h4>");
+            $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
+            print("<h4 style='color:orange'>Edición Realizada</h4>");
         break;
         
         case 16:// Conciliar X actividad

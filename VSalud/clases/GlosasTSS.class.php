@@ -403,6 +403,7 @@ class Glosas extends conexion{
         $Datos["idArchivo"]=$idArchivo;//
         $Datos["Observaciones"]=$Observaciones;//
         $Datos["Soporte"]=$destino;//
+        $Datos["idUser"]=$idUser;//
                
         $sql=$this->getSQLReeplace($tab, $Datos);
         
@@ -1124,6 +1125,6 @@ class Glosas extends conexion{
         
     }
     
-    
+   
     //Fin Clases
 }
