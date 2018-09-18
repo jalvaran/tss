@@ -223,7 +223,7 @@ SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administra
 (SELECT MAX(`fecha_factura`)) AS FechaHasta,`fecha_radicado`,`numero_radicado`, 
 (COUNT(`id_fac_mov_generados`)) AS NumFacturas,sum(`valor_neto_pagar`) as Total, MIN(EstadoGlosa) as idEstadoGlosa,
 (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = MIN(`EstadoGlosa`)) as EstadoGlosa,
-(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS = salud_archivo_facturacion_mov_generados.CuentaRIPS) as Dias
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS = salud_archivo_facturacion_mov_generados.CuentaRIPS AND (SELECT EstadoGlosa)<=4) as Dias
 FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
 
 DROP VIEW IF EXISTS `vista_af_semaforo`;
@@ -362,4 +362,17 @@ WHERE vista_salud_facturas_usuarios.num_factura=salud_archivo_facturacion_mov_ge
  AS identificacion_usuario 
 
 FROM `salud_archivo_facturacion_mov_generados`;
+
+
+DROP VIEW IF EXISTS `vista_salud_cuentas_rips`;
+CREATE VIEW vista_salud_cuentas_rips AS 
+SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administradora`,(SELECT MIN(`fecha_factura`)) AS FechaDesde,
+(SELECT sigla_nombre FROM salud_eps WHERE salud_eps.cod_pagador_min = cod_enti_administradora) as NombreCortoEPS,
+(SELECT MAX(`fecha_factura`)) AS FechaHasta,`fecha_radicado`,`numero_radicado`, 
+(COUNT(`id_fac_mov_generados`)) AS NumFacturas,sum(`valor_neto_pagar`) as Total, MIN(EstadoGlosa) as idEstadoGlosa,
+(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = MIN(`EstadoGlosa`)) as EstadoGlosa,
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS = salud_archivo_facturacion_mov_generados.CuentaRIPS AND (vista_glosas_iniciales.EstadoGlosa=1 or vista_glosas_iniciales.EstadoGlosa=3)  ) as Dias
+FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
+
+
 

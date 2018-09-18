@@ -259,19 +259,19 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
                 print("<td style='text-align:center'>");
                     //print($CuentaRIPS);
-                    $sql="SELECT MAX(DiasTranscurridos) AS Dias FROM vista_glosas_iniciales WHERE CuentaRIPS='$CuentaRIPS' AND EstadoGlosa=1";
-                    $DatosSemaforo=$obGlosas->Query($sql);
-                    $DatosSemaforo=$obGlosas->FetchArray($DatosSemaforo);
-                    
-                    if($DatosSemaforo["Dias"]>=0 and $DatosSemaforo["Dias"]<=5 and $DatosCuenta["idEstadoGlosa"]==1){
+                    //$sql="SELECT MAX(DiasTranscurridos) AS Dias FROM vista_glosas_iniciales WHERE CuentaRIPS='$CuentaRIPS' AND EstadoGlosa=1";
+                    //$DatosSemaforo=$obGlosas->Query($sql);
+                    //$DatosSemaforo=$obGlosas->FetchArray($DatosSemaforo);
+                    $imagerute="";
+                    if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 AND $DatosCuenta["Dias"]<>''){
                         $imagerute="../images/verde.png";
                         $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                     }
-                    if($DatosSemaforo["Dias"]>=6 and $DatosSemaforo["Dias"]<=10 and $DatosCuenta["idEstadoGlosa"]==1){
+                    if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
                         $imagerute="../images/naranja.png";
                         $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                     }
-                    if($DatosSemaforo["Dias"]>=11 and  $DatosCuenta["idEstadoGlosa"]==1){
+                    if($DatosCuenta["Dias"]>=11){
                         $imagerute="../images/rojo.png";
                         $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                     }
