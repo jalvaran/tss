@@ -218,7 +218,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $obGlosas->RegistraGlosaRespuestaTemporal($idGlosa,$TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $DatosGlosa["EstadoGlosa"], $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
-            print("<h4 style='color:orange'>Respuesta a Glosas Editada en la tabla temporal</h4>");
+            print("Edición Realizada");
         break;
         case 9:// Guarda las respuesta de las glosas de la tabla temporal a la real
             $obGlosas->GuardaConciliacionesTemporalAReal($idUser, "");

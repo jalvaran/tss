@@ -775,7 +775,15 @@ function DibujeFormularioEdicionActividades(idGlosa,idFormulario){
             for (var selector in config) {
                 $(selector).chosen(config[selector]);
             }
-            
+            if ($('#ValorAceptado').length) {
+                    document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
+                }
+                if ($('#ValorLevantado').length) {
+                    document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
+                }
+                if ($('#ValorEPS').length) {
+                    document.getElementById("ValorEPS").onkeypress= CampoNumerico;
+                }
             document.getElementById("CodigoGlosa_chosen").style.width = "400px";      
         }
             
@@ -964,11 +972,19 @@ function RespuestaGlosa(idGlosa,idFormulario=6){
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
                 }
-            
+
+                if ( $("#ValorAceptado").length > 0 ) {
+                    document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
+                }
+                if ( $("#ValorLevantado").length > 0 ) {
+                    document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
+                }
                 
-                document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
-                document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
-                document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
+                if ( $("#CodigoGlosa_chosen").length > 0 ) {
+                    
+                    document.getElementById("CodigoGlosa_chosen").style.width = "400px";
+                }
+                
                 DibujeRespuestaTemporal('');//Dibuja la tabla temporal de las respuestas a las glosas
             }
             
@@ -1035,7 +1051,15 @@ function Numeros(string){//Solo numeros
  */
 function ValidaValoresConciliacion(){
        
-    document.getElementById('BtnConciliarGlosa').disabled=false;
+    if ( $("#BtnConciliarGlosa").length > 0 ) {
+        document.getElementById('BtnConciliarGlosa').disabled=false;
+    }
+    
+    if ( $("#BtnEditarContraGlosa").length > 0 ) {
+        document.getElementById('BtnEditarContraGlosa').disabled=false;
+    }
+
+    
     var ValorLevantado =Numeros(document.getElementById('ValorLevantado').value);
     if(ValorLevantado==''){
         ValorLevantado=0;
@@ -1057,7 +1081,13 @@ function ValidaValoresConciliacion(){
     document.getElementById('ValorConciliar').value=ValorXConciliar;
     
     if(ValorLevantado > ValorGlosado){
-        document.getElementById('BtnConciliarGlosa').disabled=true;
+        if ( $("#BtnConciliarGlosa").length > 0 ) {
+            document.getElementById('BtnConciliarGlosa').disabled=true;
+        }
+
+        if ( $("#BtnEditarContraGlosa").length > 0 ) {
+            document.getElementById('BtnEditarContraGlosa').disabled=true;
+        }
         alertify.alert("El valor levantado no puede ser mayor al Valor Glosado");
         //document.getElementById('ValorConciliar').value='';
         return 1;
@@ -1151,7 +1181,7 @@ function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
  * @returns {undefined}
  */
 function DibujeRespuestaTemporal(idGlosa){
-    
+    document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
     var form_data = new FormData();       
         
         form_data.append('idGlosa', idGlosa); //id de la Glosa que se está respodiendo
@@ -1205,6 +1235,7 @@ function EliminarRepuestaGlosaTemporal(idGlosa,idAccion){
           if (data != "") { 
               
                 alertify.success(data);
+                document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
                 DibujeRespuestaTemporal('');
           }else {
             alert("No hay resultados para la consulta");
@@ -1245,7 +1276,17 @@ function DibujeFormularioEdicionRespuestas(idGlosa,idFormulario){
                 for (var selector in config) {
                     $(selector).chosen(config[selector]);
                 }
-            
+                if ( $("#ValorAceptado").length > 0 ) {
+                    document.getElementById("ValorAceptado").onkeypress= CampoNumerico;
+                }
+                if ( $("#ValorEPS").length > 0 ) {
+                    document.getElementById("ValorEPS").onkeypress= CampoNumerico;
+                }
+                if ( $("#ValorLevantado").length > 0 ) {
+                    document.getElementById("ValorLevantado").onkeypress= CampoNumerico;
+                }
+                
+                
                 document.getElementById("CodigoGlosa_chosen").style.width = "400px"; 
             }
             
@@ -1422,7 +1463,7 @@ function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0)
  */
 function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
     
-    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    //document.getElementById('DivHistoricoGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
@@ -1511,7 +1552,7 @@ function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
  */
 function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
     
-    document.getElementById('DivHistoricoGlosas').innerHTML='';
+    //document.getElementById('DivHistoricoGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
@@ -1610,7 +1651,7 @@ function EditarRespuestaGlosa(idGlosa){
  * @returns {undefined}
  */
 function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodActividad){
-    document.getElementById('DivHistorialGlosas').innerHTML='';
+    
     document.getElementById('DivHistoricoGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
