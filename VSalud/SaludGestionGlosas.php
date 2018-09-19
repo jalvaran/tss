@@ -26,8 +26,10 @@ print("<body>");
         $css->CreaBotonDesplegable("DialFacturasDetalle", "Abrir","BtnModalFacturas");
         $css->CreaBotonDesplegable("ModalGlosar", "Abrir","BtnModalGlosar");
         
+        
     $css->CerrarDiv();
-    
+    $css->CrearInputText("TxtCuentaActiva", "hidden", "", "", "", "", "", "", "", "", 0, 0);
+    $css->CrearInputText("TxtFacturaActiva", "hidden", "", "", "", "", "", "", "", "", 0, 0);
     $css->CrearModalAmplio("DialFacturasDetalle", "", "");
     
         $css->CrearDiv("DivHistoricoGlosas1", "container", "center", 1, 1);

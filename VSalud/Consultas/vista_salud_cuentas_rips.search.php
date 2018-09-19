@@ -255,7 +255,9 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 $css->ColTabla($DatosCuenta["numero_radicado"], 1);
                 $css->ColTabla(number_format($DatosCuenta["NumFacturas"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["Total"]), 1);
-                $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
+                print("<td><div id='EstadoGlosaCuenta_$DatosCuenta[CuentaRIPS]'>");
+                    print($DatosCuenta["EstadoGlosa"]);
+                print("</td></div>");
                 $CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
                 print("<td style='text-align:center'>");
                     //print($CuentaRIPS);
@@ -263,18 +265,20 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                     //$DatosSemaforo=$obGlosas->Query($sql);
                     //$DatosSemaforo=$obGlosas->FetchArray($DatosSemaforo);
                     $imagerute="";
-                    if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 AND $DatosCuenta["Dias"]<>''){
-                        $imagerute="../images/verde.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
-                    if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
-                        $imagerute="../images/naranja.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
-                    if($DatosCuenta["Dias"]>=11){
-                        $imagerute="../images/rojo.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
+                    print("<div id='DivSemaforoCuenta_$DatosCuenta[CuentaRIPS]'>");
+                        if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 AND $DatosCuenta["Dias"]<>''){
+                            $imagerute="../images/verde.png";
+                            $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                        }
+                        if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
+                            $imagerute="../images/naranja.png";
+                            $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                        }
+                        if($DatosCuenta["Dias"]>=11){
+                            $imagerute="../images/rojo.png";
+                            $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                        }
+                    $css->CerrarDiv();
                 print("</td>");
                 //$CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
                 print("<td style='text-align:center'>");

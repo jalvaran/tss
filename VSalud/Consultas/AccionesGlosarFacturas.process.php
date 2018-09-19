@@ -553,6 +553,52 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
             print("<h4 style='color:orange'>Conciliacion X Actividad Realizada</h4>");
         break;
+        case 17:
+            $CuentaRIPS=$obGlosas->normalizar($_REQUEST["CuentaRIPS"]);
+            $DatosCuentas=$obGlosas->ValorActual("vista_salud_cuentas_rips", "EstadoGlosa", " CuentaRIPS='$CuentaRIPS'");
+            print($DatosCuentas["EstadoGlosa"]);
+        break;
+        case 18:
+            $Factura=$obGlosas->normalizar($_REQUEST["Factura"]);
+            $DatosFactura=$obGlosas->ValorActual("vista_af_semaforo", "EstadoGlosa", " num_factura='$Factura'");
+            $Estado=$DatosFactura["EstadoGlosa"];
+            $DatosEstado=$obGlosas->ValorActual("salud_estado_glosas", "Estado_glosa", " ID='$Estado'");
+            print($DatosEstado["Estado_glosa"]);
+        break;
+        case 19: //Semaforo de la cuenta
+            $CuentaRIPS=$obGlosas->normalizar($_REQUEST["CuentaRIPS"]);
+            $DatosCuenta=$obGlosas->ValorActual("vista_salud_cuentas_rips", "Dias", " CuentaRIPS='$CuentaRIPS'");
+            if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5){
+                $imagerute="../images/verde.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
+                $imagerute="../images/naranja.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            if($DatosCuenta["Dias"]>=11){
+                $imagerute="../images/rojo.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            
+        break;
+        case 20://Semaforo para factura
+            $Factura=$obGlosas->normalizar($_REQUEST["Factura"]);
+            $DatosCuenta=$obGlosas->ValorActual("vista_af_semaforo", "Dias", " num_factura='$Factura'");
+            if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5){
+                $imagerute="../images/verde.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
+                $imagerute="../images/naranja.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            if($DatosCuenta["Dias"]>=11){
+                $imagerute="../images/rojo.png";
+                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+            }
+            
+        break;
     }
           
 }else{

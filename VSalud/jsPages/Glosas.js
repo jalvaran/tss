@@ -128,7 +128,8 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @returns {undefined}
  */
 function MostrarFacturas(CuentaRIPS,NumFactura=''){
-    document.getElementById("TxtBuscarCuentaRIPS").value=CuentaRIPS;
+    //document.getElementById("TxtBuscarCuentaRIPS").value=CuentaRIPS;
+    document.getElementById("TxtCuentaActiva").value=CuentaRIPS;
     document.getElementById("DivDetallesUsuario").innerHTML='';
     document.getElementById("DivActividadesFacturas").innerHTML='';
     document.getElementById("DivHistoricoGlosas").innerHTML='';
@@ -316,6 +317,7 @@ function FiltreFacturasXEstadoGlosa(){
  * @returns {undefined}
  */
 function MostrarActividades(idFactura){
+    document.getElementById('TxtFacturaActiva').value=idFactura;
     document.getElementById('DivHistoricoGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
@@ -1372,6 +1374,170 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
 }
 
 /**
+ * Refresca el estado de la cuenta
+ * @returns {undefined}
+ */
+function RefrescaEstadoCuenta(){
+    
+    var CuentaRIPS = document.getElementById("TxtCuentaActiva").value;
+    
+    var form_data = new FormData();
+        
+        form_data.append('idAccion', 17); //Se solicita el estado de la cuenta
+        form_data.append('CuentaRIPS', CuentaRIPS);
+        
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+                var idDivEstadoCuenta="EstadoGlosaCuenta_"+CuentaRIPS;
+                
+                document.getElementById(idDivEstadoCuenta).innerHTML=data;
+                           
+                
+          }else{
+            alertify.alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * Refresca el estado de la factura
+ * @returns {undefined}
+ */
+function RefrescaEstadoFactura(){
+    
+    var Factura = document.getElementById("TxtFacturaActiva").value;
+    
+    var form_data = new FormData();
+        
+        form_data.append('idAccion', 18); //Se solicita el estado de la cuenta
+        form_data.append('Factura', Factura);
+        
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+                var idDivEstadoFactura="EstadoGlosaFactura_"+Factura;
+                
+                document.getElementById(idDivEstadoFactura).innerHTML=data;
+                           
+                
+          }else{
+            alertify.alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * Refresca El Semaforo de las cuentas
+ * @returns {undefined}
+ */
+function RefrescaSemaforoCuenta(){
+    
+    var CuentaRIPS = document.getElementById("TxtCuentaActiva").value;
+    
+    var form_data = new FormData();
+        
+        form_data.append('idAccion', 19); //Se solicita el estado de la cuenta
+        form_data.append('CuentaRIPS', CuentaRIPS);
+        
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+                var idDivSemaforoCuenta="DivSemaforoCuenta_"+CuentaRIPS;
+                
+                document.getElementById(idDivSemaforoCuenta).innerHTML=data;
+                           
+                
+          }else{
+            alertify.alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
+ * Refresca Semaforo de la factura
+ * @returns {undefined}
+ */
+function RefrescaSemaforoFactura(){
+    
+    var Factura = document.getElementById("TxtFacturaActiva").value;
+    
+    var form_data = new FormData();
+        
+        form_data.append('idAccion', 20); //Se solicita el estado de la cuenta
+        form_data.append('Factura', Factura);
+        
+        $.ajax({
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        async:false,
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            
+          if (data != "") { 
+                var idDivSemaforoFactura="DivSemaforoFactura_"+Factura;
+                
+                document.getElementById(idDivSemaforoFactura).innerHTML=data;
+                           
+                
+          }else{
+            alertify.alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+/**
  * Refresca los div donde están dibujadas las facturas y las actividades, 
  * se utiliza para despues de una accion que cambie un estado o valor
  * @returns {undefined}
@@ -1380,13 +1546,19 @@ function RefrescarDiv(){
     document.getElementById("DivFormRespuestasGlosas").innerHTML="";
     document.getElementById("DivRespuestasGlosasTemporal").innerHTML="";
     document.getElementById("DivHistoricoGlosas").innerHTML="";
+    RefrescaEstadoCuenta();
+    RefrescaEstadoFactura();
+    RefrescaSemaforoCuenta();
+    RefrescaSemaforoFactura();
     
-    if ($('#BtnActualizarFacturas').length) {
+    /*
+    if ($('#idDivEstadoFactura').length) {
         document.getElementById("BtnActualizarFacturas").click();
     }
     if ($('#BtnActualizarCuentas').length) {
         document.getElementById("BtnActualizarCuentas").click();
     }
+    */
     if ($('#BtnActualizarActividades').length) {
         document.getElementById("BtnActualizarActividades").click();
     }

@@ -198,20 +198,26 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
                 $css->ColTabla($DatosCuenta["identificacion_usuario"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
-                $css->ColTabla($DatosCuenta["EstadoGlosa"], 1);
-                print("<td style='text-align:center'>");
-                    if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 and $DatosCuenta["idGlosa"]==1){
-                        $imagerute="../images/verde.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
-                    if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 and $DatosCuenta["idGlosa"]==1){
-                        $imagerute="../images/naranja.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
-                    if($DatosCuenta["Dias"]>=11 and  $DatosCuenta["idGlosa"]==1){
-                        $imagerute="../images/rojo.png";
-                        $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
-                    }
+                print("<td><div id='EstadoGlosaFactura_$DatosCuenta[num_factura]'>");
+                    print($DatosCuenta["EstadoGlosa"]);
+                print("</td></div>");
+                
+                
+                    print("<td style='text-align:center'>");
+                        print("<div id='DivSemaforoFactura_$DatosCuenta[num_factura]'>");
+                            if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 and $DatosCuenta["idGlosa"]==1){
+                                $imagerute="../images/verde.png";
+                                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                            }
+                            if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 and $DatosCuenta["idGlosa"]==1){
+                                $imagerute="../images/naranja.png";
+                                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                            }
+                            if($DatosCuenta["Dias"]>=11 and  $DatosCuenta["idGlosa"]==1){
+                                $imagerute="../images/rojo.png";
+                                $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
+                            }
+                    print("</td>");
                 print("</td>");
                 $idFactura=$DatosCuenta["num_factura"];   
                 print("<td style='text-align:center'>");
