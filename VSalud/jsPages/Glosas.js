@@ -12,8 +12,8 @@ function CampoNumerico(e){
     //this.value = this.value.replace(no_digito , '');
     
 	var key = window.Event ? e.which : e.keyCode
-
-	return ((key >= 48 && key <= 57) || (key >= 1 && key <= 31) || key == 127)
+        
+	return ((key >= 48 && key <= 57) || (key >= 0 && key <= 31) || key == 127)
 
 }
 
@@ -401,7 +401,7 @@ function DevolverFactura(idFactura){
                 ok     : "Devolver",
                 cancel : "Cancelar"
             } });
-    alertify.confirm("Estás seguro que deseas devolver la Factura "+idFactura+"?<br><strong>NOTA: Esta acción es irreversible. <strong>",
+    alertify.confirm("Está seguro que desea devolver la Factura "+idFactura+"?<br><strong>NOTA: Esta acción es irreversible. <strong>",
     function (e) {
         if (e) {
             if(ValidarFecha('FechaDevolucion')){
@@ -415,7 +415,7 @@ function DevolverFactura(idFactura){
             AccionesGlosarFacturas(idFactura,1);
                         
         } else {
-            alertify.error("Se canceló la devolución de la factura"+idFactura);
+            alertify.error("Se canceló la devolución de la factura: "+idFactura);
 
         }
     });

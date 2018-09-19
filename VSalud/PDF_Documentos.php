@@ -16,9 +16,13 @@ if(isset($_REQUEST["idDocumento"])){
             $obDoc->PDF_CobroPrejuridico($idCobro);
             
         break;
-        case 2: //Se va a generar un cobro prejuridico juridico
+        case 2: //Se generan los reportes de glosas
             $TipoReporte=$obCon->normalizar($_REQUEST["TipoReporte"]);
             $st= base64_decode($_REQUEST["st"]);
+            if($TipoReporte==2){
+                $st= urldecode($_REQUEST["st"]);
+            }
+            
             
             $obDoc->Reportes_PDF($TipoReporte,$st,$idUser,"");
         break;

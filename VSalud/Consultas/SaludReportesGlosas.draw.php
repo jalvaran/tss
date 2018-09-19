@@ -212,13 +212,15 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if($CuentaRIPS<>'000000'){
                 $Condicional2.=$Condicional2." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
+            $statement =" `vista_salud_respuestas` $Condicional $Condicional2";
+            //print($statement."<br>");
             
             if(isset($_REQUEST['st'])){
 
-                $statement= base64_decode($_REQUEST['st']);
-                //print($statement);
+                $statement = urldecode($_REQUEST['st']);
+                //print($statement."<br>");
             }
+            
             $limit = 10;
             $startpoint = ($NumPage * $limit) - $limit;
             $VectorST = explode("LIMIT", $statement);
@@ -239,7 +241,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($statement);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
@@ -247,7 +249,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 //Paginacion
                 if($Resultados){
 
-                    $st= base64_encode($statement);
+                    $st= urlencode($statement);
                     if($ResultadosTotales>$limit){
 
                         $css->FilaTabla(14);
