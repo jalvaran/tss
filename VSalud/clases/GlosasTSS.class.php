@@ -965,13 +965,14 @@ class Glosas extends conexion{
         $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", $EstadoGlosaFactura, "num_factura", $NumFactura);
         
         //Actualizo el estado de las actividades
-        $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura' AND CodigoActividad='$CodigoActividad'";
-        $Datos=$this->Query($sql);
-        $Datos= $this->FetchArray($Datos);
-        $Estado=$Datos["MinEstado"];
-        if($Estado=="" or $Estado==12){
-            $Estado=8;
-        }
+        $Estado= $this->CalcularEstadoActividad($NumFactura, $CodigoActividad, "");
+        //$sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura' AND CodigoActividad='$CodigoActividad'";
+        //$Datos=$this->Query($sql);
+        //$Datos= $this->FetchArray($Datos);
+        //$Estado=$Datos["MinEstado"];
+        //if($Estado=="" or $Estado==12){
+          //  $Estado=8;
+        //}
         if($TipoArchivo=="AC"){
 
             $this->update("salud_archivo_consultas", "EstadoGlosa", $Estado, " WHERE num_factura='$NumFactura' AND cod_consulta='$CodigoActividad'");
