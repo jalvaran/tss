@@ -174,7 +174,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $obGlosas->RegistraGlosaRespuestaTemporal('',$TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 2, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             
-            print("<h4 style='color:blue'>Respuesta a Glosas Registrada en la tabla temporal</h4>");
+            print("<h4 style='color:blue'>Registro temporal ingresado</h4>");
         break;
         
         case 7://Elimina una respuesta a glosa de la tabla temporal
@@ -282,7 +282,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $obGlosas->RegistraGlosaRespuestaTemporal('',$TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 3, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
-            print("<h4 style='color:blue'>Respuesta a Glosas Registrada en la tabla temporal</h4>");
+            print("<h4 style='color:blue'>Registros Registrados</h4>");
         break;
         
         case 11:// Guarda las repuestas a glosas a la tabla temporal 
@@ -336,7 +336,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $obGlosas->RegistraGlosaRespuestaTemporal('',$TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 4, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
-            print("<h4 style='color:blue'>Respuesta a Glosas Registrada en la tabla temporal</h4>");
+            print("<h4 style='color:blue'>Registro temporal ingresado</h4>");
         break;
         
         case 12:// Guarda las conciliaciones en la tabla temporal

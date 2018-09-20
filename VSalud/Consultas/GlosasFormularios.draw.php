@@ -40,7 +40,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center'>");
                     //$css->CrearSelectTable("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "", "", "cod_glosa", 0);
                         $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=800 AND cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "");
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=800 AND cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "");
                         $css->CerrarDiv();
                         
                     print("</td>");
@@ -1617,6 +1617,54 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                 
             $css->CerrarTabla();
+        break;
+        case 19://Mostrar El historial de glosas de una actividad
+            $idFactura=$obGlosas->normalizar($_REQUEST["num_factura"]);
+            $CodActividad=$obGlosas->normalizar($_REQUEST["CodigoActividad"]);
+            
+            $consulta=$obGlosas->ConsultarTabla("salud_glosas_iniciales", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' ");
+            if($obGlosas->NumRows($consulta)){
+                $css->CrearTabla();
+                while($DatosGlosasIniciales=$obGlosas->FetchAssoc($consulta)){
+                    $idGlosaInicial=$DatosGlosasIniciales["ID"];
+                    
+                    $ConsultaVista=$obGlosas->ConsultarTabla("vista_salud_respuestas", " WHERE id_glosa_inicial='$idGlosaInicial' ");
+                    if($obGlosas->NumRows($ConsultaVista)){
+                        
+                            
+                            $css->FilaTabla(14);
+                                $css->ColTabla("<strong>Código</strong>", 1);
+                                $css->ColTabla("<strong>Descripción</strong>", 1);
+                                $css->ColTabla("<strong>Valor Glosado</strong>", 1);
+                                $css->ColTabla("<strong>Valor Levantado</strong>", 1);
+                                $css->ColTabla("<strong>Valor Aceptado</strong>", 1);
+                                $css->ColTabla("<strong>Valor X Conciliar</strong>", 1);
+                                $css->ColTabla("<strong>Valor Conciliado</strong>", 1);
+                                $css->ColTabla("<strong>Estado</strong>", 1);
+                            $css->CierraFilaTabla();
+                            $VerGlosaInicial=1;
+                        while($DatosVista=$obGlosas->FetchAssoc($ConsultaVista)){
+                            
+                            $css->FilaTabla(14);
+                                $css->ColTabla($DatosVista["cod_glosa_respuesta"], 1);
+                                $css->ColTabla(utf8_encode($DatosVista["descripcion_glosa_respuesta"]), 1);
+                                $css->ColTabla(number_format($DatosVista["valor_glosado_eps"]), 1);
+                                $css->ColTabla(number_format($DatosVista["valor_levantado_eps"]), 1);
+                                $css->ColTabla(number_format($DatosVista["valor_aceptado_ips"]), 1);
+                                $css->ColTabla(number_format($DatosVista["valor_x_conciliar"]), 1);
+                                $css->ColTabla(number_format($DatosVista["valor_glosado_eps"]-$DatosVista["valor_levantado_eps"]), 1);
+                                $css->ColTabla($DatosVista["descripcion_estado"], 1);
+                            $css->CierraFilaTabla();
+                            
+                        }
+                        
+                    }
+                    
+                }
+                $css->CerrarTabla();
+            }else{
+                $css->CrearNotificacionAzul("No hay resultados", 16);
+            }
         break;
     }
     

@@ -282,7 +282,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                 print("</td>");
                 //$CuentaRIPS=ltrim($DatosCuenta["CuentaRIPS"], "0");
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrarCuenta_$CuentaRIPS", "ver cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]');CambiarColorBtnCuentas('BtnMostrarCuenta_$CuentaRIPS');", "naranja", "");
+                     $css->CrearBotonEvento("BtnMostrarCuenta_$CuentaRIPS", "Ver Cuenta", 1, "onClick", "MostrarFacturas('$DatosCuenta[CuentaRIPS]');CambiarColorBtnCuentas('BtnMostrarCuenta_$CuentaRIPS');", "naranja", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }

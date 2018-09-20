@@ -18,10 +18,10 @@ if(isset($_REQUEST["idDocumento"])){
         break;
         case 2: //Se generan los reportes de glosas
             $TipoReporte=$obCon->normalizar($_REQUEST["TipoReporte"]);
-            $st= base64_decode($_REQUEST["st"]);
-            if($TipoReporte==2){
+            //$st= base64_decode($_REQUEST["st"]);
+            //if($TipoReporte==2){
                 $st= urldecode($_REQUEST["st"]);
-            }
+            //}
             
             
             $obDoc->Reportes_PDF($TipoReporte,$st,$idUser,"");

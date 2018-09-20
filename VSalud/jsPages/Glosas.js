@@ -1900,3 +1900,45 @@ function ConciliarActividad(idFactura,CodActividad,idArchivo,TipoArchivo){
           }
       })
 }
+/**
+ * Verhistorial de glosas de una factura
+ * @param {type} idFactura
+ * @returns {undefined}
+ */
+ 
+function VerHistoricoGlosas(idFactura,CodigoActividad){
+    document.location.href = "#AnclaFormularioRespuestas";
+    document.getElementById("DivFormRespuestasGlosas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+  
+    console.log('entra');
+    var form_data = new FormData();       
+        
+        form_data.append('idFormulario', 19);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
+        
+        form_data.append('num_factura', idFactura);
+        form_data.append('CodigoActividad', CodigoActividad);
+        $.ajax({
+        //async:false,
+        url: './Consultas/GlosasFormularios.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+            if (data != "") { 
+                //document.getElementById("DivHistorialGlosas").innerHTML='Conciliacion';
+                document.getElementById("DivFormRespuestasGlosas").innerHTML=data;
+                
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error",0);
+            alertify.alert(xhr.status);
+            alertify.alert(thrownError);
+          }
+      })
+}

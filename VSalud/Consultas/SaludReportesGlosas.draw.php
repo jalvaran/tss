@@ -84,7 +84,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($st_reporte);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
@@ -399,7 +399,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($st_reporte);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
@@ -552,7 +552,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($st_reporte);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
@@ -709,7 +709,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($st_reporte);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
@@ -862,7 +862,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->CrearTabla();
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
-                        $st1= base64_encode($st_reporte);
+                        $st1= urlencode($st_reporte);
                         $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");

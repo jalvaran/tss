@@ -221,7 +221,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("</td>");
                 $idFactura=$DatosCuenta["num_factura"];   
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar_$idFactura", "ver factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
+                     $css->CrearBotonEvento("BtnMostrar_$idFactura", "Ver Factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
                 print("</td>");
             $css->CierraFilaTabla();
         }

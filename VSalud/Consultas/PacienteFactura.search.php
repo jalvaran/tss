@@ -107,7 +107,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                 $css->ColTabla("Total EPS", 1);
                 $css->ColTabla("Total Usuario", 1);
                 $css->ColTabla("Valor Total", 1);
-                $css->ColTabla("Devolver", 1);
+                $css->ColTabla("Devolución", 1);
                 
             $css->CierraFilaTabla();
             $css->FilaTabla(12);
@@ -132,7 +132,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                         $Enable=0;
                         print("<strong>Ya no es posible devolver esta Factura por tiempo<br><strong>");
                     }
-                    $css->CrearBotonEvento("BtnDevolverFactura", "Devolver", $Enable, "onClick", "DibujeFormulario(1,`$idFactura`)", "rojo", "");
+                    $css->CrearBotonEvento("BtnDevolverFactura", "Devolución", $Enable, "onClick", "DibujeFormulario(1,`$idFactura`)", "rojo", "");
                 print("</td>");
                 $css->CrearDiv("Div", "", "", 1, 1);
                 $css->CerrarDiv();

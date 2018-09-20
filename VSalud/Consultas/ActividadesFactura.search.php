@@ -163,7 +163,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                         $css->ColTabla("Valor X Conciliar", 1);
                         $css->ColTabla("Valor A Pagar", 1);
                         $css->ColTabla("Estado", 1);
-                        $css->ColTabla("Glosar", 1);
+                        $css->ColTabla("Glosa", 1);
                         $css->ColTabla("Responder", 1);
 
 
@@ -210,10 +210,8 @@ if( !empty($_REQUEST["idFactura"]) ){
                             $Enable=0;
                             print("<strong>Glosa fuera de tiempo<br><strong>");
                         }
-                        $css->CrearBotonEvento("BtnGlosarActividad", "Glosar", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
-                    
-                        print("</td>");
-                    print("<td>");
+                        $css->CrearBotonEvento("BtnGlosarActividad", "&nbsp Glosa &nbsp", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
+                        print("<br><br>");
                         $Enable=0;
                         if($DatosValoresGlosas["NumGlosas"]>0){
                             $Enable=1;
@@ -223,7 +221,20 @@ if( !empty($_REQUEST["idFactura"]) ){
                         }
                         $css->CrearBotonEvento("BtnResponderActividad_$idArchivo", "Detalles ", $Enable, "onClick", "VerDetallesActividad('$CodActividad','$idFactura');CambiarColorBtnDetalles('BtnResponderActividad_$idArchivo');", "verde", "");
                        
+                        print("</td>");
+                    print("<td>");
+                        $Enable=0;
+                        if($DatosValoresGlosas["NumGlosas"]>0){
+                            $Enable=1;
+                        }
+                        
+                        $css->CrearBotonEvento("BtnHistorial_$idArchivo", "Historial ", $Enable, "onClick", "VerHistoricoGlosas('$idFactura','$CodActividad');CambiarColorBtnDetalles('BtnResponderActividad_$idArchivo');", "rojo", "");
+                       
                         print("<br><br>");
+                        $Enable=0;
+                        if($DatosFactura["EstadoGlosa"]>=5){
+                            $Enable=0;
+                        }
                         $css->CrearBotonEvento("BtnConciliarActividad", "Conciliar", $Enable, "onClick", "DibujeFormularioConciliarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "azul", "");
                     
                     print("</td>");
