@@ -178,7 +178,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->ColTabla("<strong>IPS</strong>", 1);
             $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
             $css->ColTabla("<strong>Cuenta Global</strong>", 1);
-            $css->ColTabla("<strong>Numero de Factura</strong>", 1);
+            $css->ColTabla("<strong>Número de Factura</strong>", 1);
             $css->ColTabla("<strong>Identificación</strong>", 1);
             $css->ColTabla("<strong>Valor</strong>", 1);
             $css->ColTabla("<strong>Estado</strong>", 1);

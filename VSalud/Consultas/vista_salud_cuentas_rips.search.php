@@ -233,11 +233,11 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
             $css->ColTabla("<strong>Fecha Inicial</strong>", 1,'C');
             $css->ColTabla("<strong>Fecha Final</strong>", 1,'C');
             $css->ColTabla("<strong>Fecha de Radicado</strong>", 1,'C');
-            $css->ColTabla("<strong>Numero de Radicado</strong>", 1,'C');
+            $css->ColTabla("<strong>Número de Radicado</strong>", 1,'C');
             $css->ColTabla("<strong>Cantidad de Facturas</strong>", 1,'C');
             $css->ColTabla("<strong>Total Cuenta</strong>", 1,'C');
             $css->ColTabla("<strong>Estado Glosa</strong>", 1,'C');
-            $css->ColTabla("<strong>Semaforo</strong>", 1,'C');
+            $css->ColTabla("<strong>Semáforo</strong>", 1,'C');
             $css->ColTabla("<strong>Abrir</strong>", 1,'C');
             
         $css->CierraFilaTabla();
