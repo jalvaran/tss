@@ -816,7 +816,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_glosa_inicial`<>'') AND cod_estado<9 ";
+            $Condicional=" WHERE (`CodigoGlosa`<>'') AND EstadoGlosa<9 ";
             $Condicional2='';
             if($FechaInicial<>''){
                 $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
@@ -830,7 +830,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
-            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -842,7 +842,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $VectorST = explode("LIMIT", $statement);
             $statement = $VectorST[0]; 
             $st_reporte=$statement;
-            $statement.=" GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC ";
+            $statement.=" GROUP BY CodigoGlosa ORDER BY (COUNT(CodigoGlosa)) DESC ";
             $query = "SELECT COUNT(*) as `num` FROM {$statement}";
             
             $row = $obGlosas->NumRows($obGlosas->Query($query));
@@ -850,8 +850,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             //print($ResultadosTotales);
             $statement.=" LIMIT $startpoint,$limit";
             
-            $query="SELECT cod_glosa_inicial, descripcion_glosa_inicial,"
-                    . "COUNT(cod_glosa_inicial) AS Cantidad ";
+            $query="SELECT CodigoGlosa, DescripcionGlosa,"
+                    . "COUNT(CodigoGlosa) AS Cantidad ";
             //print("$query FROM $statement");      
             $consulta=$obGlosas->Query("$query FROM $statement");
             
@@ -925,9 +925,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
                         $css->FilaTabla(12);
-                            $css->ColTabla($DatosConsulta["cod_glosa_inicial"], 1);
+                            $css->ColTabla($DatosConsulta["CodigoGlosa"], 1);
                             
-                            $css->ColTabla(utf8_encode($DatosConsulta["descripcion_glosa_inicial"]),1);
+                            $css->ColTabla(utf8_encode($DatosConsulta["DescripcionGlosa"]),1);
                             $css->ColTabla(number_format($DatosConsulta["Cantidad"]), 1);
                             
                         $css->CierraFilaTabla();

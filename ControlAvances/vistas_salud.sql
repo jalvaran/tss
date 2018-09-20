@@ -379,6 +379,8 @@ DROP VIEW IF EXISTS `vista_glosas_iniciales_reportes`;
 CREATE VIEW vista_glosas_iniciales_reportes AS 
 SELECT *,
 (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas 
-WHERE salud_archivo_conceptos_glosas.cod_glosa=salud_glosas_iniciales.CodigoGlosa LIMIT 1) AS DescripcionGlosa
+WHERE salud_archivo_conceptos_glosas.cod_glosa=salud_glosas_iniciales.CodigoGlosa LIMIT 1) AS DescripcionGlosa,
+(SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados 
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS CodigoEps
 FROM `salud_glosas_iniciales`;
 

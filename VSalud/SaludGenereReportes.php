@@ -93,9 +93,9 @@ print("<body>");
             $css->CerrarTabla();
        
         
-    print('<div id="DivConsultas" style="display:scroll; position:fixed; top:50px; right:10px;" >');
+    
     //print("</div>");    
-    //$css->CrearDiv("DivConsultas", "container", "center", 1, 1);
+    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
     $css->CerrarDiv();    
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts
