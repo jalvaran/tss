@@ -144,7 +144,8 @@ print("<body>");
                     print("</td>");   
                 $css->CierraFilaTabla();
             $css->CerrarTabla();
-        
+     print('<div id="DivLinkDescargas" style="display:scroll; position:fixed; top:50%; right:10px;"></div>');
+		   
     $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
     $css->CerrarDiv();    
     $css->CerrarDiv();//Cerramos contenedor Principal

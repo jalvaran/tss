@@ -85,7 +85,11 @@ if($_REQUEST["idAccion"]){
             
             $imagerute="../images/download.gif";
             $page="ArchivosTemporales/Reportes/$NombreArchivo";
-            $css->CrearLink($page, "_blank", "Descargar");
+            //$css->CrearLink($page, "_blank", "Descargar");
+            print("<a href='$page' target='_blank'>");
+            $css->CrearBotonEvento("BtnDescargar", "Bajar", 1, "", "", "naranja", "");
+            //$css->CrearBoton("BtnDescargar", "Bajar");
+            print("</a>");
             //$css->CrearImageLink($page, $imagerute, "_blank");
             $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
         break; 

@@ -137,6 +137,7 @@ function EnviarCuentas(){
  * @returns {undefined}
  */
 function EnviarFacturas(){
+    document.getElementById("DivConsultas").innerHTML='';     
     document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
 
     if($('#CmbFacturas').val()==null || $('#CmbFacturas').val()==''){
@@ -441,7 +442,8 @@ function ComprimirRespuestas(){
             $('.progress-bar').css('width','100%').attr('aria-valuenow', '100');  
             document.getElementById('LyProgresoCMG').innerHTML="100%";
             //document.getElementById("DivDescargas").innerHTML=data;
-            document.getElementById("DivProcess").innerHTML=data;
+            document.getElementById("DivLinkDescargas").innerHTML=data;
+            document.getElementById("DivProcess").innerHTML='';
             document.getElementById("DivConsultas").innerHTML='Proceso Terminado';                
             
             
