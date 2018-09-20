@@ -231,7 +231,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
                     $Back="white";
                     $h=0;
                 }
-                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],2);
+                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],4);
                                
                 $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
                     $html.="<td>";
@@ -301,7 +301,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
                     $Back="white";
                     $h=0;
                 }
-                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],2);
+                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],4);
                                
                 $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
                     $html.="<td>";

@@ -449,7 +449,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla(number_format($DatosConsulta["TotalFacturado"]), 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalGlosado"]), 1);
                             print("<td>");
-                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],2);
+                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],4);
                                 print("$Porcentaje%");
                             print("</td>");
                         
@@ -581,7 +581,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla(number_format($DatosConsulta["TotalFacturado"]), 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalGlosado"]), 1);
                             print("<td>");
-                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],2);
+                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],4);
                                 print("$Porcentaje%");
                             print("</td>");
                         
