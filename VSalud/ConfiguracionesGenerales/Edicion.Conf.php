@@ -302,6 +302,7 @@ $Vector[$TablaConfig]["tipo_regimen"]["Display"]="Regimen";                    /
 $Vector[$TablaConfig]["tipo_regimen"]["Predeterminado"]="N";
 
 $TablaConfig="salud_cups";
+$Vector[$TablaConfig]["Excluir"]["ID"]=1;
 $Vector[$TablaConfig]["Excluir"]["grupo"]=1;
 $Vector[$TablaConfig]["Excluir"]["categoria"]=1;
 $Vector[$TablaConfig]["Excluir"]["subcategoria"]=1;

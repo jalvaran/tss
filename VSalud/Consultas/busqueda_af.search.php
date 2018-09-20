@@ -210,7 +210,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["TotalGlosadoFactura"]), 1);
                 print("<td><div id='EstadoGlosaFactura_$DatosCuenta[num_factura]'>");
-                    print($DatosCuenta["EstadoGlosa"]);
+                    print($DatosCuenta["DescripcionEstadoGlosa"]);
                 print("</td></div>");
                 
                 

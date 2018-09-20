@@ -472,7 +472,7 @@ function ComprimirRespuestas(){
             
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alertify.alert("Error al tratar de borrar el archivo",0);
+            alertify.alert("Error de generar el reporte de respuestas",0);
             alert(xhr.status);
             alert(thrownError);
           }

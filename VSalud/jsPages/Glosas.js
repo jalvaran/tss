@@ -349,7 +349,7 @@ function BuscarUsuarioFactura(idFactura){
         form_data.append('idFactura', idFactura);
         document.getElementById('DivDetallesUsuario').innerHTML="Buscando Paciente...";
         $.ajax({
-        async:false,    
+        //async:false,    
         url: './Consultas/PacienteFactura.search.php',
         //dataType: 'json',
         cache: false,
@@ -382,7 +382,7 @@ function BuscarActividadesFactura(idFactura){
         form_data.append('idFactura', idFactura);
         document.getElementById('DivActividadesFacturas').innerHTML="Buscando Actividades...";
         $.ajax({
-        async:false,     
+        //async:false,     
         url: './Consultas/ActividadesFactura.search.php',
         //dataType: 'json',
         cache: false,
@@ -449,7 +449,7 @@ function DibujeFormulario(idFormulario,idFactura){
         form_data.append('idFactura', idFactura);
         form_data.append('idFormulario', idFormulario);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -522,7 +522,7 @@ function AccionesGlosarFacturas(idFactura,idAccion,TipoArchivo='',idActividad=''
         form_data.append('idAccion', idAccion); //Devolver una factura
         form_data.append('idFactura', idFactura);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -632,7 +632,7 @@ function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormula
         form_data.append('idFactura', idFactura);
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -736,7 +736,7 @@ function EliminarGlosaTemporal(idGlosa,idFactura,idActividad,TipoArchivo){
         form_data.append('idAccion', 3);
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -776,7 +776,7 @@ function DibujeFormularioEdicionActividades(idGlosa,idFormulario){
         
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -854,7 +854,7 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
         form_data.append('idAccion', idAccion); //Devolver una factura
         form_data.append('idGlosaTemp', idGlosaTemp);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -892,7 +892,7 @@ function GuadarGlosasTemporales(idFactura){
         document.getElementById("DivGlosar").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
   
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -973,7 +973,7 @@ function RespuestaGlosa(idGlosa,idFormulario=6){
         form_data.append('idFormulario', idFormulario); //Formulario donde se dibujan las actividades glosadas de esta factura
                 
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1168,7 +1168,7 @@ function AgregarRespuestaGlosaTemporal(idGlosa,idAccion=6){
         }
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -1206,7 +1206,7 @@ function DibujeRespuestaTemporal(idGlosa){
         form_data.append('idFormulario', 7);  //Formulario donde se dibuja la tabla temporal de las respuestas a las glosas
               
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1242,7 +1242,7 @@ function EliminarRepuestaGlosaTemporal(idGlosa,idAccion){
         form_data.append('idAccion', idAccion); //7 para eliminar una respuesta a glosa temporal
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1278,7 +1278,7 @@ function DibujeFormularioEdicionRespuestas(idGlosa,idFormulario){
         form_data.append('idFormulario', idFormulario);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
                 
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1330,7 +1330,7 @@ function EditarRespuestaGlosaTemporal(idGlosa){
             alertify.error("Valor Levantado superior al valor X conciliar");
         }
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -1364,7 +1364,7 @@ function GuadarRespuestasTemporales(idActividad,idFactura){
   
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1404,7 +1404,7 @@ function RefrescaEstadoCuenta(){
         
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1445,7 +1445,7 @@ function RefrescaEstadoFactura(){
         
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1486,7 +1486,7 @@ function RefrescaSemaforoCuenta(){
         
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1527,7 +1527,7 @@ function RefrescaSemaforoFactura(){
         
         $.ajax({
         url: './Consultas/AccionesGlosarFacturas.process.php',
-        async:false,
+        //async:false,
         cache: false,
         contentType: false,
         processData: false,
@@ -1612,7 +1612,7 @@ function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0)
                             form_data.append('SoloRespuesta', SoloRespuesta);
                             form_data.append('Observaciones', str); 
                             $.ajax({
-                            async:false,
+                            //async:false,
                             url: './Consultas/AccionesGlosarFacturas.process.php',
                             //dataType: 'json',
                             cache: false,
@@ -1664,7 +1664,7 @@ function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
         form_data.append('CodActividad', CodActividad);
         form_data.append('Descripcion', Descripcion);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1709,7 +1709,7 @@ function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
         form_data.append('idAccion', 14); 
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -1753,7 +1753,7 @@ function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
         form_data.append('idFormulario', idFormulario);  //Formulario para dibujar el fomulario para la edicion de una repuesta de glosa
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1808,7 +1808,7 @@ function EditarRespuestaGlosa(idGlosa){
          
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,
@@ -1856,7 +1856,7 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
         form_data.append('num_factura', idFactura);
         form_data.append('CodigoActividad', CodActividad);
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/GlosasFormularios.draw.php',
         //dataType: 'json',
         cache: false,
@@ -1900,7 +1900,7 @@ function ConciliarActividad(idFactura,CodActividad,idArchivo,TipoArchivo){
         form_data.append('DescripcionActividad', DescripcionActividad);
         
         $.ajax({
-        async:false,
+        //async:false,
         url: './Consultas/AccionesGlosarFacturas.process.php',
         //dataType: 'json',
         cache: false,

@@ -22,10 +22,16 @@ $Vector["VerRegistro"]["Deshabilitado"]=1;
  * 
  */
 
-$Vector["Excluir"]["fecha_hora_registro"]=1;   //Indico que esta columna no se mostrará
-$Vector["Excluir"]["user"]=1;   //Indico que esta columna no se mostrará
-       
-$Vector["Manual"]["Vinculo"]=1;   //Indico que esta columna tendra un vinculo
+$Vector["Excluir"]["fecha_hora_registro"]=1;    //Indico que esta columna no se mostrará
+$Vector["Excluir"]["user"]=1;                   //Indico que esta columna no se mostrará
+$Vector["Excluir"]["ID"]=1;                    //Indico que esta columna no se mostrará
+$Vector["Excluir"]["grupo"]=1;                 //Indico que esta columna no se mostrará
+$Vector["Excluir"]["subgrupo"]=1;              //Indico que esta columna no se mostrará
+$Vector["Excluir"]["categoria"]=1;             //Indico que esta columna no se mostrará
+$Vector["Excluir"]["subcategoria"]=1;          //Indico que esta columna no se mostrará
+$Vector["Excluir"]["codigo_ley"]=1;            //Indico que esta columna no se mostrará
+
+$Vector["Manual"]["Vinculo"]=1;                 //Indico que esta columna tendra un vinculo
 $Vector["Manual"]["TablaVinculo"]="salud_manuales_tarifarios";  //tabla de donde se vincula
 $Vector["Manual"]["IDTabla"]="ID"; //id de la tabla que se vincula
 $Vector["Manual"]["Display"]="Nombre"; 
