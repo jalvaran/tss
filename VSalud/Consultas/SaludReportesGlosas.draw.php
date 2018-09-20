@@ -818,12 +818,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }
             $Condicional=" WHERE (`CodigoGlosa`<>'') AND EstadoGlosa<9 ";
             $Condicional2='';
-            if($FechaInicial<>''){
-                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
-            }
-            if($FechaFinal<>''){
-                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
-            }
+            
             if($idEPS<>''){
                 $Condicional2=$Condicional2." AND cod_administrador = '$idEPS' ";
             }
@@ -834,7 +829,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             
             if(isset($_REQUEST['st'])){
 
-                $statement= base64_decode($_REQUEST['st']);
+                $statement= urldecode($_REQUEST['st']);
                 //print($statement);
             }
             $limit = 10;
@@ -870,7 +865,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 //Paginacion
                 if($Resultados){
 
-                    $st= base64_encode($statement);
+                    $st= urlencode($statement);
                     if($ResultadosTotales>$limit){
 
                         $css->FilaTabla(14);

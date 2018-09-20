@@ -411,9 +411,9 @@ $html.=$DatosFormatos["CuerpoFormato"];
                 
             $html.="</tr>";
             
-            $query="SELECT cod_glosa_inicial, descripcion_glosa_inicial,"
-                    . "COUNT(cod_glosa_inicial) AS Cantidad ";
-            $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_glosa_inicial ORDER BY (COUNT(cod_glosa_inicial)) DESC");
+            $query="SELECT CodigoGlosa, DescripcionGlosa,"
+                    . "COUNT(CodigoGlosa) AS Cantidad ";
+            $consulta= $this->obCon->Query("$query FROM $st GROUP BY CodigoGlosa ORDER BY (COUNT(CodigoGlosa)) DESC");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
                 if($h==0){
@@ -426,10 +426,10 @@ $html.=$DatosFormatos["CuerpoFormato"];
                                
                 $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
                     $html.="<td>";
-                    $html.=$DatosRespuestas["cod_glosa_inicial"];
+                    $html.=$DatosRespuestas["CodigoGlosa"];
                     $html.="</td>";
                     $html.="<td>";
-                    $html.= utf8_encode($DatosRespuestas["descripcion_glosa_inicial"]);
+                    $html.= utf8_encode($DatosRespuestas["DescripcionGlosa"]);
                     $html.="</td>";
                     $html.="<td>";
                     $html.=number_format($DatosRespuestas["Cantidad"]);
