@@ -30,12 +30,12 @@ print("<body>");
     $css->CerrarDiv();
     $css->CrearInputText("TxtCuentaActiva", "hidden", "", "", "", "", "", "", "", "", 0, 0);
     $css->CrearInputText("TxtFacturaActiva", "hidden", "", "", "", "", "", "", "", "", 0, 0);
-    $css->CrearModalAmplio("DialFacturasDetalle", "", "");
+    //$css->CrearModalAmplio("DialFacturasDetalle", "", "");
     
-        $css->CrearDiv("DivHistoricoGlosas1", "container", "center", 1, 1);
-        $css->CerrarDiv();
+      //  $css->CrearDiv("DivHistoricoGlosas1", "container", "center", 1, 1);
+        //$css->CerrarDiv();
            
-    $css->CerrarModal();
+   // $css->CerrarModal();
     
     $css->CrearModalAmplio("ModalGlosar", "", "");
         $css->CrearDiv("DivGlosar", "", "center", 1, 1);

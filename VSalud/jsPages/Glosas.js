@@ -429,6 +429,7 @@ function DevolverFactura(idFactura){
  */
 function DibujeFormulario(idFormulario,idFactura){
         document.getElementById('BtnModalGlosar').click();
+        document.getElementById('BtnCierreModal').focus();
         var form_data = new FormData();       
         
         form_data.append('idFactura', idFactura);
@@ -594,6 +595,7 @@ function GlosarActividad(TipoArchivo,idActividad,idFactura,CodActividad){
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
+    document.getElementById('BtnCierreModal').focus();
     
     DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,2); //Dibuja el formulario para iniciar el registro de una nueva Glosa
     DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,3); //Dibuja las glosas temporales
@@ -1639,6 +1641,7 @@ function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
+    document.getElementById('BtnCierreModal').focus();
     
     var form_data = new FormData();       
         
@@ -1728,6 +1731,7 @@ function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
+    document.getElementById('BtnCierreModal').focus();
     
     var form_data = new FormData();       
         
@@ -1828,6 +1832,7 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
+    document.getElementById('BtnCierreModal').focus();
     
     var form_data = new FormData();       
         
