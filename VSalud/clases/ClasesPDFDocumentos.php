@@ -220,7 +220,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
             
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
-                   . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
+                   . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_administrador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -290,7 +290,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
             
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
-                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
+                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_prestador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -354,8 +354,8 @@ $html.=$DatosFormatos["CuerpoFormato"];
             $html.="</tr>";
             
             $query="SELECT regimen_eps,"
-                    . "SUM(valor_glosado_eps) AS TotalGlosado,"
-                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosadoDefinitivo ";
+                    . "SUM(ValorGlosado) AS TotalGlosado,"
+                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosadoDefinitivo ";
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY regimen_eps");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){

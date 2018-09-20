@@ -381,6 +381,20 @@ SELECT *,
 (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas 
 WHERE salud_archivo_conceptos_glosas.cod_glosa=salud_glosas_iniciales.CodigoGlosa LIMIT 1) AS DescripcionGlosa,
 (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados 
-WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS cod_administrador
-FROM `salud_glosas_iniciales`;
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS cod_administrador,
+
+(SELECT razon_social FROM salud_archivo_facturacion_mov_generados 
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS nombre_prestador,
+(SELECT cod_prest_servicio FROM salud_archivo_facturacion_mov_generados 
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS cod_prestador,
+(SELECT num_ident_prest_servicio FROM salud_archivo_facturacion_mov_generados 
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS nit_prestador,
+(SELECT nit FROM salud_eps 
+WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS nit_administrador ,
+(SELECT nombre_completo FROM salud_eps 
+WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS nombre_administrador ,
+(SELECT tipo_regimen FROM salud_eps 
+WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS regimen_eps
+
+FROM `salud_glosas_iniciales` WHERE EstadoGlosa<=6;
 

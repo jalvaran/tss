@@ -336,19 +336,6 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if(isset($_REQUEST["idEPS"])){
                 $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
             }
-            $FechaInicial="";
-            if(isset($_REQUEST["FechaInicial"])){
-                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-            }
-            $FechaFinal="";
-            if(isset($_REQUEST["FechaFinal"])){
-                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-            }
-            
-            $CuentaRIPS="000000";
-            if(isset($_REQUEST["CuentaRIPS"])){
-                $CuentaRIPS=str_pad($obGlosas->normalizar($_REQUEST["CuentaRIPS"]),6,'0',STR_PAD_LEFT);
-            }
             
             //Paginacion
             if(isset($_REQUEST['Page'])){
@@ -356,18 +343,10 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
+            $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2="";
-            if($FechaInicial<>''){
-                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
-            }
-            if($FechaFinal<>''){
-                $Condicional2.=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
-            }
-            if($CuentaRIPS<>'000000'){
-                //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
-            }
-            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
+            
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -389,7 +368,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             //print($statement);
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
-                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
+                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -491,19 +470,6 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if(isset($_REQUEST["idEPS"])){
                 $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
             }
-            $FechaInicial="";
-            if(isset($_REQUEST["FechaInicial"])){
-                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-            }
-            $FechaFinal="";
-            if(isset($_REQUEST["FechaFinal"])){
-                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-            }
-            
-            $CuentaRIPS="000000";
-            if(isset($_REQUEST["CuentaRIPS"])){
-                $CuentaRIPS=str_pad($obGlosas->normalizar($_REQUEST["CuentaRIPS"]),6,'0',STR_PAD_LEFT);
-            }
             
             //Paginacion
             if(isset($_REQUEST['Page'])){
@@ -511,18 +477,10 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
+            $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
-            if($FechaInicial<>''){
-                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
-            }
-            if($FechaFinal<>''){
-                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
-            }
-            if($CuentaRIPS<>'000000'){
-                //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
-            }
-            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
+            
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -542,7 +500,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement.=" LIMIT $startpoint,$limit";
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
-                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosado ";
+                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -643,19 +601,6 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if(isset($_REQUEST["idEPS"])){
                 $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
             }
-            $FechaInicial="";
-            if(isset($_REQUEST["FechaInicial"])){
-                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-            }
-            $FechaFinal="";
-            if(isset($_REQUEST["FechaFinal"])){
-                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-            }
-            
-            $CuentaRIPS="000000";
-            if(isset($_REQUEST["CuentaRIPS"])){
-                $CuentaRIPS=str_pad($obGlosas->normalizar($_REQUEST["CuentaRIPS"]),6,'0',STR_PAD_LEFT);
-            }
             
             //Paginacion
             if(isset($_REQUEST['Page'])){
@@ -663,18 +608,11 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`cod_estado`= 5 or `cod_estado`= 6) ";
+            $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
-            if($FechaInicial<>''){
-                $Condicional2=$Condicional2." AND fecha_factura >= '$FechaInicial' ";
-            }
-            if($FechaFinal<>''){
-                $Condicional2=$Condicional2." AND fecha_factura <= '$FechaFinal' ";
-            }
-            if($CuentaRIPS<>'000000'){
-                //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
-            }
-            $statement=" `vista_salud_respuestas` $Condicional $Condicional2";
+            
+            
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
             
             if(isset($_REQUEST['st'])){
 
@@ -698,8 +636,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement.=" LIMIT $startpoint,$limit";
             
             $query="SELECT regimen_eps,"
-                    . "SUM(valor_glosado_eps) AS TotalGlosado,"
-                    . "SUM(valor_glosado_eps - valor_levantado_eps) AS TotalGlosadoDefinitivo ";
+                    . "SUM(ValorGlosado) AS TotalGlosado,"
+                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosadoDefinitivo ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
