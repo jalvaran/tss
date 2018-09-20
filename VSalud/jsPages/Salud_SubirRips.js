@@ -170,7 +170,7 @@ function VerificarCT(){
         type: 'post',
         success: function(data){
             
-           if(data==="OK"){
+           if(data=="OK"){
                 $('.progress-bar').css('width','8%').attr('aria-valuenow', 8);  
                 document.getElementById('LyProgresoCMG').innerHTML="8%";
                 document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>Archivo CT Verificado</h4>";

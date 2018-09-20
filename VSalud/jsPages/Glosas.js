@@ -1869,6 +1869,11 @@ function DibujeFormularioConciliarActividad(TipoArchivo,idArchivo,idFactura,CodA
 
 function ConciliarActividad(idFactura,CodActividad,idArchivo,TipoArchivo){
     var DescripcionActividad = document.getElementById('DescripcionActividad').value;
+    var ValorLevantado = document.getElementById('ValorLevantado').value;
+    if(ValorLevantado==''){
+        alertify.alert('El valor levantado no puede estar vacío');
+        return;
+    }
     var form_data = getInfoFormGlosasRespuestas(1);        
         form_data.append('idAccion', 16); //Agregar respuesta a Glosa temporal
         form_data.append('idFactura', idFactura); 

@@ -54,16 +54,17 @@ if($_REQUEST["idAccion"]){
     
         case 4://Verificar CT Y Verificar que los archivos correspondan al numero de cuenta RIPS
             $CuentaRIPS=$obCon->normalizar($_REQUEST["CuentaRIPS"]);
-            $ErrorCT=0;
+            $ErrorCT=1;
             $ErrorArchivos=0;
             $consulta= $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%'");
             while($DatosCT= $obRips->FetchArray($consulta)){
-                if($DatosCT["nom_cargue"]==""){
-                    $ErrorCT=1;
+                if($DatosCT["nom_cargue"]<>""){
+                    $ErrorCT=0;
                 }
             }
             if($ErrorCT==1){
                 $css->CrearNotificacionRoja("No se recibió el Archivo CT", 14);
+                exit();
             }
             
             $consulta= $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0'");
@@ -91,15 +92,35 @@ if($_REQUEST["idAccion"]){
                 //print("Archivo".$DatosCT["nom_cargue"]);
                 if (file_exists("../archivos/".$DatosCT["nom_cargue"])) {
                     $handle = fopen("../archivos/".$DatosCT["nom_cargue"], "r");
+                    $flagCTSinRegistros=1;
                     while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+                        $flagCTSinRegistros=0;
                         $NombreArchivo=$data[2].".txt";
                         $DatosCarga=$obRips->DevuelveValores("salud_upload_control", "nom_cargue", $NombreArchivo);
                         if($DatosCarga["id_upload_control"]==""){
                             $Error=1;
                             $css->CrearNotificacionRoja("<br>El archivo $NombreArchivo relacionado en el CT, No existe en los archivos Subidos", 14);
                         }
+                        $ConsultaUpload=$obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado=0");
+                        $flagNoRelacionadoCT=1;
+                        while ($DatosUploadControl=$obRips->FetchAssoc($ConsultaUpload)){
+                            $NombreArchivoNoRelacionado=$DatosUploadControl["nom_cargue"];
+                            if($NombreArchivo==$DatosUploadControl["nom_cargue"]){
+                                $flagNoRelacionadoCT=0;
+                                
+                            }
+                        }
+                        if($flagNoRelacionadoCT==1){
+                            $css->CrearNotificacionRoja("<br>Error El archivo $NombreArchivoNoRelacionado no está relacionado en el CT", 14);
+                             exit();
+                            
+                        }
                     }
                     fclose($handle); 
+                    if($flagCTSinRegistros==1){
+                        $css->CrearNotificacionRoja("El CT no contiene información", 14);
+                        exit();
+                    }
                 }else{
                     exit("No existe el archivo ../archivos/".$DatosCT["nom_cargue"]);
                 }

@@ -231,7 +231,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                         $css->CrearBotonEvento("BtnHistorial_$idArchivo", "Historial ", $Enable, "onClick", "VerHistoricoGlosas('$idFactura','$CodActividad');CambiarColorBtnDetalles('BtnResponderActividad_$idArchivo');", "rojo", "");
                        
                         print("<br><br>");
-                        $Enable=0;
+                        $Enable=1;
                         if($DatosFactura["EstadoGlosa"]>=5){
                             $Enable=0;
                         }

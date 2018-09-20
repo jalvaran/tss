@@ -266,15 +266,15 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
                     //$DatosSemaforo=$obGlosas->FetchArray($DatosSemaforo);
                     $imagerute="";
                     print("<div id='DivSemaforoCuenta_$DatosCuenta[CuentaRIPS]'>");
-                        if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 AND $DatosCuenta["Dias"]<>''){
+                        if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 AND $DatosCuenta["Dias"]<>'' AND $DatosCuenta["idEstadoGlosa"]==1){
                             $imagerute="../images/verde.png";
                             $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                         }
-                        if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10){
+                        if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 AND $DatosCuenta["idEstadoGlosa"]==1){
                             $imagerute="../images/naranja.png";
                             $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                         }
-                        if($DatosCuenta["Dias"]>=11){
+                        if($DatosCuenta["Dias"]>=11 AND $DatosCuenta["idEstadoGlosa"]==1){
                             $imagerute="../images/rojo.png";
                             $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                         }

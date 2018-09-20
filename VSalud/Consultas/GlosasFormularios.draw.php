@@ -1332,7 +1332,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     $css->CierraFilaTabla();
                     $css->FilaTabla(14);
                     print("<td style='text-align:center'>");
-                        $css->CrearInputNumber("ValorLevantado", "number", "Valor Levantado X EPS:<br>", 0, "Valor Levantado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0, $TotalGlosado, 1);
+                        $css->CrearInputNumber("ValorLevantado", "number", "Valor Levantado X EPS:<br>", "", "Valor Levantado EPS", "", "onChange", "ValidaValoresConciliacion()", 150, 30, 0, 1, 0, $TotalGlosado, 1);
                        
                         $css->CrearInputNumber("ValorEPS", "number", "<br>Valor Glosado X EPS:<br>", $TotalGlosado, "Valor EPS", "", "", "", 150, 30, 1, 1, 0, "", 1);
                         
