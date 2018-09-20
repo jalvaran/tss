@@ -76,7 +76,7 @@ print("<body>");
                     print("</td>");
                      print("<td>");
                         $css->CrearDiv("DivFechaFinal", "", "center", 1, 1);
-                            $css->CrearInputText("FechaFinal", "date", "", "", "", "", "", "", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));
+                            $css->CrearInputText("FechaFinal", "date", "", "", "", "", "onChange", "CambiarFechaInicial()", 150, 30, 0, 0,"Seleccione una Fecha Final",date("Y-m-d"));
                         $css->CerrarDiv();    
                     print("</td>");
                      print("<td>");
@@ -93,8 +93,9 @@ print("<body>");
             $css->CerrarTabla();
        
         
-        
-    $css->CrearDiv("DivConsultas", "container", "center", 1, 1);
+    print('<div id="DivConsultas" style="display:scroll; position:fixed; top:50px; right:10px;" >');
+    //print("</div>");    
+    //$css->CrearDiv("DivConsultas", "container", "center", 1, 1);
     $css->CerrarDiv();    
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts

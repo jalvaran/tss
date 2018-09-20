@@ -375,4 +375,10 @@ SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administra
 FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
 
 
+DROP VIEW IF EXISTS `vista_glosas_iniciales_reportes`;
+CREATE VIEW vista_glosas_iniciales_reportes AS 
+SELECT *,
+(SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas 
+WHERE salud_archivo_conceptos_glosas.cod_glosa=salud_glosas_iniciales.CodigoGlosa LIMIT 1) AS DescripcionGlosa
+FROM `salud_glosas_iniciales`;
 

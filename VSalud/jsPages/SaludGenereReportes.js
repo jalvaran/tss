@@ -29,6 +29,10 @@ function CambiarFechaFinal(){
     var FechaInicial = document.getElementById("FechaInicial").value;
     $('#FechaFinal').attr("min", FechaInicial); 
 }
+function CambiarFechaInicial(){
+    var FechaFinal = document.getElementById("FechaFinal").value;
+    $('#FechaInicial').attr("max", FechaFinal);
+}
 /**
  * Envia las facturas para analizarlas
  * @returns {undefined}

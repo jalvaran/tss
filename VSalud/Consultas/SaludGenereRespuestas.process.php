@@ -85,8 +85,8 @@ if($_REQUEST["idAccion"]){
             
             $imagerute="../images/download.gif";
             $page="ArchivosTemporales/Reportes/$NombreArchivo";
-            
-            $css->CrearImageLink($page, $imagerute, "_blank");
+            $css->CrearLink($page, "_blank", "Descargar");
+            //$css->CrearImageLink($page, $imagerute, "_blank");
             $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
         break; 
         case 7://Se reciben las facturas y se llenan con respuestas a la tabla para iniciar el proceso de consulta de respuestas y registro en el excel

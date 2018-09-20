@@ -88,7 +88,7 @@ function BorrarCarga(){
  * @returns {undefined}
  */
 function EnviarCuentas(){
-    document.getElementById("DivProcess").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
+    document.getElementById("DivConsultas").innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/process.gif" alt="Cargando" height="100" width="100"></div>';
 
     if($('#Cuentas').val()==null || $('#Cuentas').val()==''){
           alertify.alert("por favor seleccione una o varias cuentas");          
