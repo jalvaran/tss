@@ -973,7 +973,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>12");
             $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
             $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;
-            $TotalXGlosar=$TotalActividad-$TotalGlosado;
+            $TotalXGlosar=$TotalActividad-$TotalGlosado+$DatosGlosa["ValorGlosado"];
             
             $css->CrearTabla();
                 $css->FilaTabla(14);
