@@ -180,7 +180,7 @@ if( !empty($_REQUEST["idAccion"]) ){
         case 7://Elimina una respuesta a glosa de la tabla temporal
             $idGlosaTemp=$obGlosas->normalizar($_REQUEST["idGlosa"]);
             $obGlosas->BorraReg("salud_archivo_control_glosas_respuestas_temp", "ID", $idGlosaTemp);
-            print("Respuesta a Glosa temporal eliminada");
+            print("Acción Temporal eliminada");
         break;    
         case 8:// Edita las repuestas a glosas a la tabla temporal 
             $idGlosa=$obGlosas->normalizar($_REQUEST["idGlosa"]);
@@ -509,6 +509,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
             $obGlosas->Query($sql);
             $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
+            
             print("<h4 style='color:orange'>Edición Realizada</h4>");
         break;
         
@@ -544,7 +545,10 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
-            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'";
+            //$sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosaHistorico=EstadoGlosa WHERE num_factura='$idFactura' AND CodigoActividad ='$CodActividad' ";
+            //$obGlosas->Query($sql);
+            
+            $sql="UPDATE salud_archivo_control_glosas_respuestas SET EstadoGlosaHistorico=EstadoGlosa, EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'";
             $obGlosas->Query($sql);
             $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa=13 WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'";
             $obGlosas->Query($sql);

@@ -5,6 +5,19 @@
  * 317 774 0609
  */
 
+/**
+ * Cambia el la fecha minima para seleccionar en una fecha final
+ * @returns {undefined}
+ */
+function CambiarFechaFinal(){
+    var FechaInicial = document.getElementById("FiltroFechaInicial").value;
+    $('#FiltroFechaFinal').attr("min", FechaInicial); 
+}
+function CambiarFechaInicial(){
+    var FechaFinal = document.getElementById("FiltroFechaFinal").value;
+    $('#FiltroFechaInicial').attr("max", FechaFinal);
+}
+
 // Solo permite ingresar numeros.
 
 function CampoNumerico(e){
@@ -172,7 +185,8 @@ function FiltreRangoFechas(){
         form_data.append('FechaInicial', $('#FiltroFechaInicial').val());
         form_data.append('FechaFinal', $('#FiltroFechaFinal').val());
         form_data.append('idEPS', $('#idEPS').val());
-        form_data.append('CuentaRIPS', $('#TxtBuscarCuentaRIPS').val());
+        form_data.append('CuentaRIPS', $('#TxtCuentaActiva').val());
+        
         form_data.append('idEstadoGlosas', $('#CmbEstadoGlosaFacturas').val());
         document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
    

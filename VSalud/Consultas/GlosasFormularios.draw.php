@@ -1653,7 +1653,12 @@ if( !empty($_REQUEST["idFormulario"]) ){
                                 $css->ColTabla(number_format($DatosVista["valor_aceptado_ips"]), 1);
                                 $css->ColTabla(number_format($DatosVista["valor_x_conciliar"]), 1);
                                 $css->ColTabla(number_format($DatosVista["valor_glosado_eps"]-$DatosVista["valor_levantado_eps"]), 1);
-                                $css->ColTabla($DatosVista["descripcion_estado"], 1);
+                                if($DatosGlosasIniciales["EstadoGlosa"]==13){
+                                    $css->ColTabla($DatosVista["descripcion_estado_historico"], 1);
+                                }else{
+                                    $css->ColTabla($DatosVista["descripcion_estado"], 1);
+                                }
+                                
                             $css->CierraFilaTabla();
                             
                         }

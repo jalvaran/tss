@@ -4,6 +4,29 @@
  * TECHNO SOLUCIONES SAS EN ASOCIACION CON SITIS SA
  * 317 774 0609
  */
+
+/**
+ * Cambia el la fecha minima para seleccionar en una fecha final
+ * @returns {undefined}
+ */
+function CambiarFechaFinalRangofacturas(){
+    var FechaInicial = document.getElementById("FechaFacturaInicial").value;
+    $('#FechaFacturaFinal').attr("min", FechaInicial); 
+}
+function CambiarFechaInicialRangofacturas(){
+    var FechaFinal = document.getElementById("FechaFacturaFinal").value;
+    $('#FechaFacturaInicial').attr("max", FechaFinal);
+}
+
+function CambiarFechaFinalRangoRadicado(){
+    var FechaInicial = document.getElementById("FechaRadicadoInicial").value;
+    $('#FechaRadicadoFinal').attr("min", FechaInicial); 
+}
+function CambiarFechaInicialRangoRadicado(){
+    var FechaFinal = document.getElementById("FechaRadicadoFinal").value;
+    $('#FechaRadicadoInicial').attr("max", FechaFinal);
+}
+
 /**
  * Envia el archivo de carga de glosas masivas al servidor
  * @returns {undefined}

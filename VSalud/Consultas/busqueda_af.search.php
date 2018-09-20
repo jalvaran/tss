@@ -21,35 +21,42 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     $statement="";
     
     //////////////////
-    $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
-    $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
+    //$CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
+    //$CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
         
-    $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS' ";
+    $statement=" `vista_af_semaforo` WHERE (Dias = '' or Dias >= 0) ";
+    
+    
+    if(isset($_REQUEST["CuentaRIPS"]) and !empty($_REQUEST["CuentaRIPS"])){
+        $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
+        $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
+        $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS' ";
+    }
+     
+    
+    
+    $FechaInicial="";
+    $FechaFinal="";
+    if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
+        $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+        //$FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+        $statement.=" AND `fecha_factura`>='$FechaInicial' ";
+    }
+    if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
+        //$FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+        $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+        $statement.="  AND `fecha_factura`<='$FechaFinal'";
+    }
+    $idEstadoGlosa='';
+    if(isset($_REQUEST["idEstadoGlosas"]) and !empty($_REQUEST["idEstadoGlosas"])){
+        $idEstadoGlosa=$obGlosas->normalizar($_REQUEST["idEstadoGlosas"]);        
+        $statement.=" AND `EstadoGlosa`=$idEstadoGlosa ";
+    }
     //Busco por Cuenta Numero de Factura
     if(isset($_REQUEST["idFactura"]) and !empty($_REQUEST["idFactura"])){
         $NumFactura=$obGlosas->normalizar($_REQUEST['idFactura']);
         //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
         $statement=" `vista_af_semaforo` WHERE `num_factura`='$NumFactura'";
-    }
-    /*
-    if(isset($_REQUEST["CuentaRIPS"]) and !empty($_REQUEST["CuentaRIPS"])){
-        $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
-        $CuentaRIPS=str_pad($CuentaRIPS, 6, "0", STR_PAD_LEFT);
-        $statement=" `vista_af_semaforo` WHERE `CuentaRIPS`='$CuentaRIPS'";
-    }
-     * 
-     */
-    $FechaInicial=date("Y-m-d");
-    $FechaFinal=date("Y-m-d");
-    if(isset($_REQUEST["FechaInicial"])){
-        $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-        $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-        $statement.=" AND `fecha_factura`>='$FechaInicial' AND `fecha_factura`<='$FechaFinal'";
-    }
-    $idEstadoGlosa='';
-    if(isset($_REQUEST["idEstadoGlosas"]) and !empty($_REQUEST["idEstadoGlosas"])){
-        $idEstadoGlosa=$obGlosas->normalizar($_REQUEST["idEstadoGlosas"]);        
-        $statement.=" AND `EstadoGlosa`=$idEstadoGlosa";
     }
     //print($statement);
     $css->CrearTabla();
@@ -65,15 +72,16 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->FilaTabla(12);
                 print("<td>");
                     
-                    $css->CrearInputText("FiltroFechaInicial", "date", "", $FechaInicial, "", "", "", "", 150, 30, 0, 0);
+                    $css->CrearInputText("FiltroFechaInicial", "date", "", $FechaInicial, "", "", "onChange", "CambiarFechaFinal()", 150, 30, 0, 0,"Fecha Inicial",date("Y-m-d"));
                 print("</td>");
                 print("<td>");
-                    $css->CrearInputText("FiltroFechaFinal", "date", "", $FechaFinal, "", "", "", "", 150, 30, 0, 0);
+                    $css->CrearInputText("FiltroFechaFinal", "date", "", $FechaFinal, "", "", "onChange", "CambiarFechaInicial()", 150, 30, 0, 0,"Fecha Final",date("Y-m-d"));
                 print("</td>");
                 print("<td>");
                 //$css->CrearTableChosen("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "ID", 200, 0, "", "");
                 //$css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "onChange", "FiltreFacturasXEstadoGlosa()", "", 0);
-                $css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "", "", "", $idEstadoGlosa);
+                //$css->CrearSelectTable($Nombre, $tabla, $Condicion, $idItemValue, $OptionDisplay1, $OptionDisplay2, $Evento, $FuncionJS, $idSel, $Requerido, $LeyendaInicial)
+                $css->CrearSelectTable("CmbEstadoGlosaFacturas", "salud_estado_glosas", "", "ID", "ID", "Estado_glosa", "", "", $idEstadoGlosa,"");
                 print("</td>");
                 print("<td>");
                     $css->CrearBotonEvento("BtnFiltroFecha", "Filtrar", 1, "onClick", "FiltreRangoFechas()", "naranja", "");
@@ -110,8 +118,9 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     
     
     //print("st:$statement");
-    $query="SELECT identificacion_usuario,cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa as idGlosa,"
-            . " (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = `EstadoGlosa`) as EstadoGlosa  ";
+    $query="SELECT identificacion_usuario,cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa ,"
+            . " (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = vista_af_semaforo.EstadoGlosa) as DescripcionEstadoGlosa,"
+            . " (SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=vista_af_semaforo.num_factura AND EstadoGlosa<=8) as TotalGlosadoFactura  ";
     $consulta=$obGlosas->Query("$query FROM $statement");
     if($obGlosas->NumRows($consulta)){
         
@@ -123,7 +132,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             
             $st= base64_encode($statementPage);
             $css->CrearDiv("DivActualizar", "", "center", 0, 1);
-                $Page="Consultas/busqueda_af.search.php?st=$st&Page=1&CuentaRIPS=$CuentaRIPS&Carry=";
+                $Page="Consultas/busqueda_af.search.php?st=$st&Page=1&Carry=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
 
                 $css->CrearBotonEvento("BtnActualizarFacturas", "Actualizar", 1, "onclick", $FuncionJS, "naranja", "");
@@ -137,7 +146,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                     
                     
                     $NumPage1=$NumPage-1;
-                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&CuentaRIPS=$CuentaRIPS&Carry=";
+                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
                     
                     $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
@@ -145,10 +154,10 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 }
                 print("</td>");
                 $TotalPaginas= ceil($ResultadosTotales/$limit);
-                print("<td colspan=5 style=text-align:center>");
+                print("<td colspan=7 style=text-align:center>");
                 print("<strong>Página: </strong>");
                                 
-                $Page="Consultas/busqueda_af.search.php?st=$st&CuentaRIPS=$CuentaRIPS&Page=";
+                $Page="Consultas/busqueda_af.search.php?st=$st&Page=";
                 $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivFacturas`,`5`);return false ;";
                 $css->CrearSelect("CmbPage", $FuncionJS,70);
                     for($p=1;$p<=$TotalPaginas;$p++){
@@ -165,7 +174,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("<td colspan='2' style=text-align:center>");
                 if($ResultadosTotales>($startpoint+$limit)){
                     $NumPage1=$NumPage+1;
-                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&CuentaRIPS=$CuentaRIPS&Carry=";
+                    $Page="Consultas/busqueda_af.search.php?st=$st&Page=$NumPage1&Carry=";
                     $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivFacturas`,`5`);return false ;";
                     $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
                 }
@@ -181,6 +190,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->ColTabla("<strong>Número de Factura</strong>", 1);
             $css->ColTabla("<strong>Identificación</strong>", 1);
             $css->ColTabla("<strong>Valor</strong>", 1);
+            $css->ColTabla("<strong>Valor Total Glosado</strong>", 1);
             $css->ColTabla("<strong>Estado</strong>", 1);
             $css->ColTabla("<strong>Semáforo</strong>", 1);
             $css->ColTabla("<strong>Abrir</strong>", 1);
@@ -198,6 +208,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
                 $css->ColTabla($DatosCuenta["identificacion_usuario"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
+                $css->ColTabla(number_format($DatosCuenta["TotalGlosadoFactura"]), 1);
                 print("<td><div id='EstadoGlosaFactura_$DatosCuenta[num_factura]'>");
                     print($DatosCuenta["EstadoGlosa"]);
                 print("</td></div>");
@@ -205,15 +216,15 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 
                     print("<td style='text-align:center'>");
                         print("<div id='DivSemaforoFactura_$DatosCuenta[num_factura]'>");
-                            if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 and $DatosCuenta["idGlosa"]==1){
+                            if($DatosCuenta["Dias"]>=0 and $DatosCuenta["Dias"]<=5 and $DatosCuenta["EstadoGlosa"]==1){
                                 $imagerute="../images/verde.png";
                                 $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                             }
-                            if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 and $DatosCuenta["idGlosa"]==1){
+                            if($DatosCuenta["Dias"]>=6 and $DatosCuenta["Dias"]<=10 and $DatosCuenta["EstadoGlosa"]==1){
                                 $imagerute="../images/naranja.png";
                                 $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                             }
-                            if($DatosCuenta["Dias"]>=11 and  $DatosCuenta["idGlosa"]==1){
+                            if($DatosCuenta["Dias"]>=11 and  $DatosCuenta["EstadoGlosa"]==1){
                                 $imagerute="../images/rojo.png";
                                 $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
                             }

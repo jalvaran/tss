@@ -316,6 +316,7 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        salud_archivo_control_glosas_respuestas.DescripcionActividad as descripcion_actividad,
        salud_archivo_control_glosas_respuestas.valor_actividad as valor_total_actividad,
        salud_archivo_control_glosas_respuestas.idGlosa as id_glosa_inicial,
+       salud_archivo_control_glosas_respuestas.EstadoGlosaHistorico as EstadoGlosaHistorico,
 
        (SELECT fecha_factura FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as fecha_factura, 
        (SELECT numero_radicado FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as numero_radicado, 
@@ -343,7 +344,8 @@ SELECT salud_archivo_control_glosas_respuestas.ID as ID,
        
        (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE salud_archivo_conceptos_glosas.cod_glosa= salud_archivo_control_glosas_respuestas.id_cod_glosa LIMIT 1) as descripcion_glosa_respuesta,
        
-        (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_archivo_control_glosas_respuestas.EstadoGlosa=salud_estado_glosas.ID LIMIT 1) as descripcion_estado
+        (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_archivo_control_glosas_respuestas.EstadoGlosa=salud_estado_glosas.ID LIMIT 1) as descripcion_estado,
+       (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_archivo_control_glosas_respuestas.EstadoGlosaHistorico=salud_estado_glosas.ID LIMIT 1) as descripcion_estado_historico
        
        
 FROM salud_archivo_control_glosas_respuestas;

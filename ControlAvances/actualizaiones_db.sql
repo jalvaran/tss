@@ -60,4 +60,5 @@ INSERT INTO `salud_regimen` (`ID`, `Regimen`) VALUES
 (6,	'ENTIDAD EN LIQUIDACION');
 
 
+ALTER TABLE `salud_archivo_control_glosas_respuestas` ADD `EstadoGlosaHistorico` INT(3) NOT NULL AFTER `Tratado`;
 
