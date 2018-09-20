@@ -52,7 +52,7 @@ if(isset($_REQUEST["idEPS"]) or !empty($_REQUEST["idFactura"]) or !empty($_REQUE
     //Busco por Cuenta RIPS
     if(!empty($_REQUEST["CuentaRIPS"])){
         $CuentaRIPS=$obGlosas->normalizar($_REQUEST['CuentaRIPS']);
-        $statement.=" AND `CuentaRIPS`='$CuentaRIPS'";
+        $statement.=" AND `CuentaRIPS` LIKE '%$CuentaRIPS%'";
     }
     
     //Busco por Cuenta Global
