@@ -695,6 +695,10 @@ function DibujeFormularioActividades(TipoArchivo,idActividad,idFactura,idFormula
 function getInfoFormGlosasRespuestas(Opciones=0){
     if ($('#CodigoGlosa').length) {
         if($('#CodigoGlosa').val()==''){
+            alertify.set({ labels: {
+                ok     : "OK",
+                cancel : "Cancelar"
+            } });
             alertify.alert("Todos los campos son obligatorios");
             return 0;
         }
@@ -926,7 +930,7 @@ function GuadarGlosasTemporales(idFactura){
             document.getElementById('DivGlosar').innerHTML=data;
             document.getElementById('DivHistorialGlosas').innerHTML='';
             
-            //MostrarActividades(idFactura);
+            BuscarActividadesFactura(idFactura);
             RefrescarDiv();
         },
         error: function (xhr, ajaxOptions, thrownError) {

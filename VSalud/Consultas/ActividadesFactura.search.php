@@ -200,7 +200,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->ColTabla($DatosFactura["Estado"], 1);
                     print("<td>");
                         $Enable=1;
-                        if(($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<=7) and ($DatosFactura["EstadoGlosa"]>8 and $DatosFactura["EstadoGlosa"]<12) ){
+                        if(($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<=7) or ($DatosFactura["EstadoGlosa"]>8 and $DatosFactura["EstadoGlosa"]<12) ){
                             $Enable=0;
                         }
                         $DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");
@@ -210,6 +210,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                             $Enable=0;
                             print("<strong>Glosa fuera de tiempo<br><strong>");
                         }
+                        
                         $css->CrearBotonEvento("BtnGlosarActividad", "&nbsp Glosa &nbsp", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
                         print("<br><br>");
                         $Enable=0;

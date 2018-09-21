@@ -568,7 +568,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
             
                 $css->FilaTabla(12);
                     $css->ColTabla("<strong>Fecha</strong>", 1);
-                    $css->ColTabla("<strong>Numero de Factura</strong>", 1);
+                    $css->ColTabla("<strong>Número de Factura</strong>", 1);
                     $css->ColTabla("<strong>Código de Actividad</strong>", 1);
                     $css->ColTabla("<strong>Código</strong>", 1);
                     $css->ColTabla("<strong>Descripción</strong>", 1);
