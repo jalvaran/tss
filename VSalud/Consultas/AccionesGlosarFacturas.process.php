@@ -282,7 +282,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $obGlosas->RegistraGlosaRespuestaTemporal('',$TipoArchivo, $idGlosa, $idFactura, $CodActividad, $Descripcion, $TotalActividad, 3, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
-            print("<h4 style='color:blue'>Registros Registrados</h4>");
+            print("<h4 style='color:blue'>Registros Ingresados</h4>");
         break;
         
         case 11:// Guarda las repuestas a glosas a la tabla temporal 

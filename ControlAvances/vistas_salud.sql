@@ -385,6 +385,9 @@ WHERE salud_archivo_conceptos_glosas.cod_glosa=salud_glosas_iniciales.CodigoGlos
 (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados 
 WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS cod_administrador,
 
+(SELECT fecha_factura FROM salud_archivo_facturacion_mov_generados 
+WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS fecha_factura,
+
 (SELECT razon_social FROM salud_archivo_facturacion_mov_generados 
 WHERE salud_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS nombre_prestador,
 (SELECT cod_prest_servicio FROM salud_archivo_facturacion_mov_generados 

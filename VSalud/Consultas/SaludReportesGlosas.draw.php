@@ -346,17 +346,17 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2="";
             
-            if(isset($_REQUEST["FechaInicial"])){
+            if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
                 $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
-                $Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                $Condicional.=" AND fecha_factura>= '$FechaInicial' ";
+                //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
                 
             }
             
-            if(isset($_REQUEST["FechaFinal"])){
+            if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
                 $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
-                $Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
+                $Condicional.=" AND fecha_factura <= '$FechaFinal' ";
+                //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
             }
             
             $statement=" `vista_glosas_iniciales_reportes` $Condicional ";
@@ -382,7 +382,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement.=" LIMIT $startpoint,$limit";
             //print($statement);
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
-                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador $Condicional2) AS TotalFacturado,"
+                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
                     . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
@@ -499,17 +499,17 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
-            if(isset($_REQUEST["FechaInicial"])){
+            if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
                 $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
-                $Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                $Condicional.=" AND fecha_factura>= '$FechaInicial' ";
+                //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
                 
             }
             
-            if(isset($_REQUEST["FechaFinal"])){
+            if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
                 $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
-                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
-                $Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
+                $Condicional.=" AND fecha_factura <= '$FechaFinal' ";
+                //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
             }
             $statement=" `vista_glosas_iniciales_reportes` $Condicional ";
             
@@ -530,7 +530,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $ResultadosTotales = $row;
             $statement.=" LIMIT $startpoint,$limit";
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
-                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador $Condicional2) AS TotalFacturado,"
+                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador ) AS TotalFacturado,"
                     . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
@@ -647,14 +647,14 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
             
-            if(isset($_REQUEST["FechaInicial"])){
+            if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
                 $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
-                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
+                $Condicional.=" AND FechaIPS >= '$FechaInicial' ";
                 //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
                 
             }
             
-            if(isset($_REQUEST["FechaFinal"])){
+            if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
                 $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
                 $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
                 //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
@@ -783,11 +783,11 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
             }
             $FechaInicial="";
-            if(isset($_REQUEST["FechaInicial"])){
+            if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
                 $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
             }
             $FechaFinal="";
-            if(isset($_REQUEST["FechaFinal"])){
+            if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
                 $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
             }
             
@@ -812,14 +812,14 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
             }
             
-            if(isset($_REQUEST["FechaInicial"])){
+            if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"]) ){
                 $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
                 $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
                 //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
                 
             }
             
-            if(isset($_REQUEST["FechaFinal"])){
+            if(isset($_REQUEST["FechaFinal"]) and !empty($_REQUEST["FechaFinal"])){
                 $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
                 $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
                 //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
