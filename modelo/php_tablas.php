@@ -1092,10 +1092,10 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $VectorSel["Nombre"]="$NombreCol";
                     $VectorSel["Evento"]="";
                     $VectorSel["Funcion"]="";
-                    $VectorSel["Required"]=$Required;
+                    $VectorSel["Required"]=1;
                     $VarSelect["Ancho"]=300;
                     $VarSelect["PlaceHolder"]="Seleccione una opcion";
-                    if($tbl=="salud_eps" OR $tbl=="salud_cups"){
+                    if($tbl=="salud_eps" OR $tbl=="salud_cups" OR $tbl=="usuarios"){
                         $this->css->CrearSelect2($VectorSel);
                     }else{
                         $this->css->CrearSelectChosen($NombreCol, $VarSelect);
@@ -1261,9 +1261,15 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                 $VectorSel["Funcion"]="";
                 $VectorSel["Required"]=$Required;
                 print("campo obligatorio * <br>");
-                $this->css->CrearSelectChosen($NombreCol, $VectorSel);
+                
+                if($tbl=='usuarios'){
+                    $this->css->CrearSelect($NombreCol, "");
+                }else{
+                    $this->css->CrearSelectChosen($NombreCol, $VectorSel);
+                }
+                
                 //$this->css->CrearSelect2($VectorSel);
-                $this->css->CrearOptionSelect("", "Seleccione Una Opcion", 0);
+                //$this->css->CrearOptionSelect("", "Seleccione Una Opcion", 0);
                 while($Opciones=$this->obCon->FetchArray($Consulta)){
                     $pre=0;
                     if($Value=="$Opciones[$IDTabla]"){
