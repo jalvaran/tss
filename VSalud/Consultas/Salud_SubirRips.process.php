@@ -64,7 +64,7 @@ if($_REQUEST["idAccion"]){
             }
             if($ErrorCT==1){
                 $css->CrearNotificacionRoja("No se recibió el Archivo CT", 14);
-                exit();
+                //exit();
             }
             
             $consulta= $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0'");

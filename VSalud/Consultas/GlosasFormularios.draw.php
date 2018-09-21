@@ -147,7 +147,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Glosa:");
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Glosa:");
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -326,7 +326,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Glosa:",$DatosGlosaTemp["CodigoGlosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Glosa:",$DatosGlosaTemp["CodigoGlosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -502,7 +502,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Respuesta:");
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Respuesta:");
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -677,7 +677,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     }
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -766,7 +766,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=1 and cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Contra Glosa:");
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=1 and cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Contra Glosa:");
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -842,7 +842,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Respuesta:");
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=900 and cod_glosa<=999", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Respuesta:");
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -997,7 +997,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Glosa:",$DatosGlosa["CodigoGlosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa<700 ", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Glosa:",$DatosGlosa["CodigoGlosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -1085,7 +1085,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     }
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa >=800 AND cod_glosa <=900 ", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -1188,7 +1188,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     }
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=1 AND cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -1399,7 +1399,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
                             
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=1 and cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código de la Contra Glosa:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", "WHERE cod_glosa>=1 and cod_glosa<=799", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código de la Contra Glosa:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
@@ -1566,7 +1566,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     }
                     print("<td style='text-align:center' colspan=3>");
                          $css->CrearDiv("DivChousen", "", "center", 1, 1);
-                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=900", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código Glosa", "Código:",$DatosGlosa["id_cod_glosa"]);
+                            $css->CrearTableChosen("CodigoGlosa", "salud_archivo_conceptos_glosas", " WHERE cod_glosa>=900", "cod_glosa", "descrpcion_concep_especifico", "aplicacion", "cod_glosa", 400, 0, "Código", "Código:",$DatosGlosa["id_cod_glosa"]);
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
