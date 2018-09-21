@@ -210,14 +210,14 @@ function DeshabilitaEnter(){
 // esta funcion permite confirmar el envio de un formulario
 function Confirmar(){
 	
-    if (confirm('¿Está seguro que desea realizar esta acción?')){ 
+    if (confirm('Desea continuar?')){ 
       this.form.submit();
     } 
 }
 
 // esta funcion permite confirmar el envio de un formulario
 function ConfirmarFormPass(){
-    alert("Esta acción requiere autorización");
+    alert("Desea continuar");
    
 }
 

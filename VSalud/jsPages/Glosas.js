@@ -623,6 +623,8 @@ function getInfoFormDevoluciones(){
  * @returns {undefined}
  */
 function GlosarActividad(TipoArchivo,idActividad,idFactura,CodActividad){
+    
+    
     document.getElementById('TxtActividadActiva').value=CodActividad;
     document.getElementById('TxtFacturaActiva').value=idFactura;
     document.getElementById('DivHistoricoGlosas').innerHTML='';
@@ -909,7 +911,10 @@ function EditarGlosaTemporal(idGlosaTemp,idAccion,TipoArchivo,idActividad,idFact
  * @returns {undefined}
  */
 function GuadarGlosasTemporales(idFactura){
-       
+        
+        if ($('#BtnDevolverFactura').length) {
+            document.getElementById('BtnDevolverFactura').disabled=true;
+        }
         
         var form_data = new FormData();        
         form_data.append('idAccion', 5); //Devolver una factura

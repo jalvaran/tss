@@ -424,7 +424,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
             print("Glosa Anulada");
         break;    
-        case 14:
+        case 14: //Edición de respuestas
             if(empty($_REQUEST["idGlosaInicial"]) or empty($_REQUEST["idGlosaRespuesta"]) or empty($_REQUEST["FechaIPS"]) or empty($_REQUEST["FechaAuditoria"]) or empty($_REQUEST["Observaciones"]) or empty($_REQUEST["ValorEPS"]) ){
                    exit("No se recibieron los valores esperados");
             }
@@ -471,8 +471,9 @@ if( !empty($_REQUEST["idAccion"]) ){
             
             $TotalActividad=$DatosGlosa["valor_actividad"];            
             $TotalGlosado=$DatosGlosa["valor_glosado_eps"];
-                        
-            $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
+            
+           
+             $Descripcion= utf8_encode($DatosGlosa["DescripcionActividad"]);
             
             $FechaIPS=$obGlosas->normalizar($_REQUEST["FechaIPS"]);
             $FechaAuditoria=$obGlosas->normalizar($_REQUEST["FechaAuditoria"]);
@@ -482,7 +483,9 @@ if( !empty($_REQUEST["idAccion"]) ){
             $ValorEPS=$obGlosas->normalizar($_REQUEST["ValorEPS"]);
             $ValorAceptado=$obGlosas->normalizar($_REQUEST["ValorAceptado"]);
             $ValorConciliar=$obGlosas->normalizar($_REQUEST["ValorConciliar"]);
-            $ValorLevantado=$obGlosas->normalizar($_REQUEST["ValorLevantado"]);     
+            $ValorLevantado=$obGlosas->normalizar($_REQUEST["ValorLevantado"]);  
+            
+               
             $destino='';
             if(!empty($_FILES['Soporte']['name'])){
             

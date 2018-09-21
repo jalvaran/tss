@@ -284,7 +284,7 @@ public function ActualizaRegistro($tabla,$campo, $value, $filtro, $idItem,$Proce
                 $Columnas[1]="Hora";                $Valores[1]=date("H:i:s");
                 $Columnas[2]="Tabla";               $Valores[2]=$tabla;
                 $Columnas[3]="Campo";               $Valores[3]=$campo;
-                $Columnas[4]="ValorAnterior";	$Valores[4]=$OldData[$campo];
+                $Columnas[4]="ValorAnterior";       $Valores[4]=$OldData[$campo];
                 $Columnas[5]="ValorNuevo";		$Valores[5]=$value;
                 $Columnas[6]="ConsultaRealizada";	$Valores[6]="$filtro = $idItem";
                 $Columnas[7]="idUsuario";		$Valores[7]=$_SESSION["idUser"];
@@ -294,6 +294,31 @@ public function ActualizaRegistro($tabla,$campo, $value, $filtro, $idItem,$Proce
         }
 }
 
+/**
+ * Se implementa para para editar las respuestas en las glosas y otros usos
+ * @param type $Tabla
+ * @param type $Campo
+ * @param type $ValorAnterior
+ * @param type $ValorNuevo
+ * @param type $Consulta
+ * @param type $idUser
+ * @param type $Vector
+ */
+public function RegistraEdicionTabla($Tabla,$Campo,$ValorAnterior,$ValorNuevo,$Consulta,$idUser,$Vector) {
+    $tab="registra_ediciones";
+    $NumRegistros=8;
+
+    $Columnas[0]="Fecha";               $Valores[0]=date("Y-m-d");
+    $Columnas[1]="Hora";                $Valores[1]=date("H:i:s");
+    $Columnas[2]="Tabla";               $Valores[2]=$Tabla;
+    $Columnas[3]="Campo";               $Valores[3]=$Campo;
+    $Columnas[4]="ValorAnterior";       $Valores[4]=$ValorAnterior;
+    $Columnas[5]="ValorNuevo";		$Valores[5]=$ValorNuevo;
+    $Columnas[6]="ConsultaRealizada";	$Valores[6]=$Consulta;
+    $Columnas[7]="idUsuario";		$Valores[7]=$idUser;
+
+    $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
+}
 //Registre Eliminaciones
  public function RegistraEliminacion($tabla,$idTabla,$idItemEliminado,$campo,$Valor,$Observaciones,$Vector) {
     $tab="registra_eliminaciones";
