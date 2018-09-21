@@ -19,7 +19,13 @@ $Vector["Limit"]=$limit;            //Numero de Registros a mostrar
  * Deshabilito Acciones
  * 
  */
-
+// Nueva Accion
+$Ruta="CrearPoliticasAcceso.php?CmbTipoUser=";
+$Vector["NuevaAccionLink"][2]="Politicas";
+$Vector["NuevaAccion"]["Politicas"]["Titulo"]=" Politicas ";
+$Vector["NuevaAccion"]["Politicas"]["Link"]=$Ruta;
+$Vector["NuevaAccion"]["Politicas"]["ColumnaLink"]="ID";
+$Vector["NuevaAccion"]["Politicas"]["Target"]="_blank";
         
 $Vector["VerRegistro"]["Deshabilitado"]=1; 
 ///Columnas excluidas
