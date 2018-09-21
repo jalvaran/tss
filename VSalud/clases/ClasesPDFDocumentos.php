@@ -147,7 +147,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
             $html.="</tr>";
             
             $query="SELECT cuenta,cod_actividad,cod_glosa_inicial,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado ";
-            $consulta= $this->obCon->Query("$query FROM $st");
+            $consulta= $this->obCon->Query("$query FROM $st ORDER BY fecha_factura");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
                 if($h==0){

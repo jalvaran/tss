@@ -72,7 +72,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $row = $obGlosas->FetchArray($obGlosas->Query($query));
             $ResultadosTotales = $row['num'];
             $st_reporte=$statement;
-            $statement.=" LIMIT $startpoint,$limit";
+            $statement.=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
             $query="SELECT cuenta,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado,cod_glosa_inicial,cod_actividad ";
             $consulta=$obGlosas->Query("$query FROM $statement");
@@ -92,7 +92,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 //Paginacion
                 if($Resultados){
 
-                    $st= base64_encode($statement);
+                    $st= base64_encode($st_reporte);
                     if($ResultadosTotales>$limit){
 
                         $css->FilaTabla(14);
@@ -229,7 +229,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $row = $obGlosas->FetchArray($obGlosas->Query($query));
             $ResultadosTotales = $row['num'];
             $st_reporte=$statement;
-            $statement.=" LIMIT $startpoint,$limit";
+            $statement.=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
             $query="SELECT cuenta,cod_actividad,cod_glosa_inicial,factura,nombre_administrador,fecha_factura,cod_prestador, identificacion, descripcion_estado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
@@ -249,7 +249,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 //Paginacion
                 if($Resultados){
 
-                    $st= urlencode($statement);
+                    $st= urlencode($st_reporte);
                     if($ResultadosTotales>$limit){
 
                         $css->FilaTabla(14);
