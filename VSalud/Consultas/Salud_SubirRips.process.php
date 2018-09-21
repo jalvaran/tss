@@ -89,38 +89,32 @@ if($_REQUEST["idAccion"]){
             $Error=0;
             $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%' ORDER BY id_upload_control DESC");
             while($DatosCT= $obRips->FetchArray($consulta)){
-                //print("Archivo".$DatosCT["nom_cargue"]);
+                
                 if (file_exists("../archivos/".$DatosCT["nom_cargue"])) {
                     $handle = fopen("../archivos/".$DatosCT["nom_cargue"], "r");
                     $flagCTSinRegistros=1;
                     while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
                         $flagCTSinRegistros=0;
                         $NombreArchivo=$data[2].".txt";
-                        $DatosCarga=$obRips->DevuelveValores("salud_upload_control", "nom_cargue", $NombreArchivo);
-                        if($DatosCarga["id_upload_control"]==""){
-                            $Error=1;
-                            $css->CrearNotificacionRoja("<br>El archivo $NombreArchivo relacionado en el CT, No existe en los archivos Subidos", 14);
-                        }
-                        $ConsultaUpload=$obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado=0");
-                        $flagNoRelacionadoCT=1;
-                        while ($DatosUploadControl=$obRips->FetchAssoc($ConsultaUpload)){
-                            $NombreArchivoNoRelacionado=$DatosUploadControl["nom_cargue"];
-                            if($NombreArchivo==$DatosUploadControl["nom_cargue"]){
-                                $flagNoRelacionadoCT=0;
-                                
-                            }
-                        }
-                        if($flagNoRelacionadoCT==1){
-                            $css->CrearNotificacionRoja("<br>Error El archivo $NombreArchivoNoRelacionado no está relacionado en el CT", 14);
-                             exit();
-                            
-                        }
+                        $Datos["nom_cargue"]=$NombreArchivo;
+                        $sql=$obCon->getSQLInsert("salud_upload_control_ct", $Datos);
+                        $obCon->Query($sql);
+                        
                     }
                     fclose($handle); 
-                    if($flagCTSinRegistros==1){
-                        $css->CrearNotificacionRoja("El CT no contiene información", 14);
-                        exit();
+                    
+                    $sql='SELECT nom_cargue
+                            FROM salud_upload_control
+                           WHERE nom_cargue NOT IN (SELECT nom_cargue
+                       FROM salud_upload_control_ct) AND Analizado=0 AND nom_cargue NOT LIKE "CT%"';
+                            
+                    $consulta=$obCon->Query($sql);
+                    while($DatosUpl=$obCon->FetchAssoc($consulta)){
+                        print("<strong style='color:red'>El Archivo ".$DatosUpl["nom_cargue"]." No está Relacionado en el CT </strong> <br>");
+                    
+                        $Error=1;
                     }
+                    
                 }else{
                     exit("No existe el archivo ../archivos/".$DatosCT["nom_cargue"]);
                 }
@@ -131,8 +125,6 @@ if($_REQUEST["idAccion"]){
             //$obCon->Query($sql);
             if($Error==0){
                 print("OK");
-            }else{
-                print("Error");
             }
             
         break;  
@@ -181,7 +173,7 @@ if($_REQUEST["idAccion"]){
                 
             }
             if($ErrorAF==1){
-                $css->CrearNotificacionRoja("Error, la CuentaRIPS no corresponde al paquete enviado o no existe ningún archivo AF", 14);
+                $css->CrearNotificacionRoja("Error, la CuentaRIPS no corresponde al paquete enviado", 14);
                 exit();
             }
             if($Error==0){

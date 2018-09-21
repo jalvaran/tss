@@ -62,3 +62,19 @@ INSERT INTO `salud_regimen` (`ID`, `Regimen`) VALUES
 
 ALTER TABLE `salud_archivo_control_glosas_respuestas` ADD `EstadoGlosaHistorico` INT(3) NOT NULL AFTER `Tratado`;
 
+DROP TABLE IF EXISTS `salud_upload_control_ct`;
+CREATE TABLE `salud_upload_control_ct` (
+  `id_upload_control` bigint(20) NOT NULL AUTO_INCREMENT,
+  `nom_cargue` varchar(45) COLLATE latin1_spanish_ci NOT NULL,
+  `fecha_cargue` datetime NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Analizado` bit(1) NOT NULL,
+  `CargadoTemp` bit(1) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`id_upload_control`),
+  KEY `nom_cargue` (`nom_cargue`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+

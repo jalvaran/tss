@@ -1127,6 +1127,7 @@ class Rips extends conexion{
         $this->VaciarTabla("salud_archivo_urgencias_temp");
         $this->VaciarTabla("salud_archivo_usuarios_temp");
         $this->VaciarTabla("salud_rips_facturas_generadas_temp");
+        $this->VaciarTabla("salud_upload_control_ct");
         
         
     }

@@ -1,3 +1,13 @@
+function DeshabilitarTeclado(e,idElement){
+    //console.log("Entra");
+    ValorActual=document.getElementById(idElement).value;
+    var key = window.Event ? e.which : e.keyCode
+    console.log(key)
+        return ((key >= 48 && key <= 50))
+        
+    //onkeyup="return false";
+}
+
 var idComprobanteC=0;
 
 function EnviaFormSC() {
