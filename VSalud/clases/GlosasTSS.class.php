@@ -634,7 +634,9 @@ class Glosas extends conexion{
            $consulta=$this->Query($sql);
            $Datos= $this->FetchArray($consulta);
            $Estado=$Datos["MinEstado"];
-           
+           if($Estado==12){
+               $Estado=8;
+           }
            return($Estado);
        }   
      /**

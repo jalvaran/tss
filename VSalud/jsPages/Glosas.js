@@ -411,6 +411,15 @@ function BuscarActividadesFactura(idFactura){
  * @returns {undefined}
  */    
 function DevolverFactura(idFactura){
+    if($('#FechaAuditoria').val()=='' || $('#FechaDevolucion').val()=='' || $('#CodigoGlosa').val()=='' || $('#Observaciones').val()==''){
+        alertify.set({ labels: {
+                ok     : "OK",
+                cancel : "Cancelar"
+            } });
+        alertify.alert("Todos los campos son obligatorios");
+        return 0;
+    }
+    
     alertify.set({ labels: {
                 ok     : "Devolver",
                 cancel : "Cancelar"
@@ -442,6 +451,17 @@ function DevolverFactura(idFactura){
  * @returns {undefined}
  */
 function DibujeFormulario(idFormulario,idFactura){
+        if ($('#DivHistorialGlosas').length) {
+            document.getElementById('DivHistorialGlosas').innerHTML='';
+        }
+        if ($('#DivFormRespuestasGlosas').length) {
+            document.getElementById('DivFormRespuestasGlosas').innerHTML='';
+        }
+        if ($('#DivRespuestasGlosasTemporal').length) {
+            document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
+        }
+       
+        
         document.getElementById('BtnModalGlosar').click();
         document.getElementById('BtnCierreModal').focus();
         var form_data = new FormData();       
@@ -924,6 +944,7 @@ function GuadarGlosasTemporales(idFactura){
 function VerDetallesActividad(CodActividad,idFactura){
         document.location.href = "#AnclaDetalleActividades";
         document.getElementById("DivGlosar").innerHTML="";
+        document.getElementById("DivFormRespuestasGlosas").innerHTML="";
         document.getElementById('TxtActividadActiva').value=CodActividad;
         document.getElementById('TxtFacturaActiva').value=idFactura;
         
@@ -1651,7 +1672,7 @@ function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0)
  */
 function MuestraEditarGlosaInicial(idGlosa,CodActividad,Descripcion){
     
-    //document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivHistorialGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
@@ -1741,7 +1762,7 @@ function EditarGlosaInicial(idGlosaInicial,idGlosaRespuesta){
  */
 function MuestraEditarGlosaRespondida(idGlosa,idFormulario){
     
-    //document.getElementById('DivHistoricoGlosas').innerHTML='';
+    document.getElementById('DivHistorialGlosas').innerHTML='';
     document.getElementById('DivFormRespuestasGlosas').innerHTML='';
     document.getElementById('DivRespuestasGlosasTemporal').innerHTML='';
     document.getElementById('BtnModalGlosar').click();
