@@ -920,7 +920,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
-                        print("<strong>Soporte de la Concilición:</strong><br>");
+                        print("<strong>Soporte de la Conciliación:</strong><br>");
                         $css->CrearUpload("UpSoporteGlosa");
                     print("</td>");
                     $css->CierraFilaTabla();
@@ -1326,7 +1326,7 @@ if( !empty($_REQUEST["idFormulario"]) ){
                         $css->CerrarDiv();                        
                     print("</td>");
                     print("<td style='text-align:center'>");
-                        print("<strong>Soporte de la Concilición:</strong><br>");
+                        print("<strong>Soporte de la Conciliación:</strong><br>");
                         $css->CrearUpload("UpSoporteGlosa");
                     print("</td>");
                     $css->CierraFilaTabla();

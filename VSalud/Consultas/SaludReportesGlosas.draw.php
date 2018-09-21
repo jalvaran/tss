@@ -754,7 +754,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`CodigoGlosa`<>'') AND EstadoGlosa<9 ";
+            $Condicional=" WHERE (`CodigoGlosa`<>'0') AND EstadoGlosa<9 ";
             $Condicional2='';
             
             if($idEPS<>''){

@@ -150,8 +150,8 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->CierraFilaTabla();
                     $css->FilaTabla(12);
                         $css->ColTabla("Archivo", 1);
-                        $css->ColTabla("Codigo", 1);
-                        $css->ColTabla("Descripcion", 1);
+                        $css->ColTabla("Código", 1);
+                        $css->ColTabla("Descripción", 1);
                         $css->ColTabla("Valor Unitario", 1);
                         $css->ColTabla("Cantidad", 1);
                         $css->ColTabla("Valor Contratado", 1);
@@ -200,7 +200,7 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $css->ColTabla($DatosFactura["Estado"], 1);
                     print("<td>");
                         $Enable=1;
-                        if($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<>8){
+                        if(($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<=7) and ($DatosFactura["EstadoGlosa"]>8 and $DatosFactura["EstadoGlosa"]<12) ){
                             $Enable=0;
                         }
                         $DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");

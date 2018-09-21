@@ -398,5 +398,5 @@ WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS nombre_ad
 (SELECT tipo_regimen FROM salud_eps 
 WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS regimen_eps
 
-FROM `salud_glosas_iniciales` WHERE EstadoGlosa<=6;
+FROM `salud_glosas_iniciales` WHERE EstadoGlosa<=7;
 
