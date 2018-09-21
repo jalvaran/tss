@@ -102,7 +102,7 @@ print("<body>");
                 print("</td>");
                 print("<td>");
                     $css->CrearSelect("CmbTipoNegociacion", "$TxtFuncion",200);
-                    $css->CrearOptionSelect("", "Tipo de Negociacion", 0);
+                    $css->CrearOptionSelect("", "Seleccione una opción", 0);
                     $css->CrearOptionSelect("evento", "Evento", 0);
                     $css->CrearOptionSelect("capita", "Capita", 0);
                 $css->CerrarSelect();

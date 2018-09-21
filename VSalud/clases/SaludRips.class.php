@@ -446,6 +446,7 @@ class Rips extends conexion{
     public function InsertarRipsFacturacionGenerada($NombreArchivo,$TipoNegociacion,$Separador,$FechaCargue, $idUser,$destino,$FechaRadicado,$NumeroRadicado,$Escenario,$CuentaGlobal,$CuentaRIPS,$idEPS, $Vector) {
         // si se recibe el archivo
         $DatosEPS=$this->DevuelveValores("salud_eps", "cod_pagador_min", $idEPS);
+        
         $Dias=$DatosEPS["dias_convenio"];
         
         $sql="SELECT CodigoPrestadora FROM empresapro";
@@ -487,6 +488,9 @@ class Rips extends conexion{
                     
                 }
                 if($ErrorXIPS==1){
+                    if($Mensaje["Errores"]<10){
+                        print("<h4 style='color:red'>El código de IPS: ".$data[0]." relacionado en la linea $line del AF, No existe en la Base de datos</h4><br>");
+                    }
                     $Mensaje["Errores"]++;
                     $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
                     $Mensaje["PosError"]=1;
@@ -498,6 +502,9 @@ class Rips extends conexion{
                 }
                 
                 if($data[8]<>$idEPS){
+                    if($Mensaje["Errores"]<10){
+                        print("<h4 style='color:red'>El código de la EPS: ".$data[8]." relacionado en la linea $line del AF, No Corresponde a la EPS Seleccionada</h4><br>");
+                    }
                     $Mensaje["Errores"]++;
                     $Mensaje["LineasError"]=$Mensaje["LineasError"].",".$line;
                     $Mensaje["PosError"]=9;

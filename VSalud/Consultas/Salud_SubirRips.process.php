@@ -102,7 +102,7 @@ if($_REQUEST["idAccion"]){
                         
                     }
                     fclose($handle); 
-                    
+                    //Se valida si se relacionaron Archivos que no estan en el paquete
                     $sql='SELECT nom_cargue
                             FROM salud_upload_control
                            WHERE nom_cargue NOT IN (SELECT nom_cargue
@@ -111,6 +111,18 @@ if($_REQUEST["idAccion"]){
                     $consulta=$obCon->Query($sql);
                     while($DatosUpl=$obCon->FetchAssoc($consulta)){
                         print("<strong style='color:red'>El Archivo ".$DatosUpl["nom_cargue"]." No está Relacionado en el CT </strong> <br>");
+                    
+                        $Error=1;
+                    }
+                    //Se valida si se relacionaron Archivos que no estan en el paquete
+                    $sql='SELECT nom_cargue
+                            FROM salud_upload_control_ct
+                           WHERE nom_cargue NOT IN (SELECT nom_cargue
+                       FROM salud_upload_control) AND nom_cargue NOT LIKE "CT%"';
+                            
+                    $consulta=$obCon->Query($sql);
+                    while($DatosUpl=$obCon->FetchAssoc($consulta)){
+                        print("<strong style='color:red'>El Archivo ".$DatosUpl["nom_cargue"]." Está Relacionado en el CT pero no se subió</strong> <br>");
                     
                         $Error=1;
                     }
@@ -167,7 +179,7 @@ if($_REQUEST["idAccion"]){
                         $Mensaje["Error"]["Num"]=$MensajeInsercion["Errores"];
                         $Mensaje["Error"]["Lines"]=$MensajeInsercion["LineasError"];
                         $Mensaje["Error"]["Pos"]=$MensajeInsercion["PosError"];
-                        $css->CrearNotificacionRoja("Error en el Archivo AF, la EPS o IPS no corresponde al archivo subido, Linea:".$MensajeInsercion["LineasError"], 14);
+                        //$css->CrearNotificacionRoja("Error en el Archivo AF, la EPS o IPS no corresponde al archivo subido, Linea:".$MensajeInsercion["LineasError"], 14);
                     }
                 }
                 
