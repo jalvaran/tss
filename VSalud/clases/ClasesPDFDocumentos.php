@@ -68,7 +68,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
      * Genera el PDF de un reporte
      * @param type $idReporte
      */
-    public function Reportes_PDF($idReporte,$st,$idUser,$Vector) {
+    public function Reportes_PDF($idReporte,$query,$st,$idUser,$Vector) {
         $DatosFormatos= $this->obCon->DevuelveValores("formatos_calidad", "ID", 32);
         if($idReporte==1){
             $Documento="Glosas Pendientes por Conciliar";
@@ -80,11 +80,11 @@ $html.=$DatosFormatos["CuerpoFormato"];
         }
         if($idReporte==3){
             $Documento="Porcentaje de valor Glosado definitivo X EPS";
-            $html= $this->ReportesHTML_PorcentajesGlosados($st);
+            $html= $this->ReportesHTML_PorcentajesGlosados($st,$query);
         }
         if($idReporte==4){
             $Documento="Porcentaje de valor Glosado definitivo X IPS";
-            $html=$this->ReportesHTML_PorcentajesGlosadosIPS($st);
+            $html=$this->ReportesHTML_PorcentajesGlosadosIPS($st,$query);
         }
         if($idReporte==5){
             $Documento="Reporte 2193";
@@ -193,7 +193,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
      * @param type $st
      * @return type
      */
-    public function ReportesHTML_PorcentajesGlosados($st) {
+    public function ReportesHTML_PorcentajesGlosados($st,$query) {
         
         $Back="#CEE3F6";
         $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
@@ -217,10 +217,12 @@ $html.=$DatosFormatos["CuerpoFormato"];
                 $html.="<strong>PORCENTAJE</strong>";
                 $html.="</td>";
             $html.="</tr>";
-            
+            /*
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
                    . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
+             * 
+             */
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_administrador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -231,7 +233,11 @@ $html.=$DatosFormatos["CuerpoFormato"];
                     $Back="white";
                     $h=0;
                 }
-                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],4);
+                $TotalFactura=$DatosRespuestas["TotalFacturado"];
+                if($DatosRespuestas["TotalFacturado"]==0){
+                    $TotalFactura=1;
+                }
+                $Porcentaje=ROUND((100/$TotalFactura)*$DatosRespuestas["TotalGlosado"],4);
                                
                 $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
                     $html.="<td>";
@@ -263,7 +269,7 @@ $html.=$DatosFormatos["CuerpoFormato"];
      * @param type $st
      * @return type
      */
-    public function ReportesHTML_PorcentajesGlosadosIPS($st) {
+    public function ReportesHTML_PorcentajesGlosadosIPS($st,$query) {
         
         $Back="#CEE3F6";
         $html='<table cellspacing="1" cellpadding="2" border="0"  align="left" >';
@@ -287,10 +293,12 @@ $html.=$DatosFormatos["CuerpoFormato"];
                 $html.="<strong>PORCENTAJE</strong>";
                 $html.="</td>";
             $html.="</tr>";
-            
+            /*
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
                     . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
                     . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
+             * 
+             */
             $consulta= $this->obCon->Query("$query FROM $st GROUP BY cod_prestador");
             $h=0;
             while($DatosRespuestas=$this->obCon->FetchAssoc($consulta)){
@@ -301,7 +309,11 @@ $html.=$DatosFormatos["CuerpoFormato"];
                     $Back="white";
                     $h=0;
                 }
-                $Porcentaje=ROUND((100/$DatosRespuestas["TotalFacturado"])*$DatosRespuestas["TotalGlosado"],4);
+                $TotalFactura=$DatosRespuestas["TotalFacturado"];
+                if($DatosRespuestas["TotalFacturado"]==0){
+                    $TotalFactura=1;
+                }
+                $Porcentaje=ROUND((100/$TotalFactura)*$DatosRespuestas["TotalGlosado"],4);
                                
                 $html.='<tr align="left" border="1" style="border-bottom: 2px solid #ddd;background-color: '.$Back.';"> ';
                     $html.="<td>";

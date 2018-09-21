@@ -22,9 +22,12 @@ if(isset($_REQUEST["idDocumento"])){
             //if($TipoReporte==2){
                 $st= urldecode($_REQUEST["st"]);
             //}
+            $query="";
             
-            
-            $obDoc->Reportes_PDF($TipoReporte,$st,$idUser,"");
+            if(isset($_REQUEST["q"])){
+                $query=urldecode($_REQUEST["q"]);
+            }
+            $obDoc->Reportes_PDF($TipoReporte,$query,$st,$idUser,"");
         break;
         
     }

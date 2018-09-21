@@ -346,7 +346,22 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2="";
             
-            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
+                $Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                
+            }
+            
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
+                $Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
+            }
+            
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional ";
+            
+            
             
             if(isset($_REQUEST['st'])){
 
@@ -367,7 +382,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $statement.=" LIMIT $startpoint,$limit";
             //print($statement);
             $query="SELECT cod_administrador,nombre_administrador,nit_administrador,"
-                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador) AS TotalFacturado,"
+                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_enti_administradora=cod_administrador $Condicional2) AS TotalFacturado,"
                     . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
@@ -379,7 +394,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
                         $st1= urlencode($st_reporte);
-                        $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
+                        $query=urlencode($query);
+                        $css->CrearImageLink("PDF_Documentos.php?q=$query&idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
                 $css->CierraFilaTabla();
@@ -444,12 +460,16 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
                         $css->FilaTabla(12);
                             $css->ColTabla($DatosConsulta["cod_administrador"], 1);
-                            $css->ColTabla($DatosConsulta["nombre_administrador"], 1);
+                            $css->ColTabla(utf8_encode($DatosConsulta["nombre_administrador"]), 1);
                             $css->ColTabla($DatosConsulta["nit_administrador"], 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalFacturado"]), 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalGlosado"]), 1);
                             print("<td>");
-                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],4);
+                                $TotalFactura=$DatosConsulta["TotalFacturado"];
+                                if($DatosConsulta["TotalFacturado"]==0){
+                                    $TotalFactura=1;
+                                }
+                                $Porcentaje=ROUND((100/$TotalFactura)*$DatosConsulta["TotalGlosado"],4);
                                 print("$Porcentaje%");
                             print("</td>");
                         
@@ -479,8 +499,19 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
+                $Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                
+            }
             
-            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
+                $Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
+            }
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional ";
             
             if(isset($_REQUEST['st'])){
 
@@ -499,7 +530,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $ResultadosTotales = $row;
             $statement.=" LIMIT $startpoint,$limit";
             $query="SELECT cod_prestador,nombre_prestador,nit_prestador,"
-                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador) AS TotalFacturado,"
+                    . " (SELECT SUM(valor_neto_pagar) FROM salud_archivo_facturacion_mov_generados WHERE cod_prest_servicio=cod_prestador $Condicional2) AS TotalFacturado,"
                     . "SUM(ValorGlosado - ValorLevantado) AS TotalGlosado ";
             $consulta=$obGlosas->Query("$query FROM $statement");
             //print("$query FROM $statement");
@@ -511,7 +542,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->FilaTabla(14);
                     print("<td colspan=7>");
                         $st1= urlencode($st_reporte);
-                        $css->CrearImageLink("PDF_Documentos.php?idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
+                        $query=urlencode($query);
+                        $css->CrearImageLink("PDF_Documentos.php?q=$query&idDocumento=2&TipoReporte=$TipoReporte&st=$st1", "../images/pdf.png", "_blank", 30, 100);
 
                     print("</td>");
                 $css->CierraFilaTabla();
@@ -576,12 +608,16 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
                         $css->FilaTabla(12);
                             $css->ColTabla($DatosConsulta["cod_prestador"], 1);
-                            $css->ColTabla($DatosConsulta["nombre_prestador"], 1);
+                            $css->ColTabla(utf8_encode($DatosConsulta["nombre_prestador"]), 1);
                             $css->ColTabla($DatosConsulta["nit_prestador"], 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalFacturado"]), 1);
                             $css->ColTabla(number_format($DatosConsulta["TotalGlosado"]), 1);
                             print("<td>");
-                                $Porcentaje=ROUND((100/$DatosConsulta["TotalFacturado"])*$DatosConsulta["TotalGlosado"],4);
+                                $TotalFacturado=$DatosConsulta["TotalFacturado"];
+                                if($DatosConsulta["TotalFacturado"]==0){
+                                    $TotalFacturado=1;
+                                }
+                                $Porcentaje=ROUND((100/$TotalFacturado)*$DatosConsulta["TotalGlosado"],4);
                                 print("$Porcentaje%");
                             print("</td>");
                         
@@ -611,8 +647,20 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Condicional=" WHERE (`EstadoGlosa`= 5 or `EstadoGlosa`= 6) ";
             $Condicional2='';
             
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
+                //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                
+            }
             
-            $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
+                //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
+            }
+            
+            $statement=" `vista_glosas_iniciales_reportes` $Condicional ";
             
             if(isset($_REQUEST['st'])){
 
@@ -762,6 +810,19 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }
             if($CuentaRIPS<>'000000'){
                 //$Condicional=$Condicional." AND cuenta = '$CuentaRIPS' ";
+            }
+            
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+                $Condicional.=" AND FechaIPS>= '$FechaInicial' ";
+                //$Condicional2.=" AND fecha_factura>= '$FechaInicial' ";
+                
+            }
+            
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                $Condicional.=" AND FechaIPS <= '$FechaFinal' ";
+                //$Condicional2.=" AND fecha_factura<= '$FechaFinal' ";
             }
             $statement=" `vista_glosas_iniciales_reportes` $Condicional $Condicional2";
             
