@@ -69,7 +69,7 @@ if( !empty($_REQUEST["idAccion"]) ){
                     $Errores=$Errores+1;
                 }
                 if(($DatosCarga["CodigoGlosa"]=='')){ //Si la EPS no está asociada a la factura
-                    $css->CrearNotificacionRoja("<br>Error: El Codigo de la glosa no existe, Linea: ".$DatosCarga["ID"]);
+                    $css->CrearNotificacionRoja("<br>Error: El Codigo de la glosa no existe, Linea: ".$DatosCarga["ID"],14);
                     $Errores=$Errores+1;
                 }
                 if(($DatosCarga["CodigoActividadAM"]=='') AND ($DatosCarga["CodigoActividadAT"]=='') AND ($DatosCarga["CodigoActividadAP"]=='') AND ($DatosCarga["CodigoActividadAC"]=='') ){ //Si la actividad no existe en ninguno de los archivos

@@ -312,13 +312,13 @@ class CssIni{
 			$Required="required";
 		else
 			$Required="";
-                /*
+                
                 if($type=="date"){
-                    $TxtEvento="onkeypress";
-                    $TxtFuncion="DeshabilitarTeclado(event,'$nombre');";
+                    //$ReadOnly="readonly";
+                    
+                    //$TxtFuncion="DeshabilitarTeclado(event,'$nombre');";
                 }
-                 * 
-                 */
+                 
 		$JavaScript=$TxtEvento.' = '.$TxtFuncion;
                 $OtrasOpciones="";
                 if($Max<>''){

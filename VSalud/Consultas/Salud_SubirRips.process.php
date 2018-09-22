@@ -53,7 +53,10 @@ if($_REQUEST["idAccion"]){
         break;
     
         case 4://Verificar CT Y Verificar que los archivos correspondan al numero de cuenta RIPS
-            $CuentaRIPS=$obCon->normalizar($_REQUEST["CuentaRIPS"]);
+            print("OK");
+            exit();
+            $CuentaRIPS=str_pad($obCon->normalizar($_REQUEST["CuentaRIPS"]), 6, "0", STR_PAD_LEFT);
+            //print($CuentaRIPS);
             $ErrorCT=1;
             $ErrorArchivos=0;
             $consulta= $obRips->ConsultarTabla("salud_upload_control", " WHERE Analizado='0' AND nom_cargue LIKE 'CT%'");
@@ -72,14 +75,19 @@ if($_REQUEST["idAccion"]){
             while($DatosArchivos= $obRips->FetchArray($consulta)){
                 
                 $NumCuentaRIPS=substr($DatosArchivos["nom_cargue"], 2, 6);
+                //print($NumCuentaRIPS);
                 if($NumCuentaRIPS<>$CuentaRIPS){
                     $ErrorArchivos=1;
                     $css->CrearNotificacionRoja("<br>La Cuenta RIPS Digitada No coincide con el archivo ".$DatosArchivos["nom_cargue"], 14);   
+                    exit();
+                    
                 }
                 
             }
             if($ErrorArchivos==0 AND $ErrorCT==0){
                 print("OK");
+            }else{
+                print(" ");
             }
             
         break;
@@ -381,6 +389,7 @@ if($_REQUEST["idAccion"]){
         case 24://Modifica los autoincrementables
             $obRips->ModifiqueAutoIncrementables("");
             $obCon->update("salud_upload_control", "Analizado", 1, "");
+            //$obCon->update("salud_upload_control", "CargadoTemp", 1, "");
             print("OK");
         break;
         case 25://Verifica duplicados

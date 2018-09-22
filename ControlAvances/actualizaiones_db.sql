@@ -76,5 +76,15 @@ CREATE TABLE `salud_upload_control_ct` (
   KEY `nom_cargue` (`nom_cargue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
+DROP TABLE IF EXISTS `empresapro_regimenes`;
+CREATE TABLE `empresapro_regimenes` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Regimen` varchar(20) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `empresapro_regimenes` (`ID`, `Regimen`) VALUES
+(1,	'COMUN'),
+(2,	'SIMPLIFICADO');
 
 

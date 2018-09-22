@@ -186,7 +186,7 @@ function RegistraConciliaciones(){
                 //document.getElementById('BtnEnviarCargaMasiva').disabled=false;
                 RegistraConciliaciones();
             }else if(respuestas[0]==='FIN'){
-                document.getElementById('EstadoProgresoConciliaciones').innerHTML="Las Glosas fueron creadas exitósamente";
+                document.getElementById('EstadoProgresoConciliaciones').innerHTML="";
                 $('#PgProgresoConciliaciones').css('width','100%').attr('aria-valuenow', 100);  
                 document.getElementById('LyProgresoConciliaciones').innerHTML="100%";
                 document.getElementById('BtnEnviarCargaMasivaConciliaciones').disabled=false;

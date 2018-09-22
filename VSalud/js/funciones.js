@@ -1,11 +1,26 @@
-function DeshabilitarTeclado(e,idElement){
-    //console.log("Entra");
-    ValorActual=document.getElementById(idElement).value;
+function NoPermitirTeclas(e,idElement){
+    
+    console.log(e);
     var key = window.Event ? e.which : e.keyCode
     console.log(key)
+    if(key){
+        document.getElementById(idElement).value= '';
+    }
         return ((key >= 48 && key <= 50))
         
     //onkeyup="return false";
+}
+
+function DeshabilitarTeclado(e,idElement){
+    
+    document.getElementById(idElement).onkeypress= NoPermitirTeclas(e,idElement);
+    
+}
+
+function ValidaFechaDates(idElement){
+    var FechaInicialPermitida =$('#'+idElement).attr("min");
+    console.log(FechaInicialPermitida);
+    
 }
 
 var idComprobanteC=0;

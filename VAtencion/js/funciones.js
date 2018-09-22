@@ -1,4 +1,17 @@
+/*
+document.getElementById("Password").addEventListener("keypress", SoloNumeroYLetras); 
+document.getElementById("Login").addEventListener("keypress", SoloNumeroYLetras); 
+function SoloNumeroYLetras(e){
+      
+    var key = window.Event ? e.which : e.keyCode
+    console.log(key) 
+    return ((key >= 48 && key <= 57) || (key >= 0 && key <= 31) || key == 127)
+   
+   
 
+}
+
+*/
 function EnviaForm(idForm) {
 	
 	document.getElementById(idForm).submit();

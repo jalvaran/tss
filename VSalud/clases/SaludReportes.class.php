@@ -246,7 +246,10 @@ class Reportes extends conexion{
                 $SoporteRespuesta="../ArchivosTemporales/Reportes/Soportes/".$idFactura."_".$CodActividad."_".$CodGlosaInicial."_".$CodGlosaRespuesta.".$Extension";
                 $SoporteRespuesta=str_replace(' ','_',$SoporteRespuesta); 
                 //print($SoporteArchivo);
-                copy($SoporteArchivo, $SoporteRespuesta);
+                if(file_exists($SoporteArchivo)){
+                    copy($SoporteArchivo, $SoporteRespuesta);
+                }
+                
             }
         }
     }

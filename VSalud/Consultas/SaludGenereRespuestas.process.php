@@ -83,14 +83,14 @@ if($_REQUEST["idAccion"]){
             $NombreArchivo=$idEPS."_".$Fecha."_ReporteXCuentas.zip";
             $Respuesta=$obCon->ComprimaRespuesta($NombreArchivo,$Soportes);
             
-            $imagerute="../images/download.gif";
+            $imagerute="../images/dardebaja.png";
             $page="ArchivosTemporales/Reportes/$NombreArchivo";
             //$css->CrearLink($page, "_blank", "Descargar");
-            print("<a href='$page' target='_blank'>");
-            $css->CrearBotonEvento("BtnDescargar", "Bajar", 1, "", "", "naranja", "");
+            //print("<a href='$page' target='_blank'>");
+            //$css->CrearBotonEvento("BtnDescargar", "Descargar", 1, "", "", "naranja", "");
             //$css->CrearBoton("BtnDescargar", "Bajar");
-            print("</a>");
-            //$css->CrearImageLink($page, $imagerute, "_blank");
+            //print("</a>");
+            $css->CrearImageLink($page, $imagerute, "_blank",70,70);
             $obCon->VaciarTabla("salud_control_generacion_respuestas_excel");
         break; 
         case 7://Se reciben las facturas y se llenan con respuestas a la tabla para iniciar el proceso de consulta de respuestas y registro en el excel

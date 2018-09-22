@@ -164,7 +164,7 @@ FROM `salud_glosas_masivas_temp`;
 DROP VIEW IF EXISTS `vista_salud_consolidaciones_masivas`;
 CREATE VIEW vista_salud_consolidaciones_masivas AS 
 SELECT `ID`,FechaConciliacion,CuentaRIPS as CuentaRIPSTemp,num_factura,CodigoActividad,ValorLevantado,ValorAceptado,Observaciones,Soporte,Conciliada,
-(SELECT FechaConciliacion>NOW()) AS Extemporanea,(SELECT ValorLevantado>0) AS ValorLevantadoPositivo,(SELECT ValorAceptado>0) AS ValorAceptadoPositivo,
+(SELECT FechaConciliacion>NOW()) AS Extemporanea,(SELECT ValorLevantado>=0) AS ValorLevantadoPositivo,(SELECT ValorAceptado>=0) AS ValorAceptadoPositivo,
 (SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
 (SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_conciliaciones_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
 

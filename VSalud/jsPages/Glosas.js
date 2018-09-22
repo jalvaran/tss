@@ -1629,6 +1629,10 @@ function RefrescarDiv(){
  * @returns {undefined}
  */
 function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0){
+    alertify.set({ labels: {
+        ok     : "OK",
+        cancel : "Cancelar"
+    } });
     alertify.prompt("Escriba el por qué Anulará esta Glosa", function (e, str) {
             if (e) {
                     if (str != '') {
@@ -1652,7 +1656,8 @@ function AnularGlosa(idGlosa,idFactura,CodActividad,TipoArchivo,SoloRespuesta=0)
                             type: 'post',
                             success: function(data){
 
-                                alertify.alert(data);            
+                                alertify.alert(data);    
+                                
                                 RefrescarDiv();
 
                             },

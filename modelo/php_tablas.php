@@ -408,7 +408,7 @@ public function DibujeTabla($Vector){
     $this->css->CrearBotonVerde("BtnFiltrar", "Filtrar");
     $TxtSt=urlencode($statement);
     $TxtTabla= base64_encode($Tabla["Tabla"]);
-    if($tbl<>'vista_af_duplicados'){
+    if($tbl==' '){
         $imagerute="../images/excel.png";    
         $this->css->CrearImageLink("$myPage?BtnExportarExcel=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
         $imagerute="../images/csv2.png";    
