@@ -957,7 +957,7 @@ class Glosas extends conexion{
      */
     public function ActualiceEstados($NumFactura,$TipoArchivo,$CodigoActividad,$Vector) {
                 
-        $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura'";
+        $sql="SELECT MIN(EstadoGlosa) as MinEstado FROM salud_glosas_iniciales WHERE num_factura='$NumFactura' ";
         $Datos=$this->Query($sql);
         $Datos= $this->FetchArray($Datos);
         $EstadoGlosaFactura=$Datos["MinEstado"];

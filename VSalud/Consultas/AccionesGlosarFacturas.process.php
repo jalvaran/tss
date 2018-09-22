@@ -421,6 +421,10 @@ if( !empty($_REQUEST["idAccion"]) ){
                 
                 
             }
+            $Estado=$obGlosas->CalcularEstadoActividad($idFactura, $CodActividad, "");
+            if($Estado==''){
+                $Estado=7;
+            }
             $obGlosas->ActualiceEstados($idFactura, $TipoArchivo, $CodActividad, "");
             print("Glosa Anulada");
         break;    
@@ -455,8 +459,15 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $destino=$carpeta.$Name;
                 move_uploaded_file($_FILES['Soporte']['tmp_name'],$Atras.$Atras.$destino);
             }
-            $obGlosas->EditaGlosaInicial($idGlosaInicial, $idFactura, $CodActividad, $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
             $obGlosas->EditaTablaControlRespuestasGlosas($idGlosaRespuesta, $DatosGlosaRespuesta["TipoArchivo"], $idGlosaInicial, $idFactura, $CodActividad, $DatosGlosaRespuesta["DescripcionActividad"], $TotalActividad, 1, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, 0, 0, $ValorEPS, $destino, $idUser, "");
+            
+            $Estado=$obGlosas->CalcularEstadoActividad($DatosGlosa["num_factura"], $DatosGlosa["CodigoActividad"], "");
+            if($Estado==''){
+                $Estado=8;
+            }
+            $obGlosas->EditaGlosaInicial($idGlosaInicial, $idFactura, $CodActividad, $TotalActividad, $Estado, $FechaIPS, $FechaAuditoria, $CodigoGlosa, $ValorEPS, $ValorAceptado, 0, $ValorConciliar, $destino, $idUser, "");
+            
+            $obGlosas->ActualiceEstados($idFactura, $DatosGlosaRespuesta["TipoArchivo"], $CodActividad, "");
             print("Edición realizada con éxito");
         break; 
         
