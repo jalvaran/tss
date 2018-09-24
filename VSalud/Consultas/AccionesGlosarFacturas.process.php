@@ -225,6 +225,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             $obGlosas->GuardaRespuestaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaContraGlosasTemporalAReal($idUser, "");
             $obGlosas->GuardaRespuestasGlosasTemporalAReal($idUser, "");
+            
             $obGlosas->BorraReg("salud_archivo_control_glosas_respuestas_temp", "idUser", $idUser);
             //$obGlosas->VaciarTabla("salud_archivo_control_glosas_respuestas_temp");
             print("Acciones Realizadas");
@@ -515,10 +516,11 @@ if( !empty($_REQUEST["idAccion"]) ){
             }
             $obGlosas->EditaTablaControlRespuestasGlosas($idGlosa, $TipoArchivo, $DatosGlosa["idGlosa"], $idFactura, $CodActividad, $Descripcion, $TotalActividad, $Estado, $FechaIPS, $FechaAuditoria, $Observaciones, $CodigoGlosa, $ValorEPS, $ValorAceptado, $ValorLevantado, $ValorConciliar, $destino, $idUser, "");
             
-            $Estado=$obGlosas->CalcularEstadoActividad($DatosGlosa["num_factura"], $DatosGlosa["CodigoActividad"], "");
-            if($Estado==''){
-                $Estado=7;
-            }
+            //$Estado=$obGlosas->CalcularEstadoActividad($DatosGlosa["num_factura"], $DatosGlosa["CodigoActividad"], "");
+           // if($Estado==''){
+             //   $Estado=7;
+            //}
+           // print("Estado ".$Estado);
             $idGlosaInicial=$DatosGlosa["idGlosa"];
             $sql="UPDATE salud_glosas_iniciales SET EstadoGlosa='$Estado',ValorLevantado='$ValorLevantado',ValorAceptado='$ValorAceptado',ValorXConciliar='$ValorConciliar' WHERE ID='$idGlosaInicial'";
             $obGlosas->Query($sql);
