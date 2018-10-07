@@ -18,7 +18,8 @@ function getInfoForm(){
         form_data.append('FechaInicial', $('#FechaInicial').val());
         form_data.append('FechaFinal', $('#FechaFinal').val());
         form_data.append('CuentaRIPS', $('#CuentaRIPS').val());
-    
+        form_data.append('CuentaGlobal', $('#CuentaGlobal').val());
+        form_data.append('Separador', $('#Separador').val());
     return form_data;
 }
 /**
@@ -44,7 +45,7 @@ function DibujeReporte(){
               
     $.ajax({
         //async:false,
-        url: './Consultas/SaludReportesGlosas.draw.php',
+        url: './Consultas/SaludReportesCartera.draw.php',
         //dataType: 'json',
         cache: false,
         contentType: false,

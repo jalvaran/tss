@@ -28,13 +28,14 @@ print("<body>");
     
             $css->CrearTabla();
                 $css->FilaTabla(16);
-                    $css->ColTabla("<strong>Tipo de Reporte</strong>", 2);
+                    $css->ColTabla("<strong>Tipo de Reporte</strong>", 1);
+                    $css->ColTabla("<strong>Separador</strong>", 1);
                     $css->ColTabla("<strong>EPS</strong>", 2);
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
-                    print("<td colspan=2 style='text-align:center' >");
+                    print("<td  style='text-align:center' >");
                         
-                        $css->CrearSelect("TipoReporte", "OcultarMostrarFiltros()",350);
+                        $css->CrearSelect("TipoReporte", "",350);
                             $css->CrearOptionSelect("1", "Facturas Pagadas", 1);
                             $css->CrearOptionSelect("2", "Facturas No Pagadas", 0);
                             $css->CrearOptionSelect("3", "Facturas Pagadas con Diferencias", 0);
@@ -43,6 +44,13 @@ print("<body>");
                             $css->CrearOptionSelect("6", "SIHO", 0);
                             $css->CrearOptionSelect("7", "Circular 014", 0);
                             
+                        $css->CerrarSelect();
+                        print("</td>");
+                        print("<td  style='text-align:center' >");
+                        $css->CrearSelect("Separador", "",150);
+                            $css->CrearOptionSelect("1", "Punto y Coma (;)", 1);
+                            $css->CrearOptionSelect("2", "Coma (,)", 0);
+                                                       
                         $css->CerrarSelect();
                     print("</td>");
                     print("<td colspan=2 style='text-align:center' >");
@@ -56,7 +64,7 @@ print("<body>");
                 $css->FilaTabla(16);
                     $css->ColTabla("<strong>Fecha Inicial</strong>", 1);
                     $css->ColTabla("<strong>Fecha Final</strong>", 1);   
-                    $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
+                    $css->ColTabla("<strong>Cuentas</strong>", 1);
                     $css->ColTabla("<strong>Generar</strong>", 1);
                 $css->CierraFilaTabla();
                 $css->FilaTabla(16);
@@ -73,6 +81,8 @@ print("<body>");
                      print("<td>");
                         $css->CrearDiv("DivCuentaRIPS", "", "center", 1, 1);
                             $css->CrearInputText("CuentaRIPS", "text", "", "", "CuentaRIPS", "", "", "", 150, 30, 0, 0,"Seleccione una Cuenta RIPS");
+                            $css->CrearInputText("CuentaGlobal", "text", "", "", "CuentaGlobal", "", "", "", 150, 30, 0, 0,"Seleccione una Cuenta RIPS");
+                        
                         $css->CerrarDiv();
                     print("</td>");
                     
