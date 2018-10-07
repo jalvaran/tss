@@ -111,6 +111,7 @@ if($_REQUEST["idAccion"]){
     
         case 4://Encuentre Facturas Pagas
             $obCon->EncuentreFacturasPagadas("");
+            
             print("OK");
             
         break;

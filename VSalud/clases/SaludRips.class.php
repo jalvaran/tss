@@ -837,12 +837,12 @@ class Rips extends conexion{
         //Secuencia SQL que selecciona los usuarios que no estan creados de la tabla temporal y los inserta en la principal
         $sql="INSERT INTO `salud_archivo_facturacion_mov_pagados` 
             (`num_factura`,`fecha_pago_factura`,`num_pago`,`valor_pagado`,
-            `nom_cargue`,`fecha_cargue`,`Soporte`,`idUser`)
+            `nom_cargue`,`fecha_cargue`,`Soporte`,`idUser`,`idEPS`,`nom_enti_administradora`,`tipo_negociacion`,`Proceso`)
             SELECT `numero_factura`,`FechaPago`,`NumeroGiro`,`ValorGiro`,`nom_cargue`,
-            `fecha_cargue`,`Soporte`,`idUser`
+            `fecha_cargue`,`Soporte`,`idUser`,`CodigoEPS`,`NombreEPS`,`FormaContratacion`,`Proceso`
             FROM salud_pagos_temporal as t1 WHERE NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_pagados` as t2  
-            WHERE t1.`nom_cargue`=t2.`nom_cargue` AND t1.`numero_factura`=t2.`num_factura`); ";
+            WHERE t1.`numero_factura`=t2.`num_factura` AND t1.Proceso=t2.Proceso); ";
         
         $this->Query($sql);
     }

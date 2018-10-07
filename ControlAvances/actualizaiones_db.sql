@@ -98,3 +98,7 @@ UPDATE `menu_submenus` SET `Estado` = b'0' WHERE `menu_submenus`.`ID` = 36;
 INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (66, 'Reportes', '49', '6', 'ReportesCartera.php', '_SELF', 1, 'reportes.jpg', '1', '2018-10-07 07:53:03', '2018-07-13 15:42:34');
 
 
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `tipo_negociacion` VARCHAR(25) NOT NULL AFTER `valor_pagado`;
+
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `idEPS` VARCHAR(25) NOT NULL AFTER `num_factura`, ADD `nom_enti_administradora` VARCHAR(100) NOT NULL AFTER `idEPS`;
+
