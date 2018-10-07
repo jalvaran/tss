@@ -87,4 +87,14 @@ INSERT INTO `empresapro_regimenes` (`ID`, `Regimen`) VALUES
 (1,	'COMUN'),
 (2,	'SIMPLIFICADO');
 
+INSERT INTO `menu_pestanas` (`ID`, `Nombre`, `idMenu`, `Orden`, `Estado`, `Updated`, `Sync`) VALUES
+(49,	'Reportes',	6,	6,	CONV('1', 2, 10) + 0,	'2018-07-13 15:42:33',	'2018-07-13 15:42:33');
+
+UPDATE `menu_pestanas` SET `Orden` = '3' WHERE `menu_pestanas`.`ID` = 40;
+UPDATE `menu_pestanas` SET `Orden` = '2' WHERE `menu_pestanas`.`ID` = 49;
+
+UPDATE `menu_submenus` SET `Estado` = b'0' WHERE `menu_submenus`.`ID` = 37;
+UPDATE `menu_submenus` SET `Estado` = b'0' WHERE `menu_submenus`.`ID` = 36;
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (66, 'Reportes', '49', '6', 'ReportesCartera.php', '_SELF', 1, 'reportes.jpg', '1', '2018-10-07 07:53:03', '2018-07-13 15:42:34');
+
 

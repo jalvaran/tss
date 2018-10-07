@@ -53,8 +53,8 @@ $css->CrearImageLink("../VMenu/MnuInventarios.php", "../images/ar.png", "_self",
 
 if($TipoUser=="administrador"){
     
-    $Consulta=$obVenta->Query("SELECT  COUNT(num_factura) as TotalFacturas,SUM(valor_pagado) as Total FROM $statement  ");
-    $DatosFacturas=$obVenta->FetchArray($Consulta);
+    $Consulta=$obCon->Query("SELECT  COUNT(num_factura) as TotalFacturas,SUM(valor_pagado) as Total FROM $statement  ");
+    $DatosFacturas=$obCon->FetchArray($Consulta);
     $TotalFacturas=  number_format($DatosFacturas["TotalFacturas"]);
     $Total=  number_format($DatosFacturas["Total"]);
     $css->CrearNotificacionAzul("Total de Facturas = $TotalFacturas, Valor = $Total", 16);

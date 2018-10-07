@@ -103,12 +103,8 @@ class Rips extends conexion{
                 $h++;
                 
                 if($h>=1 and $data[0]<>''){
-                    if($data[7]==''){
-                        $NumeroFactura=$data[8];
-                    }else{
-                        $NumeroFactura=$data[7]."-".$data[8]; //Para pagos con separador
-                    }
-                    
+                    //$NumeroFactura=$data[7]."-".$data[8]; //Para pagos con separador
+                    $NumeroFactura=$data[7].$data[8];
                     $ValorGiro=str_replace(".","",$data[9]);
                     $Giro=str_replace(".","",$data[10]);
                     $Giro=str_replace(",00","",$Giro);
@@ -143,8 +139,9 @@ class Rips extends conexion{
             fclose($handle); 
             $sql="";
             $this->RegistreUpload($NombreArchivo, $FechaCargue, $idUser, "");
-            //$this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
-               
+            $this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
+        
+        
     }
     
     // insertar Rips de consultas generados a tabla temporal, despues por medio de un trigger se llevará a la general

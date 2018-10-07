@@ -30,7 +30,6 @@ print("<body>");
     /////
     /////
     $css->CrearDiv("principal", "container", "center",1,1);
-    
     print("<br>");
     include_once("procesadores/Salud_SubirRipsPagos.process.php");
     
@@ -44,11 +43,7 @@ print("<body>");
     /////
     /////
     $css->CrearNotificacionRoja("Suba los Archivos de Relacion de Pagos", 16);
-    $css->CrearDiv("DivMensajes","","center",1,1);
-    $css->CerrarDiv();
-    $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
-    
-    //$css->CrearForm2("FrmRipsPagos", $myPage, "post", "_self");
+    $css->CrearForm2("FrmRipsPagos", $myPage, "post", "_self");
     print("<strong>Separador de Archivo</strong><br>");
     $css->CrearSelect("CmbSeparador", "");
         $css->CrearOptionSelect("", "Selecciones el Separador de los archivos", 0);
@@ -85,15 +80,14 @@ print("<body>");
                     
                 print("</td>");
                 print("<td>");
-                    $css->CrearBotonEvento("BtnEnviar", "Subir", 1, "onClick", "CargarAR()", "rojo", "");
-                    //$css->CrearBotonConfirmado("BtnEnviar", "Subir");
+                    $css->CrearBotonConfirmado("BtnEnviar", "Subir");
                     
                 print("</td>");
                 
             $css->CierraFilaTabla();
             
         $css->CerrarTabla();
-    //$css->CerrarForm();   
+    $css->CerrarForm();   
     
     
     $css->CerrarDiv();//Cerramos contenedor Secundario
