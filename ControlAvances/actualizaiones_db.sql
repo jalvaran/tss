@@ -102,3 +102,28 @@ ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `tipo_negociacion` VARCH
 
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `idEPS` VARCHAR(25) NOT NULL AFTER `num_factura`, ADD `nom_enti_administradora` VARCHAR(100) NOT NULL AFTER `idEPS`;
 
+DROP TABLE IF EXISTS `salud_cartera_x_edades_temp`;
+CREATE TABLE `salud_cartera_x_edades_temp` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `idEPS` varchar(25) NOT NULL,
+  `RazonSocialEPS` varchar(45) NOT NULL,
+  `Cantidad_1_30` int(11) NOT NULL,
+  `Valor_1_30` double NOT NULL,
+  `Cantidad_31_60` int(11) NOT NULL,
+  `Valor_31_60` double NOT NULL,
+  `Cantidad_61_90` int(11) NOT NULL,
+  `Valor_61_90` double NOT NULL,
+  `Cantidad_91_120` int(11) NOT NULL,
+  `Valor_91_120` double NOT NULL,
+  `Cantidad_121_180` int(11) NOT NULL,
+  `Valor_121_180` double NOT NULL,
+  `Cantidad_181_360` int(11) NOT NULL,
+  `Valor_181_360` double NOT NULL,
+  `Cantidad_360` int(11) NOT NULL,
+  `Valor_360` double NOT NULL,
+  `TotalFacturas` int(11) NOT NULL,
+  `Total` double NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
