@@ -9,7 +9,7 @@ $idUser=$_SESSION['idUser'];
 
 include_once("../../modelo/php_conexion.php");
 include_once("../css_construct.php");
-
+include_once("../clases/Glosas.class.php");
 if( !empty($_REQUEST["TipoReporte"]) ){
     $css =  new CssIni("id",0);
     $obGlosas = new conexion($idUser);
@@ -721,6 +721,151 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 }else{
                     $css->CrearNotificacionAzul("No hay resultados", 14);
                 }
+        break;
+        
+        case 5: // Cartera X Edades
+            
+            $obGlosas = new Glosas($idUser);
+            
+            $Separador="";
+            if(isset($_REQUEST["Separador"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["Separador"]);
+            }
+            if(isset($_REQUEST["sp"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["sp"]);
+            }
+            
+           $css->CrearTabla();
+           $css->FilaTabla(16);
+           print("<td colspan=14 style=text-align:center>");
+            $css->CrearNotificacionVerde("Cartera X Edades", 16);
+           print("</td>");
+            print("<td colspan='4' style='text-align:center'>");
+                
+                $css->CrearImageLink("ProcesadoresJS/GeneradorCSVReportesCartera.php?Opcion=$TipoReporte&sp=$Separador", "../images/csv.png", "_blank", 50, 50);
+
+            print("</td>");
+            $css->CierraFilaTabla();        
+        $css->FilaTabla(16);
+            $css->ColTabla("<strong>Cartera X Edades</strong>", 1);
+            
+            $css->ColTabla("<strong>de 1 a 30</strong>", 2);
+            $css->ColTabla("<strong>de 31 a 60</strong>", 2);
+            $css->ColTabla("<strong>de 61 a 90</strong>", 2);
+            $css->ColTabla("<strong>de 91 a 120</strong>", 2);
+            $css->ColTabla("<strong>de 121 a 180</strong>", 2);
+            $css->ColTabla("<strong>de 181 a 360</strong>", 2);
+            $css->ColTabla("<strong>+361 Dias</strong>", 2);
+            $css->ColTabla("<strong>Total</strong>", 2);
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+            $css->ColTabla("<strong> EPS </strong>", 1);
+            
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+            $css->ColTabla("<strong>C</strong>", 1);
+            $css->ColTabla("<strong>V</strong>", 1);
+        $css->CierraFilaTabla();
+        $sql="SELECT cod_enti_administradora, nom_enti_administradora FROM vista_salud_facturas_no_pagas WHERE DiasMora>0 GROUP BY cod_enti_administradora";
+        $ConsultaCartera=$obGlosas->Query($sql);
+        $CatidadFacturas=0;
+        $TotalValor=0;
+        $obGlosas->VaciarTabla("salud_cartera_x_edades_temp");
+        while($DatosEPS=$obGlosas->FetchArray($ConsultaCartera)){
+            unset($Datos);
+            $idEPS=$DatosEPS["cod_enti_administradora"];            
+            $Datos["idEPS"]=$idEPS;
+            $Datos["RazonSocialEPS"]=$DatosEPS["nom_enti_administradora"];
+            $DiasPactadosEPS=$obGlosas->ValorActual("salud_eps", "dias_convenio", " cod_pagador_min='$idEPS'");
+            $DiasPactados=$DiasPactadosEPS["dias_convenio"];
+            $css->FilaTabla(14);
+                $css->ColTabla("$DatosEPS[nom_enti_administradora]", 1);
+                
+                //De 1 a 30 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(1+$DiasPactados) AND DiasMora<=(30+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_1_30"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_1_30"]=$DatosCartera["Total"];
+                $CatidadFacturas=$DatosCartera["NumFacturas"];
+                $TotalValor=$DatosCartera["Total"];
+                //De 31 a 60 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(31+$DiasPactados) AND DiasMora<=(60+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_31_60"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_31_60"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // de 61 a 90 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(61+$DiasPactados) AND DiasMora<=(90+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_61_90"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_61_90"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // de 91 a 120 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(91+$DiasPactados) AND DiasMora<=(120+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_91_120"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_91_120"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // de 91 a 120 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(121+$DiasPactados) AND DiasMora<=(180+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_121_180"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_121_180"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // de 181 a 360 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(181+$DiasPactados) AND DiasMora<=(360+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_181_360"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_181_360"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // >360 dias
+                $Condicion=" WHERE cod_enti_administradora='$idEPS' AND (DiasMora>=(361+$DiasPactados)) ";
+                $DatosCartera=$obGlosas->CarteraSegunDias($idEPS, $Condicion, "");
+                $css->ColTabla(number_format($DatosCartera["NumFacturas"]), 1);
+                $css->ColTabla(number_format($DatosCartera["Total"]), 1);
+                $Datos["Cantidad_360"]=$DatosCartera["NumFacturas"];
+                $Datos["Valor_360"]=$DatosCartera["Total"];
+                $CatidadFacturas=$CatidadFacturas+$DatosCartera["NumFacturas"];
+                $TotalValor=$TotalValor+$DatosCartera["Total"];
+                // Totales
+                $css->ColTabla(number_format($CatidadFacturas), 1);
+                $css->ColTabla(number_format($TotalValor), 1);
+                $Datos["TotalFacturas"]=$DatosCartera["NumFacturas"];
+                $Datos["Total"]=$DatosCartera["Total"];
+                $sql_cartera=$obGlosas->getSQLInsert("salud_cartera_x_edades_temp", $Datos);
+                $obGlosas->Query($sql_cartera);
+            $css->CierraFilaTabla();
+        }
+            $css->CerrarTabla();
         break;
     }
           
