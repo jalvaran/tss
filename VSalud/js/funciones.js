@@ -796,6 +796,16 @@ function EnvieObjetoConsulta2(Page,idElement,idTarget,BorrarId=1){
         if(BorrarId==5){
             CambiarImagenOnOff(idElement);
         }
+        
+        //Para generar circular 014
+        if(BorrarId==7){
+            var Mes =document.getElementById('CmbMes').value;
+            var Anio =document.getElementById('CmbAnio').value;
+                                  
+            ValorElement="?BtnCrear=1&CmbMes="+Mes+"&CmbAnio="+Anio;            
+            document.getElementById(idTarget).innerHTML ='<br><img src="../images/cargando.gif" alt="Cargando" height="100" width="100">';
+            
+        }
         if (window.XMLHttpRequest) {
                 // code for IE7+, Firefox, Chrome, Opera, Safari
                 httpEdicion = new XMLHttpRequest();

@@ -41,8 +41,8 @@ print("<body>");
                             $css->CrearOptionSelect("3", "Facturas Pagadas con Diferencias", 0);
                             $css->CrearOptionSelect("4", "Facturas Pagadas de posibles vigencias anteriores", 0);
                             $css->CrearOptionSelect("5", "Cartera por edades", 0);
-                            $css->CrearOptionSelect("6", "SIHO", 0);
-                            $css->CrearOptionSelect("7", "Circular 014", 0);
+                            //$css->CrearOptionSelect("6", "SIHO", 0);
+                            
                             
                         $css->CerrarSelect();
                         print("</td>");

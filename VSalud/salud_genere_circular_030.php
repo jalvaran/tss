@@ -64,6 +64,63 @@ print("<body>");
     $css->CerrarTabla();
     $css->CrearDiv("DivMensajesCircular", "", "center", 1, 1);
     $css->CerrarDiv();//Cerramos contenedor de notificaciones
+    
+    $css->CrearNotificacionVerde("GENERAR CIRCULAR 014", 16);
+    $css->CrearForm2("FrmCircular014", $myPage, "post", "_self");
+    $css->CrearTabla();
+        $css->FilaTabla(16);
+            $css->ColTabla("<strong>MES</strong>", 1);
+            $css->ColTabla("<strong>AÑO</strong>", 1);
+            
+            $css->ColTabla("<strong>GENERAR</strong>", 1);
+            
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+            
+            print("<td>");
+                $css->CrearSelect("CmbMes", "");
+                    $css->CrearOptionSelect("01", "Enero", 0);
+                    $css->CrearOptionSelect("02", "Febrero", 0);
+                    $css->CrearOptionSelect("03", "Marzo", 0);
+                    $css->CrearOptionSelect("04", "Abril", 0);
+                    $css->CrearOptionSelect("05", "Mayo", 0);
+                    $css->CrearOptionSelect("06", "Junio", 0);
+                    $css->CrearOptionSelect("07", "Julio", 0);
+                    $css->CrearOptionSelect("08", "Agosto", 0);
+                    $css->CrearOptionSelect("09", "Septiembre", 0);
+                    $css->CrearOptionSelect("10", "Octubre", 0);
+                    $css->CrearOptionSelect("11", "Noviembre", 0);
+                    $css->CrearOptionSelect("12", "Diciembre", 0);
+                $css->CerrarSelect();
+            print("</td>");
+            print("<td>");
+                
+                $css->CrearSelect("CmbAnio", "");
+                    $AnioActual=date("Y");
+                    $Desde=$AnioActual-10;
+                    for($i=$Desde;$i<=$AnioActual;$i++){
+                        $sel=0;
+                        if($i==$AnioActual){
+                            $sel=1;
+                        }
+                        $css->CrearOptionSelect($i, $i, $sel);
+                    }
+                $css->CerrarSelect();
+            print("</td>");
+            
+            print("<td>");
+                $Page="Consultas/salud_generar_circular_014.process.php?idFactura=";
+                $css->CrearBotonEvento("BtnCrear014", "Generar", 1, "onClick", "EnvieObjetoConsulta2(`$Page`,`CmbAnio`,`DivMensajesCircular014`,`7`);return false;", "verde", "");
+                
+            print("</td>");
+            
+        $css->CierraFilaTabla();
+        
+        
+    $css->CerrarTabla();
+    $css->CrearDiv("DivMensajesCircular014", "", "center", 1, 1);
+    $css->CerrarDiv();//Cerramos contenedor de notificaciones
+    
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts
     $css->AgregaSubir();

@@ -127,3 +127,11 @@ CREATE TABLE `salud_cartera_x_edades_temp` (
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `empresapro` ADD `DV` INT NOT NULL AFTER `NIT`;
+ALTER TABLE `empresapro` ADD `CodigoDANE` INT NOT NULL AFTER `Ciudad`;
+ALTER TABLE `empresapro` CHANGE `NIT` `NIT` BIGINT NULL DEFAULT NULL;
+
+UPDATE `menu_submenus` SET `Nombre` = 'Circular 030 y 014' WHERE `menu_submenus`.`ID` = 35;
+
+
