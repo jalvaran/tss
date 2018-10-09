@@ -48,6 +48,9 @@ include_once("procesadores/SaludProcesosGerenciales.process.php");  //Clases de 
 $css->CrearCuadroDeDialogo("DialNuevoProceso", "Nuevo Proceso Gerencial");
     $css->CrearForm2("FrmGuardar", $myPage, "post", "_self");   
         $css->CrearInputText("TxtFecha", "date", "<strong>Fecha:</strong><br>", date("Y-m-d"), "Fecha", "", "", "", 200, 30, 0, 1);
+        print("<br><strong>IPS:</strong><br>");
+        $css->CrearSelectTable("CmbIps", "empresapro", "", "idEmpresaPro", "RazonSocial", "CodigoPrestadora", "Ciudad", "", "", 1, "Seleccione la IPS");
+        
         print("<br><strong>EPS:</strong><br>");
         $css->CrearSelectTable("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "", "", "", 1, "Seleccione la EPS");
         $css->CrearInputText("TxtNombre", "text", "<strong>Nombre del Proceso:</strong><br>", "", "Nombre", "", "", "", 230, 30, 0, 1);
@@ -105,6 +108,7 @@ $obTabla->DibujeTabla($Vector);
 $css->CerrarDiv();//Cerramos contenedor Principal
 $css->Footer();
 $css->AgregaJS(); //Agregamos javascripts
+
 //$css->AgregaSubir();    
 ////Fin HTML  
 print("</body></html>");

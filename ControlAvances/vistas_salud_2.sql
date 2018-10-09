@@ -89,3 +89,13 @@ SELECT '360' as RangoDias,cod_enti_administradora AS idEPS, nom_enti_administrad
 FROM vista_salud_facturas_no_pagas WHERE DiasMora>=(360) GROUP BY cod_enti_administradora;
 
 
+DROP VIEW IF EXISTS `vista_salud_procesos_gerenciales`;
+CREATE VIEW vista_salud_procesos_gerenciales AS 
+SELECT t1.`ID` as ID,t1.`idProceso` as idProceso,t1.`Fecha` as Fecha,
+(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=t2.IPS LIMIT 1) as IPS,
+(SELECT nombre_completo FROM salud_eps WHERE cod_pagador_min=t2.EPS LIMIT 1) as EPS,
+
+t2.`NombreProceso`,t2.`Concepto`,t1.`Observaciones`,t1.`Soporte`
+FROM `salud_procesos_gerenciales_archivos` t1 
+INNER JOIN salud_procesos_gerenciales t2 ON t1.`idProceso`=t2.`ID`;
+

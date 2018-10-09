@@ -408,12 +408,13 @@ public function DibujeTabla($Vector){
     $this->css->CrearBotonVerde("BtnFiltrar", "Filtrar");
     $TxtSt=urlencode($statement);
     $TxtTabla= base64_encode($Tabla["Tabla"]);
+    $imagerute="../images/csv2.png";    
+        $this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
+
     if($tbl==' '){
         $imagerute="../images/excel.png";    
         $this->css->CrearImageLink("$myPage?BtnExportarExcel=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
-        $imagerute="../images/csv2.png";    
-        $this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
-
+        
         //$this->css->CrearBoton("BtnExportarExcel", "Exportar a Excel");
         //$this->css->CrearBotonNaranja("BtnVerPDF", "Exportar a PDF");
         $imagerute="../images/pdf2.png";

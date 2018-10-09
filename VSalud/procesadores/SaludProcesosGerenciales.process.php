@@ -9,8 +9,9 @@ if(isset($_REQUEST["BtnGuardar"])){
     $Nombre=$obProceso->normalizar($_REQUEST["TxtNombre"]);
     $idConcepto=$obProceso->normalizar($_REQUEST["CmbConcepto"]);
     $idEps=$obProceso->normalizar($_REQUEST["CmbEps"]);
+    $idIps=$obProceso->normalizar($_REQUEST["CmbIps"]);
     $Observaciones=$obProceso->normalizar($_REQUEST["TxtObservaciones"]);
-    $obProceso->CrearProcesoGerencial($Fecha,$idEps, $Nombre, $idConcepto, $Observaciones, $idUser, "");
+    $obProceso->CrearProcesoGerencial($Fecha,$idIps,$idEps, $Nombre, $idConcepto, $Observaciones, $idUser, "");
     header("location:$myPage");
     
 }

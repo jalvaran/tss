@@ -133,5 +133,10 @@ ALTER TABLE `empresapro` ADD `CodigoDANE` INT NOT NULL AFTER `Ciudad`;
 ALTER TABLE `empresapro` CHANGE `NIT` `NIT` BIGINT NULL DEFAULT NULL;
 
 UPDATE `menu_submenus` SET `Nombre` = 'Circular 030 y 014' WHERE `menu_submenus`.`ID` = 35;
+ALTER TABLE `salud_procesos_gerenciales` ADD `IPS` INT NOT NULL AFTER `Fecha`;
+
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (67, 'Listado de Bancos', '3', '6', 'salud_bancos.php', '_SELF', b'1', 'bancos.png', '4', '2018-08-05 23:09:34', '2018-07-13 15:42:34');
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (68, 'Conceptos Procesos', '3', '6', 'salud_procesos_gerenciales_conceptos.php', '_SELF', b'1', 'proyectos.png', '9', '2018-08-05 23:09:34', '2018-07-13 15:42:34');
+
 
 

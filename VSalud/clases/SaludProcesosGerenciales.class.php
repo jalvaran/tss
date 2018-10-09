@@ -6,20 +6,21 @@
  */
 //include_once '../../php_conexion.php';
 class ProcesoGerencial extends conexion{
-    public function CrearProcesoGerencial($Fecha,$idEps,$Nombre,$idConcepto,$Observaciones,$idUser,$Vector) {
+    public function CrearProcesoGerencial($Fecha,$idIps,$idEps,$Nombre,$idConcepto,$Observaciones,$idUser,$Vector) {
         
         $DatosProcesosGerenciales= $this->DevuelveValores("salud_procesos_gerenciales_conceptos", "ID", $idConcepto);
         $Concepto=$DatosProcesosGerenciales["Concepto"];
                 
         //////Creo el proceso           
         $tab="salud_procesos_gerenciales";
-        $NumRegistros=5;
+        $NumRegistros=6;
 
         $Columnas[0]="Fecha";		$Valores[0]=$Fecha;
         $Columnas[1]="NombreProceso";   $Valores[1]=$Nombre;
         $Columnas[2]="Concepto";        $Valores[2]=$Concepto;
         $Columnas[3]="EPS";             $Valores[3]=$idEps;
         $Columnas[4]="idUser";         $Valores[4]=$idUser;
+        $Columnas[5]="IPS";             $Valores[5]=$idIps;
         
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         $id=$this->ObtenerMAX($tab, "ID", 1, "");
