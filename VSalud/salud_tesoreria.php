@@ -43,14 +43,22 @@ $css->CrearDiv("principal", "container", "center",1,1);
 
 $Vector["statement"]=$statement;   //Filtro necesario para la paginacion
 $css->DivNotificacionesJS();
+
+
 //print($statement);
 ///////////////Creamos la imagen representativa de la pagina
     /////
     /////	
-$css->CrearImageLink("../VMenu/MnuSalud.php", "../images/tesoreria.png", "_self",100,100);
+$obTabla->FormularioRangoFechas($myPage,$statement, "");
+$statement=$obTabla->FiltroRangoFechas("fecha_transaccion", $statement, "");
+$Vector["statement"]=$statement;   //Filtro necesario para la paginacion
 
-
-
+if($TipoUser=="administrador"){
+    $Consulta=$obCon->Query("SELECT SUM(valor_transaccion) as Total FROM $statement");
+    $DatosFacturacion=$obCon->FetchArray($Consulta);
+    $Total=  number_format($DatosFacturacion["Total"]);
+    $css->CrearNotificacionAzul("Total = $Total", 16);
+}
 ////Paginacion
 ////
 

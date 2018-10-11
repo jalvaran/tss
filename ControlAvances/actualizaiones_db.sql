@@ -141,3 +141,5 @@ INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`,
 
 
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` CHANGE `Soporte` `Soporte` TEXT CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL;
+
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `NumeroFacturaAdres` VARCHAR(45) NOT NULL AFTER `Arma030Anterior`;

@@ -713,10 +713,10 @@ public function DibujeTabla($Vector){
                                     //Descomentar para habilitar la edicion en linea
                                     //$this->css->CrearTextArea($idElement, "", $DatosProducto[$i], "", "", "onChange", "EditeRegistro(`$tbl`,`$NomCol`,`$idTabla`,`$idEdit`,`$idElement`)", "", "", 0, 1,0);
                                 
-                                    print(utf8_encode($DatosProducto[$i])); 
+                                    print(($DatosProducto[$i])); 
                                 }else{
                                 //$this->css->CrearInputText("TxtDatos$DatosProducto[0]", "text", "", $DatosProducto[$i], "", "", "Evento", "JS", "", "", 0, 1);
-                                    print(utf8_encode($DatosProducto[$i])); 
+                                    print(($DatosProducto[$i])); 
                                 }
                             }
                         }
@@ -738,7 +738,7 @@ public function DibujeTabla($Vector){
                             $this->css->CrearLink("../".$DatosVinculo[$ColDisplay], "_blank", $DatosVinculo[$ColDisplay]);
                         }else{
                             
-                            print($DatosVinculo[$ColDisplay]);
+                            print(utf8_encode($DatosVinculo[$ColDisplay]));
                             
                         }
                         print("</td>");

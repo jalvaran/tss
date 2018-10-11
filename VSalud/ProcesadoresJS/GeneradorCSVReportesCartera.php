@@ -30,9 +30,9 @@ if(isset($_REQUEST["Opcion"])){
                 $Separador=',';
             }
             $sqlColumnas="SELECT 'CuentaRIPS','CuentaGlobal','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO DE LA FACTURA',"
-                    . "'CODIGO EPS','EPS','VALOR PAGADO'";
+                    . "'CODIGO EPS','EPS','VALOR PAGADO','NEGOCIACION'";
             $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado ";
+                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado,tipo_negociacion ";
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
@@ -54,9 +54,9 @@ if(isset($_REQUEST["Opcion"])){
                 $Separador=',';
             }
             $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO',"
-                    . "'DIAS EN MORA','CODIGO EPS','EPS','VALOR X PAGAR'";
+                    . "'DIAS EN MORA','CODIGO EPS','EPS','VALOR X PAGAR','NEGOCIACION'";
             $query=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar ";
+                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,tipo_negociacion ";
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);

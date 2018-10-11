@@ -315,4 +315,37 @@ $Vector[$TablaConfig]["Manual"]["IDTabla"]="ID"; //id de la tabla que se vincula
 $Vector[$TablaConfig]["Manual"]["Display"]="Nombre";                    //Columna que quiero mostrar
 $Vector[$TablaConfig]["Manual"]["Predeterminado"]="N";
 
+$TablaConfig="salud_archivo_facturacion_mov_pagados";
+//$Vector[$TablaConfig]["Excluir"]["id_pagados"]=1;
+$Vector[$TablaConfig]["Excluir"]["idEPS"]=1;
+$Vector[$TablaConfig]["Excluir"]["nom_enti_administradora"]=1;
+$Vector[$TablaConfig]["Excluir"]["fecha_pago_factura"]=1;
+$Vector[$TablaConfig]["Excluir"]["num_pago"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_bruto_pagar"]=1;
+
+$Vector[$TablaConfig]["Excluir"]["valor_descuento"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_iva"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_retefuente"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_cruces"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_anticipos"]=1;
+
+$Vector[$TablaConfig]["Excluir"]["valor_otrasretenciones"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_pagado"]=1;
+$Vector[$TablaConfig]["Excluir"]["tipo_negociacion"]=1;
+
+$Vector[$TablaConfig]["Excluir"]["valor_anticipos"]=1;
+
+$Vector[$TablaConfig]["Excluir"]["nom_cargue"]=1;
+$Vector[$TablaConfig]["Excluir"]["fecha_cargue"]=1;
+$Vector[$TablaConfig]["Excluir"]["Proceso"]=1;
+
+$Vector[$TablaConfig]["Excluir"]["Estado"]=1;
+$Vector[$TablaConfig]["Excluir"]["Soporte"]=1;
+$Vector[$TablaConfig]["Excluir"]["idUser"]=1;
+$Vector[$TablaConfig]["Excluir"]["Arma030Anterior"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_reteiva"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_reteica"]=1;
+$Vector[$TablaConfig]["Excluir"]["NumeroFacturaAdres"]=1;
+
+
 ?>

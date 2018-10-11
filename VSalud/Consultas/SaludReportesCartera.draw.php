@@ -88,7 +88,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_pago_factura,fecha_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
+            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,tipo_negociacion,"
                     . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
@@ -104,7 +104,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     print("<td style='text-align:center'>");
                         print("<strong>Total Pagos:</strong> <h4 style=color:green>". number_format($TotalPagado)."</h4>");
                     print("</td>");
-                    print("<td colspan='4'>");
+                    print("<td colspan='5'>");
                         $css->CrearNotificacionVerde("Facturas Pagadas", 16);
                     print("</td>");
                     print("<td colspan='2' style='text-align:center'>");
@@ -131,7 +131,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
-                            print("<td colspan=4 style=text-align:center>");
+                            print("<td colspan=5 style=text-align:center>");
                             print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&TipoReporte=$TipoReporte&Page=";
@@ -149,7 +149,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->CerrarSelect();
                             print("</td>");
                             
-                            print("<td colspan='3' style=text-align:center>");
+                            print("<td colspan='4' style=text-align:center>");
                             if($ResultadosTotales>($startpoint+$limit)){
                                 $NumPage1=$NumPage+1;
                                 $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
@@ -170,6 +170,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA FACTURA</strong>", 1);
                         $css->ColTabla("<strong>FECHA PAGO</strong>", 1);
                         $css->ColTabla("<strong>VALOR PAGADO</strong>", 1);
+                        $css->ColTabla("<strong>NEGOCIACIÓN</strong>", 1);
                                                 
                     $css->CierraFilaTabla();
                     
@@ -183,7 +184,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_factura"], 1);
                             $css->ColTabla($DatosConsulta["fecha_pago_factura"], 1);
                             $css->ColTabla($DatosConsulta["valor_pagado"], 1);
-                                                    
+                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1);                        
                         $css->CierraFilaTabla();
                     }
                     
@@ -268,7 +269,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora,"
+            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora,tipo_negociacion,"
                     . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
@@ -284,7 +285,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     print("<td style='text-align:center'>");
                         print("<strong>Facturas Sin pagar:</strong> <h4 style=color:red>". number_format($TotalXPagar)."</h4>");
                     print("</td>");
-                    print("<td colspan='5'>");
+                    print("<td colspan='6'>");
                         $css->CrearNotificacionRoja("Facturas No Pagadas", 16);
                     print("</td>");
                     print("<td colspan='2' style='text-align:center'>");
@@ -311,7 +312,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
-                            print("<td colspan=5 style=text-align:center>");
+                            print("<td colspan=6 style=text-align:center>");
                             print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&TipoReporte=$TipoReporte&Page=";
@@ -351,7 +352,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA RADICADO</strong>", 1);
                         $css->ColTabla("<strong>DIAS EN MORA</strong>", 1);
                         $css->ColTabla("<strong>VALOR NETO A PAGAR</strong>", 1);
-                                                
+                        $css->ColTabla("<strong>NEGOCIACIÓN</strong>", 1);                    
                     $css->CierraFilaTabla();
                     
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
@@ -365,7 +366,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_radicado"], 1);
                             $css->ColTabla($DatosConsulta["DiasMora"], 1);
                             $css->ColTabla($DatosConsulta["valor_neto_pagar"], 1);
-                                                    
+                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1);                        
                         $css->CierraFilaTabla();
                     }
                     
@@ -593,7 +594,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Condicional=" WHERE (`id_pagados`<> '') ";
             $Condicional2="";
             if($idEPS<>''){
-                $Condicional2=" AND cod_enti_administradora='$idEPS'";
+                $Condicional2=" AND idEPS='$idEPS'";
             }
             if($FechaInicial<>''){
                 $Condicional2.=$Condicional2." AND fecha_pago_factura >= '$FechaInicial' ";
@@ -621,7 +622,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_pago_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT num_factura,fecha_pago_factura,ROUND(valor_pagado) as valor_pagado,"
+            $query="SELECT num_factura,fecha_pago_factura,ROUND(valor_pagado) as valor_pagado,tipo_negociacion,"
                     . "idEPS,nom_enti_administradora ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
@@ -637,7 +638,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     print("<td style='text-align:center'>");
                         print("<strong>Total Pagos:</strong> <h4 style=color:blue>". number_format($TotalXPagar)."</h4>");
                     print("</td>");
-                    print("<td colspan='2'>");
+                    print("<td colspan='3'>");
                         $css->CrearNotificacionAzul("Facturas Pagas de posibles vigencias anteriores", 16);
                     print("</td>");
                     print("<td colspan='1' style='text-align:center'>");
@@ -664,7 +665,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             }
                             print("</td>");
                             $TotalPaginas= ceil($ResultadosTotales/$limit);
-                            print("<td colspan=3 style=text-align:center>");
+                            print("<td colspan=4 style=text-align:center>");
                             print("<strong>Página: </strong>");
 
                             $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&TipoReporte=$TipoReporte&Page=";
@@ -700,7 +701,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
                         $css->ColTabla("<strong>EPS</strong>", 1);
                         $css->ColTabla("<strong>VALOR PAGADO</strong>", 1);
-                        
+                        $css->ColTabla("<strong>NEGOCIACION</strong>", 1);
                                                 
                     $css->CierraFilaTabla();
                     
@@ -712,6 +713,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla(utf8_encode($DatosConsulta["nom_enti_administradora"]), 1);
                             
                             $css->ColTabla(number_format($DatosConsulta["valor_pagado"]), 1);
+                            $css->ColTabla(($DatosConsulta["tipo_negociacion"]), 1);
                                                 
                         $css->CierraFilaTabla();
                     }

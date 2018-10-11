@@ -40,15 +40,37 @@ if(!empty($_REQUEST["BtnEditarRegistro"])){
             move_uploaded_file($_FILES[$NombreCol]['tmp_name'],$dir.$destino);
             $obVenta->ActualizaRegistro($tab, $NombreCol, $destino, $NombresColumnas[0], $IDEdit,0);
         }
-        $NumCar=strlen($_REQUEST[$NombreCol]);
+        if(isset($_REQUEST[$NombreCol])){
+            $NumCar=strlen($_REQUEST[$NombreCol]);
+        }
+        
         if(isset($_REQUEST[$NombreCol]) && $NumCar>0){
             $Edicion=$_REQUEST[$NombreCol];
             if($NombreCol=='FormaPago' && $tab=="facturas" && $_REQUEST[$NombreCol]<>"Contado"){
                 $Edicion="Credito a $_REQUEST[$NombreCol] dias";
                 
             }
-            
+            if($tab=="salud_archivo_facturacion_mov_pagados"){
+                include_once '../clases/SaludRips.class.php';
+                $obCartera = new Rips($idUser);
+                $OldData=$obVenta->ValorActual($tab, "num_factura,tipo_negociacion", " id_pagados='$IDEdit'");
+                if($OldData["tipo_negociacion"]=="Evento"){
+                    
+                    exit("No puede editar el número de una factura de tipo Evento <a href='../$myPage.php' target='_self'>Volver</a>");
+                }
+                $Num_Factura=$OldData["num_factura"];
+                $obVenta->ActualizaRegistro($tab, "NumeroFacturaAdres", $Num_Factura, $NombresColumnas[0], $IDEdit,0);
+            }
             $obVenta->ActualizaRegistro($tab, $NombreCol, $Edicion, $NombresColumnas[0], $IDEdit,0);
+            
+            if($tab=="salud_archivo_facturacion_mov_pagados"){
+                $obCartera->EncuentreFacturasPagadasConDiferencia("");
+                $obCartera->EncuentreFacturasPagadas("");
+                $Fecha=date("Y-m-d H:i:s");
+                //$obVenta->ActualizaRegistro($tab, "Updated", $Fecha, $NombresColumnas[0], $IDEdit);
+                //exit("Se analizaron los datos con el nuevo cambio <a href='../$myPage.php' target='_self'>Volver</a>");
+            }
+             
         }
        $i++;
     }
@@ -77,6 +99,8 @@ if(!empty($_REQUEST["BtnEditarRegistro"])){
         $obVenta->ActualiceClienteCartera($IDEdit, "clientes", $DatosTercero["Num_Identificacion"]);
     }
     
+    
+    
    $Fecha=date("Y-m-d H:i:s");
    $obVenta->ActualizaRegistro($tab, "Updated", $Fecha, $NombresColumnas[0], $IDEdit);
     
@@ -88,8 +112,12 @@ if(!empty($_REQUEST["BtnEditarRegistro"])){
     }
     
     //$obVenta->ActualizaRegistro($tab, "Updated", date("Y-m-d H:i:s"), $NombresColumnas[0], $IDEdit);
+    if($tab<>"salud_archivo_facturacion_mov_pagados"){
+        header("location:../$myPage.php");
+    }else{
+        exit("Se analizaron los datos con el nuevo cambio <a href='../$myPage.php' target='_self'>Volver</a>");
+    }
     
-    header("location:../$myPage.php");
 }
 
 

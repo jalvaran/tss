@@ -62,7 +62,7 @@ print("<body>");
         $css->CierraFilaTabla();
         $css->FilaTabla(16);
             print("<td>");
-                $css->CrearInputNumber("TxtPago", "number", "", "", "Valor", "", "", "", 150, 30, 0, 0, 1, "", "any");
+                $css->CrearInputNumber("TxtPago", "number", "", "", "Valor", "", "", "", 150, 30, 0, 1, 1, "", "any");
             print("</td>");
             print("<td>");
                 $css->CrearTextArea("TxtObservaciones", "", "", "Observaciones", "", "", "", 200, 60, 0, 0);
