@@ -97,7 +97,7 @@ class Rips extends conexion{
             $tab="salud_pagos_temporal";
             $sql="INSERT INTO `$tab` (`id_temp_rips_generados`, `Proceso`, `CodigoEPS`, `NombreEPS`, `FormaContratacion`, `Departamento`, `Municipio`, `FechaFactura`, `PrefijoFactura`, `NumeroFactura`, `ValorGiro`, `FechaPago`, `NumeroGiro`, `nom_cargue`, `fecha_cargue`, `idUser`, `Soporte`,`numero_factura`) VALUES";
             
-            while (($data = fgetcsv($handle, 1000, $Separador)) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, $Separador,'"',"#")) !== FALSE) {
                 //////Inserto los datos en la tabla  
                 $i++;
                 $h++;

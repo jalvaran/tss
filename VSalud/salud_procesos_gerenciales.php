@@ -52,7 +52,8 @@ $css->CrearCuadroDeDialogo("DialNuevoProceso", "Nuevo Proceso Gerencial");
         $css->CrearSelectTable("CmbIps", "empresapro", "", "idEmpresaPro", "RazonSocial", "CodigoPrestadora", "Ciudad", "", "", 1, "Seleccione la IPS");
         
         print("<br><strong>EPS:</strong><br>");
-        $css->CrearSelectTable("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "", "", "", 1, "Seleccione la EPS");
+        $css->CrearTableChosen("CmbEps", "salud_eps", "", "nombre_completo", "cod_pagador_min", "sigla_nombre", "cod_pagador_min", 300, 1, "EPS", "");
+        //$css->CrearSelectTable("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "", "", "", 1, "Seleccione la EPS");
         $css->CrearInputText("TxtNombre", "text", "<strong>Nombre del Proceso:</strong><br>", "", "Nombre", "", "", "", 230, 30, 0, 1);
         print("<strong>Concepto:</strong><br>");
         $css->CrearSelectTable("CmbConcepto", "salud_procesos_gerenciales_conceptos", "", "ID", "Concepto", "ID", "", "", "", 1);
@@ -108,7 +109,7 @@ $obTabla->DibujeTabla($Vector);
 $css->CerrarDiv();//Cerramos contenedor Principal
 $css->Footer();
 $css->AgregaJS(); //Agregamos javascripts
-
+$css->AnchoElemento("CmbEps_chosen", "300");
 //$css->AgregaSubir();    
 ////Fin HTML  
 print("</body></html>");

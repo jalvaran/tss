@@ -140,3 +140,4 @@ INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`,
 
 
 
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` CHANGE `Soporte` `Soporte` TEXT CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL;
