@@ -158,8 +158,8 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("<strong>Página: </strong>");
                                 
                 $Page="Consultas/busqueda_af.search.php?st=$st&Page=";
-                $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivFacturas`,`5`);return false ;";
-                $css->CrearSelect("CmbPage", $FuncionJS,70);
+                $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPageFacturas`,`DivFacturas`,`5`);return false ;";
+                $css->CrearSelect("CmbPageFacturas", $FuncionJS,70);
                     for($p=1;$p<=$TotalPaginas;$p++){
                         if($p==$NumPage){
                             $sel=1;
