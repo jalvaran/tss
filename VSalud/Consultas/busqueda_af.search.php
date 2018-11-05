@@ -16,7 +16,10 @@ include_once("../css_construct.php");
 if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty($_REQUEST["FechaInicial"]) or !empty($_REQUEST["FechaFinal"]) or !empty($_REQUEST["idEstadoGlosas"]) or !empty($_REQUEST["Page"]) or !empty($_REQUEST["st"]) ){
     $css =  new CssIni("id",0);
     $obGlosas = new conexion($idUser);
-        
+    $MostrarFiltros=1;
+    if(isset($_REQUEST["MostrarFiltros"])){
+        $MostrarFiltros=$_REQUEST["MostrarFiltros"];
+    }    
     // Consultas enviadas a traves de la URL
     $statement="";
     
@@ -58,7 +61,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
         //$css->CrearNotificacionRoja("Cuentas que contienen la factura: ".$NumFactura, 16);        
         $statement=" `vista_af_semaforo` WHERE `num_factura`='$NumFactura'";
     }
-    //print($statement);
+    if($MostrarFiltros==1){
     $css->CrearTabla();
             $css->FilaTabla(16);
                 $css->ColTabla("<strong>Criterios de Búsqueda</strong>", 3);
@@ -91,7 +94,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
         $css->CerrarTabla();
         //print($statement);
     //Paginacion
-        
+    }    
         
     if(isset($_REQUEST['st'])){
 

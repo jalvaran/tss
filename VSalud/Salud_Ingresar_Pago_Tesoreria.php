@@ -38,7 +38,7 @@ print("<body>");
         $css->CierraFilaTabla();
         $css->FilaTabla(16);
             print("<td>");
-                $css->CrearTableChosen("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "sigla_nombre", "cod_pagador_min", 300, 1, "EPS", "");
+                $css->CrearTableChosen("CmbEps", "salud_eps", "", "cod_pagador_min", "sigla_nombre", "nit", "cod_pagador_min", 300, 1, "EPS", "");
                // $css->CrearSelectTable("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "", "", "", 1, "Seleccione la EPS");
             print("</td>");
             print("<td>");

@@ -143,3 +143,7 @@ INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`,
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` CHANGE `Soporte` `Soporte` TEXT CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL;
 
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `NumeroFacturaAdres` VARCHAR(45) NOT NULL AFTER `Arma030Anterior`;
+
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (69, 'Devolver una factura', '13', '6', 'SaludDevolucionFactura.php', '_SELF', b'1', 'devolucion2.png', '2', '2018-07-13 15:42:34', '2018-07-13 15:42:34');
+
+
