@@ -17,8 +17,10 @@ if(isset($_REQUEST["Opcion"])){
     
     switch ($Opcion){
         case 1: //Exportar CSV 
-            
-            unlink($Link);
+            if(file_exists($Link)){
+                unlink($Link);
+            }
+            //unlink($Link);
             $Tabla=$obVenta->normalizar(base64_decode($_REQUEST["TxtT"]));
             $statement=$obVenta->normalizar(urldecode($_REQUEST["TxtL"]));
             $Columnas=$obVenta->ShowColums($Tabla);
@@ -28,12 +30,19 @@ if(isset($_REQUEST["Opcion"])){
                 $consulta=$obVenta->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$Tabla' AND Campo='$Campo'");
                 $DatosCampo=$obVenta->FetchArray($consulta);
                 if($DatosCampo["Visible"]=='' or $DatosCampo["Visible"]=='1'){
-                    $sqlColumnas.="'$Campo',";
+                    $DatosConfiguracion=$obVenta->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $Campo);
+                    $NombreVisualiza=$Campo;
+                    if($DatosConfiguracion["Visualiza"]<>''){
+                        $NombreVisualiza= utf8_encode($DatosConfiguracion["Visualiza"]);
+                        
+                    }
+                    $sqlColumnas.="'$NombreVisualiza',";
                     $CamposShow.="`$Campo`,";
                 }
                 
             }
             $sqlColumnas=substr($sqlColumnas, 0, -1);
+            
             $CamposShow=substr($CamposShow, 0, -1);
             $sqlColumnas.=" UNION ALL ";
             $Indice=$Columnas["Field"][0];
@@ -43,7 +52,9 @@ if(isset($_REQUEST["Opcion"])){
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
         case 2:   //Resumen de facturacion agrupado por referencia en un periodo de tiempo
-            unlink($Link);
+            if(file_exists($Link)){
+                unlink($Link);
+            }
             $FechaIni=$obVenta->normalizar($_REQUEST["TxtFechaIni"]);
             $FechaFin=$obVenta->normalizar($_REQUEST["TxtFechaFin"]);
             $sql="SELECT 'ID', 'FECHA', 'REFERENCIA','NOMBRE', 'DEPARTAMENTO', 'SUB1', 'SUB2','SUB3', 'SUB4','SUB5', 'CANTIDAD','TOTAL VENTA','COSTOS','EXISTENCIA' UNION ALL ";

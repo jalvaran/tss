@@ -409,7 +409,7 @@ public function DibujeTabla($Vector){
     $TxtSt=urlencode($statement);
     $TxtTabla= base64_encode($Tabla["Tabla"]);
     $imagerute="../images/csv2.png";    
-        $this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
+        //$this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
 
     if($tbl==' '){
         $imagerute="../images/excel.png";    
@@ -448,7 +448,12 @@ public function DibujeTabla($Vector){
                         $DatosCampo=$this->obCon->FetchArray($consulta);
                         if($DatosCampo["Habilitado"]=='' or $DatosCampo["Habilitado"]=='1'){
                             $this->css->FilaTabla(16);
-                                $this->css->ColTabla($Campo, 1);
+                                $DatosConfiguracion=$this->obCon->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $Campo);
+                                $NombreVisualiza=$Campo;
+                                if($DatosConfiguracion["Visualiza"]<>''){
+                                    $NombreVisualiza= utf8_encode($DatosConfiguracion["Visualiza"]);
+                                }
+                                $this->css->ColTabla($NombreVisualiza, 1);
                                 print("<td>");
 
 
@@ -497,8 +502,12 @@ public function DibujeTabla($Vector){
             }
             $Ancho=50;
             if(!isset($Vector["Excluir"][$NombreCol])){
-                
-                print("<td><strong>$NombreCol</strong><br>");
+                $DatosConfiguracion=$this->obCon->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $NombreCol);
+                $NombreVisualiza=$NombreCol;
+                if($DatosConfiguracion["Visualiza"]<>''){
+                    $NombreVisualiza=utf8_encode($DatosConfiguracion["Visualiza"]);
+                }
+                print("<td><strong>$NombreVisualiza</strong><br>");
                 $Ancho=strlen($NombreCol)."0";
                 if($Ancho<50){
                     $Ancho=50;
@@ -1082,8 +1091,12 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
            }
             
             print("<td style='text-align: center'>");
-            
-            print($NombreCol."<br>");
+            $DatosConfiguracion=$this->obCon->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $NombreCol);
+            $NombreVisualiza=$NombreCol;
+            if($DatosConfiguracion["Visualiza"]<>''){
+                $NombreVisualiza=utf8_encode($DatosConfiguracion["Visualiza"]);
+            }
+            print($NombreVisualiza."<br>");
             if(property_exists($Parametros,$NombreCol) and $NombreCol<>"Soporte"){
                 $Display=$Parametros->$NombreCol->Display;
                 $IDTabla=$Parametros->$NombreCol->IDTabla;
@@ -1116,7 +1129,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     $this->css->CerrarSelect(); 
                 }else{
                     
-                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreCol", "black", "", "", $lengCampo."0", 30, 1, $Required,"Digite $NombreCol","");
+                        $this->css->CrearInputText("$NombreCol", $TipoText, "", "", "$NombreVisualiza", "black", "", "", $lengCampo."0", 30, 1, $Required,"Digite $NombreCol","");
                         
                 }
             }else{
@@ -1131,7 +1144,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                                 $this->css->CrearInputNumber($NombreCol, $TipoText, "", $Value, $NombreCol, "", "", "", $lengCampo."0", 30, $ReadOnly, $Required, $Min, $Max, $Step);
                             }else{
 
-                                $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");
+                                $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreVisualiza", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required,"Digite $NombreCol","");
 
                             }
                             
@@ -1145,7 +1158,7 @@ public function FormularioInsertRegistro($Parametros,$VarInsert)  {
                     if($NombreCol=="RutaImagen" or $NombreCol=="Soporte"){
                         $this->css->CrearUpload($NombreCol);
                     }else{    
-                        $this->css->CrearTextArea("$NombreCol", "", $Value, "", "$NombreCol", "black", "", "","100",$lengCampo."0", $ReadOnly, 1);
+                        $this->css->CrearTextArea("$NombreCol", "", $Value, "", "$NombreVisualiza", "black", "", "","100",$lengCampo."0", $ReadOnly, 1);
                     }
                     
                 }
@@ -1250,8 +1263,12 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
            }
             
             print("<td style='text-align: center'>");
-            
-            print($NombreCol."<br>");
+            $DatosConfiguracion=$this->obCon->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $NombreCol);
+            $NombreVisualiza=$NombreCol;
+            if($DatosConfiguracion["Visualiza"]<>''){
+                $NombreVisualiza= utf8_encode($DatosConfiguracion["Visualiza"]);
+            }    
+            print($NombreVisualiza."<br>");
             if(isset($VarEdit[$tbl][$NombreCol]["Vinculo"])){
                 $Display=$VarEdit[$tbl][$NombreCol]["Display"];
                 $IDTabla=$VarEdit[$tbl][$NombreCol]["IDTabla"];
@@ -1289,14 +1306,14 @@ public function FormularioEditarRegistro($Parametros,$VarEdit,$TablaEdit)  {
                     if($lengCampo<100){
                         if($TipoText=="number"){
                             
-                            $this->css->CrearInputNumber($NombreCol, $TipoText, "", $Value, $NombreCol, "", "", "", $lengCampo."0", 30, $ReadOnly, $Required, $Min, $Max, $Step);
+                            $this->css->CrearInputNumber($NombreCol, $TipoText, "", $Value, $NombreVisualiza, "", "", "", $lengCampo."0", 30, $ReadOnly, $Required, $Min, $Max, $Step);
                         }else{
                              
-                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreCol", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required);
+                            $this->css->CrearInputText("$NombreCol", $TipoText, "", $Value, "$NombreVisualiza", "black", "", "", $lengCampo."0", 30, $ReadOnly, $Required);
                   
                         }
                     }else{
-                        $this->css->CrearTextArea("$NombreCol", "", $Value, "", "$NombreCol", "black", "", "","100",$lengCampo."0", $ReadOnly, 1);
+                        $this->css->CrearTextArea("$NombreCol", "", $Value, "", "$NombreVisualiza", "black", "", "","100",$lengCampo."0", $ReadOnly, 1);
                     }
                 }
             }
