@@ -140,6 +140,33 @@ if(isset($_REQUEST["Opcion"])){
             $obCon->Query($sql);
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
+            
+            case 6: //Exportar Facturas Pagadas
+            if(file_exists($Link)){
+                unlink($Link);
+            }
+            
+            
+            $statement=$obCon->normalizar(urldecode($_REQUEST["st"]));
+            $Separador=$obCon->normalizar($_REQUEST["sp"]);
+            if($Separador==1){
+                $Separador=';';
+            }else{
+                $Separador=',';
+            }
+            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO','FECHA DE VENCIMIENTO',"
+                    . "'DIAS EN MORA','CODIGO EPS','EPS','REGIMEN','VALOR TOTAL','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA',"
+                    . "'TOTAL PAGOS','SALDO','NEGOCIACION'";
+            $query=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,FechaVencimiento,DiasMora,"
+                    . "cod_enti_administradora,nom_enti_administradora,RegimenEPS,ROUND(valor_neto_pagar) AS valor_neto_pagar,ValorGlosaInicial"
+                    . ",ValorGlosaLevantada,ValorGlosaAceptada,TotalPagos,SaldoFinalFactura,tipo_negociacion ";
+            $sqlColumnas.=" UNION ALL ";
+            
+            //print($Indice);
+            $sql=$sqlColumnas."SELECT $query FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
+            $obCon->Query($sql);
+            print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
+            break;
         }
 }else{
     print("No se recibió parametro de opcion");

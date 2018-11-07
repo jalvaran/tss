@@ -409,7 +409,7 @@ public function DibujeTabla($Vector){
     $TxtSt=urlencode($statement);
     $TxtTabla= base64_encode($Tabla["Tabla"]);
     $imagerute="../images/csv2.png";    
-        //$this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
+        $this->css->CrearImageLink("ProcesadoresJS/GeneradorCSV.php?Opcion=1&TxtT=$TxtTabla&TxtL=$TxtSt", $imagerute, "_blank",50,50);
 
     if($tbl==' '){
         $imagerute="../images/excel.png";    
