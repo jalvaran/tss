@@ -146,4 +146,52 @@ ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `NumeroFacturaAdres` VAR
 
 INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (69, 'Devolver una factura', '13', '6', 'SaludDevolucionFactura.php', '_SELF', b'1', 'devolucion2.png', '2', '2018-07-13 15:42:34', '2018-07-13 15:42:34');
 
+DROP TABLE IF EXISTS `configuraciones_nombres_campos`;
+CREATE TABLE `configuraciones_nombres_campos` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `NombreDB` varchar(50) NOT NULL,
+  `Visualiza` varchar(50) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `configuraciones_nombres_campos` (`ID`, `NombreDB`, `Visualiza`, `Updated`, `Sync`) VALUES
+(1,	'id_medicamentos',	'ID',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
+(2,	'TipoUser',	'Tipo de Usuario',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
+(3,	'idUsuarios',	'ID',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
+(4,	'Identificacion',	'Identificación',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
+(5,	'Telefono',	'Teléfono',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
+(6,	'idEmpresaPro',	'ID',	'2018-11-06 15:19:27',	'0000-00-00 00:00:00'),
+(7,	'RazonSocial',	'Razón Social',	'2018-11-06 15:19:42',	'0000-00-00 00:00:00'),
+(8,	'CodigoPrestadora',	'Código de Prestadora',	'2018-11-06 15:20:20',	'0000-00-00 00:00:00'),
+(9,	'Direccion',	'Dirección',	'2018-11-06 15:20:39',	'0000-00-00 00:00:00'),
+(10,	'ResolucionDian',	'Resolución',	'2018-11-06 15:21:13',	'0000-00-00 00:00:00'),
+(11,	'Regimen',	'Régimen',	'2018-11-06 15:21:36',	'0000-00-00 00:00:00'),
+(12,	'ObservacionesLegales',	'Observaciones Legales',	'2018-11-06 15:22:01',	'0000-00-00 00:00:00'),
+(13,	'PuntoEquilibrio',	'Punto de Equilibrio',	'2018-11-06 15:22:20',	'0000-00-00 00:00:00'),
+(14,	'DatosBancarios',	'Datos Bancarios',	'2018-11-06 15:22:35',	'0000-00-00 00:00:00'),
+(15,	'RutaImagen',	'Imagen',	'2018-11-06 15:23:17',	'0000-00-00 00:00:00'),
+(16,	'id_concepto_glosa',	'ID',	'2018-11-06 15:30:12',	'0000-00-00 00:00:00'),
+(17,	'cod_glosa',	'Código de Glosa',	'2018-11-06 15:30:28',	'0000-00-00 00:00:00'),
+(18,	'cod_concepto_especifico',	'Código del Concepto Específico',	'2018-11-06 15:31:45',	'0000-00-00 00:00:00'),
+(19,	'descrpcion_concep_especifico',	'Descripción del Concepto Específico',	'2018-11-06 15:32:28',	'0000-00-00 00:00:00'),
+(20,	'aplicacion',	'Aplicación',	'2018-11-06 15:32:44',	'0000-00-00 00:00:00'),
+(21,	'cod_pagador_min',	'Código de Administradora',	'2018-11-06 15:37:48',	'0000-00-00 00:00:00'),
+(22,	'nit',	'NIT',	'2018-11-06 15:38:07',	'0000-00-00 00:00:00'),
+(23,	'sigla_nombre',	'Sigla del Nombre',	'2018-11-06 15:38:21',	'0000-00-00 00:00:00'),
+(24,	'nombre_completo',	'Nombre Completo',	'2018-11-06 15:38:35',	'0000-00-00 00:00:00'),
+(25,	'telefonos',	'Teléfonos',	'2018-11-06 15:38:52',	'0000-00-00 00:00:00'),
+(26,	'email',	'Email',	'2018-11-06 15:39:04',	'0000-00-00 00:00:00'),
+(27,	'tipo_regimen',	'Régimen',	'2018-11-06 15:39:23',	'0000-00-00 00:00:00'),
+(28,	'dias_convenio',	'Convenio en Días',	'2018-11-06 15:39:41',	'0000-00-00 00:00:00'),
+(29,	'Nombre_gerente',	'Nombre del Gerente',	'2018-11-06 15:39:56',	'0000-00-00 00:00:00'),
+(30,	'RepresentanteLegal',	'Representante Legal',	'2018-11-06 15:40:07',	'0000-00-00 00:00:00'),
+(31,	'NumeroRepresentanteLegal',	'Celular del Representante Legal',	'2018-11-06 15:40:30',	'0000-00-00 00:00:00'),
+(32,	'Genera030',	'Genera Circular 030?',	'2018-11-06 15:41:00',	'0000-00-00 00:00:00'),
+(33,	'codigo_sistema',	'Código',	'2018-11-06 15:45:00',	'0000-00-00 00:00:00'),
+(34,	'descripcion_cups',	'Descripción',	'2018-11-06 15:45:18',	'0000-00-00 00:00:00'),
+(35,	'observacion',	'Observaciones',	'2018-11-06 15:45:44',	'0000-00-00 00:00:00');
+
+
 

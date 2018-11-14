@@ -236,7 +236,6 @@ function VerificaArchivosRelacionadosCT(){
  */
 function CargarAF(){
     
-    
     var form_data = getInfoForm();
         form_data.append('idAccion', 6);
         form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
@@ -255,7 +254,7 @@ function CargarAF(){
                         $('.progress-bar').css('width','16%').attr('aria-valuenow', 16);  
                         document.getElementById('LyProgresoCMG').innerHTML="16%";
                         document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Subidos a la Tabla Temporal</h4>";
-                        VerificaDuplicados();
+                        VerificaValorCuenta();
 
                     }else{
                         document.getElementById("DivProcess").innerHTML='';
@@ -272,45 +271,76 @@ function CargarAF(){
         httpEdicion.open("POST",'./Consultas/Salud_SubirRips.process.php',true);
         httpEdicion.send(form_data);
         
-        /*
-      console.log('entra a ajax');
-    $.ajax({
-        //async:false,
-        url: './Consultas/Salud_SubirRips.process.php',
-        //dataType: 'html',
-        cache: false,
-        contentType: false,
-         
-        processData: false,
-        data: form_data,
-        type: 'post',
-        success: function(data){
-            console.log('entra a envio');
-            console.log(data);
-           if(data=="OK"){
-                $('.progress-bar').css('width','16%').attr('aria-valuenow', 16);  
-                document.getElementById('LyProgresoCMG').innerHTML="16%";
-                document.getElementById("DivConsultas").innerHTML="<h4 style='color:green'>AF Subidos a la Tabla Temporal</h4>";
-                //VerificaDuplicados();
-                
-            }else{
-                document.getElementById("DivProcess").innerHTML='';
-                document.getElementById("DivConsultas").innerHTML=data;
-                BorrarCarga();
-                document.getElementById('BtnSubirZip').disabled=false;
-            }
-            
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alertify.alert("Error al tratar de borrar el archivo",0);
-            alert(xhr.status);
-            alert(thrownError);
-          }
-      })
-    */
-   
    
 }
+
+
+/**
+ * Envia la peticion para que sea cargado el AF
+ * @returns {undefined}
+ */
+function VerificaValorCuenta(){
+    
+    var form_data = getInfoForm();
+        form_data.append('idAccion', 28);
+        form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
+        
+        if (window.XMLHttpRequest) {
+                // code for IE7+, Firefox, Chrome, Opera, Safari
+                httpEdicion = new XMLHttpRequest();
+            } else {
+                // code for IE6, IE5
+                httpEdicion = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            httpEdicion.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var data=this.responseText;
+                    var respuestas = data.split(';');
+                    if(respuestas[0]=="OK"){
+                        
+                        var ValorCuenta = respuestas[1];
+                        alertify.set({ labels: {
+                            ok     : "Continuar",
+                            cancel : "Cancelar Subida"
+                        } });
+                        alertify.confirm("Esta Cuenta está por valor de: "+ new Intl.NumberFormat().format(ValorCuenta) +", Desea continuar?",
+                        function (e) {
+                            if (e) {
+
+                                VerificaDuplicados();                    
+
+                            } else {
+                                alertify.error("Se canceló el proceso");
+
+                                document.getElementById("GifProcess").innerHTML="";
+                                document.getElementById('BtnSubirZip').disabled=false;
+                                document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                BorrarCarga();
+                                return;
+                            }
+                        });
+                        
+                        
+
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                        document.getElementById("DivConsultas").innerHTML=data;
+                        BorrarCarga();
+                        document.getElementById('BtnSubirZip').disabled=false;
+                    }
+                    
+                }else{
+                    document.getElementById("DivConsultas").innerHTML=this.responseText;
+                }
+            };
+        
+        httpEdicion.open("POST",'./Consultas/Salud_SubirRips.process.php',true);
+        httpEdicion.send(form_data);
+        
+   
+}
+
+
 /**
  * Verifica si hay facturas Duplicadas
  * @returns {undefined}

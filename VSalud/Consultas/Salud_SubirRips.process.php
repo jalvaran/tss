@@ -419,6 +419,13 @@ if($_REQUEST["idAccion"]){
             print("OK");
             
         break;
+    
+        case 28://Verifica el valor de la cuenta
+            
+            $Total=$obCon->Sume("salud_rips_facturas_generadas_temp", "valor_neto_pagar", "");
+            print("OK;$Total");
+            
+        break;
         
                
     }
