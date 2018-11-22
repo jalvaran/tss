@@ -18,7 +18,7 @@ if($_REQUEST["idAccion"]){
     $obRips = new Rips($idUser);
     switch ($_REQUEST["idAccion"]){
         case 1: //Subir el archivo, renombrarlo con la el numero del giro y guardarlo en la carpeta archivos
-            //$obRips->VaciarTabla("salud_pagos_temporal"); //Vacío la tabla de subida temporal
+            $obRips->VaciarTabla("salud_pagos_temporal"); //Vacío la tabla de subida temporal
             $Separador=$obRips->normalizar($_REQUEST["CmbSeparador"]);
             $TipoGiro=$obRips->normalizar($_REQUEST["CmbTipoGiro"]);
             $FechaGiro=$obRips->normalizar($_REQUEST["TxtFechaGira"]);
