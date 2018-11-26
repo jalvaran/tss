@@ -1,5 +1,8 @@
 <?php
 include_once 'html_estruct_class.php';
+if(file_exists('../../modelo/php_conexion.php')){
+    include_once '../../modelo/php_conexion.php';
+}
 /**
  * Description of pages_construct Clase para generar paginas
  *
@@ -13,33 +16,33 @@ class PageConstruct extends html_estruct_class{
      * @param type $ng_app ->Se define si se desea ingresar un modulo del framework angular
      * @param type $Vector -> uso futuro
      */
-    function __construct($Titulo,$Vector,$Angular='',$ng_app='',$CssFramework=1){
-        
-        $this->tipo_html();
-        $this->html("es",$ng_app,"",$ng_app);
-        $this->head();
-            print("<meta http-equiv=Content-Type content=text/html charset='UTF-8' />");
-            print("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
-            print("<meta name='description' content='Software de Techno Soluciones'>");
-            print("<meta name='author' content='Techno Soluciones SAS'>");
-            print("<title>$Titulo</title>");
-            if($CssFramework==1){
-                print('<link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
-                
-            }
-            print("<link rel='shortcut icon' href='../images/technoIco.ico'>");
-            print('<link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">');
-            print('<link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">');
-            print('<link href="../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">');
-            print('<link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">');
-            print('<link href="../dist/css/sb-admin-2.css" rel="stylesheet">');
-            
-            print("<link rel='stylesheet' href='../vendor/alertify/themes/alertify.core.css' />");
-            print("<link rel='stylesheet' href='../vendor/alertify/themes/alertify.default.css' id='toggleCSS' />");
-            
-            
-        $this->Chead();
-            
+    function __construct($Titulo,$Vector,$Angular='',$ng_app='',$CssFramework=1,$Inicializar=1){
+        if($Inicializar==1){
+            $this->tipo_html();
+            $this->html("es",$ng_app,"",$ng_app);
+            $this->head();
+                print("<meta http-equiv=Content-Type content=text/html charset='UTF-8' />");
+                print("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
+                print("<meta name='description' content='Software de Techno Soluciones'>");
+                print("<meta name='author' content='Techno Soluciones SAS'>");
+                print("<title>$Titulo</title>");
+                if($CssFramework==1){
+                    print('<link href="../ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">');
+
+                }
+                print("<link rel='shortcut icon' href='../images/technoIco.ico'>");
+                print('<link href="../ext/metisMenu/metisMenu.min.css" rel="stylesheet">');
+                print('<link href="../ext/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">');
+                print('<link href="../ext/datatables-responsive/dataTables.responsive.css" rel="stylesheet">');
+                print('<link href="../ext/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">');
+                print('<link href="../dist/css/sb-admin-2.css" rel="stylesheet">');
+
+                print("<link rel='stylesheet' href='../ext/alertify/themes/alertify.core.css' />");
+                print("<link rel='stylesheet' href='../ext/alertify/themes/alertify.default.css' id='toggleCSS' />");
+
+
+            $this->Chead();
+        }
     }   
     
     /**
@@ -191,24 +194,24 @@ class PageConstruct extends html_estruct_class{
      * Agrega los JavaScripts Necesarios
      */
     public function AgregaJS(){
-        print('<script src="../vendor/jquery/jquery.min.js"></script>');
-        print('<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>');
-        print('<script src="../vendor/metisMenu/metisMenu.min.js"></script>');
-        print('<script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>');
-        print('<script src="../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>');
-        print('<script src="../vendor/datatables-responsive/dataTables.responsive.js"></script>');
+        print('<script src="../ext/jquery/jquery.min.js"></script>');
+        print('<script src="../ext/bootstrap/js/bootstrap.min.js"></script>');
+        print('<script src="../ext/metisMenu/metisMenu.min.js"></script>');
+        print('<script src="../ext/datatables/js/jquery.dataTables.min.js"></script>');
+        print('<script src="../ext/datatables-plugins/dataTables.bootstrap.min.js"></script>');
+        print('<script src="../ext/datatables-responsive/dataTables.responsive.js"></script>');
         print('<script src="../dist/js/sb-admin-2.js"></script>');
-        print('<script src="../vendor/alertify/lib/alertify.min.js"></script>');
-        //print('<script type="text/javascript" src="../vendor/jquery/jquery-1.11.0.min.js"></script>');
+        print('<script src="../ext/alertify/lib/alertify.min.js"></script>');
+        //print('<script type="text/javascript" src="../ext/jquery/jquery-1.11.0.min.js"></script>');
         
     }
     /**
      * Agrega CSS y JS para el objeto Select 2
      */
     public function AgregaCssJSSelect2() {
-        print("<link rel='stylesheet' type='text/css' href='../vendor/select2\dist\css/select2.min.css' />");
-        print('<script src="../vendor/select2\vendor\jquery-2.1.0.js"></script>');
-        print('<script src="../vendor/select2\dist\js/select2.min.js"></script>');     
+        print("<link rel='stylesheet' type='text/css' href='../ext/select2\dist\css/select2.min.css' />");
+        print('<script src="../ext/select2\vendor\jquery-2.1.0.js"></script>');
+        print('<script src="../ext/select2\dist\js/select2.min.js"></script>');     
 
     }
     /**
@@ -260,6 +263,83 @@ class PageConstruct extends html_estruct_class{
         print("</div>");
 		
     }
+    
+    function CrearTabla($Titulo,$id,$Ancho,$js,$Vector) {
+        print('<div class="row">');
+        print('<div class="col-lg-12">');
+        //print('<div class="panel panel-default">');
+        //print('<div class="panel-heading">'.$Titulo.'</div>');
+        print('<div class="panel-body">');
+        print('<table width="'.$Ancho.'" class="table table-striped table-bordered table-hover" id="'.$id.'" '.$js.'>');
+    }
+    
+    function CabeceraTabla($tabla,$Columnas,$js,$Vector){
+        $obCon=new conexion(1);
+        print("<thead><tr>");
+        foreach ($Columnas as $key => $value) {
+            $Consulta=$obCon->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$tabla' AND Campo='$value' AND Visible=0");
+            $DatosExcluidas=$obCon->FetchAssoc($Consulta);
+            if($DatosExcluidas["ID"]==''){
+                $DatosNombres=$obCon->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $value);
+                $NombreColumna=$value;
+                if($DatosNombres["ID"]<>""){
+                    $NombreColumna=utf8_encode($DatosNombres["Visualiza"]);
+                    $this->th("", "", 1, 1, "", "");
+                    $js="onclick=EscribirEnCaja('TxtOrdenNombreColumna','$value');CambiarOrden();DibujeTabla();";
+                    $this->a("", "", "#", "", "", "", $js);
+                    print($NombreColumna);
+                    $this->Ca();
+                $this->Cth();
+                }
+                
+                
+            }
+            
+        }
+        print("</tr></thead>");
+    }
+    
+    function FilaTabla($tabla,$Datos,$js,$Vector){
+        $obCon=new conexion(1);
+        print('<tr class="odd gradeX">');
+        foreach ($Datos as $key => $value) {
+            $Consulta=$obCon->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$tabla' AND Campo='$key' AND Visible=0");
+            $DatosExcluidas=$obCon->FetchAssoc($Consulta);
+            if($DatosExcluidas["ID"]==''){
+                $value= utf8_encode($value);
+                print("<td>$value</td>");
+            }
+        }
+        print("</tr>");
+    }
+    
+    function CerrarTabla() {
+        print('</table></div></div></div>');
+    }
+    
+    function CrearInputText($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$ToolTip='Rellena este Campo',$Max="",$Min="",$TFont='1em'){
+		   
+        if($ReadOnly==1)
+                $ReadOnly="readonly";
+        else
+                $ReadOnly="";
+
+        if($Required==1)
+                $Required="required";
+        else
+                $Required="";
+        
+        $JavaScript=$TxtEvento.' = '.$TxtFuncion;
+        $OtrasOpciones="";
+        if($Max<>''){
+            $OtrasOpciones="max=$Max min=$Min";
+        }
+
+        print('<strong style="color:'.$color.'">'.$label.'<input name="'.$nombre.'" class="form-control" value="'.$value.'" type="'.$type.'" id="'.$nombre.'" '.$OtrasOpciones.' placeholder="'.$placeh.'" '.$JavaScript.' 
+        '.$ReadOnly.' '.$Required.' autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px; font-size: '.$TFont.' ;data-toggle="tooltip" title="'.$ToolTip.'" "></strong>');
+
+    }
+    
         //////////////////////////////////FIN
 }
 	

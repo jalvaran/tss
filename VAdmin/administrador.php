@@ -21,13 +21,21 @@ $css->CabeceraIni($myTitulo); //Inicia la cabecera de la pagina
     $css->CerrarDiv();
 $css->CabeceraFin(); 
 $css->CerrarDiv();
+
 $css->CrearDiv("page-wrapper", "", "", 1, 1);
+$css->CrearInputText("TxtTabla", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
+$css->CrearInputText("TxtCondicion", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
+$css->CrearInputText("TxtOrdenNombreColumna", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
+$css->CrearInputText("TxtOrdenTabla", "text", "", "DESC", "", "", "", "", 300, 30, 0, 0,"1em");
+$css->CrearInputText("TxtLimit", "text", "", "10", "", "", "", "", 300, 30, 0, 0,"1em");
+$css->CrearInputText("TxtPage", "text", "", "1", "", "", "", "", 300, 30, 0, 0,"1em");
+
 print('<div id="tabla" style="overflow-x: auto;">');
 
-    print("dsadsa dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
 $css->CerrarDiv();
 $css->CerrarDiv();
 $css->AgregaJS();
+print('<script src="jsPages/administrador.js"></script>');     
 $css->Cbody();
 $css->Chtml();
 
