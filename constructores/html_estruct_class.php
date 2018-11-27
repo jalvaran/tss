@@ -170,9 +170,9 @@ class html_estruct_class {
      *Metodo body para el cuerpo de la pagina
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)  
      */
-    function body($vectorhtml,$Script=''){
+    function body($vectorhtml,$class="",$Script='',$ng_app=""){
         
-         print('<body '.$Script.' >');
+         print('<body class='.$class.' '.$Script.' '.$ng_app.' >');
     }
     
     /**
@@ -190,9 +190,9 @@ class html_estruct_class {
      * @param type $class ->atr global. class del elemento div
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function div($id,$class,$vectorhtml,$Script){
+    function div($id,$class,$vectorhtml,$role,$ng_angular,$Script,$style){
         
-         print('<div id="'.$id.'" class="'.$class.'" '.$Script.' >');
+         print('<div id="'.$id.'" class="'.$class.'"  role='.$role.' '.$ng_angular.'  '.$Script.' '.$style.' >');
         
     }
     
@@ -566,9 +566,8 @@ class html_estruct_class {
      * @param type $title ->atr global. id
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function select($id,$class,$name,$title,$vectorhtml,$Script){
-        
-        print('<select id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" '.$Script.' >');
+    function select($id,$class,$name,$title,$vectorhtml,$Script,$style){        
+        print('<strong>'.$title.'</strong><select id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" '.$Script.' '.$style.' >');
     }
     
     /**

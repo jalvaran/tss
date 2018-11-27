@@ -193,5 +193,5 @@ INSERT INTO `configuraciones_nombres_campos` (`ID`, `NombreDB`, `Visualiza`, `Up
 (34,	'descripcion_cups',	'Descripción',	'2018-11-06 15:45:18',	'0000-00-00 00:00:00'),
 (35,	'observacion',	'Observaciones',	'2018-11-06 15:45:44',	'0000-00-00 00:00:00');
 
-
+ALTER TABLE `menu_submenus` ADD `idMenu` INT NOT NULL AFTER `idCarpeta`, ADD `TablaAsociada` VARCHAR(45) NOT NULL AFTER `idMenu`;
 

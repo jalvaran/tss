@@ -39,6 +39,41 @@ function DibujaAdministradores(){
       })        
 }  
 
+
+/*
+ * Dibuja los Filtros
+ * @returns {undefined}
+ */
+function DibujaFiltros(){
+    var Tabla = document.getElementById('TxtTabla').value;
+    
+    var form_data = new FormData();
+        form_data.append('Accion', 3);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivOpciones1').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
 /*
  * Selecciona la tabla a dibujar
  * @param {type} Tabla
@@ -71,7 +106,7 @@ function SeleccionarTabla(Tabla){
            
           if (data != "") { 
               document.getElementById('tabla').innerHTML=data;
-              
+              DibujaFiltros();
           }else {
             alert("No hay resultados para la consulta");
           }
@@ -108,4 +143,30 @@ function LimpiarFiltros(){
     document.getElementById('TxtPage').value='1';
 }
 
+function MuestraOcultaMenu(){
+    var id='DivSubMenuLateral';
+    estado=document.getElementById(id).style.display;
+    if(estado=="none" | estado==""){
+        document.getElementById(id).style.display="block";
+    }
+    if(estado=="block"){
+        document.getElementById(id).style.display="none";
+    }
+    
+}
+
+
+$(document).on("click",function(e) {
+    var id='DivSubMenuLateral';              
+    var container = $("#DivSubMenuLateral");
+    var container2 = $("#aMenuPrincipal");
+
+       if (!container.is(e.target) && container.has(e.target).length === 0) { 
+           if(!container2.is(e.target) && container2.has(e.target).length === 0){
+               document.getElementById(id).style.display="none";
+           }
+                       
+       }
+});
+     
 DibujaAdministradores();
