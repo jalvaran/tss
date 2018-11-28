@@ -46,6 +46,8 @@ class PageConstruct extends html_estruct_class{
 
 
             $this->Chead();
+            $this->body("", "hold-transition skin-blue sidebar-mini");
+            $this->CrearDiv("wrapper", "", "", 1, 1);
         }
     }   
     
@@ -249,6 +251,32 @@ class PageConstruct extends html_estruct_class{
               </li>
             </ul>
           </li>');
+    }
+    
+    public function PageInit($myTitulo) {
+        $NombreUsuario=$_SESSION["nombre"];
+        $idUser=$_SESSION["idUser"];
+        $this->CabeceraIni($myTitulo,"",""); //Inicia la cabecera de la pagina
+            //$css->NotificacionMensajes();
+        
+            $this->NotificacionTareas();
+            $this->NotificacionAlertas();
+            $this->InfoCuenta($NombreUsuario);
+            //$css->ControlesGenerales();
+
+        $this->CabeceraFin();
+        $this->ConstruirMenuLateral($idUser, "");
+        $this->CrearDiv("principal", "", "left", 1, 1);    
+        $this->CrearDiv("Contenido", "content-wrapper", "", 1, 1);
+    }
+    
+    public function PageFin() {
+        $this->CerrarDiv();
+        $this->FooterPage();
+        $this->CrearDiv("DivBarraControles", "", "", 0, 0);
+            $this->BarraControles();
+        $this->CerrarDiv();
+        $this->AgregaJS();
     }
     
     public function ControlesGenerales() {
@@ -1047,6 +1075,110 @@ class PageConstruct extends html_estruct_class{
             $this->input("submit", "BtnAvanzar", "btn btn-block btn-warning btn-xs $Estado", "BtnAvanzar", "Avanzar", "Avanzar", "", "", "", $js);
             $this->Cdiv();
             $this->Cdiv();
+        }
+        
+        /**
+         * Construye un Menu general en el panel lateral
+         * @param type $Nombre
+         * @param type $Clase
+         * @param type $Activo
+         * @param type $vector
+         */
+        public function PanelMenuGeneralInit($Nombre,$Clase,$Activo,$vector) {
+            if($Activo==1){
+                $Activo="active";
+            }else{
+                $Activo="";
+            }
+            print('<li class="treeview '.$Activo.'">
+                <a href="#">
+                  <i class="'.$Clase.'"></i> <span>'.$Nombre.'</span>
+                  <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                </a>
+                
+                ');
+        }
+        /**
+         * Cierra el menu general
+         */
+        public function PanelMenuGeneralFin() {
+            $this->Cli();
+        }
+        
+        public function PanelPestanaInit() {
+            print('<ul class="treeview-menu">');
+        }
+        
+        public function PanelPestana($Nombre,$Clase,$vector) {
+            print('<li class="treeview">
+                    <a href="#"><i class="'.$Clase.'"></i> '.$Nombre.'
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    
+                  ');
+        }
+        
+        public function PanelPestanaFin() {
+            print('</li></ul>');
+                  
+        }
+        
+        public function PanelSubMenuInit() {
+            print('<ul class="treeview-menu">');
+        }
+        
+        public function PanelSubMenuFin() {
+            print('</ul>');
+        }
+        
+        public function PanelSubMenu($Nombre,$Link,$js,$Clase) {
+            print('<li><a href="'.$Link.'" '.$js.'><i class="'.$Clase.'"></i> '.$Nombre.'</a></li>');
+        }
+        /**
+         * Construye el menu lateral dibujando solo lo que el usuario por su tipo tiene permitido
+         * @param type $idUsuario
+         * @param type $vector
+         */
+        public function ConstruirMenuLateral($idUsuario,$vector) {
+            $obCon=new conexion($idUsuario);
+            $sql="SELECT Nombre,Apellido,Identificacion,TipoUser FROM usuarios WHERE idUsuarios='$idUsuario'";
+            $Consulta=$obCon->Query($sql);
+            $DatosUsuario=$obCon->FetchAssoc($Consulta);
+            $NombreUsuario=$DatosUsuario["Nombre"]." ".$DatosUsuario["Apellido"];
+            
+            $this->MenuLateralInit();    
+                $this->PanelInfoUser($NombreUsuario);
+                //$css->PanelBusqueda(); //uso futuro
+                $this->PanelLateralInit("MENU GENERAL");
+                    $Consulta=$obCon->ConsultarTabla("menu"," WHERE Estado=1 ORDER BY Orden ASC");
+                    while($DatosMenu=$obCon->FetchArray($Consulta)){
+                        $idMenu=$DatosMenu["ID"];
+                        $this->PanelMenuGeneralInit(utf8_encode($DatosMenu["Nombre"]),$DatosMenu["CSS_Clase"],0,"");
+                            $ConsultaPestanas=$obCon->ConsultarTabla("menu_pestanas"," WHERE idMenu='$idMenu' AND Estado=1 ORDER BY Orden ASC");
+                            $this->PanelPestanaInit();
+                            while($DatosPestanas=$obCon->FetchAssoc($ConsultaPestanas)){
+                                $idPestana=$DatosPestanas["ID"];
+                                $this->PanelPestana(utf8_encode($DatosPestanas["Nombre"]), "fa fa-circle-o text-red", "");
+                                $this->PanelSubMenuInit();
+                                $ConsultaSubmenus=$obCon->ConsultarTabla("menu_submenus"," WHERE idPestana='$idPestana' AND Estado=1 ORDER BY Orden ASC");
+                                while($DatosSubMenu=$obCon->FetchAssoc($ConsultaSubmenus)){
+                                    $js="";
+                                    $this->PanelSubMenu(utf8_encode($DatosSubMenu["Nombre"]), $DatosSubMenu["Pagina"], $js, "fa fa-circle-o text-aqua");
+                                }
+                                $this->PanelSubMenuFin();
+                            }
+                            $this->PanelPestanaFin();
+                            
+                        $this->PanelMenuGeneralFin();
+                    }
+                    
+                $this->CPanelLateral();
+            $this->MenuLateralFin();
+            
         }
         
         //////////////////////////////////FIN

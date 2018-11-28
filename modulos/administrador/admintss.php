@@ -8,54 +8,27 @@ $myPage="admintss.php";
 $myTitulo="Plataforma TSS";
 include_once("../../sesiones/php_control_usuarios.php");
 include_once("../../constructores/paginas_constructor.php");
-$NombreUsuario=$_SESSION["nombre"]." ".$_SESSION["apellido"];
 $css =  new PageConstruct($myTitulo, "");
-$css->body("", "hold-transition skin-blue sidebar-mini");
 
-//Cabecera
-$css->CrearDiv("wrapper", "", "", 1, 1);
-$css->CabeceraIni($myTitulo,"",""); //Inicia la cabecera de la pagina
-    //$css->NotificacionMensajes();
-    $css->NotificacionTareas();
-    $css->NotificacionAlertas();
-    $css->InfoCuenta($NombreUsuario);
-    //$css->ControlesGenerales();
-     
-$css->CabeceraFin();
+$css->PageInit($myTitulo);
 
-$css->MenuLateralInit();
-    
-    $css->PanelInfoUser($NombreUsuario);
-    $css->PanelBusqueda();
-    $css->PanelLateralInit("MENU GENERAL");
-        $css->PanelMenuAdministrador();
-        $css->PanelModulos();
-        
-    $css->CPanelLateral();
-    
-$css->MenuLateralFin();
-
-
-$css->CrearDiv("principal", "", "left", 1, 1);
-    
-    $css->CrearDiv("Contenido", "content-wrapper", "", 1, 1);
-        //$css->SesionInfoPage("TSS", "Administrador");
+        //Codigo del desarrollador para su pagina
         
         $css->CrearDiv("DivOpcionesTablas", "", "left", 1, 1);
 
-        $css->CrearDiv("DivOpciones1", "col-sm-4", "left", 1, 1);
-            
-        $css->CerrarDiv();
-        $css->CrearDiv("DivOpciones2", "col-sm-2", "left", 1, 1);
+            $css->CrearDiv("DivOpciones1", "col-sm-4", "left", 1, 1);
 
-        $css->CerrarDiv();
-        $css->CrearDiv("DivOpciones3", "col-sm-2", "left", 1, 1);
+            $css->CerrarDiv();
+            $css->CrearDiv("DivOpciones2", "col-sm-2", "left", 1, 1);
 
-        $css->CerrarDiv();
-        $css->CrearDiv("DivOpciones4", "col-sm-4", "left", 1, 1);
+            $css->CerrarDiv();
+            $css->CrearDiv("DivOpciones3", "col-sm-2", "left", 1, 1);
 
+            $css->CerrarDiv();
+            $css->CrearDiv("DivOpciones4", "col-sm-4", "left", 1, 1);
+
+            $css->CerrarDiv();
         $css->CerrarDiv();
-    $css->CerrarDiv();
         
         $css->CrearDiv("DivParametrosTablas", "", "", 0, 0);
             $css->CrearInputText("TxtTabla", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
@@ -70,16 +43,12 @@ $css->CrearDiv("principal", "", "left", 1, 1);
         $css->CerrarDiv();
     $css->CerrarDiv();
 
+$css->PageFin();
+print('<script src="jsPages/administrador.js"></script>'); 
 
- 
-$css->CerrarDiv();
-$css->FooterPage();
-$css->CrearDiv("DivBarraControles", "", "", 0, 0);
-    $css->BarraControles();
-$css->CerrarDiv();
+//Codigo del desarrollador para su pagina
 
-$css->AgregaJS();
-print('<script src="jsPages/administrador.js"></script>');  
+
 $css->Cbody();
 $css->Chtml();
 
