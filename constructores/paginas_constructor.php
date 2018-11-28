@@ -55,7 +55,8 @@ class PageConstruct extends html_estruct_class{
      */
     function CabeceraIni($Title,$Link="#",$js=""){
         
-        print('<header class="main-header">
+        print('
+            <header class="main-header">
                 <!-- Logo -->
                 <a href="../index.php" class="logo">
                   <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -175,77 +176,20 @@ class PageConstruct extends html_estruct_class{
           <li class="dropdown tasks-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-flag-o"></i>
-              <span class="label label-danger">9</span>
+              <span id="spTareas" class="label label-danger"></span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have 9 tasks</li>
+              <li class="header">Lista de tareas</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
-                  <li><!-- Task item -->
-                    <a href="#">
-                      <h3>
-                        Design some buttons
-                        <small class="pull-right">20%</small>
-                      </h3>
-                      <div class="progress xs">
-                        <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">20% Complete</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <!-- end task item -->
-                  <li><!-- Task item -->
-                    <a href="#">
-                      <h3>
-                        Create a nice theme
-                        <small class="pull-right">40%</small>
-                      </h3>
-                      <div class="progress xs">
-                        <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">40% Complete</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <!-- end task item -->
-                  <li><!-- Task item -->
-                    <a href="#">
-                      <h3>
-                        Some task I need to do
-                        <small class="pull-right">60%</small>
-                      </h3>
-                      <div class="progress xs">
-                        <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">60% Complete</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <!-- end task item -->
-                  <li><!-- Task item -->
-                    <a href="#">
-                      <h3>
-                        Make beautiful transitions
-                        <small class="pull-right">80%</small>
-                      </h3>
-                      <div class="progress xs">
-                        <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">80% Complete</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
+                  <div id="DivNotificacionTareas">
+                  </div>
                   <!-- end task item -->
                 </ul>
               </li>
               <li class="footer">
-                <a href="#">View all tasks</a>
+                <a href="#">Ver todas las tareas</a>
               </li>
             </ul>
           </li>');
@@ -258,43 +202,18 @@ class PageConstruct extends html_estruct_class{
           <li class="dropdown notifications-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
+              <span id="spNotificacionAlertas" class="label label-warning"></span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">You have 10 notifications</li>
+              <li class="header">Notificaciones</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                      page and may cause design problems
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-users text-red"></i> 5 new members joined
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#">
-                      <i class="fa fa-user text-red"></i> You changed your username
-                    </a>
-                  </li>
+                  <div id="DivNotificacionAlertas">
+                  </div>
                 </ul>
               </li>
-              <li class="footer"><a href="#">View all</a></li>
+              <li class="footer"><a href="#">Ver Todas</a></li>
             </ul>
           </li>');
     }
@@ -302,12 +221,12 @@ class PageConstruct extends html_estruct_class{
     /**
      * Area para salir
      */
-    public function InfoCuenta() {
+    public function InfoCuenta($NombreUsuario) {
         print('<!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="../dist/img/user.png" class="user-image" alt="User Image">
-              <span class="hidden-xs">Alexander Pierce</span>
+              <span class="hidden-xs">'.$NombreUsuario.'</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -315,32 +234,17 @@ class PageConstruct extends html_estruct_class{
                 <img src="../dist/img/user.png" class="img-circle" alt="User Image">
 
                 <p>
-                  Alexander Pierce - Web Developer
-                  <small>Member since Nov. 2012</small>
+                  '.$NombreUsuario.'
                 </p>
               </li>
-              <!-- Menu Body -->
-              <li class="user-body">
-                <div class="row">
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
-                  </div>
-                  <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
-                  </div>
-                </div>
-                <!-- /.row -->
-              </li>
+              
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="../VMenu/Menu.php" class="btn btn-default btn-flat">Inicio</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="../destruir.php" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -369,7 +273,7 @@ class PageConstruct extends html_estruct_class{
                 <img src="../dist/img/user.png" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
-                <p>Alexander Pierce</p>
+                <p>'.$NombreUsuario.'</p>
                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
               </div>
             </div>');
@@ -388,11 +292,32 @@ class PageConstruct extends html_estruct_class{
             </form>');
     }
     
-    public function PanelMenuModulos() {
+    public function PanelLateralInit($Titulo) {
         print('<!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
-              <li class="header">MAIN NAVIGATION</li>
-              <li class="treeview">
+              <li class="header">'.$Titulo.'</li>');
+    }
+    
+    public function CPanelLateral() {
+        print('</ul>');
+    }
+    
+    public function PanelMenuAdministrador() {
+        print('<li class="treeview active">
+                <a href="#">
+                  <i class="fa fa-table"></i> <span>Administrador</span>
+                  <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                </a>
+                <ul id="DivMenuLateralModulos" class="treeview-menu">
+                                       
+                </ul>
+              </li>');
+    }
+    
+    public function PanelDashboard() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                   <span class="pull-right-container">
@@ -403,8 +328,11 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../index.php"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                   <li><a href="../index.php"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
                 </ul>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelLayoutOptions() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-files-o"></i>
                   <span>Layout Options</span>
@@ -418,16 +346,22 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
                   <li><a href="../layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
                 </ul>
-              </li>
-              <li>
+              </li>');
+    }
+    
+    public function PanelWidgets() {
+        print('<li>
                 <a href="../widgets.html">
                   <i class="fa fa-th"></i> <span>Widgets</span>
                   <span class="pull-right-container">
                     <small class="label pull-right bg-green">new</small>
                   </span>
                 </a>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelGraficos() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-pie-chart"></i>
                   <span>Charts</span>
@@ -441,8 +375,11 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
                   <li><a href="../charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
                 </ul>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelUIElements() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-laptop"></i>
                   <span>UI Elements</span>
@@ -458,8 +395,11 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
                   <li><a href="../UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
                 </ul>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelForms() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-edit"></i> <span>Forms</span>
                   <span class="pull-right-container">
@@ -471,21 +411,11 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
                   <li><a href="../forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
                 </ul>
-              </li>
-              <li class="treeview active">
-                <a href="#">
-                  <i class="fa fa-table"></i> <span>Administrador</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul id="DivMenuLateralModulos" class="treeview-menu">
-                  <li><a href="simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-                  <li class="active"><a href="data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
-                     
-                </ul>
-              </li>
-              <li>
+              </li>');
+    }
+    
+    public function PanelCalendario() {
+        print('<li>
                 <a href="../calendar.html">
                   <i class="fa fa-calendar"></i> <span>Calendar</span>
                   <span class="pull-right-container">
@@ -493,8 +423,11 @@ class PageConstruct extends html_estruct_class{
                     <small class="label pull-right bg-blue">17</small>
                   </span>
                 </a>
-              </li>
-              <li>
+              </li>');
+    }
+    
+    public function PanelMail() {
+        print('<li>
                 <a href="../mailbox/mailbox.html">
                   <i class="fa fa-envelope"></i> <span>Mailbox</span>
                   <span class="pull-right-container">
@@ -503,8 +436,11 @@ class PageConstruct extends html_estruct_class{
                     <small class="label pull-right bg-red">5</small>
                   </span>
                 </a>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelPaginas() {
+        print('<li class="treeview">
                 <a href="#">
                   <i class="fa fa-folder"></i> <span>Examples</span>
                   <span class="pull-right-container">
@@ -522,10 +458,13 @@ class PageConstruct extends html_estruct_class{
                   <li><a href="../examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
                   <li><a href="../examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
                 </ul>
-              </li>
-              <li class="treeview">
+              </li>');
+    }
+    
+    public function PanelModulos() {
+        print('<li class="treeview">
                 <a href="#">
-                  <i class="fa fa-share"></i> <span>Multilevel</span>
+                  <i class="fa fa-share"></i> <span>Módulos</span>
                   <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                       </span>
@@ -555,13 +494,21 @@ class PageConstruct extends html_estruct_class{
                   </li>
                   <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
                 </ul>
-              </li>
-              <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
-              <li class="header">LABELS</li>
+              </li>');
+    }
+    
+    
+    public function PanelDocumentacion() {
+        print('<li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>');
+    }
+    
+    
+    public function PanelLabels() {
+        print('<li class="header">LABELS</li>
               <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
               <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
               <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-            </ul>');
+            ');
     }
     
     public function SesionInfoPage($TituloGrande,$TituloPequeno) {
@@ -578,12 +525,13 @@ class PageConstruct extends html_estruct_class{
     }
     
     public function FooterPage() {
+        $anio=date("Y");
         print('<!-- /.content-wrapper -->
             <footer class="main-footer">
               <div class="pull-right hidden-xs">
-                <b>Version</b> 2.4.0
+                <b>Version</b> 2.0
               </div>
-              <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+              <strong>Copyright &copy; 2006-'.$anio.' <a href="http://technosoluciones.com.co">Techno Soluciones SAS</a>.</strong> All rights
               reserved.
             </footer>');
     }
@@ -860,7 +808,7 @@ class PageConstruct extends html_estruct_class{
 		
     }
     
-    function CrearTabla($Titulo,$id,$Ancho,$js,$Vector) {
+    function CrearTablaDB($Titulo,$id,$Ancho,$js,$Vector) {
         print('<div class="row">');
         print('<div class="col-lg-12">');
         //print('<div class="panel panel-default">');
@@ -904,7 +852,7 @@ class PageConstruct extends html_estruct_class{
         print("</tr>");
     }
     
-    function CerrarTabla() {
+    function CerrarTablaDB() {
         print('</table></div></div></div>');
     }
     
@@ -929,6 +877,16 @@ class PageConstruct extends html_estruct_class{
         print('<strong style="color:'.$color.'">'.$label.'<input name="'.$nombre.'" class="form-control" value="'.$value.'" type="'.$type.'" id="'.$nombre.'" '.$OtrasOpciones.' placeholder="'.$placeh.'" '.$JavaScript.' 
         '.$ReadOnly.' '.$Required.' autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px; font-size: '.$TFont.' ;data-toggle="tooltip" title="'.$ToolTip.'" "></strong>');
 
+    }
+    
+    public function CrearInputTextButton($type, $idText, $idButton, $class, $name,$nameButton, $title,$titleButton, $value,$valueButton, $placeholder, $autocomplete, $vectorhtml, $Script,$ScriptButton, $styles, $np_app) {
+        $this->div("", "input-group", "", "", "", "", "");
+            $this->input($type, $idText, $class, $name, $title, $value, $placeholder, $autocomplete, $vectorhtml, $Script, $styles, $np_app);
+            $this->span("", "input-group-btn", "", "");
+                print('<button id='.$idButton.' type="button" class="btn btn-success btn-flat" '.$ScriptButton.'>'.$valueButton.'</button>');
+                //$this->boton($idButton, "btn btn-info btn-flat", "button", $nameButton, $titleButton, $valueButton, "", $ScriptButton);
+            $this->Cspan();
+        $this->Cdiv();
     }
     
         //////////////////////////////////FIN

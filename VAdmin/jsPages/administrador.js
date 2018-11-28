@@ -44,9 +44,8 @@ function DibujaAdministradores(){
  * Dibuja los Filtros
  * @returns {undefined}
  */
-function DibujaFiltros(){
-    var Tabla = document.getElementById('TxtTabla').value;
-    
+function DibujaFiltros(Tabla){
+       
     var form_data = new FormData();
         form_data.append('Accion', 3);
         form_data.append('Tabla', Tabla);
@@ -106,7 +105,7 @@ function SeleccionarTabla(Tabla){
            
           if (data != "") { 
               document.getElementById('tabla').innerHTML=data;
-              DibujaFiltros();
+              
           }else {
             alert("No hay resultados para la consulta");
           }
@@ -141,6 +140,12 @@ function LimpiarFiltros(){
     document.getElementById('TxtCondicion').value='';
     document.getElementById('TxtOrdenNombreColumna').value='';
     document.getElementById('TxtPage').value='1';
+    if ($('#DivFiltrosAplicados').length){
+        document.getElementById('DivFiltrosAplicados').innerHTML='';
+        var Tabla = document.getElementById('TxtTabla').value
+        SeleccionarTabla(Tabla);
+    }
+    
 }
 
 function MuestraOcultaMenu(){
@@ -156,6 +161,19 @@ function MuestraOcultaMenu(){
 }
 
 
+function MuestraOcultaXID(id){
+    
+    var estado=document.getElementById(id).style.display;
+    if(estado=="none" | estado==""){
+        document.getElementById(id).style.display="block";
+    }
+    if(estado=="block"){
+        document.getElementById(id).style.display="none";
+    }
+    
+}
+
+/*
 $(document).on("click",function(e) {
     var id='DivSubMenuLateral';              
     var container = $("#DivSubMenuLateral");
@@ -168,5 +186,56 @@ $(document).on("click",function(e) {
                        
        }
 });
-     
+*/
+function AgregaCondicional(){
+   
+    var Tabla = document.getElementById('TxtTabla').value
+    var Columna = document.getElementById('CmbColumna').value
+    var Condicional = document.getElementById('CmbCondicion').value
+    var Busqueda = document.getElementById('TxtBusquedaTablas').value
+    var CondicionActual = document.getElementById('TxtCondicion').value
+    var CondicionFinal="";
+    var Operador = "";
+    var combo = document.getElementById("CmbColumna");
+    var ColumnaSeleccionada = combo.options[combo.selectedIndex].text;
+    
+    if(CondicionActual != ''){
+        Operador = " AND ";
+    }
+    switch(Condicional) {
+        case '=':            
+            CondicionFinal= Operador + Columna + " = '" + Busqueda + "'";            
+            break;
+        case '*':            
+            CondicionFinal= Operador + Columna + " LIKE '%" + Busqueda + "%'";            
+            break;
+        case '>':            
+            CondicionFinal= Operador + Columna + " > '" + Busqueda + "'";            
+            break;
+        case '<':            
+            CondicionFinal= Operador + Columna + " < '" + Busqueda + "'";            
+            break;
+        case '>=':            
+            CondicionFinal= Operador + Columna + " >= '" + Busqueda + "'";            
+            break;
+        case '<=':            
+            CondicionFinal= Operador + Columna + " <= '" + Busqueda + "'";            
+            break;
+        case '#%':            
+            CondicionFinal= Operador + Columna + " LIKE '" + Busqueda + "%'";            
+            break;
+        case '<>':            
+            CondicionFinal= Operador + Columna + " <> '" + Busqueda + "'";            
+            break;    
+    } 
+    document.getElementById('TxtCondicion').value=document.getElementById('TxtCondicion').value+" "+CondicionFinal;
+    
+    SeleccionarTabla(Tabla);
+    if(document.getElementById('DivFiltrosAplicados').innerHTML==''){
+        document.getElementById('DivFiltrosAplicados').innerHTML='<a href="#" id="aBorrarFiltros" onclick="LimpiarFiltros();" style="color:green"><span class="btn btn-block btn-primary btn-xs"><strong>Limpiar Filtros</strong></span></a> <strong>Filtros Aplicados: </strong><br>';
+    }
+    var lista='<i class="fa fa-circle-o text-aqua"></i><span> '+ColumnaSeleccionada+' '+ Condicional + ' '+Busqueda+' </span><br>';
+    document.getElementById('DivFiltrosAplicados').innerHTML=document.getElementById('DivFiltrosAplicados').innerHTML+" "+lista;
+    
+}
 DibujaAdministradores();

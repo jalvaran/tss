@@ -163,7 +163,7 @@ $(function () {
         if ($('body').hasClass('sidebar-collapse')) {
             $('[data-layout="sidebar-collapse"]').attr('checked', 'checked')
         }
-	
+
     }
 
     // Create the new tab
@@ -245,7 +245,7 @@ $(function () {
     // Dark sidebar skins
     var $skinBlue =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo1" href="javascript:void(0)" data-skin="skin-blue" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-blue" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9"></span><span class="bg-light-blue" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -253,7 +253,7 @@ $(function () {
     $skinsList.append($skinBlue)
     var $skinBlack =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo2" href="javascript:void(0)" data-skin="skin-black" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-black" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe"></span><span style="display:block; width: 80%; float: left; height: 7px; background: #fefefe"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -261,7 +261,7 @@ $(function () {
     $skinsList.append($skinBlack)
     var $skinPurple =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo3" href="javascript:void(0)" data-skin="skin-purple" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-purple" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-purple-active"></span><span class="bg-purple" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -269,7 +269,7 @@ $(function () {
     $skinsList.append($skinPurple)
     var $skinGreen =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo4" href="javascript:void(0)" data-skin="skin-green" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-green" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-green-active"></span><span class="bg-green" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -277,7 +277,7 @@ $(function () {
     $skinsList.append($skinGreen)
     var $skinRed =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo5" href="javascript:void(0)" data-skin="skin-red" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-red" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-red-active"></span><span class="bg-red" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -285,7 +285,7 @@ $(function () {
     $skinsList.append($skinRed)
     var $skinYellow =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo6" href="javascript:void(0)" data-skin="skin-yellow" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-yellow" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-yellow-active"></span><span class="bg-yellow" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #222d32"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -295,7 +295,7 @@ $(function () {
     // Light sidebar skins
     var $skinBlueLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo7" href="javascript:void(0)" data-skin="skin-blue-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-blue-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px; background: #367fa9"></span><span class="bg-light-blue" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -303,7 +303,7 @@ $(function () {
     $skinsList.append($skinBlueLight)
     var $skinBlackLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo8" href="javascript:void(0)" data-skin="skin-black-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-black-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div style="box-shadow: 0 0 2px rgba(0,0,0,0.1)" class="clearfix"><span style="display:block; width: 20%; float: left; height: 7px; background: #fefefe"></span><span style="display:block; width: 80%; float: left; height: 7px; background: #fefefe"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -311,7 +311,7 @@ $(function () {
     $skinsList.append($skinBlackLight)
     var $skinPurpleLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo9" href="javascript:void(0)" data-skin="skin-purple-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-purple-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-purple-active"></span><span class="bg-purple" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -319,7 +319,7 @@ $(function () {
     $skinsList.append($skinPurpleLight)
     var $skinGreenLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo10" href="javascript:void(0)" data-skin="skin-green-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-green-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-green-active"></span><span class="bg-green" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -327,7 +327,7 @@ $(function () {
     $skinsList.append($skinGreenLight)
     var $skinRedLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo11" href="javascript:void(0)" data-skin="skin-red-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-red-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-red-active"></span><span class="bg-red" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -335,7 +335,7 @@ $(function () {
     $skinsList.append($skinRedLight)
     var $skinYellowLight =
         $('<li />', {style: 'float:left; width: 33.33333%; padding: 5px;'})
-            .append('<a id="aEstilo12" href="javascript:void(0)" data-skin="skin-yellow-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
+            .append('<a href="javascript:void(0)" data-skin="skin-yellow-light" style="display: block; box-shadow: 0 0 3px rgba(0,0,0,0.4)" class="clearfix full-opacity-hover">'
                 + '<div><span style="display:block; width: 20%; float: left; height: 7px;" class="bg-yellow-active"></span><span class="bg-yellow" style="display:block; width: 80%; float: left; height: 7px;"></span></div>'
                 + '<div><span style="display:block; width: 20%; float: left; height: 20px; background: #f9fafc"></span><span style="display:block; width: 80%; float: left; height: 20px; background: #f4f5f7"></span></div>'
                 + '</a>'
@@ -349,22 +349,6 @@ $(function () {
     $('#control-sidebar-home-tab').after($tabPane)
 
     setup()
-    
+
     $('[data-toggle="tooltip"]').tooltip()
-    document.getElementById('aEstilo7').click(); //Estilo Azul claro
-    
-    /*
-    document.getElementById('aEstilo1').click(); //Estilo Azul
-    document.getElementById('aEstilo2').click(); //Estilo Blanco
-    document.getElementById('aEstilo3').click(); //Estilo purpura
-    document.getElementById('aEstilo4').click(); //Estilo verde
-    document.getElementById('aEstilo5').click(); //Estilo rojo
-    document.getElementById('aEstilo6').click(); //Estilo amarillo
-    document.getElementById('aEstilo7').click(); //Estilo Azul claro
-    document.getElementById('aEstilo8').click(); //Estilo blanco claro
-    document.getElementById('aEstilo9').click(); //Estilo purpura claro
-    document.getElementById('aEstilo10').click(); //Estilo verde claro
-    document.getElementById('aEstilo11').click(); //Estilo rojo claro
-    document.getElementById('aEstilo12').click(); //Estilo amarillo claro
-    */
 })

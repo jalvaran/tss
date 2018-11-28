@@ -172,7 +172,7 @@ class html_estruct_class {
      */
     function body($vectorhtml,$class="",$Script='',$ng_app=""){
         
-         print('<body class='.$class.' '.$Script.' '.$ng_app.' >');
+         print('<body class="'.$class.'" '.$Script.' '.$ng_app.' >');
     }
     
     /**
@@ -503,9 +503,9 @@ class html_estruct_class {
      * @param type $autocomplete ->atr. autocomplete del elemento input
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function input( $type,$id,$class,$name,$title,$value,$placeholder,$autocomplete,$vectorhtml,$Script){
+    function input( $type,$id,$class,$name,$title,$value,$placeholder,$autocomplete,$vectorhtml,$Script,$styles='',$np_app=''){
         
-        print('<input type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" placeholder="'.$placeholder.'" autocomplete="'.$autocomplete.'" '.$Script.' >');
+        print('<input type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" placeholder="'.$placeholder.'" autocomplete="'.$autocomplete.'" '.$Script.' '.$styles.' '.$np_app.' >');
     }
     
     /**
@@ -545,7 +545,7 @@ class html_estruct_class {
      */
     function boton($id,$class,$type,$name,$title,$value,$vectorhtml,$Script){
         
-        print('<boton id="'.$id.'" class="'.$class.'" type="'.$type.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" '.$Script.' >');
+        print('<button id="'.$id.'" class="'.$class.'" type="'.$type.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" '.$Script.' >');
     }
     
     /**
@@ -553,7 +553,7 @@ class html_estruct_class {
      */
     function Cboton(){
         
-        print('</boton>');
+        print('</button>');
         
     }
     

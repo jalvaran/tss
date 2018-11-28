@@ -20,7 +20,7 @@ if( !empty($_REQUEST["Accion"]) ){
             $consulta=$obCon->ConsultarTabla("menu_submenus", "WHERE Estado=1 AND idMenu=1");
             while($DatosConsulta=$obCon->FetchAssoc($consulta)){
                
-                print('<li><a href="#" onclick="LimpiarFiltros();SeleccionarTabla(`'.$DatosConsulta["TablaAsociada"].'`);"><i class="fa fa-circle-o"></i> '.$DatosConsulta["Nombre"].'</a></li>');
+                print('<li><a href="#" onclick="LimpiarFiltros();SeleccionarTabla(`'.$DatosConsulta["TablaAsociada"].'`);DibujaFiltros(`'.$DatosConsulta["TablaAsociada"].'`);"><i class="fa fa-circle-o"></i> '.$DatosConsulta["Nombre"].'</a></li>');
             }
         break; 
         case 2: //dibuja los datos de la tabla
@@ -58,7 +58,7 @@ if( !empty($_REQUEST["Accion"]) ){
             $Seleccion="";
             $QueryCompleto=$sql." ".$Condicion." ".$Orden." ".$Limite;
             
-            $css->CrearTabla($Tabla, $Tabla, "100%", $js, "");
+            $css->CrearTablaDB($Tabla, $Tabla, "100%", $js, "");
                 $css->CabeceraTabla($TituloTabla,$ColumnasSeleccionadas, $js, "");
                 
                 $consulta=$obCon->Query($QueryCompleto);
@@ -66,7 +66,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 while($DatosConsulta=$obCon->FetchAssoc($consulta)){
                     $css->FilaTabla($Tabla,$DatosConsulta, "", "");
                 }    
-            $css->CerrarTabla();
+            $css->CerrarTablaDB();
             /*
             $consulta=$obCon->ConsultarTabla("$Tabla", "");    
             while($DatosConsulta=$obCon->FetchAssoc($consulta)){
@@ -79,9 +79,15 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $Tabla=$obCon->normalizar($_REQUEST["Tabla"]); 
             $Columnas=$obCon->getColumnasVisibles($Tabla, "");
+                   
             $js="";
             
-            $css->select("CmbColumna", "form-control", "CmbColumna", "Buscar: ", "", $js,"style=width:Auto");
+            $css->fieldset("fBuscar", "", "fBuscar", "", "Buscar", "");
+            $css->legend("", "");
+                print("<a href='#' onclick='MuestraOcultaXID(`DivBusquedasTablas`)'>Buscar</a>");
+            $css->Clegend();   
+            $css->CrearDiv("DivBusquedasTablas", "", "", 0, 0);
+            $css->select("CmbColumna", "form-control", "CmbColumna", "", "", $js,"style=width:Auto");
             foreach ($Columnas["Field"] as $key => $value) {
                 $css->option("", "", $value, $value, "", "");
                     print(utf8_encode($Columnas["Visualiza"][$key]));
@@ -91,11 +97,69 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $css->select("CmbCondicion", "form-control", "CmbCondicion", " ", "", $js,"style=width:Auto");
                 $value="=";
-                $css->option("", "", $value, $value, "", "");
+                $Display="=";
+                $css->option("", "", $value, $Display, "", "");
                     print($value);
                 $css->Coption();
-            
+                
+                $value="*";
+                $Display="*";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                $value=">";
+                $Display=">";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                $value="<";
+                $Display="<";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                
+                $value=">=";
+                $Display=">=";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                
+                $value="<=";
+                $Display="<=";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                $value="#%";
+                $Display="#%";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                
+                $value="<>";
+                $Display="<>";
+                $css->option("", "", $value, $Display, "", "");
+                    print($value);
+                $css->Coption();
+                    
             $css->Cselect();
+            //$css->input("text", "TxtBusquedaTablas", "form-control", "TxtBusquedaTablas", "Valor", "", "", "", "", "");
+            $Script="";
+            $ScriptButton="onclick='AgregaCondicional()'";
+            $css->CrearInputTextButton("text", "TxtBusquedaTablas", "BtnBuscarEnTabla", "form-control", "TxtBusquedaTablas", "BtnBuscarEnTabla", "Buscar", "Buscar", "", "Buscar", "", "", "", $Script, $ScriptButton, "", "");
+            
+            $css->CrearDiv("DivFiltrosAplicados", "", "", 1, 1);
+                    
+            $css->CerrarDiv();
+            
+            $css->CerrarDiv();
+            
+            $css->Cfieldset();
+            
             
         break; 
     }
