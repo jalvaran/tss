@@ -18,8 +18,7 @@ if( !empty($_REQUEST["Accion"]) ){
         case 1: //dibujar la lista de administradores
             //$consulta=$obCon->ConsultarTabla("plataforma_administradores", "WHERE Habilitado=1");
             $consulta=$obCon->ConsultarTabla("menu_submenus", "WHERE Estado=1 AND idMenu=1");
-            while($DatosConsulta=$obCon->FetchAssoc($consulta)){
-               
+            while($DatosConsulta=$obCon->FetchAssoc($consulta)){               
                 print('<li><a href="#" onclick="DibujeTabla(`'.$DatosConsulta["TablaAsociada"].'`);"><i class="fa fa-circle-o"></i> '.$DatosConsulta["Nombre"].'</a></li>');
             }
         break; 
@@ -30,7 +29,7 @@ if( !empty($_REQUEST["Accion"]) ){
             $AscDesc=$obCon->normalizar($_REQUEST["Orden"]);
             $NumPage=$obCon->normalizar($_REQUEST["Page"]);
             $limit=$obCon->normalizar($_REQUEST["Limit"]);
-            
+            $Condicion= utf8_decode($Condicion);
             $DatosSubMenu=$obCon->DevuelveValores("menu_submenus", "TablaAsociada", $Tabla);
             $TituloTabla=$DatosSubMenu["Nombre"];
             $startpoint = ($NumPage * $limit) - $limit;
@@ -50,16 +49,25 @@ if( !empty($_REQUEST["Accion"]) ){
             }
             $sql = substr($sql, 0, -1);
             $sql = $sql." FROM $Tabla ";
-            //print($sql);
-            //print_r($ColumnasSeleccionadas["Field"]);
+            
+            $sqlConteo="SELECT COUNT(*) as TotalRegistros FROM $Tabla $Condicion";
+            $consulta=$obCon->Query($sqlConteo);
+            $DatosConteo=$obCon->FetchAssoc($consulta);
+            $TotalRegistros=$DatosConteo["TotalRegistros"];
+            
             $Orden=" ORDER BY $OrdenColumna $AscDesc ";
             $Limite="LIMIT $startpoint,$limit";
             $js="";
             $Seleccion="";
             $QueryCompleto=$sql." ".$Condicion." ".$Orden." ".$Limite;
             
+            if($TotalRegistros>$limit){                
+                $css->PaginadorTablas($Tabla, $limit, $NumPage, $TotalRegistros, "");
+            }
+            
             $css->CrearTablaDB($Tabla, $Tabla, "100%", $js, "");
-                $css->CabeceraTabla($TituloTabla,$ColumnasSeleccionadas, $js, "");
+            
+                $css->CabeceraTabla($Tabla,$limit,$TituloTabla,$ColumnasSeleccionadas, $js,$TotalRegistros,$NumPage, "");
                 
                 $consulta=$obCon->Query($QueryCompleto);
                 //$consulta=$obCon->ConsultarTabla($Tabla, " $Condicion $Orden  $Limite");    
@@ -67,6 +75,8 @@ if( !empty($_REQUEST["Accion"]) ){
                     $css->FilaTabla($Tabla,$DatosConsulta, "", "");
                 }    
             $css->CerrarTablaDB();
+            
+            
             /*
             $consulta=$obCon->ConsultarTabla("$Tabla", "");    
             while($DatosConsulta=$obCon->FetchAssoc($consulta)){
@@ -177,40 +187,40 @@ if( !empty($_REQUEST["Accion"]) ){
             $css->Clegend();   
             $css->CrearDiv("DivAccionesTablas", "", "", 0, 0);
             
-            $css->select("CmbCondicion", "form-control", "CmbCondicion", " ", "", $js,"style=width:Auto");
-                $value="SUM(";
+            $css->select("CmbAccionTabla", "form-control", "CmbAccionTabla", " ", "", $js,"style=width:Auto");
+                $value="SUM";
                 $Display="SUMAR";
-                $css->option("", "", $value, $Display, "", "");
+                $css->option("", "", $Display,$value, "", "");
                     print($Display);
                 $css->Coption();
                 
-                $value="COUNT(";
+                $value="COUNT";
                 $Display="CONTAR";
-                $css->option("", "", $value, $Display, "", "");
+                $css->option("", "", $Display,$value, "", "");
                     print($Display);
                 $css->Coption();
                 
-                $value="AVG(";
+                $value="AVG";
                 $Display="PROMEDIAR";
-                $css->option("", "", $value, $Display, "", "");
+                $css->option("", "", $Display,$value, "", "");
                     print($Display);
                 $css->Coption();
                 
-                $value="MAX(";
+                $value="MAX";
                 $Display="MAXIMO";
-                $css->option("", "", $value, $Display, "", "");
+                $css->option("", "", $Display,$value, "", "");
                     print($Display);
                 $css->Coption();
                 
-                $value="MIN(";
+                $value="MIN";
                 $Display="MINIMO";
-                $css->option("", "", $value, $Display, "", "");
+                $css->option("", "", $Display,$value, "", "");
                     print($Display);
                 $css->Coption();
                 
                 
             $css->Cselect();    
-            $css->select("CmbColumna", "form-control", "CmbColumna", "", "", $js,"style=width:Auto");
+            $css->select("CmbColumnaAcciones", "form-control", "CmbColumnaAcciones", "", "", $js,"style=width:Auto");
             foreach ($Columnas["Field"] as $key => $value) {
                 $css->option("", "", $value, $value, "", "");
                     print(utf8_encode($Columnas["Visualiza"][$key]));
@@ -220,8 +230,8 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $Script="";
             
-            $ScriptButton="AgregaCondicional()";
-            $css->CrearBotonEvento("BtnAccionTabla", "Ejecutar", 1, "onclick", "", "verde", "");
+            $ScriptButton="ConsultaAccionesTablas()";
+            $css->CrearBotonEvento("BtnAccionTabla", "Ejecutar", 1, "onclick", $ScriptButton, "verde", "");
             $css->CrearDiv("DivResultadosAcciones", "", "", 1, 1);
                     
             $css->CerrarDiv();
@@ -230,6 +240,34 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $css->Cfieldset();
         break;
+        
+        case 5: //Realiza las consultas solicitadas
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]); 
+            $Columna=$obCon->normalizar($_REQUEST["Columna"]); 
+            $AccionTabla=$obCon->normalizar($_REQUEST["AccionTabla"]); 
+            $CondicionActual=$obCon->normalizar($_REQUEST["CondicionActual"]); 
+            $ColumnaSeleccionada=$obCon->normalizar($_REQUEST["ColumnaSeleccionada"]); 
+            $TxtAccionSeleccionada=$obCon->normalizar($_REQUEST["TxtAccionSeleccionada"]); 
+            $Condicion="";
+            if($CondicionActual<>''){
+                $Condicion=" WHERE $CondicionActual";
+            }
+            $sql="SELECT $AccionTabla($Columna) AS Resultado FROM $Tabla $Condicion";
+            //print($sql);
+            
+            $Consulta=$obCon->Query($sql);
+            $DatosConsulta=$obCon->FetchAssoc($Consulta);
+            if(is_numeric($DatosConsulta["Resultado"])){
+                $Resultado=number_format($DatosConsulta["Resultado"],2);
+            }else{
+                $Resultado=$DatosConsulta["Resultado"];
+            }
+            $Mensaje='<i class="fa fa-circle-o text-red"></i><span> '.$TxtAccionSeleccionada;
+            $Mensaje.=" ".$ColumnaSeleccionada." = ".$Resultado;
+            $Mensaje.="</span><br>";
+            print($Mensaje);
+             
+            break;
     }
     
     

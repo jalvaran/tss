@@ -610,9 +610,12 @@ class html_estruct_class {
      * @param type $value ->atr. value del elemento option
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function option($id,$class,$title,$value,$vectorhtml,$Script){
-        
-        print('<option id="'.$id.'" class="'.$class.'" title="'.$title.'" value="'.$value.'" '.$Script.' >');
+    function option($id,$class,$title,$value,$vectorhtml,$Script,$Seleccionar=0,$ng_app=""){
+        $Seleccionado="";
+        if($Seleccionar==1){
+            $Seleccionado="selected";
+        }
+        print('<option id="'.$id.'" class="'.$class.'" title="'.$title.'" value="'.$value.'" '.$Script.' '.$Seleccionado.' '.$ng_app.'>');
     }
     
     /**

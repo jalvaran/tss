@@ -116,11 +116,19 @@ function SeleccionarTabla(Tabla){
           }
       })        
 }  
-
+/**
+ * Escribe en una caja de texto
+ * @param {type} idCaja
+ * @param {type} Valor
+ * @returns {undefined}
+ */
 function EscribirEnCaja(idCaja,Valor){
     document.getElementById(idCaja).value=Valor;
 }
-
+/**
+ * Funcion para cambiar la palabra desc x asc y viceversa en la caja de texto utilizada para enviar el orden al dobujador de la tabla
+ * @returns {undefined}
+ */
 function CambiarOrden(){
     var OrdenActual=document.getElementById('TxtOrdenTabla').value;
     if(OrdenActual=='DESC'){
@@ -130,6 +138,11 @@ function CambiarOrden(){
     }
 }
 
+/**
+ * Dibuja una tabla con todos sus componentes
+ * @param {type} Tabla
+ * @returns {undefined}
+ */
 function DibujeTabla(Tabla=''){
     if(Tabla==''){
         var Tabla = document.getElementById('TxtTabla').value;
@@ -139,7 +152,10 @@ function DibujeTabla(Tabla=''){
     DibujaAccionesTablas(Tabla);
     DibujaFiltros(Tabla);
 }
-
+/**
+ * Limpia las cajas de texto utilizadas para los filtros
+ * @returns {undefined}
+ */
 function LimpiarFiltros(){
     document.getElementById('TxtOrdenTabla').value='DESC';
     document.getElementById('TxtCondicion').value='';
@@ -152,19 +168,11 @@ function LimpiarFiltros(){
     }
     
 }
-
-function MuestraOcultaMenu(){
-    var id='DivSubMenuLateral';
-    estado=document.getElementById(id).style.display;
-    if(estado=="none" | estado==""){
-        document.getElementById(id).style.display="block";
-    }
-    if(estado=="block"){
-        document.getElementById(id).style.display="none";
-    }
-    
-}
-
+/**
+ * Muestra u oculta un elemento por su id
+ * @param {type} id
+ * @returns {undefined}
+ */
 
 function MuestraOcultaXID(id){
     
@@ -192,6 +200,11 @@ $(document).on("click",function(e) {
        }
 });
 */
+
+/**
+ * Agrega un condicional a la caja de texto utilizada para ese fin
+ * @returns {undefined}
+ */
 function AgregaCondicional(){
    
     var Tabla = document.getElementById('TxtTabla').value
@@ -203,7 +216,7 @@ function AgregaCondicional(){
     var Operador = "";
     var combo = document.getElementById("CmbColumna");
     var ColumnaSeleccionada = combo.options[combo.selectedIndex].text;
-    
+    document.getElementById('TxtPage').value=1;
     if(CondicionActual != ''){
         Operador = " AND ";
     }
@@ -245,7 +258,7 @@ function AgregaCondicional(){
 }
 
 /*
- * Dibuja las acciones
+ * Dibuja las acciones que se pueden realizar en una tabla
  * @returns {undefined}
  */
 function DibujaAccionesTablas(Tabla){
@@ -277,5 +290,93 @@ function DibujaAccionesTablas(Tabla){
       })        
 }  
 
+/**
+ * Envia la peticion para realizar una consulta proveniente de las acciones
+ * @returns {undefined}
+ */
+function ConsultaAccionesTablas(){
+       
+    var Tabla = document.getElementById('TxtTabla').value
+    var Columna = document.getElementById('CmbColumnaAcciones').value
+    var AccionTabla = document.getElementById('CmbAccionTabla').value
+    var CondicionActual = document.getElementById('TxtCondicion').value    
+    var combo = document.getElementById("CmbColumnaAcciones");
+    var ColumnaSeleccionada = combo.options[combo.selectedIndex].text;   
+    
+    var combo2 = document.getElementById("CmbAccionTabla");
+    var TxtAccionSeleccionada = combo2.options[combo2.selectedIndex].text;   
+       
+    var form_data = new FormData();
+        form_data.append('Accion', 5);
+        form_data.append('Tabla', Tabla);
+        form_data.append('Columna', Columna);
+        form_data.append('AccionTabla', AccionTabla);
+        form_data.append('CondicionActual', CondicionActual);
+        form_data.append('ColumnaSeleccionada', ColumnaSeleccionada);
+        form_data.append('TxtAccionSeleccionada', TxtAccionSeleccionada);
+        
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+                if(document.getElementById('DivResultadosAcciones').innerHTML==''){
+                    document.getElementById('DivResultadosAcciones').innerHTML='<strong>Resultados: </strong><br>';
+                }
+                
+                document.getElementById('DivResultadosAcciones').innerHTML=document.getElementById('DivResultadosAcciones').innerHTML+" "+data;
+              
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+/**
+ * Cambia el limite de las tablas
+ * @returns {undefined}
+ */
+function CambiarLimiteTablas(){
+    var Tabla = document.getElementById('TxtTabla').value;
+    var Limite = document.getElementById('CmbLimit').value;
+    document.getElementById('TxtPage').value=1;
+    document.getElementById('TxtLimit').value=Limite;
+    SeleccionarTabla(Tabla);
+}
 
+function AvanzarPagina(){
+    var Tabla = document.getElementById('TxtTabla').value;
+    var PaginaActual = document.getElementById('TxtPage').value;
+    PaginaActual++;
+    document.getElementById('TxtPage').value=PaginaActual;
+    SeleccionarTabla(Tabla);
+}
+
+function RetrocederPagina(){
+    var Tabla = document.getElementById('TxtTabla').value;
+    var PaginaActual = document.getElementById('TxtPage').value;
+    PaginaActual--;
+    if(PaginaActual>0){
+        document.getElementById('TxtPage').value=PaginaActual;
+        SeleccionarTabla(Tabla);
+    }
+}
+
+function SeleccionaPagina(){
+    var Tabla = document.getElementById('TxtTabla').value;
+    var PaginaActual = document.getElementById('CmbPage').value;
+    document.getElementById('TxtPage').value=PaginaActual;
+    SeleccionarTabla(Tabla);
+}
 DibujaAdministradores();

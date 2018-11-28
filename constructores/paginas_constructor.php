@@ -817,19 +817,53 @@ class PageConstruct extends html_estruct_class{
         print('<table width="'.$Ancho.'" class="table table-striped table-bordered table-hover" id="'.$id.'" '.$js.'>');
     }
     
-    function CabeceraTabla($Titulo,$Columnas,$js,$Vector){
+    function CabeceraTabla($Tabla,$Limite,$Titulo,$Columnas,$js,$TotalRegistros,$NumPage,$Vector){
         $obCon=new conexion(1);
         print("<thead><tr>");
         $ColSpanTitulo=count($Columnas["Field"]);
-        $this->th("", "", $ColSpanTitulo, 1, "", "");
-        print("<strong>$Titulo<strong>");
+         
+        $this->th("", "", 2, 1, "", "");    
+            $this->select("CmbLimit", "form-control", "CmbLimit", "", "", "onchange=CambiarLimiteTablas()", "style=width:200px");
+                $Sel=0;
+                if($Limite==10){
+                    $Sel=1;
+                }
+                $this->option("", "", "", 10, "", "",$Sel);
+                     print("Mostrar 10 Registros");
+                $this->Coption();
+                $Sel=0;
+                if($Limite==25){
+                    $Sel=1;
+                }
+                $this->option("", "", "", 25, "", "",$Sel);
+                     print("Mostrar 25 Registros");
+                $this->Coption();
+                $Sel=0;
+                if($Limite==50){
+                    $Sel=1;
+                }
+                $this->option("", "", "", 50, "", "",$Sel);
+                     print("Mostrar 50 Registros");
+                $this->Coption();
+                $Sel=0;
+                if($Limite==100){
+                    $Sel=1;
+                }
+                $this->option("", "", "", 100, "", "",$Sel);
+                     print("Mostrar 100 Registros");
+                $this->Coption();
+            $this->Cselect();
+        
+        $this->Cth();
+        $this->th("", "", $ColSpanTitulo-2, 1, "", "");
+            print("<strong>$Titulo </strong>");
         $this->Cth();
         $this->tr("", "", 1, 1, "", "");
         foreach ($Columnas["Field"] as $key => $value) {
             
             $NombreColumna=utf8_encode($Columnas["Visualiza"][$key]);
             $this->th("", "", 1, 1, "", "");
-                $js="onclick=EscribirEnCaja('TxtOrdenNombreColumna','$value');CambiarOrden();DibujeTabla();";
+                $js="onclick=EscribirEnCaja('TxtOrdenNombreColumna','$value');CambiarOrden();SeleccionarTabla('$Tabla');";
                 $this->a("", "", "#", "", "", "", $js);
                     print("<strong>$NombreColumna</strong>");
                 $this->Ca();
@@ -909,7 +943,7 @@ class PageConstruct extends html_estruct_class{
                     $Clase="btn btn-info";
                     break;
                 case "azul":
-                    $Clase="btn btn-info";
+                    $Clase="btn btn-block btn-primary";
                     break;
             }
             if($enabled==1){
@@ -920,6 +954,100 @@ class PageConstruct extends html_estruct_class{
 		
 		
 	}
+        
+        public function PaginadorTablasInit() {
+            print('<div class="col-sm-7">
+                    <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
+                        <ul class="pagination">
+                            ');
+        }
+        
+        public function PaginadorAnterior($Estado,$js) {
+            
+            if($Estado==0){
+                $Estado="disabled";
+            }else{
+                $Estado="";
+            }
+            print('<li class="paginate_button previous '.$Estado.'" id="example1_previous">
+                    <a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0" '.$js.'>Anterior</a>
+                   </li>');
+        }
+
+        public function PaginadorBoton($Estado,$Numero) {
+            
+            if($Estado==1){
+                $Estado="active";
+            }else{
+                $Estado="";
+            }
+            print('<li class="paginate_button '.$Estado.'">
+                    <a href="#" aria-controls="example1" data-dt-idx="1" tabindex="0" onclick=CambiaPagina('.$Numero.')>'.$Numero.'</a>
+                </li>');
+        }
+        
+        
+        public function PaginadorSiguiente($Estado,$js) {
+            if($Estado==0){
+                $Estado="disabled";
+            }else{
+                $Estado="";
+            }
+            print('<li class="paginate_button next '.$Estado.'" id="example1_next">
+                        <a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0" '.$js.'>Siguiente</a>
+                    </li>');
+        }
+        
+        public function PaginadorFin() {
+            print('</ul></div></div>');
+        }
+        /**
+         * Paginador para las tablas
+         * @param type $Tabla
+         * @param type $Limit
+         * @param type $PaginaActual
+         * @param type $TotalRegistros
+         * @param type $Color
+         * @param type $js
+         * @param type $vector
+         */
+        public function PaginadorTablas($Tabla,$Limit,$PaginaActual,$TotalRegistros,$vector) {
+            $this->div("", "col-lg-12", "", "", "", "", "");
+            $this->div("", "btn-group-vertical", "", "", "", "", "");
+            //print('<div class="btn-group-vertical">');
+            
+            $Estado="disabled";
+            $js="";
+            if($PaginaActual<>1){
+                $Estado="";
+                $js="onclick=RetrocederPagina();";
+            }
+            $this->input("submit", "BtnRetroceder", "btn btn-block btn-warning btn-xs $Estado", "BtnRetroceder", "Atrás", "Atrás", "", "", "", $js);
+            
+            $TotalPaginas=ceil($TotalRegistros/$Limit);
+            
+            $this->select("CmbPage", "btn btn-default btn-xs", "CmbPage", "", "", "onchange=SeleccionaPagina();", "");
+            for($i=1;$i<=$TotalPaginas;$i++){
+                $Estado=0;
+                if($PaginaActual==$i){
+                    $Estado=1;
+                }
+                
+                $this->option("", "", $i, $i, "", "",$Estado);
+                    print("$i");
+                $this->Coption();
+            }
+            $this->Cselect();
+            $Estado="";
+            $js="onclick=AvanzarPagina();";
+            if($TotalPaginas==$PaginaActual){
+                $Estado="disabled";
+                $js="";
+            }
+            $this->input("submit", "BtnAvanzar", "btn btn-block btn-warning btn-xs $Estado", "BtnAvanzar", "Avanzar", "Avanzar", "", "", "", $js);
+            $this->Cdiv();
+            $this->Cdiv();
+        }
         
         //////////////////////////////////FIN
 }
