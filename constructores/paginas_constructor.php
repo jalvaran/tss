@@ -889,6 +889,38 @@ class PageConstruct extends html_estruct_class{
         $this->Cdiv();
     }
     
+    
+    function CrearBotonEvento($nombre,$value,$enabled,$evento,$funcion,$Color,$VectorBoton){
+            
+            switch ($Color){
+                case "verde":
+                    $Clase="btn btn-success";
+                    break;
+                case "naranja":
+                    $Clase="btn btn-warning";
+                    break;
+                case "rojo":
+                    $Clase="btn btn-danger";
+                    break;
+                case "blanco":
+                    $Clase="btn";
+                    break;
+                case "azulclaro":
+                    $Clase="btn btn-info";
+                    break;
+                case "azul":
+                    $Clase="btn btn-info";
+                    break;
+            }
+            if($enabled==1){
+                print('<input type="submit" id="'.$nombre.'"  name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="'.$Clase.'">');
+            }else{
+                print('<input type="submit" id="'.$nombre.'" disabled="true" name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="'.$Clase.'">');  
+            }
+		
+		
+	}
+        
         //////////////////////////////////FIN
 }
 	

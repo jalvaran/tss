@@ -57,7 +57,7 @@ $css->CrearDiv("principal", "", "left", 1, 1);
         $css->CerrarDiv();
     $css->CerrarDiv();
         
-        $css->CrearDiv("DivParametrosTablas", "", "", 1, 0);
+        $css->CrearDiv("DivParametrosTablas", "", "", 0, 0);
             $css->CrearInputText("TxtTabla", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
             $css->CrearInputText("TxtCondicion", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");
             $css->CrearInputText("TxtOrdenNombreColumna", "text", "", "", "", "", "", "", 300, 30, 0, 0,"1em");

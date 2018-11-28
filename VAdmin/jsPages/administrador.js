@@ -130,9 +130,14 @@ function CambiarOrden(){
     }
 }
 
-function DibujeTabla(){
-    var Tabla = document.getElementById('TxtTabla').value;
+function DibujeTabla(Tabla=''){
+    if(Tabla==''){
+        var Tabla = document.getElementById('TxtTabla').value;
+    }
+    LimpiarFiltros();
     SeleccionarTabla(Tabla);
+    DibujaAccionesTablas(Tabla);
+    DibujaFiltros(Tabla);
 }
 
 function LimpiarFiltros(){
@@ -238,4 +243,39 @@ function AgregaCondicional(){
     document.getElementById('DivFiltrosAplicados').innerHTML=document.getElementById('DivFiltrosAplicados').innerHTML+" "+lista;
     
 }
+
+/*
+ * Dibuja las acciones
+ * @returns {undefined}
+ */
+function DibujaAccionesTablas(Tabla){
+       
+    var form_data = new FormData();
+        form_data.append('Accion', 4);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivOpciones2').innerHTML=data;
+              
+          }else {
+            alert("No hay resultados para la consulta");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+
 DibujaAdministradores();
