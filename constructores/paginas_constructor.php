@@ -252,7 +252,10 @@ class PageConstruct extends html_estruct_class{
             </ul>
           </li>');
     }
-    
+    /**
+     * Inicia todos los elementos de la pagina en general
+     * @param type $myTitulo
+     */
     public function PageInit($myTitulo) {
         $NombreUsuario=$_SESSION["nombre"];
         $idUser=$_SESSION["idUser"];
@@ -269,7 +272,10 @@ class PageConstruct extends html_estruct_class{
         $this->CrearDiv("principal", "", "left", 1, 1);    
         $this->CrearDiv("Contenido", "content-wrapper", "", 1, 1);
     }
-    
+                
+    /**
+     * Fin de la pagina
+     */
     public function PageFin() {
         $this->CerrarDiv();
         $this->FooterPage();
@@ -278,22 +284,31 @@ class PageConstruct extends html_estruct_class{
         $this->CerrarDiv();
         $this->AgregaJS();
     }
-    
+    /**
+     * Controles generales del AdminLTE
+     */
     public function ControlesGenerales() {
         print('<!-- Control Sidebar Toggle Button -->
                 <li>
                   <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
                 </li>');
     }
-    
+    /**
+     * Inicia el menu lateral
+     */
     public function MenuLateralInit() {
         print('<aside class="main-sidebar"><section class="sidebar">');
     }
-    
+    /**
+     * Finaliza el menu lateral
+     */
     public function MenuLateralFin() {
         print('</section></aside>');
     }
-    
+    /**
+     * Panel para visualizar el nombre del usuario
+     * @param type $NombreUsuario
+     */
     public function PanelInfoUser($NombreUsuario) {
         print('<!-- Sidebar user panel -->
             <div class="user-panel">
@@ -306,7 +321,9 @@ class PageConstruct extends html_estruct_class{
               </div>
             </div>');
     }
-    
+    /**
+     * Panel de busqueda para uso futuro
+     */
     public function PanelBusqueda() {
         print('<!-- search form -->
             <form action="#" method="get" class="sidebar-form">
@@ -319,46 +336,25 @@ class PageConstruct extends html_estruct_class{
               </div>
             </form>');
     }
-    
+    /**
+     * Inicia el panel lateral
+     * @param type $Titulo
+     */
     public function PanelLateralInit($Titulo) {
         print('<!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu" data-widget="tree">
               <li class="header">'.$Titulo.'</li>');
     }
-    
+    /**
+     * Cierra el panel lateral
+     */
     public function CPanelLateral() {
         print('</ul>');
     }
     
-    public function PanelMenuAdministrador() {
-        print('<li class="treeview active">
-                <a href="#">
-                  <i class="fa fa-table"></i> <span>Administrador</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul id="DivMenuLateralModulos" class="treeview-menu">
-                                       
-                </ul>
-              </li>');
-    }
-    
-    public function PanelDashboard() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="../index.php"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                  <li><a href="../index.php"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
-                </ul>
-              </li>');
-    }
-    
+    /**
+     *Opciones del layout 
+     */
     public function PanelLayoutOptions() {
         print('<li class="treeview">
                 <a href="#">
@@ -376,169 +372,11 @@ class PageConstruct extends html_estruct_class{
                 </ul>
               </li>');
     }
-    
-    public function PanelWidgets() {
-        print('<li>
-                <a href="../widgets.html">
-                  <i class="fa fa-th"></i> <span>Widgets</span>
-                  <span class="pull-right-container">
-                    <small class="label pull-right bg-green">new</small>
-                  </span>
-                </a>
-              </li>');
-    }
-    
-    public function PanelGraficos() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-pie-chart"></i>
-                  <span>Charts</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="../charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-                  <li><a href="../charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-                  <li><a href="../charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                  <li><a href="../charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
-                </ul>
-              </li>');
-    }
-    
-    public function PanelUIElements() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-laptop"></i>
-                  <span>UI Elements</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="../UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-                  <li><a href="../UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
-                  <li><a href="../UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
-                  <li><a href="../UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
-                  <li><a href="../UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
-                  <li><a href="../UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
-                </ul>
-              </li>');
-    }
-    
-    public function PanelForms() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-edit"></i> <span>Forms</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="../forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-                  <li><a href="../forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-                  <li><a href="../forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
-                </ul>
-              </li>');
-    }
-    
-    public function PanelCalendario() {
-        print('<li>
-                <a href="../calendar.html">
-                  <i class="fa fa-calendar"></i> <span>Calendar</span>
-                  <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                  </span>
-                </a>
-              </li>');
-    }
-    
-    public function PanelMail() {
-        print('<li>
-                <a href="../mailbox/mailbox.html">
-                  <i class="fa fa-envelope"></i> <span>Mailbox</span>
-                  <span class="pull-right-container">
-                    <small class="label pull-right bg-yellow">12</small>
-                    <small class="label pull-right bg-green">16</small>
-                    <small class="label pull-right bg-red">5</small>
-                  </span>
-                </a>
-              </li>');
-    }
-    
-    public function PanelPaginas() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-folder"></i> <span>Examples</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="../examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
-                  <li><a href="../examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
-                  <li><a href="../examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
-                  <li><a href="../examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
-                  <li><a href="../examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
-                  <li><a href="../examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
-                  <li><a href="../examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
-                  <li><a href="../examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
-                  <li><a href="../examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
-                </ul>
-              </li>');
-    }
-    
-    public function PanelModulos() {
-        print('<li class="treeview">
-                <a href="#">
-                  <i class="fa fa-share"></i> <span>Módulos</span>
-                  <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                </a>
-                <ul class="treeview-menu">
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-                  <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Level One
-                      <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                    </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
-                      <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i> Level Two
-                          <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                          </span>
-                        </a>
-                        <ul class="treeview-menu">
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                          <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </li>
-                  <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-                </ul>
-              </li>');
-    }
-    
-    
-    public function PanelDocumentacion() {
-        print('<li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li>');
-    }
-    
-    
-    public function PanelLabels() {
-        print('<li class="header">LABELS</li>
-              <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
-              <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
-              <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
-            ');
-    }
-    
+    /**
+     * Informacion del usuario que inicia sesion
+     * @param type $TituloGrande
+     * @param type $TituloPequeno
+     */
     public function SesionInfoPage($TituloGrande,$TituloPequeno) {
         print('<section class="content-header">
                 <h1>
@@ -551,7 +389,9 @@ class PageConstruct extends html_estruct_class{
                 </ol>
               </section>');
     }
-    
+    /**
+     * Pie de pagina
+     */
     public function FooterPage() {
         $anio=date("Y");
         print('<!-- /.content-wrapper -->
@@ -563,7 +403,9 @@ class PageConstruct extends html_estruct_class{
               reserved.
             </footer>');
     }
-    
+    /**
+     * Barra de controles
+     */
     public function BarraControles() {
         print('<!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">
@@ -777,15 +619,7 @@ class PageConstruct extends html_estruct_class{
         //print('<script type="text/javascript" src="../ext/jquery/jquery-1.11.0.min.js"></script>');
         
     }
-    /**
-     * Agrega CSS y JS para el objeto Select 2
-     */
-    public function AgregaCssJSSelect2() {
-        print("<link rel='stylesheet' type='text/css' href='../bower_components/select2\dist\css/select2.min.css' />");
-        print('<script src="../bower_components/select2\vendor\jquery-2.1.0.js"></script>');
-        print('<script src="../bower_components/select2\dist\js/select2.min.js"></script>');     
-
-    }
+    
     /**
      * Crea una barra de progreso
      * @param type $NombreBarra -> Nombre
@@ -830,12 +664,21 @@ class PageConstruct extends html_estruct_class{
         print("<div id='$ID' class='$Class' align='$Alineacion' style='display:$V;$Styles' $ng_angular>");
 
     }
-    
+    /**
+     * Cierra un div
+     */
     function CerrarDiv(){
         print("</div>");
 		
     }
-    
+    /**
+     * Dibuja una tabla desde la base de datos
+     * @param type $Titulo
+     * @param type $id
+     * @param type $Ancho
+     * @param type $js
+     * @param type $Vector
+     */
     function CrearTablaDB($Titulo,$id,$Ancho,$js,$Vector) {
         print('<div class="row">');
         print('<div class="col-lg-12">');
@@ -844,7 +687,17 @@ class PageConstruct extends html_estruct_class{
         print('<div class="panel-body">');
         print('<table width="'.$Ancho.'" class="table table-striped table-bordered table-hover" id="'.$id.'" '.$js.'>');
     }
-    
+    /**
+     * Cabecera para las tablas
+     * @param type $Tabla
+     * @param type $Limite
+     * @param type $Titulo
+     * @param type $Columnas
+     * @param type $js
+     * @param type $TotalRegistros
+     * @param type $NumPage
+     * @param type $Vector
+     */
     function CabeceraTabla($Tabla,$Limite,$Titulo,$Columnas,$js,$TotalRegistros,$NumPage,$Vector){
         $obCon=new conexion(1);
         print("<thead><tr>");
@@ -901,7 +754,13 @@ class PageConstruct extends html_estruct_class{
         }
         print("</tr></thead>");
     }
-    
+    /**
+     * Crea una Fila de la tabla
+     * @param type $tabla
+     * @param type $Datos
+     * @param type $js
+     * @param type $Vector
+     */
     function FilaTabla($tabla,$Datos,$js,$Vector){
         $obCon=new conexion(1);
         print('<tr class="odd gradeX">');
@@ -913,11 +772,31 @@ class PageConstruct extends html_estruct_class{
         }
         print("</tr>");
     }
-    
+    /**
+     * Cierra la tabla
+     */
     function CerrarTablaDB() {
         print('</table></div></div></div>');
     }
-    
+    /**
+     * Crear un input text
+     * @param type $nombre
+     * @param type $type
+     * @param type $label
+     * @param type $value
+     * @param type $placeh
+     * @param type $color
+     * @param type $TxtEvento
+     * @param type $TxtFuncion
+     * @param type $Ancho
+     * @param type $Alto
+     * @param type $ReadOnly
+     * @param type $Required
+     * @param type $ToolTip
+     * @param type $Max
+     * @param type $Min
+     * @param type $TFont
+     */
     function CrearInputText($nombre,$type,$label,$value,$placeh,$color,$TxtEvento,$TxtFuncion,$Ancho,$Alto,$ReadOnly,$Required,$ToolTip='Rellena este Campo',$Max="",$Min="",$TFont='1em'){
 		   
         if($ReadOnly==1)
@@ -940,7 +819,26 @@ class PageConstruct extends html_estruct_class{
         '.$ReadOnly.' '.$Required.' autocomplete="off" style="width: '.$Ancho.'px;height: '.$Alto.'px; font-size: '.$TFont.' ;data-toggle="tooltip" title="'.$ToolTip.'" "></strong>');
 
     }
-    
+    /**
+     * Crea un input text con un boton al lado
+     * @param type $type
+     * @param type $idText
+     * @param type $idButton
+     * @param type $class
+     * @param type $name
+     * @param type $nameButton
+     * @param type $title
+     * @param type $titleButton
+     * @param type $value
+     * @param type $valueButton
+     * @param type $placeholder
+     * @param type $autocomplete
+     * @param type $vectorhtml
+     * @param type $Script
+     * @param type $ScriptButton
+     * @param type $styles
+     * @param type $np_app
+     */
     public function CrearInputTextButton($type, $idText, $idButton, $class, $name,$nameButton, $title,$titleButton, $value,$valueButton, $placeholder, $autocomplete, $vectorhtml, $Script,$ScriptButton, $styles, $np_app) {
         $this->div("", "input-group", "", "", "", "", "");
             $this->input($type, $idText, $class, $name, $title, $value, $placeholder, $autocomplete, $vectorhtml, $Script, $styles, $np_app);
@@ -951,7 +849,16 @@ class PageConstruct extends html_estruct_class{
         $this->Cdiv();
     }
     
-    
+    /**
+     * crea un boton con eventos javascript
+     * @param type $nombre
+     * @param type $value
+     * @param type $enabled
+     * @param type $evento
+     * @param type $funcion
+     * @param type $Color
+     * @param type $VectorBoton
+     */
     function CrearBotonEvento($nombre,$value,$enabled,$evento,$funcion,$Color,$VectorBoton){
             
             switch ($Color){
@@ -982,14 +889,20 @@ class PageConstruct extends html_estruct_class{
 		
 		
 	}
-        
+        /**
+         * inicia el Paginador de las tablas
+         */
         public function PaginadorTablasInit() {
             print('<div class="col-sm-7">
                     <div class="dataTables_paginate paging_simple_numbers" id="example1_paginate">
                         <ul class="pagination">
                             ');
         }
-        
+        /**
+         * Pagina anterior
+         * @param type $Estado
+         * @param type $js
+         */
         public function PaginadorAnterior($Estado,$js) {
             
             if($Estado==0){
@@ -1001,7 +914,11 @@ class PageConstruct extends html_estruct_class{
                     <a href="#" aria-controls="example1" data-dt-idx="0" tabindex="0" '.$js.'>Anterior</a>
                    </li>');
         }
-
+        /**
+         * Boton del paginador
+         * @param type $Estado
+         * @param type $Numero
+         */
         public function PaginadorBoton($Estado,$Numero) {
             
             if($Estado==1){
@@ -1014,7 +931,11 @@ class PageConstruct extends html_estruct_class{
                 </li>');
         }
         
-        
+        /**
+         * Pagina siguiente
+         * @param type $Estado
+         * @param type $js
+         */
         public function PaginadorSiguiente($Estado,$js) {
             if($Estado==0){
                 $Estado="disabled";
@@ -1025,7 +946,9 @@ class PageConstruct extends html_estruct_class{
                         <a href="#" aria-controls="example1" data-dt-idx="7" tabindex="0" '.$js.'>Siguiente</a>
                     </li>');
         }
-        
+        /**
+         * Fin del paginador
+         */
         public function PaginadorFin() {
             print('</ul></div></div>');
         }
@@ -1042,7 +965,6 @@ class PageConstruct extends html_estruct_class{
         public function PaginadorTablas($Tabla,$Limit,$PaginaActual,$TotalRegistros,$vector) {
             $this->div("", "col-lg-12", "", "", "", "", "");
             $this->div("", "btn-group-vertical", "", "", "", "", "");
-            //print('<div class="btn-group-vertical">');
             
             $Estado="disabled";
             $js="";
@@ -1106,11 +1028,18 @@ class PageConstruct extends html_estruct_class{
         public function PanelMenuGeneralFin() {
             $this->Cli();
         }
-        
+        /**
+         * Inicia el panel de las pestañas en el menu
+         */
         public function PanelPestanaInit() {
             print('<ul class="treeview-menu">');
         }
-        
+        /**
+         * Pestaña para el menu
+         * @param type $Nombre
+         * @param type $Clase
+         * @param type $vector
+         */
         public function PanelPestana($Nombre,$Clase,$vector) {
             print('<li class="treeview">
                     <a href="#"><i class="'.$Clase.'"></i> '.$Nombre.'
@@ -1121,20 +1050,32 @@ class PageConstruct extends html_estruct_class{
                     
                   ');
         }
-        
+        /**
+         * Fin de la pestaña
+         */
         public function PanelPestanaFin() {
             print('</li></ul>');
                   
         }
-        
+        /**
+         * inicia el Submenu en el panel  
+         */
         public function PanelSubMenuInit() {
             print('<ul class="treeview-menu">');
         }
-        
+        /**
+         * Finaliza el submenu
+         */
         public function PanelSubMenuFin() {
             print('</ul>');
         }
-        
+        /**
+         * Submenu
+         * @param type $Nombre
+         * @param type $Link
+         * @param type $js
+         * @param type $Clase
+         */
         public function PanelSubMenu($Nombre,$Link,$js,$Clase) {
             print('<li><a href="'.$Link.'" '.$js.'><i class="'.$Clase.'"></i> '.$Nombre.'</a></li>');
         }
@@ -1167,7 +1108,8 @@ class PageConstruct extends html_estruct_class{
                                 $ConsultaSubmenus=$obCon->ConsultarTabla("menu_submenus"," WHERE idPestana='$idPestana' AND Estado=1 ORDER BY Orden ASC");
                                 while($DatosSubMenu=$obCon->FetchAssoc($ConsultaSubmenus)){
                                     $js="";
-                                    $this->PanelSubMenu(utf8_encode($DatosSubMenu["Nombre"]), $DatosSubMenu["Pagina"], $js, "fa fa-circle-o text-aqua");
+                                    $Ruta="#";
+                                    $this->PanelSubMenu(utf8_encode($DatosSubMenu["Nombre"]), $Ruta, $DatosSubMenu["JavaScript"], "fa fa-circle-o text-aqua");
                                 }
                                 $this->PanelSubMenuFin();
                             }

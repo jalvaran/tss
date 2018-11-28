@@ -15,19 +15,22 @@ $css->PageInit($myTitulo);
         //Codigo del desarrollador para su pagina
         
         $css->CrearDiv("DivOpcionesTablas", "", "left", 1, 1);
-
-            $css->CrearDiv("DivOpciones1", "col-sm-4", "left", 1, 1);
-
+        
+            $css->CrearDiv("DivPaginador", "col-sm-2", "left", 1, 1);
             $css->CerrarDiv();
-            $css->CrearDiv("DivOpciones2", "col-sm-2", "left", 1, 1);
-
+            
+            $css->CrearDiv("DivOpciones1", "col-sm-4", "left", 1, 1); //Busquedas
             $css->CerrarDiv();
-            $css->CrearDiv("DivOpciones3", "col-sm-2", "left", 1, 1);
-
+            
+            $css->CrearDiv("DivOpciones2", "col-sm-2", "left", 1, 1); //Acciones
             $css->CerrarDiv();
-            $css->CrearDiv("DivOpciones4", "col-sm-4", "left", 1, 1);
-
+             
+            $css->CrearDiv("DivOpciones3", "col-sm-2", "left", 1, 1); //Opciones generales ocultar columnas
             $css->CerrarDiv();
+            
+            $css->CrearDiv("DivOpciones4", "col-sm-2", "left", 1, 1); //Exportar
+            $css->CerrarDiv();
+            
         $css->CerrarDiv();
         
         $css->CrearDiv("DivParametrosTablas", "", "", 0, 0);
@@ -38,16 +41,13 @@ $css->PageInit($myTitulo);
             $css->CrearInputText("TxtLimit", "text", "", "10", "", "", "", "", 300, 30, 0, 0,"1em");
             $css->CrearInputText("TxtPage", "text", "", "1", "", "", "", "", 300, 30, 0, 0,"1em");
         $css->CerrarDiv();    
-        print('<div id="tabla">');
-
+        
+        $css->CrearDiv("tabla", "", "", 1, 1); //Se dibujan las tablas realizando peticiones por ajax
+        
         $css->CerrarDiv();
-    $css->CerrarDiv();
-
+    
 $css->PageFin();
 print('<script src="jsPages/administrador.js"></script>'); 
-
-//Codigo del desarrollador para su pagina
-
 
 $css->Cbody();
 $css->Chtml();

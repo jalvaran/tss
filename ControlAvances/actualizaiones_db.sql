@@ -199,5 +199,39 @@ ALTER TABLE `menu` ADD `CSS_Clase` VARCHAR(20) NOT NULL AFTER `Image`;
 
 UPDATE `menu` SET `CSS_Clase`='fa fa-share';
 
+ALTER TABLE `menu_submenus` ADD `TipoLink` INT(1) NOT NULL AFTER `TablaAsociada`, ADD `JavaScript` VARCHAR(90) NOT NULL AFTER `TipoLink`;
+
+UPDATE `menu_submenus` SET `TipoLink` = '1' WHERE `menu_submenus`.`ID` >=1 and `menu_submenus`.`ID` <=12;
+UPDATE `menu_submenus` SET `TipoLink` = '1' WHERE `menu_submenus`.`ID` >=14 and `menu_submenus`.`ID` <=21;
+
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'empresapro\')\";' WHERE `menu_submenus`.`ID` = 1;
+
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'formatos_calidad\')\";' WHERE `menu_submenus`.`ID` = 3;
+
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'centrocosto\')\";' WHERE `menu_submenus`.`ID` = 4;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'costos\')\";' WHERE `menu_submenus`.`ID` = 8;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'usuarios\')\";' WHERE `menu_submenus`.`ID` = 9;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'usuarios_tipo\')\";' WHERE `menu_submenus`.`ID` = 10;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'paginas_bloques\')\";' WHERE `menu_submenus`.`ID` = 11;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_eps\')\";' WHERE `menu_submenus`.`ID` = 12;
+
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_consultas\')\";' WHERE `menu_submenus`.`ID` = 14;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_medicamentos\')\";' WHERE `menu_submenus`.`ID` = 16;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_otros_servicios\')\";' WHERE `menu_submenus`.`ID` = 17;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_procedimientos\')\";' WHERE `menu_submenus`.`ID` = 18;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_usuarios\')\";' WHERE `menu_submenus`.`ID` = 19;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_hospitalizaciones\')\";' WHERE `menu_submenus`.`ID` = 15;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_facturacion_mov_generados\')\";' WHERE `menu_submenus`.`ID` = 20;
+UPDATE `menu_submenus` SET `JavaScript` = 'onclick=\"DibujeTabla(\'salud_archivo_facturacion_mov_pagados\')\";' WHERE `menu_submenus`.`ID` = 21;
 
 
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_consultas' WHERE `menu_submenus`.`ID` = 14;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_medicamentos' WHERE `menu_submenus`.`ID` = 16;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_otros_servicios' WHERE `menu_submenus`.`ID` = 17;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_procedimientos' WHERE `menu_submenus`.`ID` = 18;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_usuarios' WHERE `menu_submenus`.`ID` = 19;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_hospitalizaciones' WHERE `menu_submenus`.`ID` = 15;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_facturacion_mov_generados' WHERE `menu_submenus`.`ID` = 20;
+UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_facturacion_mov_pagados' WHERE `menu_submenus`.`ID` = 21;
+
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `idMenu`, `TablaAsociada`, `TipoLink`, `JavaScript`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (NULL, 'Archivo de Nacidos AN', '5', '6', '2', 'salud_archivo_nacidos', '1', 'onclick=\"DibujeTabla(\'salud_archivo_nacidos\')\";', 'salud_archivo_nacidos.php', '_SELF', b'1', 'am.png', '6', '2018-11-28 17:45:16', '2018-07-13 15:42:34');

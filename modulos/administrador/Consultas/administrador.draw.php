@@ -107,53 +107,53 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $css->select("CmbCondicion", "form-control", "CmbCondicion", " ", "", $js,"style=width:Auto");
                 $value="=";
-                $Display="=";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Igual";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 $value="*";
-                $Display="*";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Contiene";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 $value=">";
-                $Display=">";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Mayor que";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 $value="<";
-                $Display="<";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Menor que";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 
                 $value=">=";
-                $Display=">=";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Mayor o Igual que";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 
                 $value="<=";
-                $Display="<=";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Menor o Igual que";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 $value="#%";
-                $Display="#%";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Empieza por";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                 
                 $value="<>";
-                $Display="<>";
-                $css->option("", "", $value, $Display, "", "");
-                    print($value);
+                $Display="Diferente";
+                $css->option("", "", $Display, $value , "", "");
+                    print($Display." (".$value.")");
                 $css->Coption();
                     
             $css->Cselect();

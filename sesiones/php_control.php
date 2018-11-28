@@ -8,6 +8,7 @@ if (!isset($_SESSION['username'])){
 $idUser=$_SESSION['idUser'];
 $TipoUser=$_SESSION['tipouser'];
 include_once '../modelo/php_conexion.php';
+include_once '../modelo/php_tablas.php';
 $obCon = new conexion($idUser);
 $VectorPermisos["Page"]=$myPage;
 /* 

@@ -6,40 +6,6 @@
  */
 
 
-
-/*
- * Dibuja los administradores
- * @returns {undefined}
- */
-function DibujaAdministradores(){
-    var form_data = new FormData();
-        form_data.append('Accion', 1);
-        
-        $.ajax({
-        url: './Consultas/administrador.draw.php',
-        //dataType: 'json',
-        cache: false,
-        contentType: false,
-        processData: false,
-        data: form_data,
-        type: 'post',
-        success: function(data){
-           
-          if (data != "") { 
-              document.getElementById('DivMenuLateralModulos').innerHTML=data;
-              
-          }else {
-            alert("No hay resultados para la consulta");
-          }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            alert(xhr.status);
-            alert(thrownError);
-          }
-      })        
-}  
-
-
 /*
  * Dibuja los Filtros
  * @returns {undefined}
@@ -379,4 +345,3 @@ function SeleccionaPagina(){
     document.getElementById('TxtPage').value=PaginaActual;
     SeleccionarTabla(Tabla);
 }
-DibujaAdministradores();
