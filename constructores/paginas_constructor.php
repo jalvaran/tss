@@ -30,19 +30,19 @@ class PageConstruct extends html_estruct_class{
                 print($Titulo);
                 $this->Ctitle();
                 if($CssFramework==1){
-                    print('<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">');
+                    print('<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">');
 
                 }
-                print("<link rel='shortcut icon' href='../images/technoIco.ico'>");
-                print('<link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">');
-                print('<link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">');
-                print('<link rel="stylesheet" href="../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">');
-                print('<link rel="stylesheet" href="../dist/css/AdminLTE.css">');
-                print('<link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">');
-                print('<link rel="stylesheet" href="../bower_components/fonts/css.css">');
+                print("<link rel='shortcut icon' href='../../images/technoIco.ico'>");
+                print('<link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">');
+                print('<link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">');
+                print('<link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">');
+                print('<link rel="stylesheet" href="../../dist/css/AdminLTE.css">');
+                print('<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">');
+                print('<link rel="stylesheet" href="../../bower_components/fonts/css.css">');
                 
-                print("<link rel='stylesheet' href='../bower_components/alertify/themes/alertify.core.css' />");
-                print("<link rel='stylesheet' href='../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
+                print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.core.css' />");
+                print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
 
 
             $this->Chead();
@@ -104,7 +104,7 @@ class PageConstruct extends html_estruct_class{
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-                        <img src="../dist/img/user.png" class="img-circle" alt="User Image">
+                        <img src="../../dist/img/user.png" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -225,13 +225,13 @@ class PageConstruct extends html_estruct_class{
         print('<!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="../dist/img/user.png" class="user-image" alt="User Image">
+              <img src="../../dist/img/user.png" class="user-image" alt="User Image">
               <span class="hidden-xs">'.$NombreUsuario.'</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="../dist/img/user.png" class="img-circle" alt="User Image">
+                <img src="../../dist/img/user.png" class="img-circle" alt="User Image">
 
                 <p>
                   '.$NombreUsuario.'
@@ -241,10 +241,10 @@ class PageConstruct extends html_estruct_class{
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="../VMenu/Menu.php" class="btn btn-default btn-flat">Inicio</a>
+                  <a href="../../VMenu/Menu.php" class="btn btn-default btn-flat">Inicio</a>
                 </div>
                 <div class="pull-right">
-                  <a href="../destruir.php" class="btn btn-default btn-flat">Salir</a>
+                  <a href="../../destruir.php" class="btn btn-default btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
@@ -270,7 +270,7 @@ class PageConstruct extends html_estruct_class{
         print('<!-- Sidebar user panel -->
             <div class="user-panel">
               <div class="pull-left image">
-                <img src="../dist/img/user.png" class="img-circle" alt="User Image">
+                <img src="../../dist/img/user.png" class="img-circle" alt="User Image">
               </div>
               <div class="pull-left info">
                 <p>'.$NombreUsuario.'</p>
@@ -736,14 +736,14 @@ class PageConstruct extends html_estruct_class{
      * Agrega los JavaScripts Necesarios
      */
     public function AgregaJS(){
-        print('<script src="../bower_components/jquery/dist/jquery.min.js"></script>');
-        print('<script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>');
-        print('<script src="../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>');
-        print('<script src="../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>');
-        print('<script src="../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
-        print('<script src="../bower_components/fastclick/lib/fastclick.js"></script>');
-        print('<script src="../dist/js/adminlte.min.js"></script>');
-        print('<script src="../dist/js/admintss.js"></script>');
+        print('<script src="../../bower_components/jquery/dist/jquery.min.js"></script>');
+        print('<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>');
+        print('<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>');
+        print('<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>');
+        print('<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
+        print('<script src="../../bower_components/fastclick/lib/fastclick.js"></script>');
+        print('<script src="../../dist/js/adminlte.min.js"></script>');
+        print('<script src="../../dist/js/admintss.js"></script>');
         
        
         //print('<script type="text/javascript" src="../ext/jquery/jquery-1.11.0.min.js"></script>');

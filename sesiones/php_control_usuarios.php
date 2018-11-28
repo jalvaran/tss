@@ -2,12 +2,12 @@
 ob_start();
 session_start();
 if (!isset($_SESSION['username'])){
-  exit("<a href='../index.php' ><img src='../images/401.png'>Iniciar Sesion </a>");
+  exit("<a href='../../index.php' ><img src='../../images/401.png'>Iniciar Sesion </a>");
   
 }
 $idUser=$_SESSION['idUser'];
 $TipoUser=$_SESSION['tipouser'];
-include_once '../modelo/php_conexion.php';
+include_once '../../modelo/php_conexion.php';
 $obCon = new conexion($idUser);
 $VectorPermisos["Page"]=$myPage;
 /* 
@@ -16,7 +16,7 @@ $VectorPermisos["Page"]=$myPage;
 $Permiso=$obCon->VerificaPermisos($VectorPermisos);
 //$Permiso=1;
 if ($Permiso==0){
-  exit("<a href='../index.php' ><img src='../images/401.png'>Iniciar Sesion </a>");
+  exit("<a href='../index.php' ><img src='../../images/401.png'>Iniciar Sesion </a>");
   
 }
 
