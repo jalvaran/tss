@@ -18,7 +18,42 @@ class Administrador extends conexion{
         $ColumnasSeleccionadas["Field"]=[];
         foreach ($Columnas["Field"] as $key => $value) {
 
-            $Consulta=$this->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$Tabla' AND Campo='$value' AND Visible=0");
+            $Consulta=$this->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$Tabla' AND Campo='$value' AND (Visible=0 OR Habilitado=0)");
+            $DatosExcluidas=$this->FetchAssoc($Consulta);
+            if($DatosExcluidas["ID"]==''){
+                $DatosNombres=$this->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $value);
+                $ColumnasSeleccionadas["Field"][$i]=$value;
+                $ColumnasSeleccionadas["Visualiza"][$i]=$value;
+                if($DatosNombres["Visualiza"]<>''){
+                    $ColumnasSeleccionadas["Visualiza"][$i]=$DatosNombres["Visualiza"];
+                }
+
+                $ColumnasSeleccionadas["Type"][$i]=$Columnas["Type"][$z];
+
+            }
+            $i++;
+            $z++;
+        }
+        
+        return($ColumnasSeleccionadas);
+            
+    }
+    /**
+     * Obtiene las columnas disponibles en una tabla
+     * @param type $Tabla
+     * @param type $vector
+     * @return type
+     */
+    public function getColumnasDisponibles($Tabla,$vector){
+        unset($Columnas);
+        $Columnas= $this->ShowColums($Tabla);
+        
+        $i=0;
+        $z=0;
+        $ColumnasSeleccionadas["Field"]=[];
+        foreach ($Columnas["Field"] as $key => $value) {
+
+            $Consulta=$this->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$Tabla' AND Campo='$value' AND Habilitado=0");
             $DatosExcluidas=$this->FetchAssoc($Consulta);
             if($DatosExcluidas["ID"]==''){
                 $DatosNombres=$this->DevuelveValores("configuraciones_nombres_campos", "NombreDB", $value);

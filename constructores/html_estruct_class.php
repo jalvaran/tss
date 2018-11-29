@@ -901,9 +901,9 @@ class html_estruct_class {
      * @param type $rowspan ->atr. rowspan del elemento td
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function td($id,$class,$colspan,$rowspan,$vectorhtml,$Script){
+    function td($id,$class,$colspan,$rowspan,$vectorhtml,$Script,$style=""){
         
-         print('<td id="'.$id.'" class="'.$class.'" colspan="'.$colspan.'" rowspan="'.$rowspan.'" '.$Script.' >');
+         print('<td id="'.$id.'" class="'.$class.'" colspan="'.$colspan.'" rowspan="'.$rowspan.'" '.$Script.' '.$style.' >');
     }
     
     /**

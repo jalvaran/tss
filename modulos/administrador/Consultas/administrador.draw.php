@@ -72,7 +72,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 $consulta=$obCon->Query($QueryCompleto);
                 //$consulta=$obCon->ConsultarTabla($Tabla, " $Condicion $Orden  $Limite");    
                 while($DatosConsulta=$obCon->FetchAssoc($consulta)){
-                    $css->FilaTabla($Tabla,$DatosConsulta, "", "");
+                    $css->FilaTablaDB($Tabla,$DatosConsulta, "", "");
                 }    
             $css->CerrarTablaDB();
             
@@ -97,7 +97,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 print("<a href='#' onclick='MuestraOcultaXID(`DivBusquedasTablas`)'>Buscar</a>");
             $css->Clegend();   
             $css->CrearDiv("DivBusquedasTablas", "", "", 0, 0);
-            $css->select("CmbColumna", "form-control", "CmbColumna", "", "", $js,"style=width:Auto");
+            $css->select("CmbColumna", "form-control", "CmbColumna", "", "", $js,"");
             foreach ($Columnas["Field"] as $key => $value) {
                 $css->option("", "", $value, $value, "", "");
                     print(utf8_encode($Columnas["Visualiza"][$key]));
@@ -105,7 +105,7 @@ if( !empty($_REQUEST["Accion"]) ){
             }
             $css->Cselect();
             
-            $css->select("CmbCondicion", "form-control", "CmbCondicion", " ", "", $js,"style=width:Auto");
+            $css->select("CmbCondicion", "form-control", "CmbCondicion", " ", "", $js,"");
                 $value="=";
                 $Display="Igual";
                 $css->option("", "", $Display, $value , "", "");
@@ -187,7 +187,7 @@ if( !empty($_REQUEST["Accion"]) ){
             $css->Clegend();   
             $css->CrearDiv("DivAccionesTablas", "", "", 0, 0);
             
-            $css->select("CmbAccionTabla", "form-control", "CmbAccionTabla", " ", "", $js,"style=width:Auto");
+            $css->select("CmbAccionTabla", "form-control", "CmbAccionTabla", " ", "", $js,"");
                 $value="SUM";
                 $Display="SUMAR";
                 $css->option("", "", $Display,$value, "", "");
@@ -220,7 +220,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 
                 
             $css->Cselect();    
-            $css->select("CmbColumnaAcciones", "form-control", "CmbColumnaAcciones", "", "", $js,"style=width:Auto");
+            $css->select("CmbColumnaAcciones", "form-control", "CmbColumnaAcciones", "", "", $js,"");
             foreach ($Columnas["Field"] as $key => $value) {
                 $css->option("", "", $value, $value, "", "");
                     print(utf8_encode($Columnas["Visualiza"][$key]));
@@ -234,10 +234,8 @@ if( !empty($_REQUEST["Accion"]) ){
             $css->CrearBotonEvento("BtnAccionTabla", "Ejecutar", 1, "onclick", $ScriptButton, "verde", "");
             $css->CrearDiv("DivResultadosAcciones", "", "", 1, 1);
                     
-            $css->CerrarDiv();
-            
-            $css->CerrarDiv();
-            
+            $css->CerrarDiv();            
+            $css->CerrarDiv();            
             $css->Cfieldset();
         break;
         
@@ -268,6 +266,71 @@ if( !empty($_REQUEST["Accion"]) ){
             print($Mensaje);
              
             break;
+            
+        case 6: //Ocultar o Muestra un campo
+            $tbl=$obCon->normalizar($_REQUEST["Tabla"]);
+            $Campo=$obCon->normalizar($_REQUEST["Campo"]);
+            
+            $consulta=$obCon->ConsultarTabla("tablas_campos_control", "WHERE NombreTabla='$tbl' AND Campo='$Campo' AND Habilitado=1");
+            $DatosCampo=$obCon->FetchAssoc($consulta);
+            if($DatosCampo["Visible"]<>""){
+                if($DatosCampo["Visible"]==1){
+                    $obCon->ActualizaRegistro("tablas_campos_control", "Visible", 0, "ID", $DatosCampo["ID"]);
+                    
+                }
+                if($DatosCampo["Visible"]==0){
+                    $obCon->ActualizaRegistro("tablas_campos_control", "Visible", 1, "ID", $DatosCampo["ID"]);
+                    
+                }
+            }else{
+                $sql="INSERT INTO `tablas_campos_control` (`ID`, `NombreTabla`, `Campo`, `Visible`, `Editable`, `Habilitado`, `TipoUser`, `idUser`) 
+                    VALUES ('', '$tbl', '$Campo', 0, 1, 1, 'administrador', 3);";
+                $obCon->Query($sql);
+
+            }
+            print("OK");
+        break;    
+        
+        case 7://Dibuja la tabla que activa o desactiva los campos
+                        
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);
+            $ColumnasVisibles=$obCon->getColumnasVisibles($Tabla, "");
+            $ColumnasDisponibles=$obCon->getColumnasDisponibles($Tabla, "");
+            
+            $css->fieldset("fControlCampos", "", "fControlCampos", "", "Control de Campos", "");
+            $css->legend("", "");
+                print("<a href='#' onclick='MuestraOcultaXID(`DivControlCamposTabla`)'>Campos</a>");
+            $css->Clegend();   
+            $css->CrearDiv("DivControlCamposTabla", "", "", 0, 0);
+            
+            $css->CrearTabla();
+                $css->FilaTabla(14);
+                    $css->ColTabla("<strong>Columna</strong>", 1);
+                    $css->ColTabla("<strong>Estado</strong>", 1);
+                $css->CierraFilaTabla();
+                
+                foreach ($ColumnasDisponibles["Field"] as $key => $value) {
+                    if($key>0){
+                        $idCampo="ck".$value;
+                        $NombreCampo=$value;
+                        $css->FilaTabla(13);
+                            $css->ColTabla(utf8_encode($ColumnasDisponibles["Visualiza"][$key]), 1);
+                            $css->td("", "", 1, 1, "", "","");
+                                $js="onchange='OcultaMuestraCampoTabla(`$Tabla`,`$NombreCampo`);'";
+                                $Estado=0;                                
+                                if(array_search($value, $ColumnasVisibles["Field"])){
+                                    $Estado=1; 
+                                }                                                       
+                                $css->CheckBoxTS($idCampo, $idCampo, "", $Estado, 1, $js,"", "", "");
+                            $css->Ctd();
+                        $css->CierraFilaTabla();
+                    }
+                }
+                
+            $css->CerrarTabla();
+            $css->CerrarDiv();            
+            $css->Cfieldset();
+        break;      
     }
     
     

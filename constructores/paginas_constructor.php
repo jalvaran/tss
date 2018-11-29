@@ -40,6 +40,7 @@ class PageConstruct extends html_estruct_class{
                 print('<link rel="stylesheet" href="../../dist/css/AdminLTE.css">');
                 print('<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">');
                 print('<link rel="stylesheet" href="../../bower_components/fonts/css.css">');
+                print('<link rel="stylesheet" href="../../bower_components/techno/checkts/checkts.css">');
                 
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.core.css' />");
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
@@ -612,6 +613,8 @@ class PageConstruct extends html_estruct_class{
         print('<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>');
         print('<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
         print('<script src="../../bower_components/fastclick/lib/fastclick.js"></script>');
+        print('<script src="../../bower_components/alertify/lib/alertify.min.js"></script>');
+        //print('<script src="../../plugins/iCheck/icheck.min.js"></script>');
         print('<script src="../../dist/js/adminlte.min.js"></script>');
         print('<script src="../../dist/js/admintss.js"></script>');
         
@@ -761,7 +764,7 @@ class PageConstruct extends html_estruct_class{
      * @param type $js
      * @param type $Vector
      */
-    function FilaTabla($tabla,$Datos,$js,$Vector){
+    function FilaTablaDB($tabla,$Datos,$js,$Vector){
         $obCon=new conexion(1);
         print('<tr class="odd gradeX">');
         foreach ($Datos as $key => $value) {
@@ -1121,6 +1124,88 @@ class PageConstruct extends html_estruct_class{
                 $this->CPanelLateral();
             $this->MenuLateralFin();
             
+        }
+        /**
+         * Crea una tabla
+         */
+        public function CrearTabla(){
+            print('<div class="table-responsive"><table class="table table-bordered table table-hover" >');		
+	}
+        
+        /**
+         * Fila tabla
+         * @param type $FontSize
+         */
+	function FilaTabla($FontSize){
+            print('<tr style="font-size:'.$FontSize.'px">');
+		
+	}
+	/**
+         * Cierra una Fila de una tabla
+         */
+	function CierraFilaTabla(){
+            print('</tr>');
+		
+	}
+	
+	/**
+         * Columna de una tabla
+         * @param type $Contenido
+         * @param type $ColSpan
+         * @param type $align-> alineacion: L izquierda, R Derecha, C centro
+         */
+	function ColTabla($Contenido,$ColSpan,$align="L"){
+            if($align=="L"){
+              $align="left";  
+            }
+            if($align=="R"){
+              $align="right";  
+            }
+            if($align=="C"){
+              $align="center";  
+            }
+            print('<td colspan="'.$ColSpan.' " style="text-align:'.$align.'"   >'.$Contenido.'</td>');
+		
+	}
+	/**
+         * Cierre columna de tabla
+         */
+	function CierraColTabla(){
+            print('</td>');		
+	}
+	/**
+         * Cierra la tabla
+         */
+	function CerrarTabla(){
+            print('</table></div>');		
+	}
+        /**
+         * Check box con css
+         * @param type $Nombre
+         * @param type $id
+         * @param type $Leyenda
+         * @param type $Estado-> 1 para chequeado 0 para no
+         * @param type $Habilitado-> 0 para deshabilitar
+         * @param type $js->JavaScript
+         * @param type $Style
+         * @param type $ng_app
+         * @param type $vector
+         */
+        function CheckBoxTS($Nombre,$id,$Leyenda,$Estado,$Habilitado,$js,$Style,$ng_app,$vector) {
+            
+            if($Estado==1){
+                $Estado="checked";
+            }else{
+                $Estado="";
+            }
+            
+            if($Habilitado==0){
+                $Habilitado="disabled";
+            }else{
+                $Habilitado="";
+            }
+                        
+            print('<label class="checkts">'.$Leyenda.'<input name='.$Nombre.' id='.$id.' type="checkbox" '.$Estado.' '.$Habilitado.' '.$Style.' '.$js.'  '.$ng_app.'><span class="checkmark"></span></label>');        
         }
         
         //////////////////////////////////FIN

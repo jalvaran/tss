@@ -16,19 +16,16 @@ $css->PageInit($myTitulo);
         
         $css->CrearDiv("DivOpcionesTablas", "", "left", 1, 1);
         
-            $css->CrearDiv("DivPaginador", "col-sm-2", "left", 1, 1);
+            $css->CrearDiv("DivControlCampos", "col-sm-3", "left", 1, 1); //Control de campos
             $css->CerrarDiv();
             
-            $css->CrearDiv("DivOpciones1", "col-sm-4", "left", 1, 1); //Busquedas
+            $css->CrearDiv("DivOpciones1", "col-sm-3", "left", 1, 1); //Busquedas
             $css->CerrarDiv();
             
-            $css->CrearDiv("DivOpciones2", "col-sm-2", "left", 1, 1); //Acciones
+            $css->CrearDiv("DivOpciones2", "col-sm-3", "left", 1, 1); //Acciones
             $css->CerrarDiv();
              
-            $css->CrearDiv("DivOpciones3", "col-sm-2", "left", 1, 1); //Opciones generales ocultar columnas
-            $css->CerrarDiv();
-            
-            $css->CrearDiv("DivOpciones4", "col-sm-2", "left", 1, 1); //Exportar
+            $css->CrearDiv("DivOpciones3", "col-sm-3", "left", 1, 1); //Agregar
             $css->CerrarDiv();
             
         $css->CerrarDiv();

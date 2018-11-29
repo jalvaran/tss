@@ -117,6 +117,7 @@ function DibujeTabla(Tabla=''){
     SeleccionarTabla(Tabla);
     DibujaAccionesTablas(Tabla);
     DibujaFiltros(Tabla);
+    DibujaControlCampos();
 }
 /**
  * Limpia las cajas de texto utilizadas para los filtros
@@ -345,3 +346,84 @@ function SeleccionaPagina(){
     document.getElementById('TxtPage').value=PaginaActual;
     SeleccionarTabla(Tabla);
 }
+
+/**
+ * Dibuja el control de campos
+ * @param {type} Tabla
+ * @returns {undefined}
+ */
+function DibujaControlCampos(){
+    var Tabla = document.getElementById('TxtTabla').value;   
+    var form_data = new FormData();
+        form_data.append('Accion', 7);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivControlCampos').innerHTML=data;
+              SeleccionarTabla(Tabla);
+              //iCheckCSS(); //Esta funcion no permite realizar funciones, se deshabilita hasta que se encuentre solucion
+              
+          }else {
+                alertify.alert("No se pudo dibujar el control de campos para la tabla");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+/**
+ * Oculta o muestra un campo de una tabla
+ * @param {type} Tabla
+ * @param {type} Campo
+ * @returns {undefined}
+ */
+function OcultaMuestraCampoTabla(Tabla,Campo){
+       
+    var form_data = new FormData();
+        form_data.append('Accion', 6);
+        form_data.append('Tabla', Tabla);
+        form_data.append('Campo', Campo);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              if(data=="OK"){
+                  SeleccionarTabla(Tabla);
+                  alertify.success("Estado de la columna "+Campo+" Cambiado");
+              }else{
+                  alertify.alert(data);
+              }
+              
+              SeleccionarTabla(Tabla);
+              
+          }else{
+                alertify.alert("No se pudo dibujar el control de campos para la tabla");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+    
