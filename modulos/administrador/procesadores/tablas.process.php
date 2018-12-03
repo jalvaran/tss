@@ -34,6 +34,28 @@ if( !empty($_REQUEST["idAccion"]) ){
             print("OK");
             
         break; 
+        
+        case 2: //insertar datos en una tabla
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);  
+            $idEditar=$obCon->normalizar($_REQUEST["idEditar"]); 
+            $Columnas=$obCon->getColumnasVisibles($Tabla, ""); 
+            $DatosActuales=$obCon->DevuelveValores($Tabla, $Columnas["Field"][0], $idEditar);
+            foreach($Columnas["Field"] as $key => $value) {
+                if($key>0){
+                    $ValorEditado=$obCon->normalizar($_REQUEST["$value"]);     
+                    if($DatosActuales[$key]<>$ValorEditado){
+                        if($value=="Password"){
+                            $ValorEditado= md5($obCon->normalizar($_REQUEST["$value"]));
+                        }
+                        $obCon->ActualizaRegistro($Tabla, $value, $ValorEditado, $Columnas["Field"][0], $idEditar,0); 
+                    }                  
+                    
+                }
+            }
+            
+            print("OK");
+            
+        break; 
          
         
     }

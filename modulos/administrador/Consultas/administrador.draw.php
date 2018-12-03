@@ -317,8 +317,10 @@ if( !empty($_REQUEST["Accion"]) ){
             $css->Clegend();   
             $css->CrearDiv("DivAcciones", "", "", 0, 0);
             $js="onclick=DibujaFormularioNuevoRegistro(`$Tabla`)";
-            //$css->BotonAbreModal("Agregar Nuevo Registro", "ModalAcciones", $js);
-            $css->CrearBotonEvento("BtnNuevoRegistroTabla", "Agregar Registro", 1, "onclick", "DibujaFormularioNuevoRegistro(`$Tabla`)", "azulclaro", "");
+            $DatosControlTablas=$obCon->DevuelveValores("configuracion_control_tablas", "TablaDB", $Tabla);
+            if($DatosControlTablas["Agregar"]<>0 or $DatosControlTablas["Agregar"]==''){
+                $css->CrearBotonEvento("BtnNuevoRegistroTabla", "Agregar Registro", 1, "onclick", "DibujaFormularioNuevoRegistro(`$Tabla`)", "azulclaro", "");
+            }
             $css->CerrarDiv();            
             $css->Cfieldset();
         break;  
@@ -329,7 +331,18 @@ if( !empty($_REQUEST["Accion"]) ){
             
             $ColumnasVisibles=$obCon->getColumnasVisibles($Tabla, "");
             
-            $css->DibujaCamposFormulario($Tabla,$ColumnasVisibles, "", "");
+            $css->DibujaCamposFormularioInsert($Tabla,$ColumnasVisibles, "", "");
+            
+        break;  
+    
+        case 10://Dibuja el formulario para editar un registro
+                        
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);
+            $idEditar=$obCon->normalizar($_REQUEST["idEditar"]);
+            
+            $ColumnasVisibles=$obCon->getColumnasVisibles($Tabla, "");
+            
+            $css->DibujaCamposFormularioEdit($Tabla,$idEditar,$ColumnasVisibles, "", "");
             
         break;  
         

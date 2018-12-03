@@ -707,7 +707,9 @@ class PageConstruct extends html_estruct_class{
         $obCon=new conexion(1);
         print("<thead><tr>");
         $ColSpanTitulo=count($Columnas["Field"]);
-         
+        $this->th("", "", "1", "1", "", "");
+            print("<strong></strong>");
+        $this->Cth();
         $this->th("", "", 2, 1, "", "");    
             $this->select("CmbLimit", "form-control", "CmbLimit", "", "", "onchange=CambiarLimiteTablas()", "style=width:200px");
                 $Sel=0;
@@ -745,7 +747,14 @@ class PageConstruct extends html_estruct_class{
             print("<strong>$Titulo </strong>");
         $this->Cth();
         $this->tr("", "", 1, 1, "", "");
+        $c=0;
         foreach ($Columnas["Field"] as $key => $value) {
+            if($c==0){
+                $c=1;
+                $this->th("", "", 1, 1, "", "");
+                    print("<<_Opciones_>>");
+                $this->Cth();
+            }
             
             $NombreColumna=utf8_encode($Columnas["Visualiza"][$key]);
             $this->th("", "", 1, 1, "", "");
@@ -769,8 +778,31 @@ class PageConstruct extends html_estruct_class{
      */
     function FilaTablaDB($tabla,$Datos,$js,$Vector){
         $obCon=new conexion(1);
+        $DatosControlTablas=$obCon->DevuelveValores("configuracion_control_tablas", "TablaDB", $tabla);
+        if($DatosControlTablas["Editar"]<>0 or $DatosControlTablas["Editar"]==''){
+            $OpcionEditar=1;
+        }else{
+            $OpcionEditar=0;
+        }
+        if($DatosControlTablas["Ver"]==1){
+            $OpcionVer=1;
+        }else{
+            $OpcionVer=0;
+        }
         print('<tr class="odd gradeX">');
+        $c=0;
         foreach ($Datos as $key => $value) {
+            if($c==0){
+                $c=1;                
+                print("<td>");
+                if($OpcionVer==1){
+                    print('<i class="fa fa-fw fa-eye" onclick=VerRegistro(`'.$tabla.'`,`'.$value.'`)></i><a href=# onclick=VerRegistro(`'.$tabla.'`,`'.$value.'`)> Ver </a><br>');
+                } 
+                if($OpcionEditar==1){
+                    print('<i class="fa fa-fw fa-edit" onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$value.'`)></i><a href=# onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$value.'`)> Editar </a><br>');
+                } 
+                print("</td>");
+            }            
             $value= utf8_encode($value);                        
             print("<td>$value</td>");
             
@@ -1304,9 +1336,16 @@ class PageConstruct extends html_estruct_class{
             print('<button type="button" class="'.$Clase.'" data-toggle="modal" data-target="#'.$Modal.'">
                 '.$Leyenda.'</button>');
         }
-                
-        public function DibujaCamposFormulario($Tabla,$Columnas,$NumeroGrids,$vector) {
-            $obCon=new conexion($_SESSION["idUser"]);     
+        /**
+         * Dibuja el formulario para insertar un registro nuevo
+         * @param type $Tabla
+         * @param type $Columnas
+         * @param type $NumeroGrids
+         * @param type $vector
+         */        
+        public function DibujaCamposFormularioInsert($Tabla,$Columnas,$NumeroGrids,$vector) {
+            $obCon=new conexion($_SESSION["idUser"]);  
+            $this->input("hidden", "TxtTipoFormulario", "", "TxtTipoFormulario", "", "Insertar", "", "", "", "");
             $this->div("", "row", "", "", "", "", "");
                 $this->div("content", "col-lg-12", "", "", "", "", "");
                     
@@ -1348,7 +1387,7 @@ class PageConstruct extends html_estruct_class{
                                     $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
 
 
-                                }elseif($Tipo=="date" or $Tipo=="datetime" ) {
+                                }elseif($Tipo=="date" or $Tipo=="datetime" or $Tipo=="timestamp") {
                                     
                                     $TipoCaja="date";
                                     $Script="";
@@ -1360,7 +1399,7 @@ class PageConstruct extends html_estruct_class{
                                     $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, date("Y-m-d"), $Titulo, "", "", $Script,"style='line-height: 15px;'");
                                     print('</div>');
 
-                                }elseif($Tipo=="timestamp" or $Tipo=="time"){
+                                }elseif($Tipo=="time"){
 
                                     $TipoCaja="time";
                                     $Script="";
@@ -1378,15 +1417,156 @@ class PageConstruct extends html_estruct_class{
 
                                 }else{
                                     $TipoCaja="text";
+                                    $Pattern="";
                                     if($value=="Email"){
                                         $TipoCaja="email";
+                                        $Pattern="pattern=[A-Za-z0-9]+"; //Solo Letras y numeros
                                     }
+                                    
                                     if($value=="Password"){
+                                        $Pattern="pattern=[A-Za-z0-9]+"; //Solo Letras y numeros
                                         $TipoCaja="password";
+                                        $Titulo="Solo Letras y Números";
+                                        print('<div id="pswd_info">
+                                            <h4>El Password debe cumplir con los siguientes requerimientos:</h4>
+                                            <ul>
+                                              <li id="letter" class="invalid">Que contenga al menos <strong>una Letra</strong>
+                                              </li>
+                                              <li id="capital" class="invalid">Que contenga al menos <strong>una Mayúscula</strong>
+                                              </li>
+                                              <li id="number" class="invalid">Que contenga al menos <strong>un número</strong>
+                                              </li>
+                                              <li id="length" class="invalid">Que contenga al menos <strong>8 caracteres</strong>
+                                              </li>
+                                            </ul>
+                                          </div>');
                                     }
 
                                     $Script="";
-                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+                                    
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "off", "", $Script,$Pattern);
+
+                                }  
+
+                            }
+                        }   
+
+                    }
+                   
+                $this->Cdiv();
+            $this->Cdiv();
+        }
+        
+        
+        public function DibujaCamposFormularioEdit($Tabla,$idEdit,$Columnas,$NumeroGrids,$vector) {
+            $obCon=new conexion($_SESSION["idUser"]);  
+            $this->input("hidden", "TxtTipoFormulario", "", "TxtTipoFormulario", "", "Editar", "", "", "", "");
+            $this->input("hidden", "TxtIdEdit", "", "TxtIdEdit", "", "$idEdit", "", "", "", "");
+            $this->div("", "row", "", "", "", "", "");
+                $this->div("content", "col-lg-12", "", "", "", "", "");
+                    $idTabla=$Columnas["Field"][0];
+                    $DatosRegistro=$obCon->DevuelveValores($Tabla, $idTabla, $idEdit);
+                    
+                    foreach ($Columnas["Field"] as $key => $value) {
+                        
+                        if($key>0){
+                            $sql="SELECT * FROM configuracion_campos_asociados WHERE TablaOrigen='$Tabla' AND CampoTablaOrigen='$value'";
+                            $Consulta=$obCon->Query($sql);
+                            $DatosCamposAsociados=$obCon->FetchAssoc($Consulta);
+                            $DatosTipoColumna = explode('(', $Columnas["Type"][$key]);
+                            $Tipo=$DatosTipoColumna[0];
+                            $TipoCaja="";
+                            $Titulo= utf8_encode($Columnas["Visualiza"][$key]);
+                            $this->label("", "", "name", "", "");
+                                print($Titulo);
+                            $this->Clabel();
+                            if($DatosCamposAsociados["ID"]>0){
+                                $TablaAsociada=$DatosCamposAsociados["TablaAsociada"];
+                                $CampoAsociado=$DatosCamposAsociados["CampoAsociado"];
+                                $this->select($value, "form-control", "CmbInserts", $Titulo, "", "", "");
+                                    $this->option("", "", "Seleccione una opción", "", "", "");
+                                            print("Seleccione una opción");
+                                        $this->Coption();
+                                    $sql="SELECT $CampoAsociado as CampoAsociado FROM $TablaAsociada ORDER BY $CampoAsociado";
+                                    $Consulta=$obCon->Query($sql);
+                                    while($DatosAsociacion=$obCon->FetchAssoc($Consulta)){
+                                        $Sel=0;
+                                        if($DatosRegistro[$value]==$DatosAsociacion["CampoAsociado"]){
+                                            $Sel=1;
+                                        }
+                                        $this->option("", "", utf8_encode($DatosAsociacion["CampoAsociado"]), $DatosAsociacion["CampoAsociado"], "", "",$Sel);
+                                            print(utf8_encode($DatosAsociacion["CampoAsociado"]));
+                                        $this->Coption();
+                                        
+                                    }
+                                $this->Cselect();
+                            }else{
+                                                                
+                                if($Tipo=="tinyint" or $Tipo=="smallint" or $Tipo=="mediumint" or $Tipo=="int" or $Tipo=="bigint" or $Tipo=="decimal" or $Tipo=="float" or $Tipo=="double" or $Tipo=="year"){
+
+                                    $TipoCaja="number";
+                                    $Script="";
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, $DatosRegistro[$value], $Titulo, "", "", $Script);
+
+
+                                }elseif($Tipo=="date" or $Tipo=="datetime" or $Tipo=="timestamp") {
+                                    
+                                    $TipoCaja="date";
+                                    $Script="";
+                                    print('<div class="input-group date">
+                                    <div class="input-group-addon">
+                                      <i class="fa fa-calendar"></i>
+                                    </div>');
+
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, $DatosRegistro[$value], $Titulo, "", "", $Script,"style='line-height: 15px;'");
+                                    print('</div>');
+
+                                }elseif($Tipo=="time"){
+
+                                    $TipoCaja="time";
+                                    $Script="";
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, $DatosRegistro[$value], $Titulo, "", "", $Script);
+
+
+                                }elseif($Tipo=="text" or $Tipo=="mediumtext" or $Tipo=="longtext"){
+
+                                    $TipoCaja="textarea";
+                                    $Script="";                        
+                                    $this->textarea($value, "form-control", "TxtNuevoRegistro", $Titulo, $Titulo, "", $Script);
+                                        print($DatosRegistro[$value]);
+                                    $this->Ctextarea();                    
+
+
+                                }else{
+                                    $TipoCaja="text";
+                                    $Pattern="";
+                                    if($value=="Email"){
+                                        $TipoCaja="email";
+                                        //$Pattern="pattern=[A-Za-z0-9]+"; //Solo Letras y numeros
+                                    }
+                                    
+                                    if($value=="Password"){
+                                        $Pattern="pattern=[A-Za-z0-9]+"; //Solo Letras y numeros
+                                        $TipoCaja="password";
+                                        $Titulo="Solo Letras y Números";
+                                        print('<div id="pswd_info">
+                                            <h4>El Password debe cumplir con los siguientes requerimientos:</h4>
+                                            <ul>
+                                              <li id="letter" class="invalid">Que contenga al menos <strong>una Letra</strong>
+                                              </li>
+                                              <li id="capital" class="invalid">Que contenga al menos <strong>una Mayúscula</strong>
+                                              </li>
+                                              <li id="number" class="invalid">Que contenga al menos <strong>un número</strong>
+                                              </li>
+                                              <li id="length" class="invalid">Que contenga al menos <strong>8 caracteres</strong>
+                                              </li>
+                                            </ul>
+                                          </div>');
+                                    }
+
+                                    $Script="";
+                                    
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, $DatosRegistro[$value], $Titulo, "off", "", $Script,$Pattern);
 
                                 }  
 

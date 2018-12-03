@@ -492,7 +492,7 @@ function DibujaFormularioNuevoRegistro(Tabla){
               ConvierteSelects();
               EnfocaPrimerCampo('TxtNuevoRegistro');              
               AgregaEventosCamposEspeciales();
-              
+              ValidacionContrasenaSegura();
           }else {
                 alertify.alert("No se pudo dibujar el formulario");
           }
@@ -504,7 +504,45 @@ function DibujaFormularioNuevoRegistro(Tabla){
       })        
 }  
 
+/**
+ * Dibuja el formulario para editar un registro
+ * @param {type} Tabla
+ * @returns {undefined}
+ */
+function DibujaFormularioEditarRegistro(Tabla,idEditar){
+    
+    $("#ModalAcciones").modal()
 
+    var form_data = new FormData();
+        form_data.append('Accion', 10);
+        form_data.append('Tabla', Tabla);
+        form_data.append('idEditar', idEditar);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivFormularios').innerHTML=data;
+              ConvierteSelects();
+              EnfocaPrimerCampo('TxtNuevoRegistro');              
+              AgregaEventosCamposEspeciales();
+              ValidacionContrasenaSegura();
+          }else {
+              alertify.alert("No se pudo dibujar el formulario de edición");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
 
 /**
  * Enfoca el primer campo de un formulario
@@ -576,11 +614,24 @@ function CierraModal(idModal) {
  * @returns {undefined}
  */
 function GuardarRegistro(event){
-    var Tabla = document.getElementById('TxtTabla').value;
     event.preventDefault();
+    var TipoFormulario = document.getElementById('TxtTipoFormulario').value;
     
+    var Tabla = document.getElementById('TxtTabla').value;    
     var form_data = getFormInsert('TxtNuevoRegistro');
-        form_data.append('idAccion', 1);
+    
+    if(TipoFormulario == 'Insertar'){
+        var idAccion = 1;
+    }
+    
+    if(TipoFormulario == 'Editar'){
+        var idEditar = document.getElementById('TxtIdEdit').value;
+        var idAccion = 2;
+        form_data.append('idEditar', idEditar);
+    }
+    
+    
+        form_data.append('idAccion', idAccion);
         form_data.append('Tabla', Tabla);
         $.ajax({
         url: './procesadores/tablas.process.php',
@@ -754,3 +805,67 @@ function ValideImagenEmpresa(){
         alertify.success("Imagen permitida");
     }
 }
+
+/**
+ * Valida que la contraseña sea segura
+ * @returns {undefined}
+ */
+function ValidacionContrasenaSegura(){
+  var longitud = false,
+    minuscula = false,
+    numero = false,
+    mayuscula = false;
+  $('input[type=password]').keyup(function() {
+    var pswd = $(this).val();
+    if (pswd.length < 8) {
+      $('#length').removeClass('valid').addClass('invalid');
+      longitud = false;
+    } else {
+      $('#length').removeClass('invalid').addClass('valid');
+      longitud = true;
+    }
+
+    //validate letter
+    if (pswd.match(/[A-z]/)) {
+      $('#letter').removeClass('invalid').addClass('valid');
+      minuscula = true;
+    } else {
+      $('#letter').removeClass('valid').addClass('invalid');
+      minuscula = false;
+    }
+
+    //validate capital letter
+    if (pswd.match(/[A-Z]/)) {
+      $('#capital').removeClass('invalid').addClass('valid');
+      mayuscula = true;
+    } else {
+      $('#capital').removeClass('valid').addClass('invalid');
+      mayuscula = false;
+    }
+
+    //validate number
+    if (pswd.match(/\d/)) {
+      $('#number').removeClass('invalid').addClass('valid');
+      numero = true;
+    } else {
+      $('#number').removeClass('valid').addClass('invalid');
+      numero = false;
+    }
+    if(longitud==true && minuscula == true && mayuscula == true && numero == true ){
+        if ($('#BtnModalGuardar').length) {
+                document.getElementById('BtnModalGuardar').disabled=false;
+            }
+        }else{
+        if ($('#BtnModalGuardar').length) {
+                document.getElementById('BtnModalGuardar').disabled=true;
+            }
+        }
+  }).focus(function() {
+    $('#pswd_info').show();
+  }).blur(function() {
+    $('#pswd_info').hide();
+  });
+
+  
+}
+

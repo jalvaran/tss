@@ -450,6 +450,24 @@ public function ShowColums($Tabla){
       $sql=$sqlCampos.$sqlValores;
       return $sql;
     }
+    /**
+     * Obtiene el sql para actualizar
+     * @param type $Tabla
+     * @param type $Datos
+     * @return string
+     */
+    function getSQLUpdate($Tabla,$Datos){
+      $sql = "UPDATE $Tabla SET";
+      
+      $length_array = count($Datos);
+      $i = 1;
+      foreach ($Datos as $key => $value) {
+        $sql .= " `$key`='$value',";
+        
+      }
+      $sql = substr($sql, 0, -1);
+      return $sql;
+    }
 //Fin Clases
 }
 
