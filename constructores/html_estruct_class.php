@@ -503,9 +503,9 @@ class html_estruct_class {
      * @param type $autocomplete ->atr. autocomplete del elemento input
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function input( $type,$id,$class,$name,$title,$value,$placeholder,$autocomplete,$vectorhtml,$Script,$styles='',$np_app=''){
+    function input( $type,$id,$class,$name,$title,$value,$placeholder,$autocomplete,$vectorhtml,$Script,$styles='',$Pattern='',$np_app=''){
         
-        print('<input type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" placeholder="'.$placeholder.'" autocomplete="'.$autocomplete.'" '.$Script.' '.$styles.' '.$np_app.' >');
+        print('<input type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" placeholder="'.$placeholder.'" autocomplete="'.$autocomplete.'" '.$Script.' '.$styles.' '.$np_app.' '.$Pattern.' required>');
     }
     
     /**
@@ -518,17 +518,17 @@ class html_estruct_class {
      * @param type $placeholder ->atr. placeholder del elemento texarea
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function texarea($id,$class,$name,$title,$placeholder,$vectorhtml,$Script){
+    function textarea($id,$class,$name,$title,$placeholder,$vectorhtml,$Script){
         
-        print('<texarea id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" placeholder="'.$placeholder.'" '.$Script.' >');
+        print('<textarea id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" placeholder="'.$placeholder.'" '.$Script.' >');
     }
     
     /**
      * Metodo Ctexarea para cerra el texarea
      */
-    function Ctexarea(){
+    function Ctextarea(){
         
-        print('</texarea>');
+        print('</textarea>');
         
     }
     

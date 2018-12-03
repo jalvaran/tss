@@ -40,8 +40,8 @@ class PageConstruct extends html_estruct_class{
                 print('<link rel="stylesheet" href="../../dist/css/AdminLTE.css">');
                 print('<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">');
                 print('<link rel="stylesheet" href="../../bower_components/fonts/css.css">');
-                print('<link rel="stylesheet" href="../../bower_components/techno/checkts/checkts.css">');
-                
+                print('<link rel="stylesheet" href="../../bower_components/techno/css/checkts.css">');
+                print('<link rel="stylesheet" href="../../bower_components/techno/css/css_ts.css">');
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.core.css' />");
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
 
@@ -614,7 +614,7 @@ class PageConstruct extends html_estruct_class{
         print('<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
         print('<script src="../../bower_components/fastclick/lib/fastclick.js"></script>');
         print('<script src="../../bower_components/alertify/lib/alertify.min.js"></script>');
-        //print('<script src="../../plugins/iCheck/icheck.min.js"></script>');
+        print('<script src="../../bower_components/jquery-validate/jquery.validate.js"></script>');
         print('<script src="../../dist/js/adminlte.min.js"></script>');
         print('<script src="../../dist/js/admintss.js"></script>');
         
@@ -748,9 +748,10 @@ class PageConstruct extends html_estruct_class{
             $NombreColumna=utf8_encode($Columnas["Visualiza"][$key]);
             $this->th("", "", 1, 1, "", "");
                 $js="onclick=EscribirEnCaja('TxtOrdenNombreColumna','$value');CambiarOrden();SeleccionarTabla('$Tabla');";
-                $this->a("", "", "#", "", "", "", $js);
-                    print("<strong>$NombreColumna</strong>");
+                $this->a("", "", "#", "", "", "", $js);                    
+                    print('<strong>'.$NombreColumna.'</strong>');
                 $this->Ca();
+                
             $this->Cth();
                 
             
@@ -1206,6 +1207,168 @@ class PageConstruct extends html_estruct_class{
             }
                         
             print('<label class="checkts">'.$Leyenda.'<input name='.$Nombre.' id='.$id.' type="checkbox" '.$Estado.' '.$Habilitado.' '.$Style.' '.$js.'  '.$ng_app.'><span class="checkmark"></span></label>');        
+        }
+        
+        /**
+         * Crea una ventana modal
+         * @param type $id
+         * @param type $title
+         * @param type $Vector
+         * @param type $Amplio
+         * @param type $Oculto
+         * @param type $Tipo
+         */
+        function Modal($id,$title,$Vector,$Amplio=0,$Oculto=1,$Tipo=1){
+            $OcultarModal="";
+            if($Oculto==1){
+                $OcultarModal="fade";
+            }
+            $class="modal";
+            if($Tipo==2){
+                $class="modal modal-primary";
+            }
+            if($Tipo==3){
+                $class="modal modal-info";
+            }
+            if($Tipo==4){
+                $class="modal modal-warning";
+            }
+            
+            $style="";
+            if($Amplio==1){
+                $style='style="width: 80%;"';
+            }
+            print('<div class="'.$class.' '.$OcultarModal.'" id="'.$id.'" >
+                    <div class="modal-dialog" '.$style.'>
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                          <h4 class="modal-title">'.$title.'</h4>
+                        </div>
+                        <div class="modal-body">');
+        }
+        
+        /**
+         * Cierra la ventana modal
+         * @param type $idBoton->id para el boton de confirmacion
+         * @param type $JSBoton->JavaScript para el boton de confirmacion
+         * @param type $TituloBoton->Titulo del boton de confirmacion
+         * @param type $ClassBoton->Clase del boton de confirmacion
+         */
+        function CModal($idBoton,$JSBoton,$TipoBoton,$TituloBoton,$ClassBoton='btn btn-primary') {
+            print('</div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>
+                      <button id='.$idBoton.' type="'.$TipoBoton.'" class="'.$ClassBoton.'" '.$JSBoton.'>'.$TituloBoton.'</button>
+                    </div>
+                  </div>
+                  <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+              </div>');
+        }
+        /**
+         * Boton para abrir una ventana modal
+         * @param type $Leyenda
+         * @param type $Modal
+         * @param type $js
+         * @param type $Color
+         */
+        public function BotonAbreModal($Leyenda,$Modal,$js,$Color='azuloscuro'){
+            
+            switch ($Color){
+                case "verde":
+                    $Clase="btn btn-success";
+                    break;
+                case "naranja":
+                    $Clase="btn btn-warning";
+                    break;
+                case "rojo":
+                    $Clase="btn btn-danger";
+                    break;
+                case "blanco":
+                    $Clase="btn";
+                    break;
+                case "azulclaro":
+                    $Clase="btn btn-info";
+                    break;
+                case "azul":
+                    $Clase="btn btn-block btn-primary";
+                break;
+                case "azuloscuro":
+                    $Clase="btn btn-default";
+                break;
+            }            
+            print('<button type="button" class="'.$Clase.'" data-toggle="modal" data-target="#'.$Modal.'">
+                '.$Leyenda.'</button>');
+        }
+                
+        public function DibujaCamposFormulario($Tablas,$Columnas,$NumeroGrids,$vector) {
+                 
+            $this->div("", "row", "", "", "", "", "");
+                $this->div("content", "col-lg-12", "", "", "", "", "");
+                    
+                    foreach ($Columnas["Field"] as $key => $value) {
+                        
+                        if($key>0){
+                            
+                            $DatosTipoColumna = explode('(', $Columnas["Type"][$key]);
+                            $Tipo=$DatosTipoColumna[0];
+
+                            $TipoCaja="";
+                            $Titulo= utf8_encode($Columnas["Visualiza"][$key]);
+                            $this->label("", "", "name", "", "");
+                                print($Titulo);
+                            $this->Clabel();
+                            if($Tipo=="tinyint" or $Tipo=="smallint" or $Tipo=="mediumint" or $Tipo=="int" or $Tipo=="bigint" or $Tipo=="decimal" or $Tipo=="float" or $Tipo=="double" or $Tipo=="year"){
+                                
+                                $TipoCaja="number";
+                                $Script="";
+                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+                                
+
+                            }elseif($Tipo=="date" or $Tipo=="datetime" ) {
+                                
+                                $TipoCaja="date";
+                                $Script="";
+                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, date("Y-m-d"), $Titulo, "", "", $Script);
+                                
+
+                            }elseif($Tipo=="timestamp" or $Tipo=="time"){
+                                
+                                $TipoCaja="time";
+                                $Script="";
+                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+                               
+
+                            }elseif($Tipo=="text" or $Tipo=="mediumtext" or $Tipo=="longtext"){
+                                
+                                $TipoCaja="textarea";
+                                $Script="";                        
+                                $this->textarea($value, "form-control", "TxtNuevoRegistro", $Titulo, $Titulo, "", $Script);
+
+                                $this->Ctextarea();                    
+
+
+                            }else{
+                                $TipoCaja="text";
+                                if($value=="Email"){
+                                    $TipoCaja="email";
+                                }
+                                                                
+                                $Script="";
+                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+                                
+                            }  
+
+                            
+                        }   
+
+                    }
+                   
+                $this->Cdiv();
+            $this->Cdiv();
         }
         
         //////////////////////////////////FIN

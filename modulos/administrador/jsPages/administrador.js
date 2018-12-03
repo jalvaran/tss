@@ -115,9 +115,10 @@ function DibujeTabla(Tabla=''){
     }
     LimpiarFiltros();
     SeleccionarTabla(Tabla);
-    DibujaAccionesTablas(Tabla);
+    DibujaAccionesTablas();
     DibujaFiltros(Tabla);
     DibujaControlCampos();
+    DibujaOperacionesTablas(Tabla);
 }
 /**
  * Limpia las cajas de texto utilizadas para los filtros
@@ -225,10 +226,10 @@ function AgregaCondicional(){
 }
 
 /*
- * Dibuja las acciones que se pueden realizar en una tabla
+ * Dibuja las operaciones que se pueden realizar en una tabla
  * @returns {undefined}
  */
-function DibujaAccionesTablas(Tabla){
+function DibujaOperacionesTablas(Tabla){
        
     var form_data = new FormData();
         form_data.append('Accion', 4);
@@ -383,6 +384,43 @@ function DibujaControlCampos(){
       })        
 }  
 
+
+/**
+ * Dibuja las acciones
+ * @param {type} Tabla
+ * @returns {undefined}
+ */
+function DibujaAccionesTablas(){
+    var Tabla = document.getElementById('TxtTabla').value;   
+    var form_data = new FormData();
+        form_data.append('Accion', 8);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivOpciones3').innerHTML=data;
+              SeleccionarTabla(Tabla);
+              //iCheckCSS(); //Esta funcion no permite realizar funciones, se deshabilita hasta que se encuentre solucion
+              
+          }else {
+                alertify.alert("No se pudo dibujar las acciones para la tabla");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
 /**
  * Oculta o muestra un campo de una tabla
  * @param {type} Tabla
@@ -426,4 +464,101 @@ function OcultaMuestraCampoTabla(Tabla,Campo){
       })        
 }  
 
+
+/**
+ * Dibuja el formulario para ingresar un registro nuevo
+ * @param {type} Tabla
+ * @returns {undefined}
+ */
+function DibujaFormularioNuevoRegistro(Tabla){
+    
+    $("#ModalAcciones").modal()
+
+    var form_data = new FormData();
+        form_data.append('Accion', 9);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './Consultas/administrador.draw.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data != "") { 
+              document.getElementById('DivFormularios').innerHTML=data;
+              EnfocaPrimerCampo('TxtNuevoRegistro');
+          }else {
+                alertify.alert("No se pudo dibujar el formulario");
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}  
+
+
+function EnfocaPrimerCampo(NombreCampos){
+  
+  var form1Inputs = document.getElementsByName(NombreCampos);
+  var idElemento=form1Inputs[0].id;
+  document.getElementById(idElemento).focus();
+    
+}
+
+function getFormInsert(NombreCampos){
+  var form_data = new FormData();  
+  var form1Inputs = document.getElementsByName(NombreCampos);
+  for(let i=0; i<form1Inputs.length; i++){   
+      
+    form_data.append(form1Inputs[i].id, form1Inputs[i].value);
+  }
+  
+  return form_data;
+}
+
+function CierraModal(idModal) {
+    $("#"+idModal).modal('hide');//ocultamos el modal
+    $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
+    $('.modal-backdrop').remove();//eliminamos el backdrop del modal
+}
+
+function GuardarRegistro(event){
+    var Tabla = document.getElementById('TxtTabla').value;
+    event.preventDefault();
+    
+    var form_data = getFormInsert('TxtNuevoRegistro');
+        form_data.append('Accion', 1);
+        form_data.append('Tabla', Tabla);
+        $.ajax({
+        url: './procesadores/tablas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+           
+          if (data == "OK") { 
+              alertify.success("Datos Registrados correctamente");
+              document.getElementById('DivFormularios').innerHTML="";
+              
+              CierraModal("ModalAcciones");
+              SeleccionarTabla(Tabla);
+              
+          }else {
+                alertify.alert("Error: "+data);
+          }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })        
+}
     

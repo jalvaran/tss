@@ -11,7 +11,18 @@ include_once("../../constructores/paginas_constructor.php");
 $css =  new PageConstruct($myTitulo, "");
 
 $css->PageInit($myTitulo);
+        $JSBoton="onsubmit='GuardarRegistro(event);'";
+        $css->form("FrmModal", "", "", "", "", "", "", $JSBoton);
+        //$css->form("FrmModal", "", "", "", "", "", "", "");
+            $css->Modal("ModalAcciones", "TSS", "", 0, 0, 1);
 
+                    $css->CrearDiv("DivFormularios", "", "", 1, 1);
+                    $css->CerrarDiv();
+
+            $JSBoton="";
+            
+            $css->CModal("BtnModalGuardar", $JSBoton, "submit", "Guardar");
+        $css->Cform();   
         //Codigo del desarrollador para su pagina
         
         $css->CrearDiv("DivOpcionesTablas", "", "left", 1, 1);
@@ -42,7 +53,7 @@ $css->PageInit($myTitulo);
         $css->CrearDiv("tabla", "", "", 1, 1); //Se dibujan las tablas realizando peticiones por ajax
         
         $css->CerrarDiv();
-    
+        
 $css->PageFin();
 print('<script src="jsPages/administrador.js"></script>'); 
 

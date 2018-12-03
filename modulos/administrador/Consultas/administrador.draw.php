@@ -33,57 +33,30 @@ if( !empty($_REQUEST["Accion"]) ){
             $DatosSubMenu=$obCon->DevuelveValores("menu_submenus", "TablaAsociada", $Tabla);
             $TituloTabla=$DatosSubMenu["Nombre"];
             $startpoint = ($NumPage * $limit) - $limit;
-            $ColumnasSeleccionadas=$obCon->getColumnasVisibles($Tabla, "");
             
-            $idTabla=$ColumnasSeleccionadas["Field"][0];
-            //print_r($ColumnasSeleccionadas);
-            if($Condicion<>""){
-                $Condicion=" WHERE ".$Condicion;
-            }
-            if($OrdenColumna==''){
-                $OrdenColumna=$idTabla;
-            }
-            $sql="SELECT ";
-            foreach ($ColumnasSeleccionadas["Field"] as $key => $value) {
-                $sql.="$value,";
-            }
-            $sql = substr($sql, 0, -1);
-            $sql = $sql." FROM $Tabla ";
-            
-            $sqlConteo="SELECT COUNT(*) as TotalRegistros FROM $Tabla $Condicion";
-            $consulta=$obCon->Query($sqlConteo);
-            $DatosConteo=$obCon->FetchAssoc($consulta);
-            $TotalRegistros=$DatosConteo["TotalRegistros"];
-            
-            $Orden=" ORDER BY $OrdenColumna $AscDesc ";
-            $Limite="LIMIT $startpoint,$limit";
-            $js="";
-            $Seleccion="";
-            $QueryCompleto=$sql." ".$Condicion." ".$Orden." ".$Limite;
+            $ColumnasSeleccionadas=$obCon->getColumnasVisibles($Tabla, "");            
+            $DatosConsulta=$obCon->getConsultaTabla($Tabla,$ColumnasSeleccionadas, $Condicion, $OrdenColumna, $AscDesc, $NumPage, $limit,$startpoint);
+           
+            $TotalRegistros=$DatosConsulta["TotalRegistros"];
+            $QueryCompleto=$DatosConsulta["QueryCompleto"];
+            $QueryParcial=$DatosConsulta["QueryParcial"];
             
             if($TotalRegistros>$limit){                
                 $css->PaginadorTablas($Tabla, $limit, $NumPage, $TotalRegistros, "");
             }
-            
+            $js="";
             $css->CrearTablaDB($Tabla, $Tabla, "100%", $js, "");
             
                 $css->CabeceraTabla($Tabla,$limit,$TituloTabla,$ColumnasSeleccionadas, $js,$TotalRegistros,$NumPage, "");
                 
                 $consulta=$obCon->Query($QueryCompleto);
-                //$consulta=$obCon->ConsultarTabla($Tabla, " $Condicion $Orden  $Limite");    
+                 
                 while($DatosConsulta=$obCon->FetchAssoc($consulta)){
                     $css->FilaTablaDB($Tabla,$DatosConsulta, "", "");
                 }    
             $css->CerrarTablaDB();
             
             
-            /*
-            $consulta=$obCon->ConsultarTabla("$Tabla", "");    
-            while($DatosConsulta=$obCon->FetchAssoc($consulta)){
-                print('<li><a href="#" onclick="SeleccionarTabla(`'.$DatosConsulta["Tabla"].'`)">'.$DatosConsulta["Nombre"].'</a></li>');
-            }
-             * 
-             */
         break; 
         case 3: //dibujar los filtros
             
@@ -181,9 +154,9 @@ if( !empty($_REQUEST["Accion"]) ){
                    
             $js="";
             
-            $css->fieldset("fAcciones", "", "fAcciones", "", "Acciones", "");
+            $css->fieldset("fOperaciones", "", "fOperaciones", "", "Operaciones", "");
             $css->legend("", "");
-                print("<a href='#' onclick='MuestraOcultaXID(`DivAccionesTablas`)'>Acciones</a>");
+                print("<a href='#' onclick='MuestraOcultaXID(`DivAccionesTablas`)'>Operaciones</a>");
             $css->Clegend();   
             $css->CrearDiv("DivAccionesTablas", "", "", 0, 0);
             
@@ -331,6 +304,35 @@ if( !empty($_REQUEST["Accion"]) ){
             $css->CerrarDiv();            
             $css->Cfieldset();
         break;      
+        
+        case 8://Dibuja las acciones
+                        
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);
+            $ColumnasVisibles=$obCon->getColumnasVisibles($Tabla, "");
+            $ColumnasDisponibles=$obCon->getColumnasDisponibles($Tabla, "");
+            
+            $css->fieldset("fAcciones", "", "fAcciones", "", "Acciones", "");
+            $css->legend("", "");
+                print("<a href='#' onclick='MuestraOcultaXID(`DivAcciones`)'>Acciones</a>");
+            $css->Clegend();   
+            $css->CrearDiv("DivAcciones", "", "", 0, 0);
+            $js="onclick=DibujaFormularioNuevoRegistro(`$Tabla`)";
+            //$css->BotonAbreModal("Agregar Nuevo Registro", "ModalAcciones", $js);
+            $css->CrearBotonEvento("BtnNuevoRegistroTabla", "Agregar Registro", 1, "onclick", "DibujaFormularioNuevoRegistro(`$Tabla`)", "azulclaro", "");
+            $css->CerrarDiv();            
+            $css->Cfieldset();
+        break;  
+    
+        case 9://Dibuja el formulario para agregar un registro
+                        
+            $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);
+            
+            $ColumnasVisibles=$obCon->getColumnasVisibles($Tabla, "");
+            
+            $css->DibujaCamposFormulario($Tabla,$ColumnasVisibles, "", "");
+            
+        break;  
+        
     }
     
     
