@@ -10,11 +10,11 @@ $idUser=$_SESSION['idUser'];
 include_once("../clases/administrador.class.php");
 include_once("../../../constructores/paginas_constructor.php");
 
-if( !empty($_REQUEST["Accion"]) ){
+if( !empty($_REQUEST["idAccion"]) ){
     $css =  new PageConstruct("", "", 1, "", 1, 0);
     $obCon = new Administrador($idUser);
     
-    switch ($_REQUEST["Accion"]) {
+    switch ($_REQUEST["idAccion"]) {
         
         case 1: //insertar datos en una tabla
             $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);            
@@ -22,6 +22,10 @@ if( !empty($_REQUEST["Accion"]) ){
             foreach($Columnas["Field"] as $key => $value) {
                 if($key>0){
                     $Datos[$value]=$obCon->normalizar($_REQUEST["$value"]);   
+                    if($value=="Password"){
+                        $Datos[$value]= md5($obCon->normalizar($_REQUEST["$value"]));
+                    }
+                    
                 }
             }
             $sql=$obCon->getSQLInsert($Tabla, $Datos);

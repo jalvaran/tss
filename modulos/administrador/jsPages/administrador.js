@@ -489,7 +489,10 @@ function DibujaFormularioNuevoRegistro(Tabla){
            
           if (data != "") { 
               document.getElementById('DivFormularios').innerHTML=data;
-              EnfocaPrimerCampo('TxtNuevoRegistro');
+              ConvierteSelects();
+              EnfocaPrimerCampo('TxtNuevoRegistro');              
+              AgregaEventosCamposEspeciales();
+              
           }else {
                 alertify.alert("No se pudo dibujar el formulario");
           }
@@ -502,6 +505,12 @@ function DibujaFormularioNuevoRegistro(Tabla){
 }  
 
 
+
+/**
+ * Enfoca el primer campo de un formulario
+ * @param {type} NombreCampos
+ * @returns {undefined}
+ */
 function EnfocaPrimerCampo(NombreCampos){
   
   var form1Inputs = document.getElementsByName(NombreCampos);
@@ -509,30 +518,69 @@ function EnfocaPrimerCampo(NombreCampos){
   document.getElementById(idElemento).focus();
     
 }
-
+/**
+ * Obtiene los campos de un formulario
+ * @param {type} NombreCampos
+ * @returns {FormData|getFormInsert.form_data}
+ */
 function getFormInsert(NombreCampos){
   var form_data = new FormData();  
   var form1Inputs = document.getElementsByName(NombreCampos);
-  for(let i=0; i<form1Inputs.length; i++){   
-      
-    form_data.append(form1Inputs[i].id, form1Inputs[i].value);
+  
+  for(let i=0; i<form1Inputs.length; i++){  
+        
+        form_data.append(form1Inputs[i].id, form1Inputs[i].value);
+  }
+  
+  var Selects = document.getElementsByName("CmbInserts");
+  
+  for(let i=0; i<Selects.length; i++){  
+        
+        form_data.append(Selects[i].id, Selects[i].value);
   }
   
   return form_data;
 }
 
+/**
+ * Obtiene los campos de un formulario
+ * @param {type} NombreCampos
+ * @returns {FormData|getFormInsert.form_data}
+ */
+function ConvierteSelects(){
+  var form_data = new FormData();  
+  var form1Inputs = document.getElementsByName("CmbInserts");
+  var idElemento="";
+  for(let i=0; i<form1Inputs.length; i++){  
+        idElemento=form1Inputs[i].id;
+        $('#'+idElemento).select2();        
+  }
+  
+  return form_data;
+}
+
+
+/**
+ * Cierra una ventana modal
+ * @param {type} idModal
+ * @returns {undefined}
+ */
 function CierraModal(idModal) {
     $("#"+idModal).modal('hide');//ocultamos el modal
     $('body').removeClass('modal-open');//eliminamos la clase del body para poder hacer scroll
     $('.modal-backdrop').remove();//eliminamos el backdrop del modal
 }
-
+/**
+ * Guarga un registro 
+ * @param {type} event
+ * @returns {undefined}
+ */
 function GuardarRegistro(event){
     var Tabla = document.getElementById('TxtTabla').value;
     event.preventDefault();
     
     var form_data = getFormInsert('TxtNuevoRegistro');
-        form_data.append('Accion', 1);
+        form_data.append('idAccion', 1);
         form_data.append('Tabla', Tabla);
         $.ajax({
         url: './procesadores/tablas.process.php',
@@ -562,3 +610,147 @@ function GuardarRegistro(event){
       })        
 }
     
+    
+/**
+ * Agrega eventos a campos que requieran acciones especificas se dibujan desde ajax
+ * @returns {undefined}
+ */    
+function AgregaEventosCamposEspeciales(){
+    
+    if ($('#Login').length) {
+        document.getElementById("Login").addEventListener("change", VerificaLogin);
+    }
+
+    if ($('#RutaImagen').length) {
+        document.getElementById("RutaImagen").addEventListener("change", ValideImagenEmpresa);
+    }
+
+    if ($('#Tipo').length) {
+        document.getElementById("Tipo").addEventListener("change", VerificaTipoUsuario);
+    }
+}    
+
+/**
+ * Verifica si ya existe un usuario con el mismo login
+ * @returns {undefined}
+ */
+function VerificaLogin(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 1);
+        form_data.append('Login', $('#Login').val());
+      
+    $.ajax({
+        
+        url: 'buscadores/ConsultarLogin.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+           if(data=="Error"){
+                alertify.alert("El usuario ya Existe");
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=true;
+                }
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=true;
+                }
+            }else{
+                alertify.success("Usuario disponible");
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=false;
+                }
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=false;
+                }
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            //alert("Error al tratar de borrar el archivo");
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+/**
+ * Verifica si ya existe un mismo tipo de usuario
+ * @returns {undefined}
+ */
+function VerificaTipoUsuario(){
+    var form_data = new FormData();
+        form_data.append('idAccion', 1);
+        form_data.append('Tipo', $('#Tipo').val());
+      
+    $.ajax({
+        
+        url: 'buscadores/ConsultarLogin.search.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data)
+           if(data=="Error"){
+                alertify.alert("El Tipo de Usuario ya Existe");
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=true;
+                }
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=true;
+                }
+            }else{
+                alertify.success("Tipo de usuario disponible");
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=false;
+                }
+                if ($('#BtnModalGuardar').length) {
+                    document.getElementById('BtnModalGuardar').disabled=false;
+                }
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            //alert("Error al tratar de borrar el archivo");
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+/**
+ * Verifica si la extension de la imagen de la empresa es valida
+ * @returns {Boolean}
+ */
+function ValideImagenEmpresa(){
+    var fileInput = document.getElementById('RutaImagen');
+    var filePath = fileInput.value;
+    var allowedExtensions = /(.jpg|.jpeg|.png|.gif)$/i;
+    if(!allowedExtensions.exec(filePath)){
+        alertify.alert('Solo se permiten archivos con extension .jpeg/.jpg/.png/.gif');
+        fileInput.value = '';
+        if ($('#BtnModalGuardar').length) {
+            document.getElementById('BtnModalGuardar').disabled=true;
+        }
+        
+        if ($('#BtnModalGuardar').length) {
+            document.getElementById('BtnModalGuardar').disabled=true;
+        }
+        
+        return false;
+    }else{
+        if ($('#BtnModalGuardar').length) {
+            document.getElementById('BtnModalGuardar').disabled=false;
+        }
+        if ($('#BtnModalGuardar').length) {
+            document.getElementById('BtnModalGuardar').disabled=false;
+        }
+        
+        alertify.success("Imagen permitida");
+    }
+}

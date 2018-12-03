@@ -41,10 +41,11 @@ class PageConstruct extends html_estruct_class{
                 print('<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">');
                 print('<link rel="stylesheet" href="../../bower_components/fonts/css.css">');
                 print('<link rel="stylesheet" href="../../bower_components/techno/css/checkts.css">');
-                print('<link rel="stylesheet" href="../../bower_components/techno/css/css_ts.css">');
+                print('<link rel="stylesheet" href="../../bower_components/techno/css/css_ts.css">');                 
+                print('<link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">'); 
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.core.css' />");
                 print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
-
+                print('<link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">');       
 
             $this->Chead();
             $this->body("", "hold-transition skin-blue sidebar-mini");
@@ -614,10 +615,11 @@ class PageConstruct extends html_estruct_class{
         print('<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
         print('<script src="../../bower_components/fastclick/lib/fastclick.js"></script>');
         print('<script src="../../bower_components/alertify/lib/alertify.min.js"></script>');
-        print('<script src="../../bower_components/jquery-validate/jquery.validate.js"></script>');
+        print('<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>');
+        
         print('<script src="../../dist/js/adminlte.min.js"></script>');
         print('<script src="../../dist/js/admintss.js"></script>');
-        
+        print('<script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>');
        
         //print('<script type="text/javascript" src="../ext/jquery/jquery-1.11.0.min.js"></script>');
         
@@ -769,8 +771,7 @@ class PageConstruct extends html_estruct_class{
         $obCon=new conexion(1);
         print('<tr class="odd gradeX">');
         foreach ($Datos as $key => $value) {
-            
-            $value= utf8_encode($value);
+            $value= utf8_encode($value);                        
             print("<td>$value</td>");
             
         }
@@ -1304,65 +1305,92 @@ class PageConstruct extends html_estruct_class{
                 '.$Leyenda.'</button>');
         }
                 
-        public function DibujaCamposFormulario($Tablas,$Columnas,$NumeroGrids,$vector) {
-                 
+        public function DibujaCamposFormulario($Tabla,$Columnas,$NumeroGrids,$vector) {
+            $obCon=new conexion($_SESSION["idUser"]);     
             $this->div("", "row", "", "", "", "", "");
                 $this->div("content", "col-lg-12", "", "", "", "", "");
                     
                     foreach ($Columnas["Field"] as $key => $value) {
                         
                         if($key>0){
-                            
+                            $sql="SELECT * FROM configuracion_campos_asociados WHERE TablaOrigen='$Tabla' AND CampoTablaOrigen='$value'";
+                            $Consulta=$obCon->Query($sql);
+                            $DatosCamposAsociados=$obCon->FetchAssoc($Consulta);
                             $DatosTipoColumna = explode('(', $Columnas["Type"][$key]);
                             $Tipo=$DatosTipoColumna[0];
-
                             $TipoCaja="";
                             $Titulo= utf8_encode($Columnas["Visualiza"][$key]);
                             $this->label("", "", "name", "", "");
                                 print($Titulo);
                             $this->Clabel();
-                            if($Tipo=="tinyint" or $Tipo=="smallint" or $Tipo=="mediumint" or $Tipo=="int" or $Tipo=="bigint" or $Tipo=="decimal" or $Tipo=="float" or $Tipo=="double" or $Tipo=="year"){
-                                
-                                $TipoCaja="number";
-                                $Script="";
-                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
-                                
-
-                            }elseif($Tipo=="date" or $Tipo=="datetime" ) {
-                                
-                                $TipoCaja="date";
-                                $Script="";
-                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, date("Y-m-d"), $Titulo, "", "", $Script);
-                                
-
-                            }elseif($Tipo=="timestamp" or $Tipo=="time"){
-                                
-                                $TipoCaja="time";
-                                $Script="";
-                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
-                               
-
-                            }elseif($Tipo=="text" or $Tipo=="mediumtext" or $Tipo=="longtext"){
-                                
-                                $TipoCaja="textarea";
-                                $Script="";                        
-                                $this->textarea($value, "form-control", "TxtNuevoRegistro", $Titulo, $Titulo, "", $Script);
-
-                                $this->Ctextarea();                    
-
-
+                            if($DatosCamposAsociados["ID"]>0){
+                                $TablaAsociada=$DatosCamposAsociados["TablaAsociada"];
+                                $CampoAsociado=$DatosCamposAsociados["CampoAsociado"];
+                                $this->select($value, "form-control", "CmbInserts", $Titulo, "", "", "");
+                                    $this->option("", "", "Seleccione una opción", "", "", "");
+                                            print("Seleccione una opción");
+                                        $this->Coption();
+                                    $sql="SELECT $CampoAsociado as CampoAsociado FROM $TablaAsociada ORDER BY $CampoAsociado";
+                                    $Consulta=$obCon->Query($sql);
+                                    while($DatosAsociacion=$obCon->FetchAssoc($Consulta)){
+                                        $this->option("", "", utf8_encode($DatosAsociacion["CampoAsociado"]), $DatosAsociacion["CampoAsociado"], "", "");
+                                            print(utf8_encode($DatosAsociacion["CampoAsociado"]));
+                                        $this->Coption();
+                                        
+                                    }
+                                $this->Cselect();
                             }else{
-                                $TipoCaja="text";
-                                if($value=="Email"){
-                                    $TipoCaja="email";
-                                }
                                                                 
-                                $Script="";
-                                $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
-                                
-                            }  
+                                if($Tipo=="tinyint" or $Tipo=="smallint" or $Tipo=="mediumint" or $Tipo=="int" or $Tipo=="bigint" or $Tipo=="decimal" or $Tipo=="float" or $Tipo=="double" or $Tipo=="year"){
 
-                            
+                                    $TipoCaja="number";
+                                    $Script="";
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+
+
+                                }elseif($Tipo=="date" or $Tipo=="datetime" ) {
+                                    
+                                    $TipoCaja="date";
+                                    $Script="";
+                                    print('<div class="input-group date">
+                                    <div class="input-group-addon">
+                                      <i class="fa fa-calendar"></i>
+                                    </div>');
+
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, date("Y-m-d"), $Titulo, "", "", $Script,"style='line-height: 15px;'");
+                                    print('</div>');
+
+                                }elseif($Tipo=="timestamp" or $Tipo=="time"){
+
+                                    $TipoCaja="time";
+                                    $Script="";
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+
+
+                                }elseif($Tipo=="text" or $Tipo=="mediumtext" or $Tipo=="longtext"){
+
+                                    $TipoCaja="textarea";
+                                    $Script="";                        
+                                    $this->textarea($value, "form-control", "TxtNuevoRegistro", $Titulo, $Titulo, "", $Script);
+
+                                    $this->Ctextarea();                    
+
+
+                                }else{
+                                    $TipoCaja="text";
+                                    if($value=="Email"){
+                                        $TipoCaja="email";
+                                    }
+                                    if($value=="Password"){
+                                        $TipoCaja="password";
+                                    }
+
+                                    $Script="";
+                                    $this->input($TipoCaja, $value, "form-control", "TxtNuevoRegistro", $Titulo, "", $Titulo, "", "", $Script);
+
+                                }  
+
+                            }
                         }   
 
                     }
