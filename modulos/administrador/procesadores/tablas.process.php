@@ -35,7 +35,7 @@ if( !empty($_REQUEST["idAccion"]) ){
             
         break; 
         
-        case 2: //insertar datos en una tabla
+        case 2: //editar datos en una tabla
             $Tabla=$obCon->normalizar($_REQUEST["Tabla"]);  
             $idEditar=$obCon->normalizar($_REQUEST["idEditar"]); 
             $Columnas=$obCon->getColumnasVisibles($Tabla, ""); 

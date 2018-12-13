@@ -74,14 +74,18 @@ if( !empty($_REQUEST["idFormulario"]) ){
             $idFactura=$obGlosas->normalizar($_REQUEST["idFactura"]);
             
             $DatosFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "valor_neto_pagar,valor_total_pago,CuentaGlobal,CuentaRIPS ", "  num_factura='$idFactura'");
+            $IndiceASumar="";
+            $IndiceCodigoActividad="";
             if($TipoArchivo=='AC'){
                 $Tabla="salud_archivo_consultas";
                 $idTabla="id_consultas";
                 $sql="SELECT cod_consulta as Codigo,"
                     . "(SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=salud_archivo_consultas.cod_consulta) as Descripcion,"
-                    . "`valor_consulta` as Total,EstadoGlosa, "
+                    . "SUM(`valor_consulta`) as Total,EstadoGlosa, "
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=salud_archivo_consultas.EstadoGlosa) as Estado "
-                    . "FROM `salud_archivo_consultas` WHERE `$idTabla`='$idActividad'";
+                    . "FROM `salud_archivo_consultas` WHERE `$idTabla`='$idActividad' ";
+                $IndiceASumar="valor_consulta";
+                $IndiceCodigoActividad="cod_consulta";
             }
             
             if($TipoArchivo=='AP'){
@@ -89,9 +93,11 @@ if( !empty($_REQUEST["idFormulario"]) ){
                 $idTabla="id_procedimiento";
                 $sql="SELECT  cod_procedimiento  as Codigo,"
                     . "(SELECT descripcion_cups FROM salud_cups WHERE salud_cups.codigo_sistema=$Tabla.cod_procedimiento) as Descripcion,"
-                    . "`valor_procedimiento` as Total,EstadoGlosa, "
+                    . "SUM(`valor_procedimiento`) as Total,EstadoGlosa, "
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=$Tabla.EstadoGlosa) as Estado "
-                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad'";
+                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad' ";
+                $IndiceASumar="valor_procedimiento";
+                $IndiceCodigoActividad="cod_procedimiento";
             }
             
             if($TipoArchivo=='AT'){
@@ -101,7 +107,9 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     . "nom_servicio as Descripcion,"
                     . "SUM(`valor_total_material`) as Total,EstadoGlosa, "
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=$Tabla.EstadoGlosa) as Estado "
-                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad' GROUP BY $idTabla";
+                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad' ";
+                $IndiceASumar="valor_total_material";
+                $IndiceCodigoActividad="cod_servicio";
             }
             
             if($TipoArchivo=='AM'){
@@ -111,13 +119,16 @@ if( !empty($_REQUEST["idFormulario"]) ){
                     . "(nom_medicamento) as Descripcion,"
                     . "SUM(`valor_total_medic`) as Total,EstadoGlosa, "
                     . "(SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID=$Tabla.EstadoGlosa) as Estado "
-                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad' GROUP BY $idTabla";
+                    . "FROM `$Tabla` WHERE `$idTabla`='$idActividad' ";
+                $IndiceASumar="valor_total_medic";
+                $IndiceCodigoActividad="cod_medicamento";
             }
             
             $Consulta=$obGlosas->Query($sql);
             $DatosActividad=$obGlosas->FetchArray($Consulta);
             $CodActividad=$DatosActividad["Codigo"];
-            $TotalActividad=$DatosActividad["Total"];
+            //$TotalActividad=$DatosActividad["Total"];
+            $TotalActividad=$obGlosas->Sume($Tabla, $IndiceASumar, " WHERE num_factura='$idFactura' AND $IndiceCodigoActividad='$CodActividad'");
             $TotalGlosasExistentes=$obGlosas->Sume("salud_glosas_iniciales", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad' AND EstadoGlosa<>12");
             $TotalGlosasExistentesTemp=$obGlosas->Sume("salud_glosas_iniciales_temp", "ValorGlosado", " WHERE num_factura='$idFactura' AND CodigoActividad='$CodActividad'");
             $TotalGlosado=$TotalGlosasExistentesTemp+$TotalGlosasExistentes;

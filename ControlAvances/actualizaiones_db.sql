@@ -31,7 +31,7 @@ CREATE TABLE `salud_manuales_tarifarios` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;;
 
 INSERT INTO `salud_manuales_tarifarios` (`ID`, `Nombre`) VALUES
 (1,	'SOAT'),
@@ -49,7 +49,7 @@ CREATE TABLE `salud_regimen` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Regimen` varchar(45) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;;
 
 INSERT INTO `salud_regimen` (`ID`, `Regimen`) VALUES
 (1,	'CONTRIBUTIVO'),
@@ -65,7 +65,7 @@ ALTER TABLE `salud_archivo_control_glosas_respuestas` ADD `EstadoGlosaHistorico`
 DROP TABLE IF EXISTS `salud_upload_control_ct`;
 CREATE TABLE `salud_upload_control_ct` (
   `id_upload_control` bigint(20) NOT NULL AUTO_INCREMENT,
-  `nom_cargue` varchar(45) COLLATE latin1_spanish_ci NOT NULL,
+  `nom_cargue` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
   `fecha_cargue` datetime NOT NULL,
   `idUser` int(11) NOT NULL,
   `Analizado` bit(1) NOT NULL,
@@ -74,14 +74,14 @@ CREATE TABLE `salud_upload_control_ct` (
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id_upload_control`),
   KEY `nom_cargue` (`nom_cargue`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 DROP TABLE IF EXISTS `empresapro_regimenes`;
 CREATE TABLE `empresapro_regimenes` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Regimen` varchar(20) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;;
 
 INSERT INTO `empresapro_regimenes` (`ID`, `Regimen`) VALUES
 (1,	'COMUN'),
@@ -126,7 +126,7 @@ CREATE TABLE `salud_cartera_x_edades_temp` (
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;;
 
 ALTER TABLE `empresapro` ADD `DV` INT NOT NULL AFTER `NIT`;
 ALTER TABLE `empresapro` ADD `CodigoDANE` INT NOT NULL AFTER `Ciudad`;
@@ -154,7 +154,7 @@ CREATE TABLE `configuraciones_nombres_campos` (
   `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;;
 
 INSERT INTO `configuraciones_nombres_campos` (`ID`, `NombreDB`, `Visualiza`, `Updated`, `Sync`) VALUES
 (1,	'id_medicamentos',	'ID',	'2018-11-06 15:11:32',	'0000-00-00 00:00:00'),
