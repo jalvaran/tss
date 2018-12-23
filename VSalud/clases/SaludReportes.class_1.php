@@ -83,19 +83,12 @@ class Reportes extends conexion{
         //$consulta=$this->ConsultarTabla("salud_control_generacion_respuestas_excel", "WHERE Generada=0");
         $i=2;       
         $EncabezadoInforme=1;
-        $EncabezadoDatosFacturas=1;
-        $EncabezadoFacturas=1;
-        $z=0;  
-        $Condicion="";
         while($DatosFacturas=$this->FetchArray($consulta)){
             $idFactura=$DatosFacturas["num_factura"];
-            $Condicion.=" factura='$idFactura' OR";
-        }   
-        $Condicion= substr ($Condicion, 0, -2);
-            $idFactura=$DatosFacturas["num_factura"];
-            $sql="SELECT * FROM vista_salud_respuestas WHERE $Condicion AND (cod_estado=2 or cod_estado=4)";
+            $sql="SELECT * FROM vista_salud_respuestas WHERE factura='$idFactura' AND (cod_estado=2 or cod_estado=4)";
             $Datos= $this->Query($sql);
-            
+            $EncabezadoFacturas=1;
+            $EncabezadoDatosFacturas=1;
             
             while($DatosRespuesta= $this->FetchAssoc($Datos)){
                 if($EncabezadoInforme==1){
@@ -145,10 +138,10 @@ class Reportes extends conexion{
                 }
                 
                 if($EncabezadoFacturas==1){
-                    //$i++;$i++;$i++;
+                    $i++;$i++;$i++;
                     $Color='ffe6b6';
-                    $objPHPExcel->getActiveSheet()->getStyle("A$i:V$i")->getFill() ->setFillType(PHPExcel_Style_Fill::FILL_SOLID) ->getStartColor()->setARGB($Color);
-                    $objPHPExcel->getActiveSheet()->getStyle("A$i:V$i")->getFont()->setSize(10)->setBold(true);
+                    $objPHPExcel->getActiveSheet()->getStyle("A$i:H$i")->getFill() ->setFillType(PHPExcel_Style_Fill::FILL_SOLID) ->getStartColor()->setARGB($Color);
+                    $objPHPExcel->getActiveSheet()->getStyle("A$i:H$i")->getFont()->setSize(10)->setBold(true);
                     $objPHPExcel->getActiveSheet()->SetCellValue("A$i", 'NÚMERO DE FACTURA');
                     $objPHPExcel->getActiveSheet()->SetCellValue("B$i", 'FECHA DE FACTURA');
                     $objPHPExcel->getActiveSheet()->SetCellValue("C$i", 'TIPO DE DOCUMENTO');
@@ -157,24 +150,6 @@ class Reportes extends conexion{
                     $objPHPExcel->getActiveSheet()->SetCellValue("F$i", 'MEDIDA EDAD');
                     $objPHPExcel->getActiveSheet()->SetCellValue("G$i", 'SEXO');
                     $objPHPExcel->getActiveSheet()->SetCellValue("H$i", 'VALOR DE LA FACTURA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("I$i", 'CUENTA RIPS');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("J$i", 'RADICADO');
-                    //$objPHPExcel->getActiveSheet()->SetCellValue("K$i", 'FACTURA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("K$i", 'CÓDIGO ACTIVIDAD');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("L$i", 'VALOR ACTIVIDAD');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("M$i", 'FECHA DE RESPUESTA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("N$i", 'CÓDIGO GLOSA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("O$i", 'DESCRIPCIÓN GLOSA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("P$i", 'ESTADO');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("Q$i", 'VALOR GLOSADO');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("R$i", 'VALOR LEVANTADO');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("S$i", 'VALOR ACEPTADO');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("T$i", 'VALOR X CONCILIAR');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("U$i", 'CODIGO DE RESPUESTA');
-                    $objPHPExcel->getActiveSheet()->SetCellValue("V$i", 'DESCRIPCIÓN DE RESPUESTA');
-                    
-                    $EncabezadoFacturas=0;
-                }
                     $i++;
                     $objPHPExcel->getActiveSheet()->SetCellValue("A$i", $DatosRespuesta["factura"]);
                     $objPHPExcel->getActiveSheet()->SetCellValue("B$i", $DatosRespuesta["fecha_factura"]);
@@ -195,29 +170,53 @@ class Reportes extends conexion{
                     $objPHPExcel->getActiveSheet()->SetCellValue("G$i", $DatosRespuesta["sexo_usuario"]);
                     $objPHPExcel->getActiveSheet()->SetCellValue("H$i", $DatosRespuesta["valor_factura"]);
                     
-                    //$i++;
-                
-                //$i++;
-                $objPHPExcel->getActiveSheet()->SetCellValue("I$i", $DatosRespuesta["cuenta"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("J$i", $DatosRespuesta["numero_radicado"]);
-                //$objPHPExcel->getActiveSheet()->SetCellValue("K$i", $DatosRespuesta["factura"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("K$i", $DatosRespuesta["cod_actividad"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("L$i", $DatosRespuesta["valor_total_actividad"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("M$i", $DatosRespuesta["fecha_respuesta"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("N$i", $DatosRespuesta["cod_glosa_inicial"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("O$i", utf8_encode($DatosRespuesta["descripcion_glosa_inicial"]));
-                $objPHPExcel->getActiveSheet()->SetCellValue("P$i", utf8_encode($DatosRespuesta["descripcion_estado"]));
-                $objPHPExcel->getActiveSheet()->SetCellValue("Q$i", $DatosRespuesta["valor_glosado_eps"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("R$i", $DatosRespuesta["valor_levantado_eps"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("S$i", $DatosRespuesta["valor_aceptado_ips"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("T$i", $DatosRespuesta["valor_x_conciliar"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("U$i", $DatosRespuesta["cod_glosa_respuesta"]);
-                $objPHPExcel->getActiveSheet()->SetCellValue("V$i", utf8_encode($DatosRespuesta["descripcion_glosa_respuesta"]));
+                    $i++;
+                $EncabezadoFacturas=0;
+                }
+                if($EncabezadoDatosFacturas==1){
+                    $i++;
+                    $Color='dfe8e7';
+                    $objPHPExcel->getActiveSheet()->getStyle("A$i:N$i")->getFill() ->setFillType(PHPExcel_Style_Fill::FILL_SOLID) ->getStartColor()->setARGB($Color);
+                    $objPHPExcel->getActiveSheet()->getStyle("A$i:N$i")->getFont()->setSize(10)->setBold(true);
+                    $objPHPExcel->getActiveSheet()->SetCellValue("A$i", 'CUENTA RIPS');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("B$i", 'RADICADO');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("C$i", 'FACTURA');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", 'CÓDIGO ACTIVIDAD');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("D$i", 'VALOR ACTIVIDAD');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("E$i", 'FECHA DE RESPUESTA');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("F$i", 'CÓDIGO GLOSA');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("G$i", 'DESCRIPCIÓN GLOSA');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("H$i", 'ESTADO');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("I$i", 'VALOR GLOSADO');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("J$i", 'VALOR LEVANTADO');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("K$i", 'VALOR ACEPTADO');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("L$i", 'VALOR X CONCILIAR');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("M$i", 'CODIGO DE RESPUESTA');
+                    $objPHPExcel->getActiveSheet()->SetCellValue("N$i", 'DESCRIPCIÓN DE RESPUESTA');
+                    
+                    $EncabezadoDatosFacturas=0;
+                }
+                $i++;
+                $objPHPExcel->getActiveSheet()->SetCellValue("A$i", $DatosRespuesta["cuenta"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("B$i", $DatosRespuesta["numero_radicado"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("C$i", $DatosRespuesta["factura"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosRespuesta["cod_actividad"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("D$i", $DatosRespuesta["valor_total_actividad"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("E$i", $DatosRespuesta["fecha_respuesta"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("F$i", $DatosRespuesta["cod_glosa_inicial"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("G$i", utf8_encode($DatosRespuesta["descripcion_glosa_inicial"]));
+                $objPHPExcel->getActiveSheet()->SetCellValue("H$i", utf8_encode($DatosRespuesta["descripcion_estado"]));
+                $objPHPExcel->getActiveSheet()->SetCellValue("I$i", $DatosRespuesta["valor_glosado_eps"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("J$i", $DatosRespuesta["valor_levantado_eps"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("K$i", $DatosRespuesta["valor_aceptado_ips"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("L$i", $DatosRespuesta["valor_x_conciliar"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("M$i", $DatosRespuesta["cod_glosa_respuesta"]);
+                $objPHPExcel->getActiveSheet()->SetCellValue("N$i", utf8_encode($DatosRespuesta["descripcion_glosa_respuesta"]));
                
                 
             }
             $this->update("salud_control_generacion_respuestas_excel", "Generada", 1, " WHERE num_factura='$idFactura'");
-        
+        }
 	
 	//Guardamos los cambios
 	$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');

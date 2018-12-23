@@ -135,3 +135,59 @@ t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
 (SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as TotalPagos,
 (SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)) AS SaldoFinalFactura
 FROM salud_archivo_facturacion_mov_generados t1 WHERE t1.estado<>'' AND t1.estado<>'PAGADA'; 
+
+
+
+DROP VIEW IF EXISTS `vista_salud_respuestas`;
+CREATE VIEW vista_salud_respuestas AS 
+SELECT salud_archivo_control_glosas_respuestas.ID as ID,
+       salud_archivo_control_glosas_respuestas.CuentaRIPS as cuenta,
+       salud_archivo_control_glosas_respuestas.num_factura as factura,
+       salud_archivo_control_glosas_respuestas.Tratado as Tratado,
+       salud_archivo_control_glosas_respuestas.Soporte as Soporte,
+       salud_archivo_control_glosas_respuestas.valor_glosado_eps,
+       salud_archivo_control_glosas_respuestas.valor_levantado_eps,
+       salud_archivo_control_glosas_respuestas.valor_aceptado_ips,
+       salud_archivo_control_glosas_respuestas.EstadoGlosa as cod_estado,
+       (salud_archivo_control_glosas_respuestas.valor_glosado_eps-salud_archivo_control_glosas_respuestas.valor_levantado_eps-salud_archivo_control_glosas_respuestas.valor_aceptado_ips) AS valor_x_conciliar,
+       salud_archivo_control_glosas_respuestas.observacion_auditor,
+       salud_archivo_control_glosas_respuestas.fecha_registo as fecha_respuesta,
+       salud_archivo_control_glosas_respuestas.id_cod_glosa as cod_glosa_respuesta,
+       salud_archivo_control_glosas_respuestas.CodigoActividad as cod_actividad,
+       salud_archivo_control_glosas_respuestas.DescripcionActividad as descripcion_actividad,
+       salud_archivo_control_glosas_respuestas.valor_actividad as valor_total_actividad,
+       salud_archivo_control_glosas_respuestas.idGlosa as id_glosa_inicial,
+       salud_archivo_control_glosas_respuestas.EstadoGlosaHistorico as EstadoGlosaHistorico,
+
+       (SELECT fecha_factura FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as fecha_factura, 
+       (SELECT numero_radicado FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as numero_radicado, 
+       (SELECT fecha_radicado FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as fecha_radicado, 
+       (SELECT valor_neto_pagar FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as valor_factura, 
+       (SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as cod_administrador, 
+       (SELECT nom_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as nombre_administrador, 
+       (SELECT cod_prest_servicio FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as cod_prestador, 
+       (SELECT razon_social FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as nombre_prestador, 
+       (SELECT num_ident_prest_servicio FROM salud_archivo_facturacion_mov_generados WHERE salud_archivo_facturacion_mov_generados.num_factura=salud_archivo_control_glosas_respuestas.num_factura LIMIT 1) as nit_prestador, 
+       
+       (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) as nit_administrador,
+       (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) as regimen_eps,
+       
+       (SELECT num_ident_usuario FROM vista_salud_facturas_usuarios WHERE vista_salud_facturas_usuarios.num_factura=(SELECT factura) LIMIT 1) as identificacion,
+       
+       (SELECT tipo_ident_usuario FROM salud_archivo_usuarios WHERE salud_archivo_usuarios.num_ident_usuario=(SELECT identificacion) LIMIT 1) as tipo_identificacion,
+       (SELECT edad FROM salud_archivo_usuarios WHERE salud_archivo_usuarios.num_ident_usuario=(SELECT identificacion) LIMIT 1) as edad_usuario,
+       (SELECT unidad_medida_edad FROM salud_archivo_usuarios WHERE salud_archivo_usuarios.num_ident_usuario=(SELECT identificacion) LIMIT 1) as unidad_medida_edad,
+       (SELECT sexo FROM salud_archivo_usuarios WHERE salud_archivo_usuarios.num_ident_usuario=(SELECT identificacion) LIMIT 1) as sexo_usuario,
+       
+       (SELECT CodigoGlosa FROM salud_glosas_iniciales WHERE salud_archivo_control_glosas_respuestas.idGlosa=salud_glosas_iniciales.ID LIMIT 1) AS cod_glosa_inicial,
+       
+       (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE (SELECT cod_glosa_inicial)= salud_archivo_conceptos_glosas.cod_glosa LIMIT 1) as descripcion_glosa_inicial,
+       
+       (SELECT descrpcion_concep_especifico FROM salud_archivo_conceptos_glosas WHERE salud_archivo_conceptos_glosas.cod_glosa= salud_archivo_control_glosas_respuestas.id_cod_glosa LIMIT 1) as descripcion_glosa_respuesta,
+       
+        (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_archivo_control_glosas_respuestas.EstadoGlosa=salud_estado_glosas.ID LIMIT 1) as descripcion_estado,
+       (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_archivo_control_glosas_respuestas.EstadoGlosaHistorico=salud_estado_glosas.ID LIMIT 1) as descripcion_estado_historico
+       
+       
+FROM salud_archivo_control_glosas_respuestas;
+ 
