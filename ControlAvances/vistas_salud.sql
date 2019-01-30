@@ -226,14 +226,6 @@ SELECT `CuentaRIPS`,CuentaGlobal ,`cod_enti_administradora`,`nom_enti_administra
 (SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales WHERE vista_glosas_iniciales.CuentaRIPS = salud_archivo_facturacion_mov_generados.CuentaRIPS AND (SELECT EstadoGlosa)<=4) as Dias
 FROM `salud_archivo_facturacion_mov_generados` GROUP BY `CuentaRIPS`;
 
-DROP VIEW IF EXISTS `vista_af_semaforo`;
-CREATE VIEW vista_af_semaforo AS
-SELECT *,
-(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales
-WHERE vista_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura 
-AND vista_glosas_iniciales.EstadoGlosa=1) AS Dias
-FROM `salud_archivo_facturacion_mov_generados`;
-
 DROP VIEW IF EXISTS `vista_salud_facturas_usuarios`;
 CREATE VIEW vista_salud_facturas_usuarios AS 
 SELECT num_factura, num_ident_usuario FROM salud_archivo_consultas GROUP BY num_factura UNION

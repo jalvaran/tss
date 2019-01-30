@@ -31,7 +31,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE  t1.GeneraCircular='S' AND t1.estado='RADICADO' AND fecha_radicado>='$FechaInicial' AND fecha_radicado<='$FechaFinal'
                 
-            UNION
+            UNION ALL
             
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
@@ -47,7 +47,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE t1.GeneraCircular='S' AND t1.estado='JURIDICO' AND fecha_radicado>='$FechaInicial' AND fecha_radicado<='$FechaFinal'
 
-            UNION
+            UNION ALL
 
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
@@ -63,7 +63,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE t1.GeneraCircular='S' AND t1.estado='RADICADO' AND fecha_radicado<'$FechaInicial'
                 
-            UNION
+            UNION ALL
             
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP,  
@@ -79,7 +79,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE t1.GeneraCircular='S' AND t1.estado='JURIDICO' AND fecha_radicado<'$FechaInicial'
 
-            UNION 
+            UNION ALL
 
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
@@ -97,7 +97,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE t1.GeneraCircular='S' AND t1.estado='DIFERENCIA' AND fecha_radicado>='$FechaInicial' AND fecha_radicado<='$FechaFinal'
 
-            UNION 
+            UNION ALL
 
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
@@ -115,7 +115,7 @@ class Circular030 extends conexion{
             FROM (SELECT @rownum:=0) r, vista_af t1 
             WHERE t1.GeneraCircular='S' AND t1.estado='DIFERENCIA' AND fecha_radicado<'$FechaInicial'
              
-            UNION 
+            UNION ALL
 
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
@@ -139,7 +139,7 @@ class Circular030 extends conexion{
         
         //Las pagas si el usuario elije esa opcion
         if($Tipo=='2'){
-            $sql.=" UNION
+            $sql.=" UNION ALL
                 SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_prest_servicio as TipoIdentificacionERP, 
             (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora) as NumeroIdentificacionERP, 
@@ -159,7 +159,7 @@ class Circular030 extends conexion{
                      ";
         }
         //Las eliminadas del 030 inicial
-        $sql.=" UNION 
+        $sql.=" UNION ALL
 
             SELECT '2' as TipoRegistro, @rownum:=@rownum+1 as ConsecutivoRegistro, 
             tipo_ident_erp as TipoIdentificacionERP, 

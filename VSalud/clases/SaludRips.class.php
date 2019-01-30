@@ -957,7 +957,7 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '193180011501',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
             'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','PAGADA',fecha_radicado
@@ -972,7 +972,7 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '193180011501',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
             'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','RADICADO' ,fecha_radicado
@@ -988,7 +988,7 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '193180011501',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
             'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado
@@ -1004,7 +1004,7 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '193180011501',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
             'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado

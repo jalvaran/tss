@@ -236,3 +236,13 @@ UPDATE `menu_submenus` SET `TablaAsociada` = 'salud_archivo_facturacion_mov_paga
 
 INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `idMenu`, `TablaAsociada`, `TipoLink`, `JavaScript`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES (NULL, 'Archivo de Nacidos AN', '5', '6', '2', 'salud_archivo_nacidos', '1', 'onclick=\"DibujeTabla(\'salud_archivo_nacidos\')\";', 'salud_archivo_nacidos.php', '_SELF', b'1', 'am.png', '6', '2018-11-28 17:45:16', '2018-07-13 15:42:34');
 ALTER TABLE `formatos_calidad` CHANGE `Codigo` `Codigo` VARCHAR(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL;
+
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` ENGINE = MyISAM;
+ALTER TABLE `salud_archivo_hospitalizaciones` ENGINE = MyISAM;
+ALTER TABLE `salud_archivo_nacidos` ENGINE = MyISAM;
+ALTER TABLE `salud_archivo_urgencias` ENGINE = MyISAM;
+ALTER TABLE `salud_archivo_usuarios` ENGINE = MyISAM;
+ALTER TABLE `salud_glosas_iniciales` ENGINE = MyISAM;
+ALTER TABLE `salud_tesoreria` ENGINE = MyISAM;
+
+
