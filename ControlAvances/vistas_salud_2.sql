@@ -224,3 +224,37 @@ WHERE salud_archivo_medicamentos.num_factura=salud_archivo_facturacion_mov_gener
 
 FROM `salud_archivo_facturacion_mov_generados`;
 
+
+
+DROP VIEW IF EXISTS `vista_circular030_1_radicados`;
+CREATE VIEW vista_circular030_1_radicados AS 
+
+SELECT '2' as TipoRegistro,
+            tipo_ident_prest_servicio as TipoIdentificacionERP, 
+            (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora) as NumeroIdentificacionERP, 
+            nom_enti_administradora as RazonSocialIPS, 
+            'NI' as TipoIdentificacionIPS, 
+            (SELECT NIT FROM empresapro WHERE idEmpresaPro=1) as NumeroIdentificacionIPS, 
+            'F' as TipoCobro,num_factura,'I' as IndicadorActualizacion,valor_neto_pagar as Valor,
+            fecha_factura as FechaEmision,fecha_radicado as FechaPresentacion,'' as FechaDevolucion,
+            '0' as ValorPagado,'0' as ValorGlosaAceptada,'NO' as GlosaRespondida, 
+            (SELECT Valor-ValorPagado-ValorGlosaAceptada) as SaldoFactura, 'NO' as CobroJuridico, '0' as EtapaCobroJuridico
+            FROM vista_af t1 
+            WHERE  t1.GeneraCircular='S' AND t1.estado='RADICADO';
+                
+
+DROP VIEW IF EXISTS `vista_circular030_2_juridicos`;
+CREATE VIEW vista_circular030_2_juridicos AS 
+
+SELECT '2' as TipoRegistro,
+            tipo_ident_prest_servicio as TipoIdentificacionERP, 
+            (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora) as NumeroIdentificacionERP, 
+            nom_enti_administradora as RazonSocialIPS, 
+            'NI' as TipoIdentificacionIPS, 
+            (SELECT NIT FROM empresapro WHERE idEmpresaPro=1) as NumeroIdentificacionIPS, 
+            'F' as TipoCobro,num_factura,'I' as IndicadorActualizacion,valor_neto_pagar as Valor,
+            fecha_factura as FechaEmision,fecha_radicado as FechaPresentacion,'' as FechaDevolucion,
+            '0' as ValorPagado,'0' as ValorGlosaAceptada,'NO' as GlosaRespondida, 
+            (SELECT Valor-ValorPagado-ValorGlosaAceptada) as SaldoFactura, 'NO' as CobroJuridico, '0' as EtapaCobroJuridico
+            FROM vista_af t1 
+            WHERE  t1.GeneraCircular='S' AND t1.estado='JURIDICO';

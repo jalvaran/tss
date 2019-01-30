@@ -53,8 +53,8 @@ print("<body>");
                 $css->CerrarSelect();
             print("</td>");
             print("<td>");
-                $Page="Consultas/salud_generar_circular_030.process.php?idFactura=";
-                $css->CrearBotonEvento("BtnCrear", "Generar", 1, "onClick", "EnvieObjetoConsulta2(`$Page`,`TxtFechaInicial`,`DivMensajesCircular`,`4`);return false;", "naranja", "");
+                //$Page="Consultas/salud_generar_circular_030.process.php?idFactura=";
+                $css->CrearBotonEvento("BtnGenerar030", "Generar", 1, "onClick", "GenereRadicadosEnPeriodo();", "naranja", "");
                 
             print("</td>");
             
@@ -62,6 +62,9 @@ print("<body>");
         
         
     $css->CerrarTabla();
+    $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
+    $css->CrearDiv("DivProcess", "", "center", 1, 1);
+    $css->CerrarDiv();//Cerramos contenedor de notificaciones
     $css->CrearDiv("DivMensajesCircular", "", "center", 1, 1);
     $css->CerrarDiv();//Cerramos contenedor de notificaciones
     
@@ -122,6 +125,7 @@ print("<body>");
     $css->CerrarDiv();//Cerramos contenedor de notificaciones
     
     $css->CerrarDiv();//Cerramos contenedor Principal
+    print('<script type="text/javascript" src="jsPages/Salud_Generar030.js"></script>');
     $css->AgregaJS(); //Agregamos javascripts
     $css->AgregaSubir();
     $css->Footer();

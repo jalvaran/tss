@@ -221,6 +221,179 @@ class Circular030 extends conexion{
         }
         return($NombreCircular);
     }
+    /**
+     * Escribe la 030 los datos generados en estado radicado durante el rango seleccionado
+     * @param type $FechaInicial
+     * @param type $FechaFinal
+     * @param type $Inicia
+     * @param type $Tipo
+     * @param type $Vector
+     */
+    public function Escribir030_Radicados_Rango($FechaInicial,$FechaFinal,$Contador,$Tipo,$Vector) {
+        $nombre_archivo = "../ArchivosTemporales/pre_Circular030.txt";
+        //Si existe el archivo y no se ha iniciado la escritura
+        
+        if(file_exists($nombre_archivo) and $Contador==''){
+            unlink($nombre_archivo);
+        }
+       
+        if($Contador==''){
+            $Contador=0;
+            $limit="LIMIT 5000";
+        }else{
+            $limit="LIMIT $Contador,5000";
+        }
+        
+        $sql="SELECT * FROM vista_circular030_1_radicados "
+                        . "WHERE FechaPresentacion>='$FechaInicial' AND FechaPresentacion<='$FechaFinal' $limit";
+        
+        $consulta=$this->Query($sql);
+        
+        if($archivo = fopen($nombre_archivo, "a")){
+            
+            $mensaje="";
+            while($Datos030= $this->FetchArray($consulta)){
+                $Contador++;
+                for($i=0;$i<=18;$i++){
+                    $Datos030[$i]= $this->QuitarAcentos($Datos030[$i]);
+                    $Datos030[$i]= trim($Datos030[$i]);
+                    if($i==7){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $Datos030[$i]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $Datos030[$i]);
+                        
+                        $mensaje.=$Prefijo.",".$NumeroFactura.",";
+                    }else if($i==0){
+                        $mensaje.=$Datos030[$i].",$Contador,";
+                    }else{
+                        $mensaje.=$Datos030[$i].",";
+                    }
+                    
+                }
+                
+                $mensaje=substr($mensaje, 0, -1);
+                $mensaje.="\r\n";
+            }
+            //$mensaje=substr($mensaje, 0, -2);
+            fwrite($archivo, $mensaje);
+            fclose($archivo);
+        }
+        return($Contador);
+    }
+    
+    
+    /**
+     * Escribe la 030 los datos generados en estado de cobro juridico durante el rango seleccionado
+     * @param type $FechaInicial
+     * @param type $FechaFinal
+     * @param type $Inicia
+     * @param type $Tipo
+     * @param type $Vector
+     */
+    public function Escribir030_Juridicos_Rango($FechaInicial,$FechaFinal,$Contador,$Tipo,$ContadorGeneral,$Vector) {
+        $nombre_archivo = "../ArchivosTemporales/pre_Circular030.txt";
+               
+        if($Contador==''){
+            $Contador=0;
+            $limit="LIMIT 5000";
+        }else{
+            $limit="LIMIT $Contador,5000";
+        }
+        
+        $sql="SELECT * FROM vista_circular030_2_juridicos "
+                        . "WHERE FechaPresentacion>='$FechaInicial' AND FechaPresentacion<='$FechaFinal' $limit";
+        
+        $consulta=$this->Query($sql);
+        
+        if($archivo = fopen($nombre_archivo, "a")){
+            
+            $mensaje="";
+            while($Datos030= $this->FetchArray($consulta)){
+                $Contador++;
+                $ContadorGeneral++;
+                for($i=0;$i<=18;$i++){
+                    $Datos030[$i]= $this->QuitarAcentos($Datos030[$i]);
+                    $Datos030[$i]= trim($Datos030[$i]);
+                    if($i==7){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $Datos030[$i]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $Datos030[$i]);                    
+                        
+                        $mensaje.=$Prefijo.",".$NumeroFactura.",";
+                    }else if($i==0){
+                        $mensaje.=$Datos030[$i].",$ContadorGeneral,";
+                    }else{
+                        $mensaje.=$Datos030[$i].",";
+                    }
+                    
+                }
+                
+                $mensaje=substr($mensaje, 0, -1);
+                $mensaje.="\r\n";
+            }
+            //$mensaje=substr($mensaje, 0, -2);
+            fwrite($archivo, $mensaje);
+            fclose($archivo);
+        }
+        $Contadores[0]=$Contador;
+        $Contadores[1]=$ContadorGeneral;
+        return($Contadores);
+    }
+    /**
+     * Escribe los radicados anteriores al rango seleccionado
+     * @param type $FechaInicial
+     * @param type $FechaFinal
+     * @param int $Contador
+     * @param type $Tipo
+     * @param type $Vector
+     * @return type
+     */
+    public function Escribir030_Radicados_Iniciales($FechaInicial,$FechaFinal,$Contador,$Tipo,$ContadorGeneral,$Vector) {
+        $nombre_archivo = "../ArchivosTemporales/pre_Circular030.txt";
+        
+        if($Contador==''){
+            $Contador=0;
+            $limit="LIMIT 5000";
+        }else{
+            $limit="LIMIT $Contador,5000";
+        }
+        
+        $sql="SELECT * FROM vista_circular030_1_radicados "
+                        . "WHERE FechaPresentacion<'$FechaInicial' $limit";
+        
+        $consulta=$this->Query($sql);
+        
+        if($archivo = fopen($nombre_archivo, "a")){
+            
+            $mensaje="";
+            while($Datos030= $this->FetchArray($consulta)){
+                $Contador++;
+                $ContadorGeneral++;
+                for($i=0;$i<=18;$i++){
+                    $Datos030[$i]= $this->QuitarAcentos($Datos030[$i]);
+                    $Datos030[$i]= trim($Datos030[$i]);
+                    if($i==7){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $Datos030[$i]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $Datos030[$i]);
+                        
+                        $mensaje.=$Prefijo.",".$NumeroFactura.",";
+                    }else if($i==0){
+                        $mensaje.=$Datos030[$i].",$ContadorGeneral,";
+                    }else{
+                        $mensaje.=$Datos030[$i].",";
+                    }
+                    
+                }
+                
+                $mensaje=substr($mensaje, 0, -1);
+                $mensaje.="\r\n";
+            }
+            //$mensaje=substr($mensaje, 0, -2);
+            fwrite($archivo, $mensaje);
+            fclose($archivo);
+        }
+       $Contadores[0]=$Contador;
+       $Contadores[1]=$ContadorGeneral;
+       return($Contadores);
+    }
     
     //Fin Clases
 }
