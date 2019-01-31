@@ -245,4 +245,19 @@ ALTER TABLE `salud_archivo_usuarios` ENGINE = MyISAM;
 ALTER TABLE `salud_glosas_iniciales` ENGINE = MyISAM;
 ALTER TABLE `salud_tesoreria` ENGINE = MyISAM;
 
+UPDATE `salud_eps` SET `nit` = '830009783' WHERE `salud_eps`.`ID` = 15;
+UPDATE `salud_eps` SET `nit` = '837000084' WHERE `salud_eps`.`ID` = 59;
+UPDATE `salud_eps` SET `nit` = '890102044' WHERE `salud_eps`.`ID` = 46;
+UPDATE `salud_eps` SET `nit` = '804002105' WHERE `salud_eps`.`ID` = 74;
+UPDATE `salud_eps` SET `nit` = '830113831' WHERE `salud_eps`.`ID` = 1;
+UPDATE `salud_eps` SET `nit` = '890900840' WHERE `salud_eps`.`ID` = 25;
+UPDATE `salud_eps` SET `nit` = '890101994' WHERE `salud_eps`.`ID` = 26;
+UPDATE `salud_eps` SET `nit` = '890480110' WHERE `salud_eps`.`ID` = 27;
+UPDATE `salud_eps` SET `nit` = '806008394' WHERE `salud_eps`.`ID` = 76;
+UPDATE `salud_eps` SET `nit` = '800088702' WHERE `salud_eps`.`ID` = 7;
+UPDATE `salud_eps` SET `nit` = '830006404' WHERE `salud_eps`.`ID` = 10;
+UPDATE `salud_eps` SET `nit` = '860512237' WHERE `salud_eps`.`ID` = 11;
+UPDATE `salud_eps` SET `nit` = '899999107' WHERE `salud_eps`.`ID` = 51;
+
+
 

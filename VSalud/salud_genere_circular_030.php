@@ -46,15 +46,14 @@ print("<body>");
             
             print("</td>");
             print("<td>");
-                $css->CrearSelect("CmbAdicional", "",200);
-                    $css->CrearOptionSelect("", "Seleccione un Item", 0);
-                    $css->CrearOptionSelect(1, "Sin Facturas Pagadas", 0);
-                    $css->CrearOptionSelect(2, "Con Facturas Pagadas", 0);
+                $css->CrearSelect("CmbAdicional", "",200);                    
+                    $css->CrearOptionSelect(1, "Solo periodo seleccionado", 0);
+                    $css->CrearOptionSelect(2, "Incluir Datos anteriores", 0);
                 $css->CerrarSelect();
             print("</td>");
             print("<td>");
                 //$Page="Consultas/salud_generar_circular_030.process.php?idFactura=";
-                $css->CrearBotonEvento("BtnGenerar030", "Generar", 1, "onClick", "GenereRadicadosEnPeriodo();", "naranja", "");
+                $css->CrearBotonEvento("BtnGenerar030", "Generar", 1, "onClick", "ConstruyaVista030();", "naranja", "");
                 
             print("</td>");
             
@@ -64,6 +63,8 @@ print("<body>");
     $css->CerrarTabla();
     $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
     $css->CrearDiv("DivProcess", "", "center", 1, 1);
+    $css->CerrarDiv();//Cerramos contenedor de notificaciones
+    $css->CrearDiv("DivMensajesCircular2", "", "center", 1, 1);
     $css->CerrarDiv();//Cerramos contenedor de notificaciones
     $css->CrearDiv("DivMensajesCircular", "", "center", 1, 1);
     $css->CerrarDiv();//Cerramos contenedor de notificaciones
