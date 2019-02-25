@@ -54,10 +54,12 @@ $statement=$obTabla->FiltroRangoFechas("fecha_transaccion", $statement, "");
 $Vector["statement"]=$statement;   //Filtro necesario para la paginacion
 
 if($TipoUser=="administrador"){
-    $Consulta=$obCon->Query("SELECT SUM(valor_transaccion) as Total FROM $statement");
+    $Consulta=$obCon->Query("SELECT SUM(valor_transaccion) as Total,SUM(valor_legalizado) AS Legalizado, SUM(valor_legalizar) AS XLegalizar FROM $statement");
     $DatosFacturacion=$obCon->FetchArray($Consulta);
     $Total=  number_format($DatosFacturacion["Total"]);
-    $css->CrearNotificacionAzul("Total = $Total", 16);
+    $Legalizado=  number_format($DatosFacturacion["Legalizado"]);
+    $XLegalizar=  number_format($DatosFacturacion["XLegalizar"]);
+    $css->CrearNotificacionAzul("Total Transacciones = $Total<br>Total Legalizado = $Legalizado<br>Total Por Legalizar = $XLegalizar<br>", 16);
 }
 ////Paginacion
 ////

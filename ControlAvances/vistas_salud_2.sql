@@ -258,3 +258,12 @@ SELECT '2' as TipoRegistro,
             (SELECT Valor-ValorPagado-ValorGlosaAceptada) as SaldoFactura, 'NO' as CobroJuridico, '0' as EtapaCobroJuridico
             FROM vista_af t1 
             WHERE  t1.GeneraCircular='S' AND t1.estado='JURIDICO';
+
+
+
+ALTER TABLE `salud_tesoreria` ADD `valor_legalizado` DOUBLE NOT NULL AFTER `valor_transaccion`, ADD `valor_legalizar` DOUBLE NOT NULL AFTER `valor_legalizado`;
+ALTER TABLE `salud_tesoreria` ADD `observaciones_cartera` TEXT NOT NULL AFTER `observacion`;
+ALTER TABLE `salud_tesoreria` ADD `legalizado` VARCHAR(2) NOT NULL DEFAULT 'NO' AFTER `observaciones_cartera`;
+ALTER TABLE `salud_tesoreria` CHANGE `valor_transaccion` `valor_transaccion` DOUBLE NOT NULL COMMENT 'Valor de transaccion ';
+
+

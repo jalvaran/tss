@@ -31,15 +31,16 @@ class Circular014 extends conexion{
                 if($Datos014["tipo_negociacion"]<>'capita'){
                     $TipoNegociacion=2;
                 }
-                $mensaje.=$Datos014["num_ident_prest_servicio"].",";
-                $mensaje.=$Datos014["DV"].",";
-                $mensaje.=$MesRadicado.",";
-                $mensaje.=$AnioRadicado.",";
-                $mensaje.=$TipoNegociacion.",";
-                $mensaje.=round($Datos014["valor_neto_pagar"]).",";
-                $mensaje.=$Datos014["cod_enti_administradora"].",";
-                $mensaje.=$Datos014["CodigoDANE"].",";
-                $mensaje.="0";//Averiguar que dato debe ir
+                $mensaje.=$Datos014["num_ident_prest_servicio"].",";    //1
+                $mensaje.=$Datos014["DV"].",";                          //2
+                $mensaje.=$MesRadicado.",";                             //3
+                $mensaje.=$AnioRadicado.",";                            //4
+                $mensaje.=$TipoNegociacion.",";                         //5
+                $mensaje.=$Datos014["num_factura"].",";
+                $mensaje.=round($Datos014["valor_neto_pagar"]).",";     //6
+                $mensaje.=$Datos014["cod_enti_administradora"].",";     //7
+                $mensaje.=$Datos014["CodigoDANE"].",";                  //8
+                $mensaje.="0";//Averiguar que dato debe ir              //9
                 
                 $mensaje.="\r\n";
             }

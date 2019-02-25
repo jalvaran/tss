@@ -347,5 +347,13 @@ $Vector[$TablaConfig]["Excluir"]["valor_reteiva"]=1;
 $Vector[$TablaConfig]["Excluir"]["valor_reteica"]=1;
 $Vector[$TablaConfig]["Excluir"]["NumeroFacturaAdres"]=1;
 
+$TablaConfig="salud_tesoreria";
+//$Vector[$TablaConfig]["Excluir"]["id_pagados"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_legalizado"]=1;
+$Vector[$TablaConfig]["Excluir"]["valor_legalizar"]=1;
+$Vector[$TablaConfig]["Excluir"]["observaciones_cartera"]=1;
+$Vector[$TablaConfig]["Excluir"]["legalizado"]=1;
+$Vector[$TablaConfig]["Excluir"]["fecha_hora_registro"]=1;
+$Vector[$TablaConfig]["Excluir"]["idUser"]=1;
 
 ?>

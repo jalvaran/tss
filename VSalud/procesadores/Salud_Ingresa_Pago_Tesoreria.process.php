@@ -25,7 +25,7 @@ if(isset($_REQUEST["BtnGuardar"])){
     }   
     
     $tab="salud_tesoreria";
-    $NumRegistros=11;  
+    $NumRegistros=12;  
 
 
     $Columnas[0]="cod_enti_administradora";	$Valores[0]=$idEPS;
@@ -39,6 +39,7 @@ if(isset($_REQUEST["BtnGuardar"])){
     $Columnas[8]="observacion";			$Valores[8]=$Observaciones;
     $Columnas[9]="fecha_hora_registro";		$Valores[9]=date("Y-m-d H:i:s");
     $Columnas[10]="idUser";			$Valores[10]=$idUser;
+    $Columnas[11]="valor_legalizar";	        $Valores[11]=$Pago;
     
     $obVenta->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
     
