@@ -1141,5 +1141,80 @@ class Rips extends conexion{
         
         
     }
+    
+    //Rips de pagos formato adres
+    public function InsertarRipsPagosAdresContributivoTemporal($NombreArchivo,$Separador,$FechaCargue, $idUser,$destino,$FechaGiro,$TipoGiro, $Vector) {
+        // si se recibe el archivo
+        if($Separador==1){
+           $Separador=";"; 
+        }else{
+           $Separador=",";  
+        }
+        
+            
+            $handle = fopen("../archivos/".$NombreArchivo, "r");
+            $i=0;
+            $z=0;
+            $h=0;
+            $tab="salud_pagos_contributivo_temp";
+            $sql="INSERT INTO `$tab` (`ID`, `Proceso`, `NitEPS`, `CodigoEps`, `NombreEPS`, `FechaPago`, `numero_factura`, `PrefijoFactura`, `NumeroFactura`, `FechaFactura`, `FormaContratacion`, `ValorGiro`, `fecha_cargue`, `Soporte`, `Estado`, `idUser`) VALUES";
+            
+            while (($data = fgetcsv($handle, 1000, $Separador,'"',"#")) !== FALSE) {
+                //////Inserto los datos en la tabla  
+                $i++;
+                $h++;
+                
+                if($h>=1 and $data[0]<>''){
+                    $Prefijo="";
+                    $NumeroFactura="";
+                    $FacturaCompleta="";
+                    if($data[7]<>''){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $data[7]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $data[7]);                    
+                        $FacturaCompleta=$data[7];                        
+                    }
+                    //$DatosFactura= $this->DevuelveValores("salud_archivo_facturacion_mov_generados", "num_factura", $data[7]);
+                    $CodigoEps="";
+                    $FechaFactura="";
+                    $TipoContratacion="";
+                    $ValorGiro=str_replace(".","",$data[5]);
+                    
+                    $ValorGiro=str_replace("$","",$ValorGiro);
+                    
+                    if($data[6]<>""){
+                        $FechaArchivo= explode("/", $data[4]);
+                        if(count($FechaArchivo)>1){
+                            $FechaPago= $FechaArchivo[2]."-".$FechaArchivo[1]."-".$FechaArchivo[0];
+                        }else{
+                            $FechaPago=$data[4];
+                        }
+
+                     }else{
+                        $FechaPago="0000-00-00";
+                     }
+
+                    if($z==1){
+                        
+                        $sql.="('','$data[6]', '$data[2]', '$CodigoEps','$data[3]', '$FechaPago', '$FacturaCompleta', '$Prefijo','$NumeroFactura','$FechaFactura', '$TipoContratacion', '$ValorGiro', '$FechaCargue','$destino' ,'0','$idUser'),";
+                    }
+                    $z=1;
+
+                    if($i==10000){
+                        $sql=substr($sql, 0, -1);
+                        $this->Query($sql);
+                        $sql="INSERT INTO `$tab` (`ID`, `Proceso`, `NitEPS`, `CodigoEps`, `NombreEPS`, `FechaPago`, `numero_factura`, `PrefijoFactura`, `NumeroFactura`, `FechaFactura`, `FormaContratacion`, `ValorGiro`, `fecha_cargue`, `Soporte`, `Estado`, `idUser`) VALUES";
+            
+                        $i=0;
+                    }
+                }
+            }
+            $sql=substr($sql, 0, -1);
+            $this->Query($sql);
+            fclose($handle); 
+            $sql="";
+            //$this->RegistreUpload($NombreArchivo, $FechaCargue, $idUser, "");
+            //$this->update("salud_upload_control", "Analizado", 1, " WHERE nom_cargue='$NombreArchivo'");
+               
+    }
     //Fin Clases
 }

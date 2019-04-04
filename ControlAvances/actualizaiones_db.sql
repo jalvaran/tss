@@ -260,4 +260,51 @@ UPDATE `salud_eps` SET `nit` = '860512237' WHERE `salud_eps`.`ID` = 11;
 UPDATE `salud_eps` SET `nit` = '899999107' WHERE `salud_eps`.`ID` = 51;
 
 
+CREATE TABLE `salud_pagos_contributivo` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Proceso` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NitEPS` bigint(20) NOT NULL,
+  `CodigoEps` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NombreEPS` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FechaPago` date NOT NULL,
+  `numero_factura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `PrefijoFactura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NumeroFactura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FechaFactura` date NOT NULL,
+  `FormaContratacion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `ValorGiro` double NOT NULL,
+  `fecha_cargue` datetime NOT NULL,
+  `Soporte` text COLLATE utf8_spanish_ci NOT NULL,
+  `Estado` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`ID`),
+  KEY `NitEPS` (`NitEPS`),
+  KEY `numero_factura` (`numero_factura`),
+  KEY `idUser` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+CREATE TABLE `salud_pagos_contributivo_temp` (
+  `ID` varchar(1) COLLATE utf8_spanish_ci NOT NULL,
+  `Proceso` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NitEPS` bigint(20) NOT NULL,
+  `CodigoEps` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NombreEPS` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FechaPago` date NOT NULL,
+  `numero_factura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `PrefijoFactura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NumeroFactura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FechaFactura` date NOT NULL,
+  `FormaContratacion` varchar(30) COLLATE utf8_spanish_ci NOT NULL,
+  `ValorGiro` double NOT NULL,
+  `fecha_cargue` datetime NOT NULL,
+  `Soporte` text COLLATE utf8_spanish_ci NOT NULL,
+  `Estado` int(11) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  KEY `NitEPS` (`NitEPS`),
+  KEY `numero_factura` (`numero_factura`),
+  KEY `idUser` (`idUser`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;

@@ -64,10 +64,16 @@ if(isset($_REQUEST["BtnEnviar"])){
                 //if($Prefijo=="AR"){
             $DatosUploads=$obRips->DevuelveValores("salud_upload_control", "nom_cargue", $NombreAR);
             if($DatosUploads["id_upload_control"]==''){
-                $obRips->InsertarRipsPagosAdres($NombreAR,$Separador, $FechaCargue, $idUser,$destino,$FechaGiro,$TipoGiro, "");
-                $NumRegistros=$obRips->CalculeRegistros("archivos/".$NombreAR,$Separador); // se calculan cuantos registros tiene el archivo
-                $css->CrearNotificacionVerde(number_format($NumRegistros)." Registros del archivo $NombreAR cargados correctamente",16);
+                if($TipoGiro==1 or $TipoGiro==2){
+                    $obRips->InsertarRipsPagosAdres($NombreAR,$Separador, $FechaCargue, $idUser,$destino,$FechaGiro,$TipoGiro, "");
+                    $NumRegistros=$obRips->CalculeRegistros("archivos/".$NombreAR,$Separador); // se calculan cuantos registros tiene el archivo
+                    $css->CrearNotificacionVerde(number_format($NumRegistros)." Registros del archivo $NombreAR cargados correctamente",16);
+                }
                 
+                if($TipoGiro==3){
+                    $obRips->InsertarRipsPagosAdresContributivoTemporal($NombreAR, $Separador, $FechaCargue, $idUser, $destino, $FechaGiro, $TipoGiro, "");
+                    exit();
+                }
             }else{
                 $css->CrearNotificacionAzul("El archivo ya fue subido el $DatosUploads[fecha_cargue], por el usuario $DatosUploads[idUser]",16);
             }

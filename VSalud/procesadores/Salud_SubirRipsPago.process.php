@@ -50,11 +50,19 @@ if($_REQUEST["idAccion"]){
                     //$data[$i]=str_replace('"','',$data[$i]); 
                     
                     if($i==2){
-                        if(!isset($data[10])){
-                            exit("El archivo no es válido");
+                        if($TipoGiro==1 or $TipoGiro==2){
+                            if(!isset($data[10])){
+                                exit("El archivo no es válido");
+                            }
+                            $Giro=str_replace(".","",$data[10]);
+                            $Giro=str_replace(",00","",$Giro);
                         }
-                        $Giro=str_replace(".","",$data[10]);
-                        $Giro=str_replace(",00","",$Giro);
+                        if($TipoGiro==3){
+                            if(!isset($data[1])){
+                                exit("El archivo no es válido");
+                            }
+                            $Giro="C1";
+                        }
                        // print($Giro);
                         
                     }
@@ -112,10 +120,33 @@ if($_REQUEST["idAccion"]){
             
         break;
         case 2: //insertar rips a tabla temporal
-            
+            $TipoGiro=$obRips->normalizar($_REQUEST["CmbTipoGiro"]);
+            //print("Tipo de Giro".$TipoGiro);
             $DatosArchivoActual=$obRips->DevuelveValores("salud_subir_rips_pago_control", "ID", 1);
-            $obRips->InsertarRipsPagosAdres($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
-            $obRips->AnaliceInsercionFacturasPagadasAdres("");
+            if($TipoGiro==1 or $TipoGiro==2){
+                
+                $obRips->InsertarRipsPagosAdres($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
+                $obRips->AnaliceInsercionFacturasPagadasAdres("");
+            }
+            if($TipoGiro==3){
+               
+                $obRips->InsertarRipsPagosAdresContributivoTemporal($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
+                $sql="UPDATE salud_pagos_contributivo_temp pt INNER JOIN salud_archivo_facturacion_mov_generados mg ON mg.num_factura=pt.numero_factura 
+                        SET pt.CodigoEps=mg.cod_enti_administradora, pt.FechaFactura=mg.fecha_factura, pt.FormaContratacion=mg.tipo_negociacion;";
+                $obCon->Query($sql);
+                $sql="INSERT INTO `salud_pagos_contributivo` SELECT * FROM `salud_pagos_contributivo_temp` as t1 
+                        WHERE NOT EXISTS (SELECT 1 FROM `salud_pagos_contributivo` as t2 WHERE t1.`FechaPago`=t2.`FechaPago` and t1.`numero_factura`=t2.`numero_factura` AND t1.`NitEPS`=t2.`NitEPS`);"; 
+                $obCon->Query($sql);
+                
+                $sql="INSERT INTO `salud_pagos_temporal` (`id_temp_rips_generados`, `Proceso`, `CodigoEPS`, `NombreEPS`, `FormaContratacion`, `Departamento`, `Municipio`, `FechaFactura`, `PrefijoFactura`, `NumeroFactura`, `ValorGiro`, `FechaPago`, `NumeroGiro`, `nom_cargue`, `fecha_cargue`, `idUser`, `Soporte`,`numero_factura`)
+                SELECT '',Proceso,CodigoEps,NombreEPS,FormaContratacion,'','',FechaFactura,PrefijoFactura,NumeroFactura,ValorGiro,FechaPago,'','',fecha_cargue,idUser,Soporte,numero_factura FROM salud_pagos_contributivo WHERE Estado=0";
+                $obCon->Query($sql);
+                $obCon->update("salud_pagos_contributivo", "Estado", 1, "");
+                $obCon->AjusteAutoIncrement("salud_pagos_contributivo", "ID", "");
+                $obCon->VaciarTabla("salud_pagos_contributivo_temp");
+                $obRips->AnaliceInsercionFacturasPagadasAdres("");
+                //print("Subido");
+            }
             print("OK");
             
         break;  

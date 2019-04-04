@@ -123,9 +123,11 @@ function CargarAR(){
 }
 
 function InsertarRIPSPago(){
+    var TipoGiro = document.getElementById('CmbTipoGiro').value;
     var form_data = new FormData();
         form_data.append('idAccion', 2);
-        
+        form_data.append('CmbTipoGiro', TipoGiro);
+        //console.log("Tipo Giro"+TipoGiro)
         $.ajax({
         //async:false,
         url: './procesadores/Salud_SubirRipsPago.process.php',
@@ -136,6 +138,7 @@ function InsertarRIPSPago(){
         data: form_data,
         type: 'post',
         success: function(data){
+            //console.log(data)
             if(data=="OK"){
                 $('.progress-bar').css('width','40%').attr('aria-valuenow', 40);  
                 document.getElementById('LyProgresoCMG').innerHTML="40%";
