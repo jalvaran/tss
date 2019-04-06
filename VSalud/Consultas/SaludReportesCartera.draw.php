@@ -792,6 +792,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Datos["RazonSocialEPS"]=$DatosEPS["nom_enti_administradora"];
             $DiasPactadosEPS=$obGlosas->ValorActual("salud_eps", "dias_convenio", " cod_pagador_min='$idEPS'");
             $DiasPactados=$DiasPactadosEPS["dias_convenio"];
+            if($DiasPactados==''){
+                $DiasPactados=30;
+            }
             $css->FilaTabla(14);
                 $css->ColTabla("$DatosEPS[nom_enti_administradora]", 1);
                 
