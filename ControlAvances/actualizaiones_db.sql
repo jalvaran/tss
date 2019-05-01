@@ -308,3 +308,6 @@ CREATE TABLE `salud_pagos_contributivo_temp` (
   KEY `numero_factura` (`numero_factura`),
   KEY `idUser` (`idUser`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+
+ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `SubeDesde` VARCHAR(15) NOT NULL AFTER `NumeroFacturaAdres`;

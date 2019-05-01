@@ -50,14 +50,14 @@ if($_REQUEST["idAccion"]){
                     //$data[$i]=str_replace('"','',$data[$i]); 
                     
                     if($i==2){
-                        if($TipoGiro==1 or $TipoGiro==2){
+                        if($TipoGiro==1){
                             if(!isset($data[10])){
                                 exit("El archivo no es válido");
                             }
                             $Giro=str_replace(".","",$data[10]);
                             $Giro=str_replace(",00","",$Giro);
                         }
-                        if($TipoGiro==3){
+                        if($TipoGiro==3 or $TipoGiro==2){
                             if(!isset($data[1])){
                                 exit("El archivo no es válido");
                             }
@@ -123,12 +123,12 @@ if($_REQUEST["idAccion"]){
             $TipoGiro=$obRips->normalizar($_REQUEST["CmbTipoGiro"]);
             //print("Tipo de Giro".$TipoGiro);
             $DatosArchivoActual=$obRips->DevuelveValores("salud_subir_rips_pago_control", "ID", 1);
-            if($TipoGiro==1 or $TipoGiro==2){
+            if($TipoGiro==1 ){
                 
                 $obRips->InsertarRipsPagosAdres($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
                 $obRips->AnaliceInsercionFacturasPagadasAdres("");
             }
-            if($TipoGiro==3){
+            if($TipoGiro==3 or $TipoGiro==2){
                
                 $obRips->InsertarRipsPagosAdresContributivoTemporal($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
                 $sql="UPDATE salud_pagos_contributivo_temp pt INNER JOIN salud_archivo_facturacion_mov_generados mg ON mg.num_factura=pt.numero_factura 
@@ -144,7 +144,12 @@ if($_REQUEST["idAccion"]){
                 $obCon->update("salud_pagos_contributivo", "Estado", 1, "");
                 $obCon->AjusteAutoIncrement("salud_pagos_contributivo", "ID", "");
                 $obCon->VaciarTabla("salud_pagos_contributivo_temp");
-                $obRips->AnaliceInsercionFacturasPagadasAdres("");
+                $TipoMovimiento="Contributivo";
+                if($TipoGiro==2){
+                    $TipoMovimiento="CuentaMaestra";
+                }
+                
+                $obRips->AnaliceInsercionFacturasPagadasAdres("",$TipoMovimiento);
                 //print("Subido");
             }
             print("OK");
