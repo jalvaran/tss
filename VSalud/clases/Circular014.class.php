@@ -19,7 +19,8 @@ class Circular014 extends conexion{
         }
         
         $sql="SELECT *, (SELECT DV FROM empresapro WHERE empresapro.CodigoPrestadora=salud_archivo_facturacion_mov_generados.cod_prest_servicio LIMIT 1) AS DV,"
-                . "(SELECT CodigoDANE FROM empresapro WHERE empresapro.CodigoPrestadora=salud_archivo_facturacion_mov_generados.cod_prest_servicio LIMIT 1) AS CodigoDANE "
+                . "(SELECT CodigoDANE FROM empresapro WHERE empresapro.CodigoPrestadora=salud_archivo_facturacion_mov_generados.cod_prest_servicio LIMIT 1) AS CodigoDANE,"
+                . "(SELECT Genera014 FROM salud_eps WHERE salud_eps.cod_pagador_min=salud_archivo_facturacion_mov_generados.cod_enti_administradora LIMIT 1) AS Genera014 "
                 . " FROM salud_archivo_facturacion_mov_generados WHERE fecha_radicado >= '$FechaInicial' AND fecha_radicado <= '$FechaFinal'";
                 
         $consulta=$this->Query($sql);
@@ -31,18 +32,20 @@ class Circular014 extends conexion{
                 if($Datos014["tipo_negociacion"]<>'capita'){
                     $TipoNegociacion=2;
                 }
-                $mensaje.=$Datos014["num_ident_prest_servicio"].",";    //1
-                $mensaje.=$Datos014["DV"].",";                          //2
-                $mensaje.=$MesRadicado.",";                             //3
-                $mensaje.=$AnioRadicado.",";                            //4
-                $mensaje.=$TipoNegociacion.",";                         //5
-                $mensaje.=$Datos014["num_factura"].",";
-                $mensaje.=round($Datos014["valor_neto_pagar"]).",";     //6
-                $mensaje.=$Datos014["cod_enti_administradora"].",";     //7
-                $mensaje.=$Datos014["CodigoDANE"].",";                  //8
-                $mensaje.="0";//Averiguar que dato debe ir              //9
-                
-                $mensaje.="\r\n";
+                if($Datos014["Genera014"]=='S'){
+                    $mensaje.=$Datos014["num_ident_prest_servicio"].",";    //1
+                    $mensaje.=$Datos014["DV"].",";                          //2
+                    $mensaje.=$MesRadicado.",";                             //3
+                    $mensaje.=$AnioRadicado.",";                            //4
+                    $mensaje.=$TipoNegociacion.",";                         //5
+                    $mensaje.=$Datos014["num_factura"].",";
+                    $mensaje.=round($Datos014["valor_neto_pagar"]).",";     //6
+                    $mensaje.=$Datos014["cod_enti_administradora"].",";     //7
+                    $mensaje.=$Datos014["CodigoDANE"].",";                  //8
+                    $mensaje.="0";//Averiguar que dato debe ir              //9
+
+                    $mensaje.="\r\n";
+                }
             }
             $mensaje=substr($mensaje, 0, -2);
             

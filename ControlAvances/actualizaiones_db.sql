@@ -341,3 +341,19 @@ CREATE TABLE `temporal_actualizacion_facturas` (
   `FechaRegistro` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `idMenu`, `TablaAsociada`, `TipoLink`, `JavaScript`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES
+(69,	'Actualizacion de Facturas',	36,	7,	0,	'',	0,	'',	'ActualizarFacturas.php',	'_SELF',	CONV('1', 2, 10) + 0,	'actualizar.png',	9,	'2019-06-13 10:06:18',	'2018-07-13 15:42:34');
+
+INSERT INTO `menu_carpetas` (`ID`, `Ruta`, `Updated`, `Sync`) VALUES
+(7,	'../modulos/carteraips/',	'2018-07-13 15:42:32',	'2018-07-13 15:42:32');
+
+
+ALTER TABLE `salud_cartera_x_edades_temp` ADD `RegimenEPS` VARCHAR(25) NOT NULL AFTER `Total`;
+
+ALTER TABLE `salud_eps` ADD `Genera014` VARCHAR(1) NOT NULL DEFAULT 'S' AFTER `Genera030`, ADD `Genera07` VARCHAR(1) NOT NULL DEFAULT 'S' AFTER `Genera014`;
+
+
+ALTER TABLE `salud_cartera_x_edades_temp` ADD `NIT_EPS` VARCHAR(20) NOT NULL AFTER `RegimenEPS`;
+
+

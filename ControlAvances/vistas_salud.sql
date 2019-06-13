@@ -16,7 +16,10 @@ CREATE VIEW vista_salud_facturas_no_pagas AS
 SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
 (SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
 t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
-t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`
+t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
+(SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,
+(SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as NIT_EPS,
+(SELECT nombre_completo FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as RazonSocialEPS
 FROM salud_archivo_facturacion_mov_generados t1 WHERE t1.tipo_negociacion='evento' AND (t1.estado='RADICADO' OR t1.estado=''); 
 --
 -- 3. Vista para ver las facturas con diferencias
@@ -394,4 +397,17 @@ WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS nombre_ad
 WHERE salud_eps.cod_pagador_min=(SELECT cod_administrador) LIMIT 1) AS regimen_eps
 
 FROM `salud_glosas_iniciales` WHERE EstadoGlosa<=7;
+
+
+--
+-- 2. vista que se realizará desde la programacion
+--
+DROP VIEW IF EXISTS `vista_salud_carteraxdias_v2`;
+CREATE VIEW vista_salud_carteraxdias_v2 AS 
+SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
+(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
+t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,(SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen
+FROM salud_archivo_facturacion_mov_generados t1 WHERE t1.fecha_radicado<='2019-01-01' AND t1.tipo_negociacion='evento' AND (t1.estado='RADICADO' OR t1.estado=''); 
+
 

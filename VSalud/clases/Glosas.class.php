@@ -143,7 +143,7 @@ class Glosas extends conexion{
     }
     //Cartera x Edad
     public function CarteraSegunDias($idEPS,$Condicion,$Vector) {
-        $sql="SELECT SUM(valor_neto_pagar) AS Total, COUNT(num_factura) AS NumFacturas FROM vista_salud_facturas_no_pagas $Condicion";
+        $sql="SELECT SUM(valor_neto_pagar) AS Total, COUNT(num_factura) AS NumFacturas FROM vista_salud_carteraxdias_v2 $Condicion";
         $Consulta=$this->Query($sql);
         $DatosCartera=$this->FetchArray($Consulta);
         return($DatosCartera);

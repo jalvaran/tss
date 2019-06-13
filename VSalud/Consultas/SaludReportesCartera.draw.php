@@ -736,6 +736,23 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             if(isset($_REQUEST["sp"])){
                 $Separador=$obGlosas->normalizar($_REQUEST["sp"]);
             }
+            $CondicionFechaCorte="";
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaCorte=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                $CondicionFechaCorte=" AND t1.fecha_radicado<='$FechaCorte' ";
+            }
+            $sql="DROP VIEW IF EXISTS `vista_salud_carteraxdias_v2`;";
+            $obGlosas->Query($sql);
+            $sql="CREATE VIEW vista_salud_carteraxdias_v2 AS 
+                SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
+                (SELECT DATEDIFF('$FechaCorte',t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+                t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
+                t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
+                (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,
+                (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as NIT_EPS,
+(SELECT nombre_completo FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as RazonSocialEPS
+                FROM salud_archivo_facturacion_mov_generados t1 WHERE  t1.tipo_negociacion='evento' $CondicionFechaCorte AND (t1.estado='RADICADO' OR t1.estado=''); ";
+            $obGlosas->Query($sql);
             
            $css->CrearTabla();
            $css->FilaTabla(16);
@@ -780,7 +797,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $css->ColTabla("<strong>C</strong>", 1);
             $css->ColTabla("<strong>V</strong>", 1);
         $css->CierraFilaTabla();
-        $sql="SELECT cod_enti_administradora, nom_enti_administradora FROM vista_salud_facturas_no_pagas WHERE DiasMora>0 GROUP BY cod_enti_administradora";
+        $sql="SELECT cod_enti_administradora, nom_enti_administradora, Regimen,NIT_EPS,RazonSocialEPS FROM vista_salud_carteraxdias_v2 WHERE DiasMora>0 GROUP BY cod_enti_administradora";
         $ConsultaCartera=$obGlosas->Query($sql);
         $CatidadFacturas=0;
         $TotalValor=0;
@@ -789,7 +806,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             unset($Datos);
             $idEPS=$DatosEPS["cod_enti_administradora"];            
             $Datos["idEPS"]=$idEPS;
-            $Datos["RazonSocialEPS"]=$DatosEPS["nom_enti_administradora"];
+            $Datos["RazonSocialEPS"]=$DatosEPS["RazonSocialEPS"];
+            $Datos["RegimenEPS"]=$DatosEPS["Regimen"];
+            $Datos["NIT_EPS"]=$DatosEPS["NIT_EPS"];
             $DiasPactadosEPS=$obGlosas->ValorActual("salud_eps", "dias_convenio", " cod_pagador_min='$idEPS'");
             $DiasPactados=$DiasPactadosEPS["dias_convenio"];
             if($DiasPactados==''){
@@ -865,7 +884,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $css->ColTabla(number_format($CatidadFacturas), 1);
                 $css->ColTabla(number_format($TotalValor), 1);
                 $Datos["TotalFacturas"]=$DatosCartera["NumFacturas"];
-                $Datos["Total"]=$DatosCartera["Total"];
+                $Datos["Total"]=$TotalValor;
                 $sql_cartera=$obGlosas->getSQLInsert("salud_cartera_x_edades_temp", $Datos);
                 $obGlosas->Query($sql_cartera);
             $css->CierraFilaTabla();
@@ -911,7 +930,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`SaldoFinalFactura` > 0) ";
+            $Condicional=" WHERE (`SaldoFinalFactura` > 0) AND Genera07='S' ";
             $Condicional2="";
             if($idEPS<>''){
                 $Condicional2=" AND cod_enti_administradora='$idEPS'";
