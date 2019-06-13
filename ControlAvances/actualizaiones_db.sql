@@ -311,3 +311,33 @@ CREATE TABLE `salud_pagos_contributivo_temp` (
 
 
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `SubeDesde` VARCHAR(15) NOT NULL AFTER `NumeroFacturaAdres`;
+
+
+ALTER TABLE `menu` ADD `CSS_Clase` VARCHAR(20) NOT NULL AFTER `Image`;
+
+UPDATE `menu` SET `CSS_Clase`='fa fa-share';
+
+ALTER TABLE `menu_submenus` ADD `idMenu` INT NOT NULL AFTER `idCarpeta`, ADD `TablaAsociada` VARCHAR(45) NOT NULL AFTER `idMenu`;
+
+ALTER TABLE `menu_submenus` ADD `TipoLink` INT(1) NOT NULL AFTER `TablaAsociada`, ADD `JavaScript` VARCHAR(90) NOT NULL AFTER `TipoLink`;
+
+
+CREATE TABLE `registro_actualizacion_facturas` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `FacturaAnterior` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FacturaNueva` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `Observaciones` text COLLATE utf8_spanish_ci NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `FechaRegistro` datetime NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+CREATE TABLE `temporal_actualizacion_facturas` (
+  `ID` varchar(1) COLLATE utf8_spanish_ci NOT NULL,
+  `FacturaAnterior` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `FacturaNueva` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `Observaciones` text COLLATE utf8_spanish_ci NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `FechaRegistro` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+

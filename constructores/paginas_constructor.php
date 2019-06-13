@@ -30,22 +30,22 @@ class PageConstruct extends html_estruct_class{
                 print($Titulo);
                 $this->Ctitle();
                 if($CssFramework==1){
-                    print('<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">');
+                    print('<link rel="stylesheet" href="../../componentes/bootstrap/dist/css/bootstrap.css">');
 
                 }
                 print("<link rel='shortcut icon' href='../../images/technoIco.ico'>");
-                print('<link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">');
-                print('<link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">');
-                print('<link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">');
+                print('<link rel="stylesheet" href="../../componentes/font-awesome/css/font-awesome.min.css">');
+                print('<link rel="stylesheet" href="../../componentes/Ionicons/css/ionicons.min.css">');
+                print('<link rel="stylesheet" href="../../componentes/datatables.net-bs/css/dataTables.bootstrap.min.css">');
                 print('<link rel="stylesheet" href="../../dist/css/AdminLTE.css">');
                 print('<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">');
-                print('<link rel="stylesheet" href="../../bower_components/fonts/css.css">');
-                print('<link rel="stylesheet" href="../../bower_components/techno/css/checkts.css">');
-                print('<link rel="stylesheet" href="../../bower_components/techno/css/css_ts.css">');                 
-                print('<link rel="stylesheet" href="../../bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">'); 
-                print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.core.css' />");
-                print("<link rel='stylesheet' href='../../bower_components/alertify/themes/alertify.default.css' id='toggleCSS' />");
-                print('<link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">');       
+                print('<link rel="stylesheet" href="../../componentes/fonts/css.css">');
+                print('<link rel="stylesheet" href="../../componentes/techno/css/checkts.css">');
+                print('<link rel="stylesheet" href="../../componentes/techno/css/css_ts.css">');                 
+                print('<link rel="stylesheet" href="../../componentes/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">'); 
+                print("<link rel='stylesheet' href='../../componentes/alertify/themes/alertify.core.css' />");
+                print("<link rel='stylesheet' href='../../componentes/alertify/themes/alertify.default.css' id='toggleCSS' />");
+                print('<link rel="stylesheet" href="../../componentes/select2/dist/css/select2.min.css">');       
 
             $this->Chead();
             $this->body("", "hold-transition skin-blue sidebar-mini");
@@ -71,7 +71,7 @@ class PageConstruct extends html_estruct_class{
                 <!-- Header Navbar: style can be found in header.less -->
                 <nav class="navbar navbar-static-top">
                   <!-- Sidebar toggle button-->
-                  <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                  <a href="#" id="BtnMuestraMenuLateral" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -183,12 +183,66 @@ class PageConstruct extends html_estruct_class{
               <span id="spTareas" class="label label-danger"></span>
             </a>
             <ul class="dropdown-menu">
-              <li class="header">Lista de tareas</li>
+              <li class="header">Tareas Automaticas</li>
               <li>
                 <!-- inner menu: contains the actual data -->
                 <ul class="menu">
-                  <div id="DivNotificacionTareas">
-                  </div>
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3 id="hTituloBackCreacionTablas">
+                        Backups, Creacion de tablas
+                        
+                      </h3>
+                      
+                      <div class="progress active">
+                        <div id="prBackCreacionTablas" class="progress-bar progress-bar-success progress-bar-striped" style="width: 0%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only"></span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Contabilización de Facturas                        
+                      </h3>
+                      <div id="DivErroresContabilizacionFacturas">
+                                              
+                      </div>
+                      <div id="DivMensajesContabilizacionFacturas">
+                                            
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Some task I need to do
+                        <small class="pull-right">60%</small>
+                      </h3>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">60% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+                  <!-- end task item -->
+                  <li><!-- Task item -->
+                    <a href="#">
+                      <h3>
+                        Make beautiful transitions
+                        <small class="pull-right">80%</small>
+                      </h3>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                          <span class="sr-only">80% Complete</span>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
                   <!-- end task item -->
                 </ul>
               </li>
@@ -203,23 +257,11 @@ class PageConstruct extends html_estruct_class{
      */
     public function NotificacionAlertas() {
         print('<!-- Notifications: style can be found in dropdown.less -->
-          <li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-bell-o"></i>
-              <span id="spNotificacionAlertas" class="label label-warning"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">Notificaciones</li>
-              <li>
-                <!-- inner menu: contains the actual data -->
-                <ul class="menu">
-                  <div id="DivNotificacionAlertas">
-                  </div>
-                </ul>
-              </li>
-              <li class="footer"><a href="#">Ver Todas</a></li>
-            </ul>
-          </li>');
+          <li class="dropdown notifications-menu" >
+            <a href="#" onclick="AbreNotificaciones()">
+              <i class="fa fa-bell-o" onclick="AbreNotificaciones()"></i>
+              <span id="spNotificacionAlertas" class="label label-danger" style="font-size:16px;color:red"></span>
+            </a>');
     }
     
     /**
@@ -259,7 +301,7 @@ class PageConstruct extends html_estruct_class{
      * @param type $myTitulo
      */
     public function PageInit($myTitulo) {
-        $NombreUsuario=$_SESSION["nombre"];
+        $NombreUsuario= utf8_encode($_SESSION["nombre"]);
         $idUser=$_SESSION["idUser"];
         $this->CabeceraIni($myTitulo,"",""); //Inicia la cabecera de la pagina
             //$css->NotificacionMensajes();
@@ -272,13 +314,66 @@ class PageConstruct extends html_estruct_class{
         $this->CabeceraFin();
         $this->ConstruirMenuLateral($idUser, "");
         $this->CrearDiv("principal", "", "left", 1, 1);    
-        $this->CrearDiv("Contenido", "content-wrapper", "", 1, 1);
+        $this->CrearDiv("", "content-wrapper", "", 1, 1);
+        $this->ModalUsoGeneral("ModalNotificaciones", "DivNotificacionesGenerales", "Notificaciones", "Leer Todo", "LeerTodo()", "");
+        $this->DivColapsable("DivColapsableTablas", "","style=display:none;overflow-x: scroll;");
+            $this->CrearDiv("DivOpcionesTablasDB", "", "", 1, 1);
+            $this->CerrarDiv();
+             $this->div("DivTablaDB", "", "", "", "", "", "");
+            
+            $this->CerrarDiv();
+        $this->CDivColapsable();
+            $this->div("DivCentralMensajes", "", "", "", "", "", "style=position: absolute;top:50%;left:50%;padding:5px;");
+            
+            $this->Cdiv();
+        
+    }
+    /**
+     * Se dibuja el modal para las opciones de las tablas
+     * @param type $Tabla
+     * @param type $DivTabla
+     */
+    public function ModalFormulariosTablasDB($Tabla,$DivTabla) {
+        //$this->BotonAbreModal("Abrir", "ModalAcciones", "", "azul");
+        
+        $JSBoton="onsubmit=GuardarRegistro(event);";
+        $this->form("FrmModal", "", "", "", "", "", "", $JSBoton);
+        
+            $this->Modal("ModalAccionesConstructor", "TSS", "", 0, 0, 1);
+
+                    $this->CrearDiv("DivFormularios", "", "", 1, 1);
+                    $this->CerrarDiv();
+
+            $JSBoton="";
+            
+            $this->CModal("BtnModalGuardar", $JSBoton, "submit", "Guardar");
+        $this->Cform();           
+        
+        
+    }
+    /**
+     * Crear un modal para usos generales
+     * @param type $NombreModal
+     * @param type $idDivBodyModal
+     * @param type $TituloModal
+     * @param type $ValorBoton
+     * @param type $JSBoton
+     * @param type $Extras
+     */
+    public function ModalUsoGeneral($NombreModal,$idDivBodyModal,$TituloModal,$ValorBoton,$JSBoton,$Extras) {        
+           
+            $this->Modal($NombreModal, $TituloModal, "", 0, 0, 1);
+                    $this->CrearDiv($idDivBodyModal, "", "", 1, 1);
+                    $this->CerrarDiv();
+            $this->CModal("BtnModalGuardar", $JSBoton, "submit", $ValorBoton);
+        
     }
                 
     /**
      * Fin de la pagina
      */
     public function PageFin() {
+        $this->CerrarDiv();
         $this->CerrarDiv();
         $this->FooterPage();
         $this->CrearDiv("DivBarraControles", "", "", 0, 0);
@@ -399,7 +494,7 @@ class PageConstruct extends html_estruct_class{
         print('<!-- /.content-wrapper -->
             <footer class="main-footer">
               <div class="pull-right hidden-xs">
-                <b>Version</b> 2.0
+                <b>Version</b> 1.0
               </div>
               <strong>Copyright &copy; 2006-'.$anio.' <a href="http://technosoluciones.com.co">Techno Soluciones SAS</a>.</strong> All rights
               reserved.
@@ -608,23 +703,27 @@ class PageConstruct extends html_estruct_class{
      * Agrega los JavaScripts Necesarios
      */
     public function AgregaJS(){
-        print('<script src="../../bower_components/jquery/dist/jquery.min.js"></script>');
-        print('<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>');
-        print('<script src="../../bower_components/datatables.net/js/jquery.dataTables.min.js"></script>');
-        print('<script src="../../bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>');
-        print('<script src="../../bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
-        print('<script src="../../bower_components/fastclick/lib/fastclick.js"></script>');
-        print('<script src="../../bower_components/alertify/lib/alertify.min.js"></script>');
-        print('<script src="../../bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>');
+        print('<script src="../../componentes/jquery/dist/jquery.min.js"></script>');
+        print('<script src="../../componentes/jquery/dist/jquery.mask.min.js"></script>');
+        print('<script src="../../componentes/bootstrap/dist/js/bootstrap.min.js"></script>');
+        print('<script src="../../componentes/datatables.net/js/jquery.dataTables.min.js"></script>');
+        print('<script src="../../componentes/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>');
+        print('<script src="../../componentes/jquery-slimscroll/jquery.slimscroll.min.js"></script>');
+        print('<script src="../../componentes/fastclick/lib/fastclick.js"></script>');
+        print('<script src="../../componentes/alertify/lib/alertify.min.js"></script>');
+        print('<script src="../../componentes/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>');
         
         print('<script src="../../dist/js/adminlte.min.js"></script>');
         print('<script src="../../dist/js/admintss.js"></script>');
-        print('<script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>');
-       
+        print('<script src="../../componentes/select2/dist/js/select2.full.min.js"></script>');
+        print('<script src="../../general/js/tablas.js"></script>');  //script genrral de la pagina
+        print('<script src="../../general/js/formularios.js"></script>');  //script genrral de la pagina
         //print('<script type="text/javascript" src="../ext/jquery/jquery-1.11.0.min.js"></script>');
         
     }
-    
+    public function AgregaAngular(){
+        print('<script src="../../componentes/angularjs/angular.min.js"></script>');
+    }
     /**
      * Crea una barra de progreso
      * @param type $NombreBarra -> Nombre
@@ -685,12 +784,12 @@ class PageConstruct extends html_estruct_class{
      * @param type $Vector
      */
     function CrearTablaDB($Titulo,$id,$Ancho,$js,$Vector) {
-        print('<div class="row">');
-        print('<div class="col-lg-12">');
+        print('<div class="row" >');
+        print('<div class="col-lg-11" style="overflow: auto; width:97% ;">');
         //print('<div class="panel panel-default">');
         //print('<div class="panel-heading">'.$Titulo.'</div>');
-        print('<div class="panel-body">');
-        print('<table width="'.$Ancho.'" class="table table-striped table-bordered table-hover" id="'.$id.'" '.$js.'>');
+        print('<div class="panel-heading">');
+        print('<table width="'.$Ancho.'" class="table table-striped table-bordered table-hover table-responsive" id="'.$id.'" '.$js.'>');
     }
     /**
      * Cabecera para las tablas
@@ -703,7 +802,8 @@ class PageConstruct extends html_estruct_class{
      * @param type $NumPage
      * @param type $Vector
      */
-    function CabeceraTabla($Tabla,$Limite,$Titulo,$Columnas,$js,$TotalRegistros,$NumPage,$Vector){
+    function CabeceraTabla($Tabla,$Limite,$Titulo,$Columnas,$js,$TotalRegistros,$NumPage,$Vector,$DivTablas=''){
+        
         $obCon=new conexion(1);
         print("<thead><tr>");
         $ColSpanTitulo=count($Columnas["Field"]);
@@ -711,7 +811,7 @@ class PageConstruct extends html_estruct_class{
             print("<strong></strong>");
         $this->Cth();
         $this->th("", "", 2, 1, "", "");    
-            $this->select("CmbLimit", "form-control", "CmbLimit", "", "", "onchange=CambiarLimiteTablas()", "style=width:200px");
+            $this->select($Tabla."_CmbLimit", "form-control", $Tabla."_CmbLimit", "", "", "onchange=CambiarLimiteTablas('$Tabla','$DivTablas')", "style=width:200px");
                 $Sel=0;
                 if($Limite==10){
                     $Sel=1;
@@ -758,8 +858,8 @@ class PageConstruct extends html_estruct_class{
             
             $NombreColumna=utf8_encode($Columnas["Visualiza"][$key]);
             $this->th("", "", 1, 1, "", "");
-                $js="onclick=EscribirEnCaja('TxtOrdenNombreColumna','$value');CambiarOrden();SeleccionarTabla('$Tabla');";
-                $this->a("", "", "#", "", "", "", $js);                    
+                $js="onclick=EscribirEnCaja('".$Tabla."_ordenColumna','$value');CambiarOrden('$Tabla','$DivTablas');DibujeTablaDB('$Tabla','$DivTablas');";
+                $this->a("", "", "#".$Tabla."_aControlCampos", "", "", "", $js);                    
                     print('<strong>'.$NombreColumna.'</strong>');
                 $this->Ca();
                 
@@ -776,18 +876,38 @@ class PageConstruct extends html_estruct_class{
      * @param type $js
      * @param type $Vector
      */
-    function FilaTablaDB($tabla,$Datos,$js,$Vector){
+    function FilaTablaDB($tabla,$DivTablas,$Datos,$js,$Vector){
         $obCon=new conexion(1);
         $DatosControlTablas=$obCon->DevuelveValores("configuracion_control_tablas", "TablaDB", $tabla);
-        if($DatosControlTablas["Editar"]<>0 or $DatosControlTablas["Editar"]==''){
+        if($DatosControlTablas["Editar"]<>0){
             $OpcionEditar=1;
         }else{
             $OpcionEditar=0;
         }
         if($DatosControlTablas["Ver"]==1){
+            $DatosLink=$obCon->DevuelveValores("configuracion_control_tablas", "TablaDB", $tabla);
+            $LinkVer=$DatosLink["LinkVer"];
             $OpcionVer=1;
         }else{
             $OpcionVer=0;
+        }
+        if($DatosControlTablas["AccionesAdicionales"]==1){
+            $sql="SELECT * FROM configuracion_tablas_acciones_adicionales WHERE TablaDB='$tabla'";
+            $consultaAccionesAdicionales=$obCon->Query($sql);
+            $AccionesAdicionales=[];
+            $i=0;
+            while ($DatosAccionesAdicionales = $obCon->FetchAssoc($consultaAccionesAdicionales)) {
+                $AccionesAdicionales[$i]["Titulo"]=$DatosAccionesAdicionales["Titulo"];
+                $AccionesAdicionales[$i]["JavaScript"]=$DatosAccionesAdicionales["JavaScript"];
+                $AccionesAdicionales[$i]["ClaseIcono"]=$DatosAccionesAdicionales["ClaseIcono"];
+                $AccionesAdicionales[$i]["Ruta"]=$DatosAccionesAdicionales["Ruta"];
+                $AccionesAdicionales[$i]["Target"]=$DatosAccionesAdicionales["Target"];
+                $i++;
+            }
+            $DatosOtrasAcciones=$obCon->DevuelveValores("configuracion_tablas_acciones_adicionales", "TablaDB", $tabla);
+            $OpcionOtrasAcciones=1;
+        }else{
+            $OpcionOtrasAcciones=0;
         }
         print('<tr class="odd gradeX">');
         $c=0;
@@ -796,10 +916,26 @@ class PageConstruct extends html_estruct_class{
                 $c=1;                
                 print("<td>");
                 if($OpcionVer==1){
-                    print('<i class="fa fa-fw fa-eye" onclick=VerRegistro(`'.$tabla.'`,`'.$value.'`)></i><a href=# onclick=VerRegistro(`'.$tabla.'`,`'.$value.'`)> Ver </a><br>');
+                    
+                    $Link="../../general/Consultas/".$LinkVer.$value;
+                    print('<i class="fa fa-fw fa-eye"></i><a href="'.$Link.'" target="_blank"> Ver </a><br>');
                 } 
                 if($OpcionEditar==1){
-                    print('<i class="fa fa-fw fa-edit" onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$value.'`)></i><a href=# onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$value.'`)> Editar </a><br>');
+                    print('<i class="fa fa-fw fa-edit" onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$DivTablas.'`,`'.$value.'`)></i><a href=# onclick=DibujaFormularioEditarRegistro(`'.$tabla.'`,`'.$DivTablas.'`,`'.$value.'`)> Editar </a><br>');
+                } 
+                if($OpcionOtrasAcciones==1){
+                    foreach ($AccionesAdicionales as $key => $Accion) {
+                       //print_r($Accion);
+                       $TituloAccion=$Accion["Titulo"];
+                       $js=$Accion["JavaScript"]."(".$value.")";
+                       $ClaseIcono=$Accion["ClaseIcono"];
+                       $Ruta=$Accion["Ruta"].$value;
+                       $Target=$Accion["Target"];
+                       print('<i class="'.$ClaseIcono.'" '.$js.'></i><a href="'.$Ruta.'" target="'.$Target.'" '.$js.'> '.$TituloAccion.' </a><br>');
+              
+                    }
+                    //$Link="../../general/Consultas/".$LinkVer.$value;
+                    //print('<i class="fa fa-fw fa-eye"></i><a href="'.$Link.'" target="_blank")> Ver </a><br>');
                 } 
                 print("</td>");
             }            
@@ -876,11 +1012,11 @@ class PageConstruct extends html_estruct_class{
      * @param type $styles
      * @param type $np_app
      */
-    public function CrearInputTextButton($type, $idText, $idButton, $class, $name,$nameButton, $title,$titleButton, $value,$valueButton, $placeholder, $autocomplete, $vectorhtml, $Script,$ScriptButton, $styles, $np_app) {
+    public function CrearInputTextButton($type, $idText, $idButton, $class, $name,$nameButton, $title,$titleButton, $value,$valueButton, $placeholder, $autocomplete, $vectorhtml, $Script,$ScriptButton, $styles, $ng_app_text,$ng_app_button='') {
         $this->div("", "input-group", "", "", "", "", "");
-            $this->input($type, $idText, $class, $name, $title, $value, $placeholder, $autocomplete, $vectorhtml, $Script, $styles, $np_app);
+            $this->input($type, $idText, $class, $name, $title, $value, $placeholder, $autocomplete, $vectorhtml, $Script, $styles, $ng_app_text);
             $this->span("", "input-group-btn", "", "");
-                print('<button id='.$idButton.' type="button" class="btn btn-success btn-flat" '.$ScriptButton.'>'.$valueButton.'</button>');
+                print('<button id='.$idButton.' type="button" class="btn btn-success btn-flat" '.$ScriptButton.' '.$ng_app_button.'>'.$valueButton.'</button>');
                 //$this->boton($idButton, "btn btn-info btn-flat", "button", $nameButton, $titleButton, $valueButton, "", $ScriptButton);
             $this->Cspan();
         $this->Cdiv();
@@ -919,9 +1055,9 @@ class PageConstruct extends html_estruct_class{
                     break;
             }
             if($enabled==1){
-                print('<input type="submit" id="'.$nombre.'"  name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="'.$Clase.'">');
+                print('<input type="submit" id="'.$nombre.'"  name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="form-control '.$Clase.'">');
             }else{
-                print('<input type="submit" id="'.$nombre.'" disabled="true" name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="'.$Clase.'">');  
+                print('<input type="submit" id="'.$nombre.'" disabled="true" name="'.$nombre.'" value="'.$value.'" '.$evento.'="'.$funcion.' ; return false" class="form-control '.$Clase.'">');  
             }
 		
 		
@@ -999,7 +1135,7 @@ class PageConstruct extends html_estruct_class{
          * @param type $js
          * @param type $vector
          */
-        public function PaginadorTablas($Tabla,$Limit,$PaginaActual,$TotalRegistros,$vector) {
+        public function PaginadorTablas($Tabla,$Limit,$PaginaActual,$TotalRegistros,$vector,$DivTablas='') {
             $this->div("", "col-lg-12", "", "", "", "", "");
             $this->div("", "btn-group-vertical", "", "", "", "", "");
             
@@ -1007,13 +1143,13 @@ class PageConstruct extends html_estruct_class{
             $js="";
             if($PaginaActual<>1){
                 $Estado="";
-                $js="onclick=RetrocederPagina();";
+                $js="onclick=RetrocederPagina('$Tabla','$DivTablas');";
             }
-            $this->input("submit", "BtnRetroceder", "btn btn-block btn-warning btn-xs $Estado", "BtnRetroceder", "Atrás", "Atrás", "", "", "", $js);
+            $this->input("submit", $Tabla."_BtnRetroceder", "btn btn-block btn-warning btn-xs $Estado", $Tabla."_BtnRetroceder", "Atrás", "Atrás", "", "", "", $js);
             
             $TotalPaginas=ceil($TotalRegistros/$Limit);
             
-            $this->select("CmbPage", "btn btn-default btn-xs", "CmbPage", "", "", "onchange=SeleccionaPagina();", "");
+            $this->select($Tabla."_CmbPage", "btn btn-default btn-xs", $Tabla."_CmbPage", "", "", "onchange=SeleccionaPagina('$Tabla','$DivTablas');", "");
             for($i=1;$i<=$TotalPaginas;$i++){
                 $Estado=0;
                 if($PaginaActual==$i){
@@ -1026,12 +1162,12 @@ class PageConstruct extends html_estruct_class{
             }
             $this->Cselect();
             $Estado="";
-            $js="onclick=AvanzarPagina();";
+            $js="onclick=AvanzarPagina('$Tabla','$DivTablas');";
             if($TotalPaginas==$PaginaActual){
                 $Estado="disabled";
                 $js="";
             }
-            $this->input("submit", "BtnAvanzar", "btn btn-block btn-warning btn-xs $Estado", "BtnAvanzar", "Avanzar", "Avanzar", "", "", "", $js);
+            $this->input("submit", $Tabla."_BtnAvanzar", "btn btn-block btn-warning btn-xs $Estado", $Tabla."_BtnAvanzar", "Avanzar", "Avanzar", "", "", "", $js);
             $this->Cdiv();
             $this->Cdiv();
         }
@@ -1113,8 +1249,8 @@ class PageConstruct extends html_estruct_class{
          * @param type $js
          * @param type $Clase
          */
-        public function PanelSubMenu($Nombre,$Link,$js,$Clase) {
-            print('<li><a href="'.$Link.'" '.$js.'><i class="'.$Clase.'"></i> '.$Nombre.'</a></li>');
+        public function PanelSubMenu($Nombre,$Link,$js,$Clase,$Target) {
+            print('<li><a href="'.$Link.'" target='.$Target.' '.$js.'><i class="'.$Clase.'"></i> '.$Nombre.'</a></li>');
         }
         /**
          * Construye el menu lateral dibujando solo lo que el usuario por su tipo tiene permitido
@@ -1126,33 +1262,77 @@ class PageConstruct extends html_estruct_class{
             $sql="SELECT Nombre,Apellido,Identificacion,TipoUser FROM usuarios WHERE idUsuarios='$idUsuario'";
             $Consulta=$obCon->Query($sql);
             $DatosUsuario=$obCon->FetchAssoc($Consulta);
-            $NombreUsuario=$DatosUsuario["Nombre"]." ".$DatosUsuario["Apellido"];
+            $TipoUser=$DatosUsuario["TipoUser"];
+            $NombreUsuario= utf8_encode($DatosUsuario["Nombre"]." ".$DatosUsuario["Apellido"]);
             
             $this->MenuLateralInit();    
                 $this->PanelInfoUser($NombreUsuario);
                 //$css->PanelBusqueda(); //uso futuro
-                $this->PanelLateralInit("MENU GENERAL");
-                    $Consulta=$obCon->ConsultarTabla("menu"," WHERE Estado=1 ORDER BY Orden ASC");
+                $this->PanelLateralInit("<a href='../menu/Menu.php'>MENU GENERAL</a>");
+                    $sql="SELECT m.ID,m.CSS_Clase,m.Nombre, m.Pagina,m.Target,m.Image,m.Orden, c.Ruta FROM menu m "
+                    . "INNER JOIN menu_carpetas c ON c.ID=m.idCarpeta WHERE m.Estado=1 ORDER BY m.Orden ASC";
+                    $Consulta=$obCon->Query($sql);
+                    //$Consulta=$obCon->ConsultarTabla("menu"," WHERE Estado=1 ORDER BY Orden ASC");
                     while($DatosMenu=$obCon->FetchArray($Consulta)){
                         $idMenu=$DatosMenu["ID"];
-                        $this->PanelMenuGeneralInit(utf8_encode($DatosMenu["Nombre"]),$DatosMenu["CSS_Clase"],0,"");
-                            $ConsultaPestanas=$obCon->ConsultarTabla("menu_pestanas"," WHERE idMenu='$idMenu' AND Estado=1 ORDER BY Orden ASC");
-                            $this->PanelPestanaInit();
-                            while($DatosPestanas=$obCon->FetchAssoc($ConsultaPestanas)){
-                                $idPestana=$DatosPestanas["ID"];
-                                $this->PanelPestana(utf8_encode($DatosPestanas["Nombre"]), "fa fa-circle-o text-red", "");
-                                $this->PanelSubMenuInit();
-                                $ConsultaSubmenus=$obCon->ConsultarTabla("menu_submenus"," WHERE idPestana='$idPestana' AND Estado=1 ORDER BY Orden ASC");
-                                while($DatosSubMenu=$obCon->FetchAssoc($ConsultaSubmenus)){
-                                    $js="";
-                                    $Ruta="#";
-                                    $this->PanelSubMenu(utf8_encode($DatosSubMenu["Nombre"]), $Ruta, $DatosSubMenu["JavaScript"], "fa fa-circle-o text-aqua");
-                                }
-                                $this->PanelSubMenuFin();
+                        if($DatosUsuario["TipoUser"]=="administrador"){
+                            $Visible=1;
+                        }else{
+                            $Visible=0;
+                            $sql="SELECT ID FROM paginas_bloques WHERE TipoUsuario='$TipoUser' AND Pagina='$DatosMenu[Pagina]' AND Habilitado='SI'";
+                            $DatosUser=$obCon->Query($sql);
+                            $DatosUser=$obCon->FetchArray($DatosUser);
+                            if($DatosUser["ID"]>0){
+                                $Visible=1;
                             }
-                            $this->PanelPestanaFin();
-                            
-                        $this->PanelMenuGeneralFin();
+                        }
+                        if($Visible==1){
+                            $this->PanelMenuGeneralInit(utf8_encode($DatosMenu["Nombre"]),$DatosMenu["CSS_Clase"],0,"");
+                                $ConsultaPestanas=$obCon->ConsultarTabla("menu_pestanas"," WHERE idMenu='$idMenu' AND Estado=1 ORDER BY Orden ASC");
+                                $this->PanelPestanaInit();
+                                while($DatosPestanas=$obCon->FetchAssoc($ConsultaPestanas)){
+                                    $idPestana=$DatosPestanas["ID"];
+                                    
+                                    $ConsultaSubmenus=$obCon->ConsultarTabla("menu_submenus"," WHERE idPestana='$idPestana' AND Estado=1 ORDER BY Orden ASC");
+                                    $IniciaPestana=1;
+                                    while($DatosSubMenu=$obCon->FetchAssoc($ConsultaSubmenus)){
+                                        
+                                        if($DatosUsuario["TipoUser"]=="administrador"){
+                                        $Visible=1;
+                                        }else{
+                                            $Visible=0;
+                                            $sql="SELECT ID FROM paginas_bloques WHERE TipoUsuario='$TipoUser' AND Pagina='$DatosSubMenu[Pagina]' AND Habilitado='SI'";
+                                            $DatosUser=$obCon->Query($sql);
+                                            $DatosUser=$obCon->FetchArray($DatosUser);
+                                            if($DatosUser["ID"]>0){
+                                                $Visible=1;
+                                            }
+                                        }
+                                        
+                                       
+                                        
+                                        if($Visible==1){
+                                            if($IniciaPestana==1){
+                                                $IniciaPestana=0;
+                                                $this->PanelPestana(utf8_encode($DatosPestanas["Nombre"]), "fa fa-circle-o text-red", "");
+                                                $this->PanelSubMenuInit();
+                                            }
+                                            $DatosCarpeta=$obCon->DevuelveValores("menu_carpetas", "ID", $DatosSubMenu["idCarpeta"]);
+                                            $Ruta="#";
+                                            if($DatosSubMenu["JavaScript"]==''){
+                                                $Ruta='../'.$DatosCarpeta["Ruta"].$DatosSubMenu["Pagina"];
+                                            }
+                                            
+                                            $this->PanelSubMenu(utf8_encode($DatosSubMenu["Nombre"]), $Ruta, $DatosSubMenu["JavaScript"], "fa fa-circle-o text-aqua",$DatosSubMenu["Target"]);
+                                        }
+                                        
+                                    }
+                                    $this->PanelSubMenuFin();
+                                }
+                                $this->PanelPestanaFin();
+
+                            $this->PanelMenuGeneralFin();
+                        }
                     }
                     
                 $this->CPanelLateral();
@@ -1162,8 +1342,11 @@ class PageConstruct extends html_estruct_class{
         /**
          * Crea una tabla
          */
-        public function CrearTabla(){
-            print('<div class="table-responsive"><table class="table table-bordered table table-hover" >');		
+        public function CrearTabla($id=""){
+            if($id<>''){
+                $id="id=".$id;
+            }
+            print('<div  class="table-responsive"><table '.$id.'  class="table table-bordered table table-hover" >');		
 	}
         
         /**
@@ -1171,7 +1354,7 @@ class PageConstruct extends html_estruct_class{
          * @param type $FontSize
          */
 	function FilaTabla($FontSize){
-            print('<tr style="font-size:'.$FontSize.'px">');
+            print('<tr class="odd gradeX" style="font-size:'.$FontSize.'px">');
 		
 	}
 	/**
@@ -1188,7 +1371,7 @@ class PageConstruct extends html_estruct_class{
          * @param type $ColSpan
          * @param type $align-> alineacion: L izquierda, R Derecha, C centro
          */
-	function ColTabla($Contenido,$ColSpan,$align="L"){
+	function ColTabla($Contenido,$ColSpan,$align="L",$AdicionalStyles=""){
             if($align=="L"){
               $align="left";  
             }
@@ -1198,7 +1381,7 @@ class PageConstruct extends html_estruct_class{
             if($align=="C"){
               $align="center";  
             }
-            print('<td colspan="'.$ColSpan.' " style="text-align:'.$align.'"   >'.$Contenido.'</td>');
+            print('<td colspan="'.$ColSpan.' " style="text-align:'.$align.';'.$AdicionalStyles.'"   >'.$Contenido.'</td>');
 		
 	}
 	/**
@@ -1343,8 +1526,11 @@ class PageConstruct extends html_estruct_class{
          * @param type $NumeroGrids
          * @param type $vector
          */        
-        public function DibujaCamposFormularioInsert($Tabla,$Columnas,$NumeroGrids,$vector) {
+        public function DibujaCamposFormularioInsert($Tabla,$idDivTabla,$Columnas,$NumeroGrids,$vector) {
             $obCon=new conexion($_SESSION["idUser"]);  
+            $this->input("hidden", "TxtTipoFormulario", "", "TxtTipoFormulario", "", "Insertar", "", "", "", "");
+            $this->input("hidden", "TxtTablaDB", "", "TxtTablaDB", "", $Tabla, "", "", "", "");
+            $this->input("hidden", "TxtIdDivTablaDB", "", "TxtIdDivTablaDB", "", $idDivTabla, "", "", "", "");
             $this->input("hidden", "TxtTipoFormulario", "", "TxtTipoFormulario", "", "Insertar", "", "", "", "");
             $this->div("", "row", "", "", "", "", "");
                 $this->div("content", "col-lg-12", "", "", "", "", "");
@@ -1365,13 +1551,14 @@ class PageConstruct extends html_estruct_class{
                             if($DatosCamposAsociados["ID"]>0){
                                 $TablaAsociada=$DatosCamposAsociados["TablaAsociada"];
                                 $CampoAsociado=$DatosCamposAsociados["CampoAsociado"];
-                                $this->select($value, "form-control", "CmbInserts", $Titulo, "", "", "");
+                                $this->select($value, "form-control", "CmbInserts", "", "", "", "");
                                     $this->option("", "", "Seleccione una opción", "", "", "");
                                             print("Seleccione una opción");
                                         $this->Coption();
                                     $sql="SELECT $CampoAsociado as CampoAsociado FROM $TablaAsociada ORDER BY $CampoAsociado";
                                     $Consulta=$obCon->Query($sql);
                                     while($DatosAsociacion=$obCon->FetchAssoc($Consulta)){
+                                      
                                         $this->option("", "", utf8_encode($DatosAsociacion["CampoAsociado"]), $DatosAsociacion["CampoAsociado"], "", "");
                                             print(utf8_encode($DatosAsociacion["CampoAsociado"]));
                                         $this->Coption();
@@ -1420,7 +1607,7 @@ class PageConstruct extends html_estruct_class{
                                     $Pattern="";
                                     if($value=="Email"){
                                         $TipoCaja="email";
-                                        $Pattern="pattern=[A-Za-z0-9]+"; //Solo Letras y numeros
+                                        $Pattern=""; //Solo Letras y numeros
                                     }
                                     
                                     if($value=="Password"){
@@ -1458,10 +1645,12 @@ class PageConstruct extends html_estruct_class{
         }
         
         
-        public function DibujaCamposFormularioEdit($Tabla,$idEdit,$Columnas,$NumeroGrids,$vector) {
+        public function DibujaCamposFormularioEdit($Tabla,$idDivTabla,$idEdit,$Columnas,$NumeroGrids,$vector) {
             $obCon=new conexion($_SESSION["idUser"]);  
             $this->input("hidden", "TxtTipoFormulario", "", "TxtTipoFormulario", "", "Editar", "", "", "", "");
             $this->input("hidden", "TxtIdEdit", "", "TxtIdEdit", "", "$idEdit", "", "", "", "");
+            $this->input("hidden", "TxtTablaDB", "", "TxtTablaDB", "", $Tabla, "", "", "", "");
+            $this->input("hidden", "TxtIdDivTablaDB", "", "TxtIdDivTablaDB", "", $idDivTabla, "", "", "", "");
             $this->div("", "row", "", "", "", "", "");
                 $this->div("content", "col-lg-12", "", "", "", "", "");
                     $idTabla=$Columnas["Field"][0];
@@ -1577,6 +1766,180 @@ class PageConstruct extends html_estruct_class{
                    
                 $this->Cdiv();
             $this->Cdiv();
+        }
+        
+        
+        public function Notificacion($Titulo,$Leyenda,$Color,$js,$vector) {
+            if($Color=="azul"){
+                $clase="callout callout-info";
+            }
+            if($Color=="rojo"){
+                $clase="callout callout-danger";
+            }
+            if($Color=="naranja"){
+                $clase="callout callout-warning";
+            }
+            if($Color=="verde"){
+                $clase="callout callout-success";
+            }
+            print('<div class="'.$clase.'" '.$js.'>
+                      <h4>'.$Titulo.'</h4>
+                      <p>'.$Leyenda.'</p>
+                    </div>');
+        }
+        
+        public function TituloMenu($Titulo) {
+            print('<h3 style= color:#d4b038>'.$Titulo.'</h3><br>');
+        }
+        
+        public function IniciaTabs() {
+            print('<div class="div-tabs">
+            <ul class="nav nav-tabs">');
+        }
+        
+        public function NuevaTab($idTab,$Titulo,$vector,$Activa='') {
+            if($Activa==1){
+                $Activa='class="active"';
+            }
+            print('<li '.$Activa.'><a href="#'.$idTab.'" data-toggle="tab" aria-expanded="true">'.$Titulo.'</a></li>');
+        }
+        
+        public function CierraTabs() {
+            print('</ul>');
+        }
+        
+        public function FinTabs() {
+            print('</div>');
+        }
+        
+        
+        public function IniciaContenidoTabs() {
+            print('<div class="tab-content">');
+        }
+        
+        public function FinContenidoTabs() {
+            print('</div>');
+        }
+        
+        public function ContenidoTabs($idTab,$vector,$Activo='class="tab-pane"') {
+            if($Activo==1){
+                $Activo='class="tab-pane active"';
+            }
+            print('<div '.$Activo.' id="'.$idTab.'">');
+        }
+        
+        public function CierreContenidoTabs() {
+            print('</div>');
+        }
+        
+        public function ImageLink($Link,$Target,$Imagen,$vector,$js,$style='') {
+            print('<a href="'.$Link.'" target="'.$Target.'" ><img src="'.$Imagen.'" '.$js.' alt="" '.$style.'></a>');
+        }
+        
+        
+        function SubTabs($link,$target,$image,$SubTitle,$js=""){
+		
+		print('	
+              <div class="col-md-3">
+                    <a href="'.$link.'" target="'.$target.'" class="gal" '.$js.'><img src="'.$image.'" alt="" style="width: 120px;height: 120px;"><span></span></a>
+                    <div class="col2"><span class="col3"><a href="'.$link.'" target="'.$target.'">'.utf8_encode($SubTitle).'</a></span></div>
+                  </div>
+		');
+	}
+        
+        function IniciaMenu($Title){
+		
+		print('
+		
+			<div class="">
+			  <h3 class="">'.$Title.'</h3>
+			</div>  
+			 <div class="tabs tb gallery">
+             
+            
+					
+		');
+	}
+        
+        function FinMenu(){
+            print('</div></div>');
+	}
+        
+        /**
+         * Crear un Div Colapsable
+         * @param type $id
+         * @param type $Titulo
+         */
+        public function DivColapsable($id,$Titulo,$style) {
+            print('<div id='.$id.' class="box box-info box-solid" '.$style.'>
+                <div class="box-header with-border">
+                  <h3 id="TituloDivColapsableTabla" class="box-title">'.$Titulo.'</h3>
+
+                  <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    
+                  </div>
+                  <!-- /.box-tools -->
+                </div>
+                <div class="box-body" >');
+        }
+        /**
+         * Cerrar un div colapsable
+         */
+        public function CDivColapsable() {
+            print('</div>
+                <!-- /.box-body -->
+              </div>');
+        }
+        
+        /**
+         * Agrega los JS para exportar a excel desde javascript
+         */
+        public function AddJSExcel(){
+            print('<script src="../../componentes/jsexcel/external/jszip.js"></script>');
+            print('<script src="../../componentes/jsexcel/external/FileSaver.js"></script>');
+            print('<script src="../../componentes/jsexcel/external/jszip.js"></script>');
+            print('<script src="../../componentes/jsexcel/scripts/excel-gen.js"></script>');
+        }
+        
+        
+        public function TabInit() {
+            print('<div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">');
+        }
+        
+        public function TabLabel($id,$Title,$Ref,$Active=0,$js='') {
+            $Class="";
+            if($Active==1){
+                $Class='class="active"';
+            }
+            print('<li '.$Class.'><a id='.$id.' href="#'.$Ref.'" data-toggle="tab" '.$js.'>'.$Title.'</a></li>');
+        }
+        
+        
+        public function TabInitEnd() {
+            print('</ul>');
+        }
+        
+        
+        public function TabContentInit() {
+            print('<div class="tab-content">');
+        }
+        
+        public function TabContentEnd() {
+            print('</div>');
+        }
+        
+        public function TabPaneInit($Ref,$Active='') {
+            if($Active==1){
+                $Active='active';
+            }
+            print('<div class="tab-pane '.$Active.'" id="'.$Ref.'">');
+        }
+        
+        public function TabPaneEnd() {
+            print('</div>');
         }
         
         //////////////////////////////////FIN

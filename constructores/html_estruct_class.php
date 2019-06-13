@@ -23,9 +23,7 @@ class html_estruct_class {
      * @param type $Script -> Evento o funcionaliada
      */
     function html($lang,$vectorhtml,$Script,$ng_app=''){
-        if($ng_app<>''){
-            $ng_app="ng-app=".$ng_app;
-        }
+        
         print('<html lang="'.$lang.'" '.$Script.' '.$ng_app.'>');
     }
     
@@ -192,7 +190,7 @@ class html_estruct_class {
      */
     function div($id,$class,$vectorhtml,$role,$ng_angular,$Script,$style){
         
-         print('<div id="'.$id.'" class="'.$class.'"  role='.$role.' '.$ng_angular.'  '.$Script.' '.$style.' >');
+         print('<div id="'.$id.'" class="'.$class.'"  role="'.$role.'" '.$ng_angular.'  '.$Script.' '.$style.' >');
         
     }
     
@@ -548,6 +546,8 @@ class html_estruct_class {
         print('<button id="'.$id.'" class="'.$class.'" type="'.$type.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" '.$Script.' >');
     }
     
+    
+    
     /**
      * Metodo Cboton para cerra el boton
      */
@@ -878,9 +878,9 @@ class html_estruct_class {
      * @param type $rowspan ->atr. rowspan del elemento tr
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function tr($id,$class,$colspan,$rowspan,$vectorhtml,$Script){
+    function tr($id,$class,$colspan,$rowspan,$vectorhtml,$Script,$style=""){
         
-        print('<tr id="'.$id.'" class="'.$class.'" colspan="'.$colspan.'" rowspan="'.$rowspan.'" '.$Script.' >');
+        print('<tr id="'.$id.'" class="'.$class.'" colspan="'.$colspan.'" rowspan="'.$rowspan.'" '.$Script.' '.$style.'>');
     }
     
     /**
@@ -1154,9 +1154,9 @@ class html_estruct_class {
      * @param type $data_target ->atr. data-* del elemento button
      * @param type $vectorhtml ->vector por si se desea meter mas atributos al elemento(se debe definir antes de ulitlizarlo y en la clase definir el uso para tal atributo)
      */
-    function button($type,$id,$class,$name,$title,$value,$data_toggle,$data_target,$vectorhtml,$Script){
+    function button($type,$id,$class,$name,$title,$value,$data_toggle,$data_target,$vectorhtml,$Script,$ng_angular){
         
-        print('<button type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" data-toggle="'.$data_toggle.'" data-target="'.$data_target.'" '.$Script.' >');
+        print('<button type="'.$type.'" id="'.$id.'" class="'.$class.'" name="'.$name.'" title="'.$title.'" value="'.$value.'" data-toggle="'.$data_toggle.'" data-target="'.$data_target.'" '.$Script.' '.$ng_angular.' >');
     }
       
     /**

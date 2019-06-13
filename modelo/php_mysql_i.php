@@ -12,10 +12,11 @@ class db_conexion{
     public  $db=DB;
     
     // conectar
-    public function Conectar(){
-        $this->mysqli = new mysqli($this->host, $this->user, $this->pw, $this->db);
+    public function Conectar($host=HOST,$user=USER,$pw=PW,$db=DB){
+        $this->mysqli = new mysqli($host, $user, $pw, $db);
         if ($this->mysqli->connect_errno) {
-            printf("Falla en la conexion: %s\n", $this->mysqli->connect_error);
+            printf("Falla en la conexion: %s\n", $this->mysqli->connect_error);   
+            return($this->mysqli->connect_error);
             exit();
         }
     }
@@ -27,7 +28,7 @@ class db_conexion{
         $str=str_ireplace("CREATE ", "ISQL", $str);
         $str=str_ireplace("DROP ", "ISQL", $str);
         $str=str_ireplace("ALTER ", "ISQL", $str);
-        $str=str_ireplace("SELECT ", "ISQL", $str);
+        //$str=str_ireplace("SELECT ", "ISQL", $str);
         $str=str_ireplace("INSERT ", "ISQL", $str);
         $str=str_ireplace("UPDATE ", "ISQL", $str);
         $str=str_ireplace("DELETE ", "ISQL", $str);
@@ -36,6 +37,7 @@ class db_conexion{
         //$str=filter_var($string, FILTER_SANITIZE_STRING);
         return($str);
     }
+    
     
     //Funcion para Conetarse a un servidor y seleccionar una base de datos
      public function ConToServer($ip,$User,$Pass,$db,$VectorCon){
@@ -56,12 +58,12 @@ class db_conexion{
     ////////////////////////////////////////////////////////////////////
 //////////////////////Funcion query mysql
 ///////////////////////////////////////////////////////////////////
-public function Query($sql){
-    
-    $this->Conectar();    
-    $Consul=$this->mysqli->query($sql) or die ($this->mysqli->error);			
-    $this->CerrarCon();
+public function Query($sql)
+  {	
+    $this->Conectar();
+    $Consul=$this->mysqli->query($sql) or die ($this->mysqli->error);    
     return($Consul);
+    $this->CerrarCon();
 }
 
 public function QueryExterno($sql,$ip,$User,$Pass,$db,$VectorCon){
@@ -71,9 +73,11 @@ public function QueryExterno($sql,$ip,$User,$Pass,$db,$VectorCon){
         $Mensaje="No se pudo conectar al servidor en la ip: $ip ".$this->mysqli->connect_errno;
         exit();
     }   
-    $Consul=$this->mysqli->query($sql) or die ($this->mysqli->error);			
-    $this->CerrarCon();
+    $Consul=$this->mysqli->query($sql) or die ($this->mysqli->error);    
     return($Consul);
+    $this->CerrarCon();
+    
+    
 }
     ////////////////////////////////////////////////////////////////////
 //////////////////////Funcion Obtener vaciar una tabla
@@ -81,7 +85,7 @@ public function QueryExterno($sql,$ip,$User,$Pass,$db,$VectorCon){
 public function VaciarTabla($tabla)
   {		
 	$tabla=$this->normalizar($tabla);
-	$sql="TRUNCATE `$tabla`";
+	$sql="TRUNCATE $tabla";
 	
 	$this->Query($sql) or die('no se pudo vaciar la tabla $tabla: ' . $this->mysqli->error);	
 		
@@ -92,7 +96,7 @@ public function VaciarTabla($tabla)
 ///////////////////////////////////////////////////////////////////
 
     public function update($tabla,$campo, $value, $condicion){
-	$sql="UPDATE `$tabla` SET `$campo` = '$value' $condicion";
+	$sql="UPDATE $tabla SET `$campo` = '$value' $condicion";
 	$this->Query($sql) or die('no se pudo actualizar el registro en la $tabla: ' . $this->mysqli->error);
     }
     
@@ -274,7 +278,7 @@ public function ActualizaRegistro($tabla,$campo, $value, $filtro, $idItem,$Proce
         $filtro=$this->normalizar($filtro);
         $idItem=$this->normalizar($idItem);
         if($campo<>'ISQLd' and $campo<>$value){
-            $sql="UPDATE `$tabla` SET `$campo` = '$value' WHERE `$filtro` = '$idItem'";
+            $sql="UPDATE $tabla SET `$campo` = '$value' WHERE `$filtro` = '$idItem'";
             $this->Query($sql);	
             if($ProcesoInterno==0){
                 $tab="registra_ediciones";
@@ -284,7 +288,7 @@ public function ActualizaRegistro($tabla,$campo, $value, $filtro, $idItem,$Proce
                 $Columnas[1]="Hora";                $Valores[1]=date("H:i:s");
                 $Columnas[2]="Tabla";               $Valores[2]=$tabla;
                 $Columnas[3]="Campo";               $Valores[3]=$campo;
-                $Columnas[4]="ValorAnterior";       $Valores[4]=$OldData[$campo];
+                $Columnas[4]="ValorAnterior";	$Valores[4]=$OldData[$campo];
                 $Columnas[5]="ValorNuevo";		$Valores[5]=$value;
                 $Columnas[6]="ConsultaRealizada";	$Valores[6]="$filtro = $idItem";
                 $Columnas[7]="idUsuario";		$Valores[7]=$_SESSION["idUser"];
@@ -294,31 +298,6 @@ public function ActualizaRegistro($tabla,$campo, $value, $filtro, $idItem,$Proce
         }
 }
 
-/**
- * Se implementa para para editar las respuestas en las glosas y otros usos
- * @param type $Tabla
- * @param type $Campo
- * @param type $ValorAnterior
- * @param type $ValorNuevo
- * @param type $Consulta
- * @param type $idUser
- * @param type $Vector
- */
-public function RegistraEdicionTabla($Tabla,$Campo,$ValorAnterior,$ValorNuevo,$Consulta,$idUser,$Vector) {
-    $tab="registra_ediciones";
-    $NumRegistros=8;
-
-    $Columnas[0]="Fecha";               $Valores[0]=date("Y-m-d");
-    $Columnas[1]="Hora";                $Valores[1]=date("H:i:s");
-    $Columnas[2]="Tabla";               $Valores[2]=$Tabla;
-    $Columnas[3]="Campo";               $Valores[3]=$Campo;
-    $Columnas[4]="ValorAnterior";       $Valores[4]=$ValorAnterior;
-    $Columnas[5]="ValorNuevo";		$Valores[5]=$ValorNuevo;
-    $Columnas[6]="ConsultaRealizada";	$Valores[6]=$Consulta;
-    $Columnas[7]="idUsuario";		$Valores[7]=$idUser;
-
-    $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
-}
 //Registre Eliminaciones
  public function RegistraEliminacion($tabla,$idTabla,$idItemEliminado,$campo,$Valor,$Observaciones,$Vector) {
     $tab="registra_eliminaciones";
@@ -350,7 +329,7 @@ public function RegistraEdicionTabla($Tabla,$Campo,$ValorAnterior,$ValorNuevo,$C
 public function ShowColums($Tabla){
     
     
-    $sql="SHOW COLUMNS FROM `$Tabla`;";
+    $sql="SHOW COLUMNS FROM $Tabla;";
     $Results=$this->Query($sql);
     $i=0;
     while($Columnas = $this->FetchArray($Results) ){
@@ -398,8 +377,7 @@ public function ShowColums($Tabla){
       $sql=$sqlCampos.$sqlValores;
       return $sql;
     }
-    
-     /*
+    /*
       * Muestra todas las tablas de una base de datos
       */
      public function MostrarTablas($DataBase,$Vector){
@@ -424,6 +402,7 @@ public function ShowColums($Tabla){
         return($Nombres);
 
     }
+    
     /**
      * Devuelve el sql para Reemplazar un dato
      * @param type $Tabla
@@ -471,7 +450,8 @@ public function ShowColums($Tabla){
 //Fin Clases
 }
 
-$con = new mysqli($host, $user, $pw, $db);
+
+$con = new mysqli(HOST, USER, PW, DB);
 if ($con->connect_errno) {
     $Mensaje="No se pudo conectar al servidor en la ip: $ip ".$con->connect_error;
     exit();

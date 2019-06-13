@@ -71,7 +71,7 @@ if(!empty($_REQUEST["BtnEditarRegistro"])){
             $Datos["idCliente"]=$DatosFactura["Clientes_idClientes"];
             $obVenta->InsertarFacturaEnCartera($Datos);///Inserto La factura en la cartera
 
-            $sql="UPDATE `librodiario` SET `CuentaPUC`='1305',`NombreCuenta`='CLIENTES NACIONALES' WHERE `Num_Documento_Interno`='$IDEdit' AND `CuentaPUC` LIKE '11%'";
+            $sql="UPDATE `librodiario` SET `CuentaPUC`='130505',`NombreCuenta`='CLIENTES NACIONALES' WHERE `Num_Documento_Interno`='$IDEdit' AND `CuentaPUC` LIKE '11%'";
             $obVenta->Query($sql);
         }
         
