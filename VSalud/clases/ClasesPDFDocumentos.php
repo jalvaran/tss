@@ -37,7 +37,7 @@ class Documento extends Tabla{
         $DatosEmpresaPro=$this->obCon->DevuelveValores("empresapro", "idEmpresaPro", 1);
         $this->PDF_Encabezado($fecha,1, $idFormato, "",$Documento); //encabezado del formato de calidad
         $this->PDF->SetMargins(20, PDF_MARGIN_TOP, 20);
-        $this->PDF->SetFont('helvetica', '', 8);
+        $this->PDF->SetFont('helvetica', '', 10);
         $html="<br>";
         $html.="
 <p style=margin-left:0cm; margin-right:0cm; text-align:justify><span style=font-size:11pt><span style=font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;><strong><span style=font-size:10.0pt><span style=font-family:&quot;Arial&quot;,&quot;sans-serif&quot;>$DatosEmpresaPro[Ciudad], $DatosCobro[Fecha]</span></span></strong><span style=font-size:10.0pt><span style=font-family:&quot;Arial&quot;,&quot;sans-serif&quot;></span></span></span></span></p>
@@ -58,8 +58,9 @@ class Documento extends Tabla{
 
 ";
         
-$html.=$DatosFormatos["CuerpoFormato"];        
-        $this->PDF_Write("<br>".$html);
+$html.= utf8_encode($DatosFormatos["CuerpoFormato"]); 
+        $this->PDF->writeHTML($html, true, 0, true, true);
+        //$this->PDF_Write("<br>".$html);
         
         
         $this->PDF_Output("CobroPrejuridico_$idCobro");

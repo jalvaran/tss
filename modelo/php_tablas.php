@@ -3259,7 +3259,9 @@ public function GenerarInformeComprasComparativo($TipoReporte,$FechaInicial,$Fec
                 }
         }
         // create new PDF document
-        $this->PDF = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'ISO 8859-1', false);
+       // $this->PDF = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'ISO 8859-1', false);
+         $this->PDF = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
         // set document information
         $this->PDF->SetCreator(PDF_CREATOR);
         $this->PDF->SetAuthor('Techno Soluciones');

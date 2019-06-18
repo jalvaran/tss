@@ -750,7 +750,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
                 (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,
                 (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as NIT_EPS,
-(SELECT nombre_completo FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as RazonSocialEPS
+                (SELECT nombre_completo FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as RazonSocialEPS
                 FROM salud_archivo_facturacion_mov_generados t1 WHERE  t1.tipo_negociacion='evento' $CondicionFechaCorte AND (t1.estado='RADICADO' OR t1.estado=''); ";
             $obGlosas->Query($sql);
             
