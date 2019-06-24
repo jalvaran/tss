@@ -36,11 +36,38 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
-        case 2: //Exportar Facturas Pagadas
+        case 2: //Exportar Facturas No Pagadas
             if(file_exists($Link)){
                 unlink($Link);
             }
@@ -60,8 +87,35 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $query FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $query FROM $statement;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
         case 3: //Exportar Facturas Pagadas con diferencias
@@ -84,8 +138,35 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
         case 4: //Exportar Facturas Pagadas que no han sido generadas
@@ -108,8 +189,35 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $CamposShow FROM $statement ;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
             
@@ -136,8 +244,35 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $CamposShow FROM salud_cartera_x_edades_temp INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $CamposShow FROM salud_cartera_x_edades_temp;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
             
@@ -163,8 +298,35 @@ if(isset($_REQUEST["Opcion"])){
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
-            $sql=$sqlColumnas."SELECT $query FROM $statement INTO OUTFILE '$OuputFile' FIELDS TERMINATED BY '$Separador' $Enclosed LINES TERMINATED BY '\r\n';";
-            $obCon->Query($sql);
+            $sql=$sqlColumnas."SELECT $query FROM $statement;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;
         }

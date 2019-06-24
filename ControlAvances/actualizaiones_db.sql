@@ -313,6 +313,12 @@ CREATE TABLE `salud_pagos_contributivo_temp` (
 ALTER TABLE `salud_archivo_facturacion_mov_pagados` ADD `SubeDesde` VARCHAR(15) NOT NULL AFTER `NumeroFacturaAdres`;
 
 
+ALTER TABLE `salud_tesoreria` ADD `valor_legalizado` DOUBLE NOT NULL AFTER `valor_transaccion`, ADD `valor_legalizar` DOUBLE NOT NULL AFTER `valor_legalizado`;
+ALTER TABLE `salud_tesoreria` ADD `observaciones_cartera` TEXT NOT NULL AFTER `observacion`;
+ALTER TABLE `salud_tesoreria` ADD `legalizado` VARCHAR(2) NOT NULL DEFAULT 'NO' AFTER `observaciones_cartera`;
+ALTER TABLE `salud_tesoreria` CHANGE `valor_transaccion` `valor_transaccion` DOUBLE NOT NULL COMMENT 'Valor de transaccion ';
+
+
 ALTER TABLE `menu` ADD `CSS_Clase` VARCHAR(20) NOT NULL AFTER `Image`;
 
 UPDATE `menu` SET `CSS_Clase`='fa fa-share';
