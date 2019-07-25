@@ -8,6 +8,7 @@
  */
 document.getElementById("ArchivosZip").addEventListener("change", ValidaCuentaRIPS); 
 var ErroresArchivos=0;
+var ValorCapita=0;
 function ValidaCuentaRIPS(){
     
     var CuentaRIPS = document.getElementById('CuentaRIPS').value;
@@ -17,7 +18,7 @@ function ValidaCuentaRIPS(){
         form_data.append('CuentaRIPS', CuentaRIPS)
                 
         $.ajax({
-        async:false,
+        //async:false,
         url: 'Consultas/Salud_SubirRips.process.php',
         //dataType: "json",
         cache: false,
@@ -280,7 +281,8 @@ function CargarAF(){
  * @returns {undefined}
  */
 function VerificaValorCuenta(){
-    
+   // var TipoNegociacion=$('#CmbTipoNegociacion').value();
+    var TipoNegociacion=document.getElementById('CmbTipoNegociacion').value;
     var form_data = getInfoForm();
         form_data.append('idAccion', 28);
         form_data.append('UpSoporteRadicado', $('#UpSoporteRadicado').prop('files')[0]);
@@ -303,24 +305,79 @@ function VerificaValorCuenta(){
                             ok     : "Continuar",
                             cancel : "Cancelar Subida"
                         } });
-                        alertify.confirm("Esta Cuenta está por valor de: "+ new Intl.NumberFormat().format(ValorCuenta) +", Desea continuar?",
-                        function (e) {
+                        if(TipoNegociacion=='evento'){    
+                            alertify.confirm("Esta Cuenta está por valor de: "+ new Intl.NumberFormat().format(ValorCuenta) +", Desea continuar?",
+                            function (e) {
+                                if (e) {
+                                    
+                                    VerificaDuplicados();                    
+
+                                } else {
+                                    alertify.error("Se canceló el proceso");
+
+                                    document.getElementById("GifProcess").innerHTML="";
+                                    document.getElementById('BtnSubirZip').disabled=false;
+                                    document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                    BorrarCarga();
+                                    return;
+                                }
+                            });
+                        }else{
+                            
+                            alertify.prompt("Esta Cuenta está por valor de: "+ new Intl.NumberFormat().format(ValorCuenta) +", para continuar por favor digite el valor por el cual se facturó esta capita: "
+                            , function (e, str) {
                             if (e) {
+                                    if (str != '') {
+                                        if(!$.isNumeric(str) || str <= 0){
+                                            alertify.alert("El valor ingresado debe ser un número mayor a Cero");
+                                            document.getElementById("GifProcess").innerHTML="";
+                                            document.getElementById('BtnSubirZip').disabled=false;
+                                            document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                            BorrarCarga();
+                                            return;
+                                        }
+                                        
+                                        var ValorIngresado= new Intl.NumberFormat().format(str);
+                                        alertify.confirm("El valor digitado es: "+ ValorIngresado +", Desea continuar?",
+                                        function (e) {
+                                            if (e) {
+                                                ValorCapita=str;
+                                                VerificaDuplicados();                   
 
-                                VerificaDuplicados();                    
+                                            } else {
+                                                alertify.error("Se canceló el proceso");
 
+                                                document.getElementById("GifProcess").innerHTML="";
+                                                document.getElementById('BtnSubirZip').disabled=false;
+                                                document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                                BorrarCarga();
+                                                return;
+                                            }
+                                        });
+                                        
+                                    
+                                    }else{
+                                       alertify.alert("Debes Escribir una observacion");
+                                       document.getElementById("GifProcess").innerHTML="";
+                                        document.getElementById('BtnSubirZip').disabled=false;
+                                        document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                        BorrarCarga();
+                                        return;
+                                    }
+                                    //alertify.success("You've clicked OK and typed: " + str);
                             } else {
-                                alertify.error("Se canceló el proceso");
+                                    alertify.error("Se canceló el proceso");
 
-                                document.getElementById("GifProcess").innerHTML="";
-                                document.getElementById('BtnSubirZip').disabled=false;
-                                document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
-                                BorrarCarga();
-                                return;
+                                    document.getElementById("GifProcess").innerHTML="";
+                                    document.getElementById('BtnSubirZip').disabled=false;
+                                    document.getElementById("DivConsultas").innerHTML="<h2>PROCESO DE CARGA CANCELADO</h2>";
+                                    BorrarCarga();
+                                    return;
                             }
-                        });
-                        
-                        
+                            }, "");
+                            
+                            
+                        }
 
                     }else{
                         document.getElementById("DivProcess").innerHTML='';
@@ -803,9 +860,13 @@ function CargarAU(){
  * @returns {undefined}
  */
 function AnalizarAF(){
+    
+    var CuentaGlobal=document.getElementById('CuentaGlobal').value;
+
     var form_data = new FormData();
         form_data.append('idAccion', 15);
-              
+        form_data.append('CuentaGlobal', CuentaGlobal);  
+        form_data.append('ValorCapita', ValorCapita);  
     $.ajax({
         //async:false,
         url: './Consultas/Salud_SubirRips.process.php',

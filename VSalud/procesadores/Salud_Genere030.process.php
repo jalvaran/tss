@@ -134,6 +134,12 @@ if($_REQUEST["idAccion"]){
             $consulta=$obCon->Query($sql);
             $DatosRegistros=$obCon->FetchAssoc($consulta);
             $TotalRegistros=$TotalRegistros+$DatosRegistros["TotalRegistros"];
+            
+            $sql="SELECT COUNT(*) as TotalRegistros FROM vista_circular030_diferencia_periodo ";                        
+            $consulta=$obCon->Query($sql);
+            $DatosRegistros=$obCon->FetchAssoc($consulta);
+            $TotalRegistros=$TotalRegistros+$DatosRegistros["TotalRegistros"];
+            
             if($CmbAdicional==2){
                 $sql="SELECT COUNT(*) as TotalRegistros FROM vista_circular030_pagadas_anteriores ";                        
                 $consulta=$obCon->Query($sql);
@@ -144,6 +150,12 @@ if($_REQUEST["idAccion"]){
                 $consulta=$obCon->Query($sql);
                 $DatosRegistros=$obCon->FetchAssoc($consulta);
                 $TotalRegistros=$TotalRegistros+$DatosRegistros["TotalRegistros"];
+                
+                $sql="SELECT COUNT(*) as TotalRegistros FROM vista_circular030_diferencia_anteriores ";                        
+                $consulta=$obCon->Query($sql);
+                $DatosRegistros=$obCon->FetchAssoc($consulta);
+                $TotalRegistros=$TotalRegistros+$DatosRegistros["TotalRegistros"];
+                
             }
             ///Faltan los juridicos anteriores y todo lo que tiene que ver con glosas
             print("OK;$TotalRegistros");
@@ -236,6 +248,65 @@ if($_REQUEST["idAccion"]){
             print("OK;$TotalRegistros;$TotalRegistrosRealizados;$Fin;$ContadorGeneral");
             
         break;//Fin caso 9
+        
+        case 10:// registro las facturas que fueron pagadas con diferencia dentro del rango
+                        
+            $TxtFechaInicial=$obCon->normalizar($_REQUEST["TxtFechaInicial"]);
+            $TxtFechaFinal=$obCon->normalizar($_REQUEST["TxtFechaFinal"]);
+            $CmbAdicional=$obCon->normalizar($_REQUEST["CmbAdicional"]);
+            $Contador=$obCon->normalizar($_REQUEST["Contador"]);
+            $TotalRegistros=$obCon->normalizar($_REQUEST["TotalRegistros"]);
+            $ContadorGeneral=$obCon->normalizar($_REQUEST["ContadorGeneral"]);
+            $NombreArchivo=$obCon->normalizar($_REQUEST["NombreArchivo"]);
+            if($ContadorGeneral==''){
+                $ContadorGeneral=0;
+            }
+            if($TotalRegistros==''){
+                $sql="SELECT COUNT(*) as TotalRegistros FROM vista_circular030_diferencia_periodo ";
+                $consulta=$obCon->Query($sql);
+                $DatosRegistros=$obCon->FetchAssoc($consulta);
+                $TotalRegistros=$DatosRegistros["TotalRegistros"];
+            }
+            $Contadores=$obCon->Escribir030_Diferencia_Rango($TxtFechaInicial, $TxtFechaFinal, $Contador, $CmbAdicional,$ContadorGeneral,$NombreArchivo, "");
+            $TotalRegistrosRealizados=$Contadores[0];
+            $Fin="";
+            if($TotalRegistrosRealizados==$TotalRegistros){
+                $Fin="Fin";
+            }
+            $ContadorGeneral=$Contadores[1];
+            print("OK;$TotalRegistros;$TotalRegistrosRealizados;$Fin;$ContadorGeneral");
+            
+        break;//Fin caso 10
+        
+        case 11:// registro las facturas que fueron pagadas con diferencia anteriores
+                        
+            $TxtFechaInicial=$obCon->normalizar($_REQUEST["TxtFechaInicial"]);
+            $TxtFechaFinal=$obCon->normalizar($_REQUEST["TxtFechaFinal"]);
+            $CmbAdicional=$obCon->normalizar($_REQUEST["CmbAdicional"]);
+            $Contador=$obCon->normalizar($_REQUEST["Contador"]);
+            $TotalRegistros=$obCon->normalizar($_REQUEST["TotalRegistros"]);
+            $ContadorGeneral=$obCon->normalizar($_REQUEST["ContadorGeneral"]);
+            $NombreArchivo=$obCon->normalizar($_REQUEST["NombreArchivo"]);
+            if($ContadorGeneral==''){
+                $ContadorGeneral=0;
+            }
+            if($TotalRegistros==''){
+                $sql="SELECT COUNT(*) as TotalRegistros FROM vista_circular030_diferencia_anteriores ";
+                $consulta=$obCon->Query($sql);
+                $DatosRegistros=$obCon->FetchAssoc($consulta);
+                $TotalRegistros=$DatosRegistros["TotalRegistros"];
+            }
+            $Contadores=$obCon->Escribir030_Diferencia_Anteriores($TxtFechaInicial, $TxtFechaFinal, $Contador, $CmbAdicional,$ContadorGeneral,$NombreArchivo, "");
+            $TotalRegistrosRealizados=$Contadores[0];
+            $Fin="";
+            if($TotalRegistrosRealizados==$TotalRegistros){
+                $Fin="Fin";
+            }
+            $ContadorGeneral=$Contadores[1];
+            print("OK;$TotalRegistros;$TotalRegistrosRealizados;$Fin;$ContadorGeneral");
+            
+        break;//Fin caso 11
+        
     }
     
 }else{

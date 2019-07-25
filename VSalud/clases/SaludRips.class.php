@@ -802,7 +802,31 @@ class Rips extends conexion{
     //Copia los registros de la tabla temporal facturas que no existan en la principal y los inserta
     public function AnaliceInsercionFacturasGeneradas($Vector) {
         //Secuencia SQL que selecciona los usuarios que no estan creados de la tabla temporal y los inserta en la principal
-        $sql="INSERT INTO `salud_archivo_facturacion_mov_generados` 
+        $sql="SELECT * FROM salud_rips_facturas_generadas_temp LIMIT 1";
+        $Consulta= $this->Query($sql);
+        $DatosRips=$this->FetchAssoc($Consulta);
+        
+        if($DatosRips["tipo_negociacion"]=="evento"){
+            $TablaCopiar="salud_archivo_facturacion_mov_generados";
+        }else{
+            $TablaCopiar="salud_archivo_af_capita";
+        }
+        if($TablaCopiar=="salud_archivo_af_capita"){
+            if(!isset($Vector["ValorCapita"])){
+                return("E1");
+            }
+            if(!isset($Vector["CuentaGlobal"])){
+                return("E2");
+            }
+            unset($DatosRips["id_temp_rips_generados"]);
+            unset($DatosRips["LineaArchivo"]);
+            $DatosRips["valor_total_pago"]=$Vector["ValorCapita"];
+            $DatosRips["valor_neto_pagar"]=$Vector["ValorCapita"];
+            $DatosRips["num_factura"]=$Vector["CuentaGlobal"];
+            $sql=$this->getSQLInsert("salud_archivo_facturacion_mov_generados", $DatosRips);
+            $this->Query($sql);
+        }
+        $sql="INSERT INTO `$TablaCopiar` 
             (`cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
@@ -814,10 +838,12 @@ class Rips extends conexion{
             `tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,
             `fecha_radicado`,`numero_radicado`,`Soporte`,`Escenario`,`CuentaGlobal`,`CuentaRIPS`,`dias_pactados`,'RADICADO',`cod_enti_administradora` AS eps_radicacion
             FROM salud_rips_facturas_generadas_temp as t1 WHERE NOT EXISTS  
-            (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
+            (SELECT 1 FROM `$TablaCopiar` as t2 
             WHERE t1.`num_factura`=t2.`num_factura`); ";
         
         $this->Query($sql);
+        
+        
         
     }
     //Copia los registros de la tabla temporal Otros Servicios que no existan en la principal y los inserta

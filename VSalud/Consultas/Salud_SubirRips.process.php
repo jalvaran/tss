@@ -158,8 +158,16 @@ if($_REQUEST["idAccion"]){
             $FechaRadicado=$obRips->normalizar($_REQUEST["FechaRadicado"]);
             $NumeroRadicado=$obRips->normalizar($_REQUEST["NumeroRadicado"]);
             $CmbEscenario=$obRips->normalizar($_REQUEST["CmbEscenario"]);
-            
+            $TipoNegociacion=$obRips->normalizar($_REQUEST["CmbTipoNegociacion"]);
             $CuentaRIPS=$obRips->normalizar($_REQUEST["CuentaRIPS"]);
+            if($TipoNegociacion=='capita'){
+                $DatosCuentaGlobal=$obCon->DevuelveValores("salud_archivo_facturacion_mov_generados", "num_factura", $CuentaGlobal);
+                if($DatosCuentaGlobal["num_factura"]<>''){
+                    $css->CrearNotificacionRoja("Error, la CuentaGlobal $CuentaGlobal ya está asociada en el registro ".$DatosCuentaGlobal["id_fac_mov_generados"]." del AF", 14);
+                    exit();
+                }
+            }
+            
             $destino="";
             
             if(!empty($_FILES['UpSoporteRadicado']['name'])){
@@ -173,7 +181,7 @@ if($_REQUEST["idAccion"]){
             }
             $obRips->VaciarTabla("salud_rips_facturas_generadas_temp"); //Vacío la tabla de subida temporal
             
-            $TipoNegociacion=$obRips->normalizar($_REQUEST["CmbTipoNegociacion"]);
+            
             $FechaCargue=date("Y-m-d H:i:s");
             
             $consulta = $obRips->ConsultarTabla("salud_upload_control", " WHERE CargadoTemp='0' AND nom_cargue LIKE 'AF%' ORDER BY id_upload_control DESC");
@@ -336,8 +344,18 @@ if($_REQUEST["idAccion"]){
             print("OK");
         break;
         
-        case 15://Analice los AF            
-            $obRips->AnaliceInsercionFacturasGeneradas(""); 
+        case 15://Analice los AF        
+            $CuentaGlobal=$obRips->normalizar($_REQUEST["CuentaGlobal"]);
+            $ValorCapita=$obRips->normalizar($_REQUEST["ValorCapita"]);
+            $Vector["CuentaGlobal"]=$CuentaGlobal;
+            $Vector["ValorCapita"]=$ValorCapita;
+            $Error=$obRips->AnaliceInsercionFacturasGeneradas($Vector); 
+            if($Error=="E1"){
+                exit("Error, No se recibió el valor de la capita");
+            }
+            if($Error=="E2"){
+                exit("Error, No se recibió la Cuenta Global");
+            }
             $obRips->VaciarTabla("salud_rips_facturas_generadas_temp");
             
             print("OK");
@@ -394,6 +412,7 @@ if($_REQUEST["idAccion"]){
         break;
         case 25://Verifica duplicados
             $Error=$obRips->VerifiqueDuplicadosAF(""); // Verifica si hay duplicados en los AF subidos
+            
             if($Error==1){
                 print("Error");
             }

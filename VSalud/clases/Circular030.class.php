@@ -652,6 +652,29 @@ class Circular030 extends conexion{
                 
             ";
             $this->Query($sql);
+            
+            //Facturas con diferencia
+            $sql="DROP VIEW IF EXISTS `vista_circular030_diferencia_periodo`;";
+            $this->Query($sql);
+            $sql=" CREATE VIEW vista_circular030_diferencia_periodo AS 
+                SELECT '2' as TipoRegistro,
+            tipo_ident_prest_servicio as TipoIdentificacionERP, 
+            (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora) as NumeroIdentificacionERP, 
+            nom_enti_administradora as RazonSocialIPS, 
+            'NI' as TipoIdentificacionIPS, 
+            (SELECT NIT FROM empresapro WHERE idEmpresaPro=1) as NumeroIdentificacionIPS, 
+            'F' as TipoCobro,num_factura,'A' as IndicadorActualizacion,valor_neto_pagar as Valor,
+            fecha_factura as FechaEmision,fecha_radicado as FechaPresentacion,'' as FechaDevolucion,
+            (SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as ValorPagado,
+            (SELECT IFNULL((SELECT SUM(GlosaAceptada) FROM salud_registro_glosas WHERE salud_registro_glosas.num_factura=t1.num_factura),0)) as ValorGlosaAceptada,
+            (SELECT IF((SELECT SUM(GlosaAceptada) FROM salud_registro_glosas WHERE salud_registro_glosas.num_factura=t1.num_factura)>0,'SI','NO')) as GlosaRespondida, 
+            (SELECT Valor-ValorPagado-ValorGlosaAceptada) as SaldoFactura,
+            'NO' as CobroJuridico, '0' as EtapaCobroJuridico
+            FROM  vista_af t1 
+            WHERE t1.GeneraCircular='S' AND t1.estado='DIFERENCIA' AND fecha_radicado>='$FechaInicial' AND fecha_radicado<='$FechaFinal'
+                
+            ";
+            $this->Query($sql);
         
         //Datos anteriores al periodo seleccionado
         if($Opciones=='2'){
@@ -721,6 +744,29 @@ class Circular030 extends conexion{
             WHERE t1.GeneraCircular='S' AND t1.estado='JURIDICO' AND fecha_radicado<'$FechaInicial'";
             
             $this->Query($sql);
+            
+            $sql="DROP VIEW IF EXISTS `vista_circular030_diferencia_anteriores`;";
+            $this->Query($sql);
+            $sql=" CREATE VIEW vista_circular030_diferencia_anteriores AS 
+                SELECT '2' as TipoRegistro, 
+            tipo_ident_prest_servicio as TipoIdentificacionERP, 
+            (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora) as NumeroIdentificacionERP, 
+            nom_enti_administradora as RazonSocialIPS, 
+            'NI' as TipoIdentificacionIPS, 
+            (SELECT NIT FROM empresapro WHERE idEmpresaPro=1) as NumeroIdentificacionIPS, 
+            'F' as TipoCobro,num_factura,'A' as IndicadorActualizacion,valor_neto_pagar as Valor,
+            fecha_factura as FechaEmision,fecha_radicado as FechaPresentacion,'' as FechaDevolucion,
+            (SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as ValorPagado,
+            (SELECT IFNULL((SELECT SUM(GlosaAceptada) FROM salud_registro_glosas WHERE salud_registro_glosas.num_factura=t1.num_factura),0)) as ValorGlosaAceptada,
+            (SELECT IF((SELECT SUM(GlosaAceptada) FROM salud_registro_glosas WHERE salud_registro_glosas.num_factura=t1.num_factura)>0,'SI','NO')) as GlosaRespondida, 
+            (SELECT Valor-ValorPagado-ValorGlosaAceptada) as SaldoFactura,
+            'NO' as CobroJuridico, '0' as EtapaCobroJuridico
+            FROM  vista_af t1 
+            WHERE t1.GeneraCircular='S' AND t1.estado='DIFERENCIA' AND fecha_radicado<'$FechaInicial'
+                
+            ";
+            $this->Query($sql);
+            
             /*
             //030 inicial
             $sql="DROP VIEW IF EXISTS `vista_circular030_inicial`;";
@@ -753,5 +799,104 @@ class Circular030 extends conexion{
         
     }
     
+    
+    public function Escribir030_Diferencia_Rango($FechaInicial,$FechaFinal,$Contador,$Tipo,$ContadorGeneral,$NombreArchivo,$Vector) {
+        $nombre_archivo = $NombreArchivo;
+               
+        if($Contador==''){
+            $Contador=0;
+            $limit="LIMIT 5000";
+        }else{
+            $limit="LIMIT $Contador,5000";
+        }
+        
+        $sql="SELECT * FROM vista_circular030_diferencia_periodo $limit";
+        
+        $consulta=$this->Query($sql);
+        
+        if($archivo = fopen($nombre_archivo, "a")){
+            
+            $mensaje="";
+            while($Datos030= $this->FetchArray($consulta)){
+                $mensaje.="\r\n";
+                $Contador++;
+                $ContadorGeneral++;
+                for($i=0;$i<=18;$i++){
+                    $Datos030[$i]= $this->QuitarAcentos($Datos030[$i]);
+                    $Datos030[$i]= trim($Datos030[$i]);
+                    if($i==7){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $Datos030[$i]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $Datos030[$i]);                    
+                        
+                        $mensaje.=$Prefijo.",".$NumeroFactura.",";
+                    }else if($i==0){
+                        $mensaje.=$Datos030[$i].",$ContadorGeneral,";
+                    }else{
+                        $mensaje.=$Datos030[$i].",";
+                    }
+                    
+                }
+                
+                $mensaje=substr($mensaje, 0, -1);
+                //$mensaje.="\r\n";
+            }
+            //$mensaje=substr($mensaje, 0, -2);
+            fwrite($archivo, $mensaje);
+            fclose($archivo);
+        }
+        $Contadores[0]=$Contador;
+        $Contadores[1]=$ContadorGeneral;
+        return($Contadores);
+    }
+    
+    
+    public function Escribir030_Diferencia_Anteriores($FechaInicial,$FechaFinal,$Contador,$Tipo,$ContadorGeneral,$NombreArchivo,$Vector) {
+        $nombre_archivo = $NombreArchivo;
+               
+        if($Contador==''){
+            $Contador=0;
+            $limit="LIMIT 5000";
+        }else{
+            $limit="LIMIT $Contador,5000";
+        }
+        
+        $sql="SELECT * FROM vista_circular030_diferencia_anteriores $limit";
+        
+        $consulta=$this->Query($sql);
+        
+        if($archivo = fopen($nombre_archivo, "a")){
+            
+            $mensaje="";
+            while($Datos030= $this->FetchArray($consulta)){
+                $mensaje.="\r\n";
+                $Contador++;
+                $ContadorGeneral++;
+                for($i=0;$i<=18;$i++){
+                    $Datos030[$i]= $this->QuitarAcentos($Datos030[$i]);
+                    $Datos030[$i]= trim($Datos030[$i]);
+                    if($i==7){
+                        $Prefijo=preg_replace('/[^A-Za-z]+/', '', $Datos030[$i]);
+                        $NumeroFactura=preg_replace('/[^0-9]+/', '', $Datos030[$i]);                    
+                        
+                        $mensaje.=$Prefijo.",".$NumeroFactura.",";
+                    }else if($i==0){
+                        $mensaje.=$Datos030[$i].",$ContadorGeneral,";
+                    }else{
+                        $mensaje.=$Datos030[$i].",";
+                    }
+                    
+                }
+                
+                $mensaje=substr($mensaje, 0, -1);
+                //$mensaje.="\r\n";
+            }
+            //$mensaje=substr($mensaje, 0, -2);
+            fwrite($archivo, $mensaje);
+            fclose($archivo);
+        }
+        $Contadores[0]=$Contador;
+        $Contadores[1]=$ContadorGeneral;
+        return($Contadores);
+    }
     //Fin Clases
 }
