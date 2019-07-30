@@ -43,7 +43,7 @@ print("<body>");
                             $css->CrearOptionSelect("6", "Circular 07", 0);
                             $css->CrearOptionSelect("5", "Cartera por edades", 0);
                             //$css->CrearOptionSelect("6", "SIHO", 0);
-                            
+                            $css->CrearOptionSelect("7", "Saldos por EPS", 0);
                             
                         $css->CerrarSelect();
                         print("</td>");
