@@ -262,5 +262,31 @@ SELECT '2' as TipoRegistro,
 
 
 
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `idMenu`, `TablaAsociada`, `TipoLink`, `JavaScript`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES
+(70,	'Registrar Descuentos BDUA',	36,	8,	0,	'',	0,	'',	'RegistrarDescuentosBDUA.php',	'_SELF',	CONV('1', 2, 10) + 0,	'pedidos.png',	10,	'2019-06-13 10:06:18',	'2018-07-13 15:42:34');
+INSERT INTO `menu_carpetas` (`ID`, `Ruta`, `Updated`, `Sync`) VALUES
+(8,	'../modulos/DescuentosBDUA/',	'2018-07-13 15:42:32',	'2018-07-13 15:42:32');
 
+
+CREATE TABLE `descuentos_bdua` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `Fecha` date NOT NULL,
+  `NumeroFactura` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `NumeroRadicado` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `AfiliadosIMA` double NOT NULL,
+  `ValorDescuento` double NOT NULL,
+  `idUser` int(11) NOT NULL,
+  `FechaRegistro` date NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `NumeroRadicado` (`NumeroRadicado`),
+  KEY `NumeroFactura` (`NumeroFactura`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+
+DROP VIEW IF EXISTS `vista_af`;
+CREATE VIEW vista_af AS
+SELECT *,
+(SELECT Genera030 FROM salud_eps WHERE salud_eps.cod_pagador_min=`salud_archivo_facturacion_mov_generados`. cod_enti_administradora) as GeneraCircular,
+(SELECT fecha_pago_factura FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=salud_archivo_facturacion_mov_generados.num_factura ORDER BY fecha_pago_factura DESC LIMIT 1) AS FechaPagoFactura 
+FROM `salud_archivo_facturacion_mov_generados` ;
 

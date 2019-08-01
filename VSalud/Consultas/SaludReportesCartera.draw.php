@@ -930,7 +930,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             }else{
                 $NumPage=1;
             }
-            $Condicional=" WHERE (`SaldoFinalFactura` > 0) AND Genera07='S' ";
+            $Condicional=" WHERE (`SaldoFinalFactura` <> 0) AND Genera07='S' ";
             $Condicional2="";
             if($idEPS<>''){
                 $Condicional2=" AND cod_enti_administradora='$idEPS'";

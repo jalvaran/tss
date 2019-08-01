@@ -413,9 +413,12 @@ function GenerePagadasAnteriores(Contador="",TotalRegistros='',ContadorGeneral,G
                     GenerePagadasAnteriores(RegistrosRealizados,TotalRegistros,ContadorGeneral,GranTotalRegistros,NombreArchivo);
                 }
                 if(Termina=='Fin'){       
-                    
-                    GenereRadicadosAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
-                   
+                    if(CmbAdicional==2){
+                        GenereRadicadosAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                    }
+                    //GenerePagadasEnPeriodo("","",RegistrosRealizados,GranTotalRegistros,NombreArchivo);
                 }                    
             }else{
                 document.getElementById(DivDestino).innerHTML=data;
@@ -488,9 +491,12 @@ function GenereRadicadosAnteriores(Contador="",TotalRegistros='',ContadorGeneral
                     GenereRadicadosAnteriores(RegistrosRealizados,TotalRegistros,ContadorGeneral,GranTotalRegistros,NombreArchivo);
                 }
                 if(Termina=='Fin'){       
-                    
-                    GenereDiferenciaAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
-                    
+                    if(CmbAdicional==2){
+                        GenereDiferenciaAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                    }
+                    //GenerePagadasEnPeriodo("","",RegistrosRealizados,GranTotalRegistros,NombreArchivo);
                 }                    
             }else{
                 document.getElementById(DivDestino).innerHTML=data;
@@ -555,9 +561,12 @@ function GenereDiferenciaEnPeriodo(Contador="",TotalRegistros='',ContadorGeneral
                     GenereDiferenciaEnPeriodo(RegistrosRealizados,TotalRegistros,ContadorGeneral,GranTotalRegistros,NombreArchivo);
                 }
                 if(Termina=='Fin'){       
-                    
-                    GenerePagosEnRangoRadicadosFuera('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
-                    
+                    if(CmbAdicional==2){
+                        GenerePagadasAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                    }
+                    //GenerePagadasEnPeriodo("","",RegistrosRealizados,GranTotalRegistros,NombreArchivo);
                 }                    
             }else{
                 document.getElementById(DivDestino).innerHTML=data;
@@ -582,7 +591,7 @@ function GenereDiferenciaAnteriores(Contador="",TotalRegistros='',ContadorGenera
     var DivDestino =  'DivMensajesCircular';
     
     var form_data = new FormData();
-        form_data.append('idAccion', 11)
+        form_data.append('idAccion', 10)
         form_data.append('TxtFechaInicial', TxtFechaInicial)
         form_data.append('TxtFechaFinal', TxtFechaFinal)
         form_data.append('CmbAdicional', CmbAdicional)
@@ -621,74 +630,12 @@ function GenereDiferenciaAnteriores(Contador="",TotalRegistros='',ContadorGenera
                     GenereDiferenciaAnteriores(RegistrosRealizados,TotalRegistros,ContadorGeneral,GranTotalRegistros,NombreArchivo);
                 }
                 if(Termina=='Fin'){       
-                   document.getElementById("DivProcess").innerHTML='';
-                    //GenerePagosEnRangoRadicadosFuera("","",RegistrosRealizados,GranTotalRegistros,NombreArchivo);
-                }                    
-            }else{
-                document.getElementById(DivDestino).innerHTML=data;
-                document.getElementById("DivProcess").innerHTML='';
-            }
-            
-                        
-        },
-        error: function(xhr, ajaxOptions, thrownError){
-          alert(xhr.status);
-          alert(thrownError);
-        }
-      })
-        
-}
-
-function GenerePagosEnRangoRadicadosFuera(Contador="",TotalRegistros='',ContadorGeneral,GranTotalRegistros,NombreArchivo){    
-    
-    var TxtFechaInicial = document.getElementById('TxtFechaInicial').value;
-    var TxtFechaFinal = document.getElementById('TxtFechaFinal').value;
-    var CmbAdicional = document.getElementById('CmbAdicional').value;
-    var DivDestino =  'DivMensajesCircular';
-    
-    var form_data = new FormData();
-        form_data.append('idAccion', 12)
-        form_data.append('TxtFechaInicial', TxtFechaInicial)
-        form_data.append('TxtFechaFinal', TxtFechaFinal)
-        form_data.append('CmbAdicional', CmbAdicional)
-        form_data.append('Contador', Contador)
-        form_data.append('TotalRegistros', TotalRegistros)
-        form_data.append('ContadorGeneral', ContadorGeneral) 
-        form_data.append('NombreArchivo', NombreArchivo) 
-        $.ajax({
-        //async:false,
-        url: 'procesadores/Salud_Genere030.process.php',
-        //dataType: "json",
-        cache: false,
-        processData: false,
-        contentType: false,
-        data: form_data,
-        type: 'POST',
-        success: (data) =>{   
-            console.log(data);
-            var respuestas = data.split(';');            
-            if(respuestas[0]=='OK'){
-                var TotalRegistros=respuestas[1];
-                var RegistrosRealizados=respuestas[2];
-                var ContadorGeneral=respuestas[4];
-                var Termina=respuestas[3];
-                if(TotalRegistros==0){
-                    var Divisor=1;
-                }else{
-                    var Divisor=TotalRegistros;
-                }
-                var porcentaje = Math.round((100/GranTotalRegistros)*ContadorGeneral);
-                
-                $('.progress-bar').css('width',porcentaje+'%').attr('aria-valuenow', porcentaje);  
-                document.getElementById('LyProgresoCMG').innerHTML=porcentaje+"%";
-                document.getElementById(DivDestino).innerHTML=RegistrosRealizados+' Registros guardados de '+TotalRegistros+", que en estado Recibieron pagos en el rango pero radicadas Antes del periodo seleccionado.<br>Total de Registros hasta el momento "+ContadorGeneral;
-                if(Termina==''){
-                    GenerePagosEnRangoRadicadosFuera(RegistrosRealizados,TotalRegistros,ContadorGeneral,GranTotalRegistros,NombreArchivo);
-                }
-                if(Termina=='Fin'){       
-                   
-                    document.getElementById("DivProcess").innerHTML='';
-                      
+                    if(CmbAdicional==2){
+                        document.getElementById("DivProcess").innerHTML='';
+                       /// GenereDiferenciaAnteriores('','',ContadorGeneral,GranTotalRegistros,NombreArchivo);
+                    }else{
+                        document.getElementById("DivProcess").innerHTML='';
+                    }
                     //GenerePagadasEnPeriodo("","",RegistrosRealizados,GranTotalRegistros,NombreArchivo);
                 }                    
             }else{

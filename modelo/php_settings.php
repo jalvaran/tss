@@ -6,9 +6,9 @@
 $host="localhost";
 $user="techno";
 $pw="techno";
-$db="tss_suroccidente";
+$db="tss_malvinas";
  
-const HOST="localhost", USER="techno",PW="techno",DB="tss_suroccidente"; //para uso 
+const HOST="localhost", USER="techno",PW="techno",DB="tss_malvinas"; //para uso 
 
 /* Para un servidor la combinacion deberá ser $TipoPC="Server"; $TipoKardex="Caja";
  * Para una Caja la combinacion deberá ser $TipoPC="Caja"; $TipoKardex="Caja";
