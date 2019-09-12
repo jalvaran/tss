@@ -25,7 +25,7 @@ if($_REQUEST["idAccion"]){
             $consulta=$obCon->Query($sql);
             $DatosConsulta=$obCon->FetchArray($consulta);
             if($DatosConsulta["CuentaRIPS"]==$CuentaRIPS){
-                print("Error");
+                print("OK");
             }else{
                 print("OK");
             }
