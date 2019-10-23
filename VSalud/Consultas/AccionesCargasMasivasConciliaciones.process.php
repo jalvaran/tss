@@ -49,6 +49,10 @@ if( !empty($_REQUEST["idAccion"]) ){
         case 4://Se realizan las validaciones
             $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1);
             $Errores=0;
+            $sql="UPDATE salud_conciliaciones_masivas_temp t1 INNER JOIN salud_archivo_facturacion_mov_generados t2 ON t1.num_factura=t2.num_factura 
+                    SET t1.CuentaRIPS=t2.CuentaRIPS;";
+            $obGlosas->Query($sql);
+            
             $sql="SELECT * FROM vista_salud_consolidaciones_masivas";
             $Datos=$obGlosas->Query($sql);
             while($DatosCarga=$obGlosas->FetchArray($Datos)){
