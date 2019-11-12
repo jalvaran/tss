@@ -79,6 +79,7 @@ class GlosasMasivas extends Glosas{
             foreach ($valor as $campo2 => $valor2){
                 $campo2 == "Soporte" ? $sql.= $valor2."');" : $sql.= $valor2."','";
             }
+            
             $this->Query($sql);
         }    
        
@@ -115,9 +116,10 @@ class GlosasMasivas extends Glosas{
         $count=0;
         $columnas = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
         $filas = $objPHPExcel->setActiveSheetIndex(0)->getHighestRow();
+        //print("Filas: $filas");
         date_default_timezone_set('UTC'); //establecemos la hora local
         for ($i=2;$i<=$filas;$i++){
-            if($objPHPExcel->getActiveSheet()->getCell('B'.$i)->getCalculatedValue()<>''){
+            if($objPHPExcel->getActiveSheet()->getCell('A'.$i)->getCalculatedValue()<>''){
                 $data=PHPExcel_Shared_Date::ExcelToPHP($objPHPExcel->getActiveSheet()->getCell('A'.$i)->getValue());
                 $FechaConciliacion=date("Y-m-d",$data); 
                 $_DATOS_EXCEL[$i]['FechaConciliacion'] = $FechaConciliacion;

@@ -106,6 +106,20 @@ print("<body>");
         $css->CierraFilaTabla();
         $css->FilaTabla(16);
         
+        print("<td colspan=4 style='text-align:center'>");
+        
+            $css->CrearNotificacionAzul("Generar XML y Cargar al FTP", 16);
+            $css->CrearBotonEvento("BtnCrearXML", "Crear XML de Glosas y Enviar al FTP", 1, "onclick", "ConfirmarGeneracionXMLGlosas()", "naranja", "");
+            $css->CrearDiv("DivProcessGeneracionXML", "", "center", 1, 1);
+            $css->CerrarDiv();
+            $css->CrearDiv("DivGeneracionXML", "", "left", 1, 1);
+            $css->CerrarDiv();
+        print("</td>");
+        $css->CierraFilaTabla();
+        $css->FilaTabla(16);
+        
+        $css->FilaTabla(16);
+        
         print("<td colspan=4>");
             $css->CrearNotificacionAzul("Cuentas", 16);
             $css->CrearDiv("DivCuentas", "", "center", 1, 1);

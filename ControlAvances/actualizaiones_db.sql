@@ -408,3 +408,40 @@ CREATE TABLE `salud_archivo_af_capita` (
   KEY `EstadoCobro` (`EstadoCobro`),
   KEY `cod_enti_administradora` (`cod_enti_administradora`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Archivo de transacciones_AF_generadas';
+
+
+
+ALTER TABLE `empresapro` ADD `CentroCostos` VARCHAR(5) NOT NULL AFTER `idEmpresaPro`, ADD INDEX `CentroCostos` (`CentroCostos`);
+ALTER TABLE `salud_eps` ADD `TipoEntidad` VARCHAR(5) NOT NULL AFTER `nit`, ADD INDEX `TipoEntidad` (`TipoEntidad`);
+
+
+DROP TABLE IF EXISTS `parametros_contables_glosas`;
+CREATE TABLE `parametros_contables_glosas` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `CuentaPUC` bigint(20) NOT NULL,
+  `DescripcionCuenta` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+  `TipoCuentaGlosaInicial` enum('D','C') COLLATE utf8_spanish_ci NOT NULL,
+  `TipoCuentaGlosaAceptada` enum('D','C') COLLATE utf8_spanish_ci NOT NULL,
+  `TipoCuentaGlosaLevantada` enum('D','C') COLLATE utf8_spanish_ci NOT NULL,
+  `Regimen` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
+  `Vigencia` int(4) NOT NULL,
+  `idUser` int(11) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+INSERT INTO `parametros_contables_glosas` (`ID`, `CuentaPUC`, `DescripcionCuenta`, `TipoCuentaGlosaInicial`, `TipoCuentaGlosaAceptada`, `TipoCuentaGlosaLevantada`, `Regimen`, `Vigencia`, `idUser`) VALUES
+(1,	83330113,	'EMPRESAS REG CONTRIBUTIVO',	'D',	'C',	'C',	'CONTRIBUTIVO',	2018,	1),
+(2,	8915170101,	'EMPRESAS REG CONTRIBUTIVO',	'C',	'D',	'D',	'CONTRIBUTIVO',	2018,	1),
+(3,	83330313,	'EMPRESAS REG SUBSIDIADO',	'D',	'C',	'C',	'SUBSIDIADO',	2018,	1),
+(4,	8915170101,	'EMPRESAS REG SUBSIDIADO',	'C',	'D',	'D',	'SUBSIDIADO',	2018,	1),
+(5,	83330114,	'EMPRESAS REG CONTRIBUTIVO',	'D',	'C',	'C',	'CONTRIBUTIVO',	2019,	1),
+(6,	8915170101,	'EMPRESAS REG CONTRIBUTIVO',	'C',	'D',	'D',	'CONTRIBUTIVO',	2019,	1),
+(7,	83330314,	'EMPRESAS REG SUBSIDIADO',	'D',	'C',	'C',	'SUBSIDIADO',	2019,	1),
+(8,	8915170101,	'EMPRESAS REG SUBSIDIADO',	'C',	'D',	'D',	'SUBSIDIADO',	2019,	1);
+
+
+ALTER TABLE `servidores` ADD `Puerto` int(11) NOT NULL AFTER `DataBase`;
+ALTER TABLE `servidores` ADD `TipoServidor` VARCHAR(10) NOT NULL AFTER `Puerto`;
+ALTER TABLE `salud_glosas_iniciales` ADD `EstadoReporteXMLFTP` INT NOT NULL AFTER `ValorConciliado`;
+
+

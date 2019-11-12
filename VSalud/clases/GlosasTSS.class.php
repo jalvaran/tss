@@ -1145,6 +1145,87 @@ class Glosas extends conexion{
         
     }
     
+    public function ConstruirXMLGlosaInicial($DatosGlosa) {
+        $DatosRuta=$this->DevuelveValores("configuracion_general", "ID", 14);
+        $Ruta=$DatosRuta["Valor"];
+        $NumeroFactura=$DatosGlosa["num_factura"];
+        $nombre_archivo = "GLI".$NumeroFactura."_".$DatosGlosa["ID"].".xml";
+        $RutaArchivo=$Ruta.$nombre_archivo;
+        $DatosFactura=$this->DevuelveValores("salud_archivo_facturacion_mov_generados", "num_factura", $NumeroFactura);
+        $DatosEPS=$this->DevuelveValores("salud_eps", "cod_pagador_min", $DatosFactura["cod_enti_administradora"]);
+        $DatosIPS=$this->DevuelveValores("empresapro", "CodigoPrestadora", $DatosFactura["cod_prest_servicio"]);
+        
+        $idFactura=$DatosFactura["id_fac_mov_generados"];
+        $FechaFacturaXml = date("d/m/Y",strtotime($DatosFactura["fecha_factura"]));
+        $AnioFactura = date("Y",strtotime($DatosFactura["fecha_factura"]));
+        $MesGlosa = date("m",strtotime($DatosGlosa["FechaRegistro"]));
+        $NitIPSXml= number_format($DatosIPS["NIT"],0,",",".");
+        $NitIPSXml.="-".$DatosIPS["DV"];
+        $RegimenEPS=$DatosEPS["tipo_regimen"];
+        $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaInicial='D' LIMIT 1";
+        $CuentaPUCDebito=$this->FetchAssoc($this->Query($sql));
+        
+        $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaInicial='C' LIMIT 1";
+        $CuentaPUCCredito=$this->FetchAssoc($this->Query($sql));
+        
+        $ValorGlosa=round($DatosGlosa["ValorGlosado"],1);
+        
+        $xmlGlosa='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<factura>
+    <cabecera_asg>
+        <tnro>'.$idFactura.'</tnro> <!-- Identificador - llave primaria de la factura en la base de datos de TSS -->
+        <tdocu>GLI</tdocu> <!-- Tipo de documento definido para el movimiento - ACTUALMENTE TENEMOS UN ARCHIVO DE CONFIGURACION PARA LOS TIPOS DE DOCUMENTO - VERIFICAR LA MEJOR OPCION DE DONDE PODRIAMOS TOMAR ESTE DATO-->
+        <usucrea>CADUCEOS</usucrea> <!-- Usuario que realiza el movimiento - POR DEFECTO ENVIAR CADUCEOS -->
+        <fechacrea>'.$FechaFacturaXml.'</fechacrea> <!-- Fecha factura - SE DEBE TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS-->
+        <tmovempcod>'.$NitIPSXml.'</tmovempcod> <!-- Nit de la ESE que presento la cuenta -->
+        <ccosto>'.$DatosIPS["CentroCostos"].'</ccosto> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+        <tmovdocnro>'.$NumeroFactura.'</tmovdocnro> <!-- Nro. Factura -->
+        <tmovval>'.$ValorGlosa.'</tmovval> <!-- Valor total de glosa inicial - corresponde a la sumatoria de glosas iniciales de los registros de la factura -->
+        <tmovpernro>'.$MesGlosa.'</tmovpernro> <!-- Mes en que se realiza el movimiento o registro de la glosa -->
+        <tmovemppaic>169</tmovemppaic> <!-- Código del Pais -->
+        <detalles>
+            <tnro>'.$idFactura.'</tnro> <!-- Identificador - llave primaria de la factura en la base de datos de TSS -->
+            <tmovcuecod>'.$CuentaPUCDebito["CuentaPUC"].'</tmovcuecod> <!-- Cuenta contable debito para glosa inicial - TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS  -->
+            <tmovmdecpt>'.$CuentaPUCDebito["DescripcionCuenta"].'</tmovmdecpt> <!-- Descripción de la cuenta contable debito del servicio -->
+            <tmovmdemov>D</tmovmdemov> <!-- Tipo de movimiento C (Crédito) - D (Debito) definido para la glosa inicial -->
+            <tmovccocod>'.$DatosIPS["CentroCostos"].'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovscocod>'.$DatosEPS["TipoEntidad"].'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovtercod>'.$DatosEPS["nit"].'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
+            <tmovternom>'.$DatosEPS["nombre_completo"].'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
+            <tmovmdedoc>'.$NumeroFactura.'</tmovmdedoc> <!-- Nro. Factura -->
+            <tmovmdeval>'.$ValorGlosa.'</tmovmdeval> <!-- Valor glosado inicial de la factura -->
+        </detalles>
+        <detalles>
+            <tnro>'.$idFactura.'</tnro> <!-- Identificador - llave primaria de la factura en la base de datos de TSS -->
+            <tmovcuecod>'.$CuentaPUCCredito["CuentaPUC"].'</tmovcuecod> <!-- Cuenta contable credito para glosa inicial - TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS  -->
+            <tmovmdecpt>'.$CuentaPUCCredito["DescripcionCuenta"].'</tmovmdecpt> <!-- Descripción de la cuenta contable crédito del regimen del paciente -->
+            <tmovmdemov>C</tmovmdemov> <!-- Tipo de movimiento C (Crédito) - D (Debito) definido para la glosa inicial -->
+            <tmovccocod>'.$DatosIPS["CentroCostos"].'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovscocod>'.$DatosEPS["TipoEntidad"].'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovtercod>'.$DatosEPS["nit"].'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
+            <tmovternom>'.$DatosEPS["nombre_completo"].'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
+            <tmovmdedoc>'.$NumeroFactura.'</tmovmdedoc> <!-- Nro. Factura -->
+            <tmovmdeval>'.$ValorGlosa.'</tmovmdeval> <!-- Valor glosado inicial de la factura -->
+        </detalles>	
+    </cabecera_asg>
+</factura>';
+        
+        if(file_exists($RutaArchivo)){
+            unlink($RutaArchivo);
+        }
+        if($archivo = fopen($RutaArchivo, "w")){
+            if(!fwrite($archivo, $xmlGlosa)){
+                exit("E1;No se pudo generar el XML para la factura $NumeroFactura");
+            }
+            fclose($archivo);
+        }
+        
+        $this->ActualizaRegistro("salud_glosas_iniciales", "EstadoReporteXMLFTP", 1, "ID", $DatosGlosa["ID"]);
+        
+       
+        
+        
+    }
    
     //Fin Clases
 }

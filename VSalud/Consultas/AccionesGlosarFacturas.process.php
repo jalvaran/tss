@@ -618,7 +618,30 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $css->CrearImage("ImgSemaforo", $imagerute, "", 50, 20);
             }
             print(" ");
-        break;
+        break;//Fin caso 20
+        
+        case 21: //Obtener numero de registros de XML de glosas iniciales a construir
+            $sql="SELECT COUNT(ID) as TotalRegistros FROM salud_glosas_iniciales WHERE EstadoReporteXMLFTP=0 AND EstadoGlosa=1 OR EstadoGlosa=5 OR EstadoGlosa=6 OR EstadoGlosa=7";
+            $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
+            $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            print("OK;XML de glosas Iniciales a Generar $NumeroGlosasIniciales;$NumeroGlosasIniciales");
+        break;//Fin caso 21   
+    
+        case 22: //Construir el xml de las glosas iniciales
+            $TotalGlosasIniciales=$obGlosas->normalizar($_REQUEST["TotalGlosasIniciales"]);
+            
+            $sql="SELECT * FROM salud_glosas_iniciales WHERE EstadoReporteXMLFTP=0 AND (EstadoGlosa=1 OR EstadoGlosa=5 OR EstadoGlosa=6 OR EstadoGlosa=7) LIMIT 1";
+            $DatosGlosa=$obGlosas->FetchAssoc($obGlosas->Query($sql));
+            if($DatosGlosa["ID"]>0){
+                $obGlosas->ConstruirXMLGlosaInicial($DatosGlosa);
+            }
+            
+            $sql="SELECT COUNT(ID) as TotalRegistros FROM salud_glosas_iniciales WHERE EstadoReporteXMLFTP=0 AND (EstadoGlosa=1 OR EstadoGlosa=5 OR EstadoGlosa=6 OR EstadoGlosa=7) LIMIT 1";
+            $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
+            $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            print("OK;XML de glosas Iniciales a Generar $NumeroGlosasIniciales;$NumeroGlosasIniciales");
+        break;//Fin caso 22
+        
     }
           
 }else{

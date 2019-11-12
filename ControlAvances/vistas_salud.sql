@@ -117,11 +117,11 @@ FROM `salud_archivo_facturacion_mov_generados`;
 DROP VIEW IF EXISTS `vista_salud_glosas_masivas`;
 CREATE VIEW vista_salud_glosas_masivas AS 
 SELECT `ID`,FechaIPS,FechaAuditoria,ValorGlosado,Analizado,GlosaInicial,GlosaControlRespuestas,CodigoActividad,Observaciones,Soporte,
-(SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
-(SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_glosas_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
-(SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_glosas_masivas_temp.`ID_EPS`=salud_archivo_facturacion_mov_generados.cod_enti_administradora AND `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS CodEps,
-(SELECT nit FROM salud_eps WHERE `salud_glosas_masivas_temp`.`NIT_EPS`=salud_eps.nit AND `salud_glosas_masivas_temp`.`ID_EPS`=salud_eps.cod_pagador_min) AS NIT,
-(SELECT cod_glosa FROM salud_archivo_conceptos_glosas WHERE `salud_glosas_masivas_temp`.`CodigoGlosa`=salud_archivo_conceptos_glosas.cod_glosa) AS CodigoGlosa,
+(SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS Factura,
+(SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_glosas_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS LIMIT 1) AS CuentaRIPS,
+(SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados WHERE salud_glosas_masivas_temp.`ID_EPS`=salud_archivo_facturacion_mov_generados.cod_enti_administradora AND `salud_glosas_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS CodEps,
+(SELECT nit FROM salud_eps WHERE `salud_glosas_masivas_temp`.`NIT_EPS`=salud_eps.nit AND `salud_glosas_masivas_temp`.`ID_EPS`=salud_eps.cod_pagador_min LIMIT 1) AS NIT,
+(SELECT cod_glosa FROM salud_archivo_conceptos_glosas WHERE `salud_glosas_masivas_temp`.`CodigoGlosa`=salud_archivo_conceptos_glosas.cod_glosa LIMIT 1) AS CodigoGlosa,
 
 (SELECT cod_medicamento FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_glosas_masivas_temp.num_factura 
 AND salud_archivo_medicamentos.cod_medicamento=salud_glosas_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAM,
@@ -168,8 +168,8 @@ DROP VIEW IF EXISTS `vista_salud_consolidaciones_masivas`;
 CREATE VIEW vista_salud_consolidaciones_masivas AS 
 SELECT `ID`,FechaConciliacion,CuentaRIPS as CuentaRIPSTemp,num_factura,CodigoActividad,ValorLevantado,ValorAceptado,Observaciones,Soporte,Conciliada,
 (SELECT FechaConciliacion>NOW()) AS Extemporanea,(SELECT ValorLevantado>=0) AS ValorLevantadoPositivo,(SELECT ValorAceptado>=0) AS ValorAceptadoPositivo,
-(SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura) AS Factura,
-(SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_conciliaciones_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS) AS CuentaRIPS,
+(SELECT num_factura FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura LIMIT 1) AS Factura,
+(SELECT `CuentaRips` FROM salud_archivo_facturacion_mov_generados WHERE `salud_conciliaciones_masivas_temp`.`num_factura`=salud_archivo_facturacion_mov_generados.num_factura AND `salud_conciliaciones_masivas_temp`.`CuentaRips`=salud_archivo_facturacion_mov_generados.CuentaRIPS LIMIT 1) AS CuentaRIPS,
 
 (SELECT cod_medicamento FROM salud_archivo_medicamentos WHERE salud_archivo_medicamentos.num_factura=salud_conciliaciones_masivas_temp.num_factura 
 AND salud_archivo_medicamentos.cod_medicamento=salud_conciliaciones_masivas_temp.CodigoActividad LIMIT 1) AS CodigoActividadAM,

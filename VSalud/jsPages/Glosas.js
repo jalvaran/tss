@@ -2001,3 +2001,53 @@ function VerHistoricoGlosas(idFactura,CodigoActividad){
           }
       })
 }
+
+
+function ConfirmarGeneracionXMLGlosas(){
+    alertify.confirm("Está seguro que desea iniciar el proceso de generacion de XML para las glosas?",
+    function (e) {
+        if (e) {
+           
+            CalcularArchivosXMLARealizarGlosasIniciales();
+                        
+        } else {
+            alertify.error("Se canceló el proceso");
+
+        }
+    });
+}
+
+
+function CalcularArchivosXMLARealizarGlosasIniciales(){
+    document.getElementById('DivProcessGeneracionXML').innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+    var form_data = new FormData();      
+        form_data.append('idAccion', 21); //Agregar respuesta a Glosa temporal
+                
+        $.ajax({
+        //async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data);
+            var respuestas = data.split(';'); 
+            if(respuestas[0]=="OK"){
+                alertify.success(respuestas[1]);
+                document.getElementById('DivProcessGeneracionXML').innerHTML=respuestas[1];
+                //GenerarXMLGlosasIniciales(respuestas[2]);
+            }else{
+                alertify.alert(data);
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alertify.error("Error al tratar de generar los xml de las glosas ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
