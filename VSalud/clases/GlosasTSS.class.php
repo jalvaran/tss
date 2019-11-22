@@ -1145,11 +1145,13 @@ class Glosas extends conexion{
         
     }
     
-    public function ConstruirXMLGlosaInicial($DatosGlosa) {
+    public function ConstruirXMLGlosas($DatosGlosa) {
+        $idUser=$_SESSION["idUser"];
         $DatosRuta=$this->DevuelveValores("configuracion_general", "ID", 14);
         $Ruta=$DatosRuta["Valor"];
         $NumeroFactura=$DatosGlosa["num_factura"];
-        $nombre_archivo = "GLI".$NumeroFactura."_".$DatosGlosa["ID"].".xml";
+        $TipoDocumento="GLI";
+        $nombre_archivo = $TipoDocumento.$NumeroFactura.".xml";
         $RutaArchivo=$Ruta.$nombre_archivo;
         $DatosFactura=$this->DevuelveValores("salud_archivo_facturacion_mov_generados", "num_factura", $NumeroFactura);
         $DatosEPS=$this->DevuelveValores("salud_eps", "cod_pagador_min", $DatosFactura["cod_enti_administradora"]);
@@ -1168,17 +1170,88 @@ class Glosas extends conexion{
         $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaInicial='C' LIMIT 1";
         $CuentaPUCCredito=$this->FetchAssoc($this->Query($sql));
         
-        $ValorGlosa=round($DatosGlosa["ValorGlosado"],1);
+        $ValorGlosaInicial=round($DatosGlosa["ValorGlosado"],1);
+        $ValorGlosaAceptada=round($DatosGlosa["ValorAceptado"],1);
+        $ValorGlosaLevantada=round($DatosGlosa["ValorLevantado"],1);
         
+        if($ValorGlosaInicial>0){
+            $xmlGlosaInicial=$this->ConstruirXMLGlosa($idFactura,$TipoDocumento, $FechaFacturaXml, $NitIPSXml, $DatosIPS["CentroCostos"], $NumeroFactura, $ValorGlosaInicial, $MesGlosa, $CuentaPUCDebito, $CuentaPUCCredito, $DatosEPS["TipoEntidad"], $DatosEPS["nit"], $DatosEPS["nombre_completo"]);
+            $this->GuardeArchivoXMLEnLocal($RutaArchivo, $NumeroFactura, $xmlGlosaInicial);
+            $idRegistroXML=$this->AgregueRegistroXMLFTP($NumeroFactura, $nombre_archivo, $RutaArchivo, $idUser);
+            if($ValorGlosaAceptada>0){
+                $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaAceptada='D' LIMIT 1";
+                $CuentaPUCDebito=$this->FetchAssoc($this->Query($sql));
+                $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaAceptada='C' LIMIT 1";
+                $CuentaPUCCredito=$this->FetchAssoc($this->Query($sql));
+                $TipoDocumento="GLA";
+                $nombre_archivo = $TipoDocumento.$NumeroFactura.".xml";
+                $RutaArchivo=$Ruta.$nombre_archivo;
+                $xmlGlosaAceptada=$this->ConstruirXMLGlosa($idFactura,$TipoDocumento, $FechaFacturaXml, $NitIPSXml, $DatosIPS["CentroCostos"], $NumeroFactura, $ValorGlosaAceptada, $MesGlosa, $CuentaPUCDebito, $CuentaPUCCredito, $DatosEPS["TipoEntidad"], $DatosEPS["nit"], $DatosEPS["nombre_completo"]);
+                $this->GuardeArchivoXMLEnLocal($RutaArchivo, $NumeroFactura, $xmlGlosaAceptada);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "Xml_Glosa_Aceptada", 1, "num_factura", $NumeroFactura);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "NombreArchivoXMLGlosaAceptada", $nombre_archivo, "ID", $idRegistroXML);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "Ruta_Xml_GlosaAceptada", $RutaArchivo, "ID", $idRegistroXML);
+                
+            }
+            
+            if($ValorGlosaLevantada>0){
+                $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaLevantada='D' LIMIT 1";
+                $CuentaPUCDebito=$this->FetchAssoc($this->Query($sql));
+                $sql="SELECT CuentaPUC,DescripcionCuenta FROM parametros_contables_glosas WHERE Regimen='$RegimenEPS' AND Vigencia='$AnioFactura' AND TipoCuentaGlosaLevantada='C' LIMIT 1";
+                $CuentaPUCCredito=$this->FetchAssoc($this->Query($sql));
+                $TipoDocumento="GLL";
+                $nombre_archivo = $TipoDocumento.$NumeroFactura.".xml";
+                $RutaArchivo=$Ruta.$nombre_archivo;
+                $xmlGlosaLevantada=$this->ConstruirXMLGlosa($idFactura,$TipoDocumento, $FechaFacturaXml, $NitIPSXml, $DatosIPS["CentroCostos"], $NumeroFactura, $ValorGlosaLevantada, $MesGlosa, $CuentaPUCDebito, $CuentaPUCCredito, $DatosEPS["TipoEntidad"], $DatosEPS["nit"], $DatosEPS["nombre_completo"]);
+                $this->GuardeArchivoXMLEnLocal($RutaArchivo, $NumeroFactura, $xmlGlosaLevantada);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "Xml_Glosa_Levantada", 1, "num_factura", $NumeroFactura);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "NombreArchivoXMLGlosaLevantada", $nombre_archivo, "ID", $idRegistroXML);
+                $this->ActualizaRegistro("registro_glosas_xml_ftp", "Ruta_Xml_GlosaLevantada", $RutaArchivo, "ID", $idRegistroXML);
+                
+            }
+            
+        }
+        
+        
+        
+    }
+    
+    public function GuardeArchivoXMLEnLocal($RutaArchivo,$NumeroFactura,$xml) {
+        if(file_exists($RutaArchivo)){
+            unlink($RutaArchivo);
+        }
+        if($archivo = fopen($RutaArchivo, "w")){
+            if(!fwrite($archivo, $xml)){
+                exit("E1;No se pudo generar el XML para la factura $NumeroFactura");
+            }
+            fclose($archivo);
+        }
+    }
+    
+    public function AgregueRegistroXMLFTP($num_factura,$NombreArchivoXML,$RutaArchivoXML,$idUser) {
+        
+        $Datos["num_factura"]=$num_factura;
+        $Datos["Xml_Glosa_Inicial"]=1;
+        $Datos["FechaRegistroGlosaInicial"]=date("Y-m-d H:i:s");
+        $Datos["NombreArchivoXMLGlosaInicial"]=$NombreArchivoXML;
+        $Datos["Ruta_Xml_GlosaInicial"]=$RutaArchivoXML;
+        $Datos["idUser"]=$idUser;
+        $sql= $this->getSQLInsert("registro_glosas_xml_ftp", $Datos);
+        $this->Query($sql);
+        $ID= $this->ObtenerMAX("registro_glosas_xml_ftp", "ID", 1, "");
+        return($ID);
+    }
+    
+    public function ConstruirXMLGlosa($idFactura,$TipoDocumento,$FechaFacturaXml,$NitIPSXml,$CentroCostos,$NumeroFactura,$ValorGlosa,$MesGlosa,$CuentaPUCDebito,$CuentaPUCCredito,$TipoEntidadEPS,$NitEPS,$NombreEps) {
         $xmlGlosa='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <factura>
     <cabecera_asg>
         <tnro>'.$idFactura.'</tnro> <!-- Identificador - llave primaria de la factura en la base de datos de TSS -->
-        <tdocu>GLI</tdocu> <!-- Tipo de documento definido para el movimiento - ACTUALMENTE TENEMOS UN ARCHIVO DE CONFIGURACION PARA LOS TIPOS DE DOCUMENTO - VERIFICAR LA MEJOR OPCION DE DONDE PODRIAMOS TOMAR ESTE DATO-->
+        <tdocu>'.$TipoDocumento.'</tdocu> <!-- Tipo de documento definido para el movimiento - ACTUALMENTE TENEMOS UN ARCHIVO DE CONFIGURACION PARA LOS TIPOS DE DOCUMENTO - VERIFICAR LA MEJOR OPCION DE DONDE PODRIAMOS TOMAR ESTE DATO-->
         <usucrea>CADUCEOS</usucrea> <!-- Usuario que realiza el movimiento - POR DEFECTO ENVIAR CADUCEOS -->
         <fechacrea>'.$FechaFacturaXml.'</fechacrea> <!-- Fecha factura - SE DEBE TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS-->
         <tmovempcod>'.$NitIPSXml.'</tmovempcod> <!-- Nit de la ESE que presento la cuenta -->
-        <ccosto>'.$DatosIPS["CentroCostos"].'</ccosto> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+        <ccosto>'.$CentroCostos.'</ccosto> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
         <tmovdocnro>'.$NumeroFactura.'</tmovdocnro> <!-- Nro. Factura -->
         <tmovval>'.$ValorGlosa.'</tmovval> <!-- Valor total de glosa inicial - corresponde a la sumatoria de glosas iniciales de los registros de la factura -->
         <tmovpernro>'.$MesGlosa.'</tmovpernro> <!-- Mes en que se realiza el movimiento o registro de la glosa -->
@@ -1188,10 +1261,10 @@ class Glosas extends conexion{
             <tmovcuecod>'.$CuentaPUCDebito["CuentaPUC"].'</tmovcuecod> <!-- Cuenta contable debito para glosa inicial - TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS  -->
             <tmovmdecpt>'.$CuentaPUCDebito["DescripcionCuenta"].'</tmovmdecpt> <!-- Descripción de la cuenta contable debito del servicio -->
             <tmovmdemov>D</tmovmdemov> <!-- Tipo de movimiento C (Crédito) - D (Debito) definido para la glosa inicial -->
-            <tmovccocod>'.$DatosIPS["CentroCostos"].'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
-            <tmovscocod>'.$DatosEPS["TipoEntidad"].'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
-            <tmovtercod>'.$DatosEPS["nit"].'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
-            <tmovternom>'.$DatosEPS["nombre_completo"].'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
+            <tmovccocod>'.$CentroCostos.'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovscocod>'.$TipoEntidadEPS.'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovtercod>'.$NitEPS.'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
+            <tmovternom>'.$NombreEps.'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
             <tmovmdedoc>'.$NumeroFactura.'</tmovmdedoc> <!-- Nro. Factura -->
             <tmovmdeval>'.$ValorGlosa.'</tmovmdeval> <!-- Valor glosado inicial de la factura -->
         </detalles>
@@ -1200,32 +1273,73 @@ class Glosas extends conexion{
             <tmovcuecod>'.$CuentaPUCCredito["CuentaPUC"].'</tmovcuecod> <!-- Cuenta contable credito para glosa inicial - TENER EN CUENTA EL AÑO DE LA FACTURA PARA IDENTIFICAR QUE CUENTAS SE AFECTAN - VER PUNTO 3 DEL DOCUMENTO DE REQUERIMIENTOS  -->
             <tmovmdecpt>'.$CuentaPUCCredito["DescripcionCuenta"].'</tmovmdecpt> <!-- Descripción de la cuenta contable crédito del regimen del paciente -->
             <tmovmdemov>C</tmovmdemov> <!-- Tipo de movimiento C (Crédito) - D (Debito) definido para la glosa inicial -->
-            <tmovccocod>'.$DatosIPS["CentroCostos"].'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
-            <tmovscocod>'.$DatosEPS["TipoEntidad"].'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
-            <tmovtercod>'.$DatosEPS["nit"].'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
-            <tmovternom>'.$DatosEPS["nombre_completo"].'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
+            <tmovccocod>'.$CentroCostos.'</tmovccocod> <!-- Centro de Costo de la IPS o punto de atención que presento la cuenta - VER PUNTO 1 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovscocod>'.$TipoEntidadEPS.'</tmovscocod> <!-- Subcentro de costo - Corresponde al tipo de entidad -  VER PUNTO 2 DEL DOCUMENTO DE REQUERIMIENTOS -->
+            <tmovtercod>'.$NitEPS.'</tmovtercod> <!-- Nit de la Aseguradora - EPS -->
+            <tmovternom>'.$NombreEps.'</tmovternom> <!-- Razón Social de la entidad Aseguradora -->
             <tmovmdedoc>'.$NumeroFactura.'</tmovmdedoc> <!-- Nro. Factura -->
             <tmovmdeval>'.$ValorGlosa.'</tmovmdeval> <!-- Valor glosado inicial de la factura -->
         </detalles>	
     </cabecera_asg>
 </factura>';
         
-        if(file_exists($RutaArchivo)){
-            unlink($RutaArchivo);
-        }
-        if($archivo = fopen($RutaArchivo, "w")){
-            if(!fwrite($archivo, $xmlGlosa)){
-                exit("E1;No se pudo generar el XML para la factura $NumeroFactura");
-            }
-            fclose($archivo);
-        }
-        
-        $this->ActualizaRegistro("salud_glosas_iniciales", "EstadoReporteXMLFTP", 1, "ID", $DatosGlosa["ID"]);
-        
-       
-        
+        return($xmlGlosa);
         
     }
    
+    public function ReportarGlosasXFTP($DatosGlosa) {
+        $DatosServidorFTP= $this->DevuelveValores("servidores", "ID", 200);
+        $ftp_host=$DatosServidorFTP["IP"];
+	$ftp_port=$DatosServidorFTP["Puerto"];
+	$ftp_user=$DatosServidorFTP["Usuario"];
+	$ftp_password=$DatosServidorFTP["Password"];
+        $DatosConfiguracion= $this->DevuelveValores("configuracion_general", "ID", 15);
+	$ruta=$DatosConfiguracion["Valor"];
+        
+	// Realizamos la conexion con el servidor
+	$conn_id=@ftp_connect($ftp_host,$ftp_port);
+	if($conn_id){
+		// Realizamos el login con nuestro usuario y contraseña
+		if(@ftp_login($conn_id,$ftp_user,$ftp_password)){
+			// Canbiamos al directorio especificado
+			if(@ftp_chdir($conn_id,$ruta)){
+				# Subimos el fichero
+                            //@ftp_put($conn_id,$DatosGlosa["NombreArchivoXMLGlosaInicial"],$DatosGlosa["NombreArchivoXMLGlosaInicial"],FTP_BINARY);
+                                if($DatosGlosa["Ruta_Xml_GlosaInicial"]<>''){
+                                    if (!ftp_put($conn_id, $DatosGlosa["NombreArchivoXMLGlosaInicial"], $DatosGlosa["Ruta_Xml_GlosaInicial"], FTP_BINARY)) {
+
+                                       exit("E1;Hubo un problema durante la transferencia de $DatosGlosa[Ruta_Xml_GlosaInicial]\n");
+                                    }
+                                }
+                                if($DatosGlosa["Ruta_Xml_GlosaAceptada"]<>''){
+                                    if (!ftp_put($conn_id, $DatosGlosa["NombreArchivoXMLGlosaAceptada"], $DatosGlosa["Ruta_Xml_GlosaAceptada"], FTP_BINARY)) {
+
+                                       exit("E1;Hubo un problema durante la transferencia de $DatosGlosa[Ruta_Xml_GlosaAceptada]\n");
+                                    }
+                                }
+                                if($DatosGlosa["Ruta_Xml_GlosaLevantada"]<>''){
+                                    if (!ftp_put($conn_id, $DatosGlosa["NombreArchivoXMLGlosaLevantada"], $DatosGlosa["Ruta_Xml_GlosaLevantada"], FTP_BINARY)) {
+
+                                       exit("E1;Hubo un problema durante la transferencia de $DatosGlosa[Ruta_Xml_GlosaLevantada]\n");
+                                    }
+                                }
+                                
+                                $this->ActualizaRegistro("registro_glosas_xml_ftp", "ReportadoXFtp", 1, "ID", $DatosGlosa["idRegistroGlosasXmlFtp"]);
+
+                        }else{
+                                exit("No existe el directorio especificado en el ftp, ".$ruta);
+                        }
+                        
+                       
+		}else
+			echo "El usuario o la contraseña son incorrectos";
+		# Cerramos la conexion ftp
+		ftp_close($conn_id);
+	}else{
+            exit("No ha sido posible conectar con el servidor");
+        }
+        
+    }
+    
     //Fin Clases
 }
