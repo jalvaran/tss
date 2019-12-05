@@ -1298,9 +1298,11 @@ class Glosas extends conexion{
         
 	// Realizamos la conexion con el servidor
 	$conn_id=@ftp_connect($ftp_host,$ftp_port);
+        
 	if($conn_id){
 		// Realizamos el login con nuestro usuario y contraseña
 		if(@ftp_login($conn_id,$ftp_user,$ftp_password)){
+                        ftp_pasv($conn_id, true);
 			// Canbiamos al directorio especificado
 			if(@ftp_chdir($conn_id,$ruta)){
 				# Subimos el fichero

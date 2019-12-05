@@ -420,7 +420,7 @@ SELECT t1.id_fac_mov_generados as ID, t1.cod_prest_servicio, t1.razon_social,
 t1.num_ident_prest_servicio as NIT, t1.num_factura, fecha_factura,cod_enti_administradora,
 nom_enti_administradora,plan_beneficios,EstadoGlosa,
 (SELECT (FechaRegistro) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura LIMIT 1) as FechaRegistro,
-(SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorGlosado,
+(SELECT SUM(ValorLevantado+ValorAceptado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorGlosado,
 (SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorLevantado,
 (SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorAceptado,
 
