@@ -1032,7 +1032,7 @@ class PageConstruct extends html_estruct_class{
      * @param type $Color
      * @param type $VectorBoton
      */
-    function CrearBotonEvento($nombre,$value,$enabled,$evento,$funcion,$Color,$VectorBoton){
+    function CrearBotonEvento($nombre,$value,$enabled,$evento,$funcion,$Color,$VectorBoton=''){
             
             switch ($Color){
                 case "verde":
@@ -1940,6 +1940,30 @@ class PageConstruct extends html_estruct_class{
         
         public function TabPaneEnd() {
             print('</div>');
+        }
+        
+        
+        public function CrearTitulo($Mensaje,$color='azul') {
+            
+            if($color=="azul"){
+                $tipo="info";
+            }
+            if($color=="rojo"){
+                $tipo="danger";
+            }
+            if($color=="naranja"){
+                $tipo="warning";
+            }
+            if($color=="verde"){
+                $tipo="success";
+            }
+            print('<div class="box box-'.$tipo.'">
+            <div class="box-header with-border">
+              <h3 class="box-title">'.$Mensaje.'</h3>             
+            </div>
+            
+          </div>');
+            //print('<div class="callout callout-info">'.$Mensaje.'</div>');
         }
         
         //////////////////////////////////FIN

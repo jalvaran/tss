@@ -360,6 +360,15 @@ WHERE vista_salud_facturas_usuarios.num_factura=salud_archivo_facturacion_mov_ge
 
 FROM `salud_archivo_facturacion_mov_generados`;
 
+DROP VIEW IF EXISTS `vista_af_semaforo`;
+CREATE VIEW vista_af_semaforo AS
+SELECT *,
+(SELECT MAX(DiasTranscurridos) FROM vista_glosas_iniciales
+WHERE vista_glosas_iniciales.num_factura=salud_archivo_facturacion_mov_generados.num_factura 
+AND vista_glosas_iniciales.EstadoGlosa=1) AS Dias
+
+FROM `salud_archivo_facturacion_mov_generados`;
+
 
 DROP VIEW IF EXISTS `vista_salud_cuentas_rips`;
 CREATE VIEW vista_salud_cuentas_rips AS 
@@ -428,6 +437,7 @@ nom_enti_administradora,plan_beneficios,EstadoGlosa,
 (SELECT IFNULL((SELECT Xml_Glosa_Aceptada FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as Xml_Glosa_Aceptada,
 (SELECT IFNULL((SELECT Xml_Glosa_Levantada FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as Xml_Glosa_Levantada,
 (SELECT IFNULL((SELECT ReportadoXFtp FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as ReportadoXFtp,
+(SELECT IFNULL((SELECT GlosaInicialReportadaPorFTP FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as GlosaInicialReportadaPorFTP,
 
 (SELECT (ID) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as idRegistroGlosasXmlFtp,
 (SELECT (NombreArchivoXMLGlosaInicial) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as NombreArchivoXMLGlosaInicial,
@@ -440,3 +450,33 @@ nom_enti_administradora,plan_beneficios,EstadoGlosa,
 
   
 FROM vista_af t1 WHERE t1.EstadoGlosa>=5 AND t1.EstadoGlosa<=7;
+
+DROP VIEW IF EXISTS `vista_reporte_contable_facturas_xml_ftp_glosas_iniciales`;
+CREATE VIEW vista_reporte_contable_facturas_xml_ftp_glosas_iniciales AS 
+SELECT t1.id_fac_mov_generados as ID, t1.cod_prest_servicio, t1.razon_social, 
+t1.num_ident_prest_servicio as NIT, t1.num_factura, fecha_factura,cod_enti_administradora,
+nom_enti_administradora,plan_beneficios,EstadoGlosa,
+(SELECT (FechaRegistro) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura LIMIT 1) as FechaRegistro,
+(SELECT SUM(ValorLevantado+ValorAceptado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorGlosado,
+(SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorLevantado,
+(SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales t2 WHERE t1.num_factura=t2.num_factura) as ValorAceptado,
+
+(SELECT IFNULL((SELECT Xml_Glosa_Inicial FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as Xml_Glosa_Inicial,
+(SELECT IFNULL((SELECT Xml_Glosa_Aceptada FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as Xml_Glosa_Aceptada,
+(SELECT IFNULL((SELECT Xml_Glosa_Levantada FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as Xml_Glosa_Levantada,
+(SELECT IFNULL((SELECT ReportadoXFtp FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as ReportadoXFtp,
+(SELECT IFNULL((SELECT GlosaInicialReportadaPorFTP FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura LIMIT 1),0)) as GlosaInicialReportadaPorFTP,
+
+(SELECT (ID) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as idRegistroGlosasXmlFtp,
+(SELECT (NombreArchivoXMLGlosaInicial) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as NombreArchivoXMLGlosaInicial,
+(SELECT (NombreArchivoXMLGlosaAceptada) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as NombreArchivoXMLGlosaAceptada,
+(SELECT (NombreArchivoXMLGlosaLevantada) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as NombreArchivoXMLGlosaLevantada,
+(SELECT (Ruta_Xml_GlosaInicial) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as Ruta_Xml_GlosaInicial,
+(SELECT (Ruta_Xml_GlosaAceptada) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as Ruta_Xml_GlosaAceptada,
+(SELECT (Ruta_Xml_GlosaLevantada) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as Ruta_Xml_GlosaLevantada,
+(SELECT (Ruta_Ftp) FROM registro_glosas_xml_ftp t2 WHERE t1.num_factura=t2.num_factura) as Ruta_Ftp
+
+  
+FROM vista_af t1 WHERE t1.EstadoGlosa=1;
+
+

@@ -140,14 +140,16 @@ function BuscarCuentaXCriterio(Criterio=1){
  * @param {type} NumFactura
  * @returns {undefined}
  */
-function MostrarFacturas(CuentaRIPS,NumFactura=''){
+function MostrarFacturas(CuentaRIPS,NumFactura='',LimpiarDivs=1){
     //document.getElementById("TxtBuscarCuentaRIPS").value=CuentaRIPS;
     document.getElementById("TxtCuentaActiva").value=CuentaRIPS;
-    document.getElementById("DivDetallesUsuario").innerHTML='';
-    document.getElementById("DivActividadesFacturas").innerHTML='';
-    document.getElementById("DivHistoricoGlosas").innerHTML='';
-    document.getElementById("DivFormRespuestasGlosas").innerHTML='';
-    document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
+    if(LimpiarDivs==1){
+        document.getElementById("DivDetallesUsuario").innerHTML='';
+        document.getElementById("DivActividadesFacturas").innerHTML='';
+        document.getElementById("DivHistoricoGlosas").innerHTML='';
+        document.getElementById("DivFormRespuestasGlosas").innerHTML='';
+        document.getElementById("DivRespuestasGlosasTemporal").innerHTML='';
+    }
     document.location.href = "#AnclaFacturas";
     document.getElementById("DivFacturas").innerHTML='<div id="GifProcess">Buscando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
     var form_data = new FormData();
@@ -937,6 +939,9 @@ function GuadarGlosasTemporales(idFactura){
             
             BuscarActividadesFactura(idFactura);
             RefrescarDiv();
+            if ($('#BtnActualizarListaFacturasCuenta').length) {
+                document.getElementById("BtnActualizarListaFacturasCuenta").click();
+            }
         },
         error: function (xhr, ajaxOptions, thrownError) {
             alertify.error("Error al tratar de editar la glosa ",0);
@@ -2159,6 +2164,7 @@ function SubirFTPGlosas(TotalRegistros){
                     alertify.success("XML Subidos al FTP correctamente");
                     document.getElementById('DivProcessSubirFTP').innerHTML="";
                     document.getElementById('DivSubirFTP').innerHTML="Se subieron al servidor ftp "+TotalRegistros+" Archivos XML de Glosas";
+                    CalcularTotalArchivosFTPDeGlosasASubirIniciales();
                 }else{
                     SubirFTPGlosas(TotalRegistros);
                 }
@@ -2172,6 +2178,123 @@ function SubirFTPGlosas(TotalRegistros){
         error: function (xhr, ajaxOptions, thrownError) {
             document.getElementById('DivProcessSubirFTP').innerHTML="";
             alertify.error("Error al tratar de subir los ftp de las glosas ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+
+function CalcularTotalArchivosFTPDeGlosasASubirIniciales(){
+    document.getElementById('DivProcessSubirFTP').innerHTML='<div id="GifProcess">Procesando...<br><img   src="../images/cargando.gif" alt="Cargando" height="100" width="100"></div>';
+    var form_data = new FormData();      
+        form_data.append('idAccion', 26); 
+                
+        $.ajax({
+        //async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data);
+            var respuestas = data.split(';'); 
+            if(respuestas[0]=="OK"){
+                alertify.success(respuestas[1]);
+                document.getElementById('DivSubirFTP').innerHTML=respuestas[1];
+                SubirFTPGlosasIniciales(respuestas[2]);
+            }else{
+                document.getElementById('DivProcessSubirFTP').innerHTML="";
+                alertify.alert(data);
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            document.getElementById('DivProcessSubirFTP').innerHTML="";
+            alertify.error("Error al tratar de subir los ftp de las glosas ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+function SubirFTPGlosasIniciales(TotalRegistros){
+    
+    var form_data = new FormData();      
+        form_data.append('idAccion', 27); //Agregar respuesta a Glosa temporal
+        form_data.append('TotalRegistros', TotalRegistros); //Agregar respuesta a Glosa temporal        
+        $.ajax({
+        //async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data);
+            var respuestas = data.split(';'); 
+            if(respuestas[0]=="OK"){
+                //alertify.success(respuestas[1]);
+                document.getElementById('DivSubirFTP').innerHTML=respuestas[1];
+                if(respuestas[2] == 0){
+                    alertify.success("XML Subidos al FTP correctamente");
+                    document.getElementById('DivProcessSubirFTP').innerHTML="";
+                    document.getElementById('DivSubirFTP').innerHTML="Se subieron al servidor ftp "+TotalRegistros+" Archivos XML de Glosas";
+                }else{
+                    SubirFTPGlosasIniciales(TotalRegistros);
+                }
+                
+            }else{
+                document.getElementById('DivProcessSubirFTP').innerHTML="";
+                alertify.alert(data);
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            document.getElementById('DivProcessSubirFTP').innerHTML="";
+            alertify.error("Error al tratar de subir los ftp de las glosas ",0);
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      })
+}
+
+function CrearXMLGlosaInicial(NumeroFactura,ValorGlosado){
+    
+    var form_data = new FormData();      
+        form_data.append('idAccion', 25); //Crear Glosa Inicial
+        form_data.append('NumeroFactura', NumeroFactura);    
+        form_data.append('ValorGlosado', ValorGlosado);       
+        $.ajax({
+        //async:false,
+        url: './Consultas/AccionesGlosarFacturas.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            console.log(data);
+            var respuestas = data.split(';'); 
+            if(respuestas[0]=="OK"){
+                alertify.success(respuestas[1]);
+                document.getElementById('DivGeneracionXML').innerHTML=respuestas[1];
+                RefrescarDiv();                
+            }else{
+                document.getElementById('DivProcessGeneracionXML').innerHTML="";
+                alertify.alert(data);
+            }
+            
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            document.getElementById('DivProcessGeneracionXML').innerHTML="";
+            alertify.error("Error al tratar de generar los xml de las glosas ",0);
             alert(xhr.status);
             alert(thrownError);
           }

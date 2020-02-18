@@ -445,3 +445,34 @@ ALTER TABLE `servidores` ADD `TipoServidor` VARCHAR(10) NOT NULL AFTER `Puerto`;
 ALTER TABLE `salud_glosas_iniciales` ADD `EstadoReporteXMLFTP` INT NOT NULL AFTER `ValorConciliado`;
 
 
+CREATE TABLE `cuentas_contables` (
+  `PUC` bigint(20) NOT NULL,
+  `Nombre` varchar(100) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `SolicitaBase` int(11) NOT NULL,
+  `Updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Sync` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`PUC`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+ALTER TABLE `salud_archivo_facturacion_mov_generados` ADD `CuentaContable` bigint NOT NULL AFTER `EstadoGlosa`;
+ALTER TABLE `salud_rips_facturas_generadas_temp` ADD `CuentaContable` bigint NOT NULL AFTER `CuentaRIPS`;
+ALTER TABLE `salud_circular030_inicial` ADD `CuentaContable` bigint NOT NULL AFTER `Cod_Entidad_Administradora`;
+ALTER TABLE `salud_tesoreria` ADD `TipoPago` int(11) NOT NULL AFTER `fecha_hora_registro`;
+ALTER TABLE `salud_tesoreria` ADD INDEX(`TipoPago`);
+ALTER TABLE `salud_archivo_facturacion_mov_generados` ADD INDEX(`CuentaContable`);
+ALTER TABLE `salud_archivo_facturacion_mov_generados` ADD INDEX(`CuentaGlobal`);
+
+
+CREATE TABLE `salud_tesoreria_tipos_pago` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `TipoPago` varchar(25) COLLATE utf8_spanish_ci NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+INSERT INTO `salud_tesoreria_tipos_pago` (`ID`, `TipoPago`) VALUES
+(1,	'PAGO EPS'),
+(2,	'PAGO NOMINA');
+
+INSERT INTO `menu_submenus` (`ID`, `Nombre`, `idPestana`, `idCarpeta`, `idMenu`, `TablaAsociada`, `TipoLink`, `JavaScript`, `Pagina`, `Target`, `Estado`, `Image`, `Orden`, `Updated`, `Sync`) VALUES
+(71,	'Cuentas Contables',	3,	6,	0,	'',	0,	'',	'cuentas_contables.php',	'_SELF',	CONV('1', 2, 10) + 0,	'subcuentas.png',	10,	'2018-08-05 23:09:34',	'2018-07-13 15:42:34');
+

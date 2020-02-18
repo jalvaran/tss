@@ -19,7 +19,8 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     $MostrarFiltros=1;
     if(isset($_REQUEST["MostrarFiltros"])){
         $MostrarFiltros=$_REQUEST["MostrarFiltros"];
-    }    
+    }  
+    
     // Consultas enviadas a traves de la URL
     $statement="";
     
@@ -37,7 +38,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     }
      
     
-    
+    $css->CrearBotonEvento("BtnActualizarListaFacturasCuenta", "Actualizar Facturas", 1, "onClick", "MostrarFacturas('$CuentaRIPS','','0');", "naranja", "");
     $FechaInicial="";
     $FechaFinal="";
     if(isset($_REQUEST["FechaInicial"]) and !empty($_REQUEST["FechaInicial"])){
@@ -121,7 +122,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
     
     
     //print("st:$statement");
-    $query="SELECT identificacion_usuario,cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa ,"
+    $query="SELECT cod_prest_servicio,Dias,CuentaRIPS,CuentaGlobal,num_factura,fecha_factura,valor_neto_pagar,EstadoGlosa ,"
             . " (SELECT Estado_glosa FROM salud_estado_glosas WHERE salud_estado_glosas.ID = vista_af_semaforo.EstadoGlosa) as DescripcionEstadoGlosa,"
             . " (SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=vista_af_semaforo.num_factura AND EstadoGlosa<=8) as TotalGlosadoFactura  ";
     $consulta=$obGlosas->Query("$query FROM $statement");
@@ -191,7 +192,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
             $css->ColTabla("<strong>Cuenta RIPS</strong>", 1);
             $css->ColTabla("<strong>Cuenta Global</strong>", 1);
             $css->ColTabla("<strong>Número de Factura</strong>", 1);
-            $css->ColTabla("<strong>Identificación</strong>", 1);
+            //$css->ColTabla("<strong>Identificación</strong>", 1);
             $css->ColTabla("<strong>Valor</strong>", 1);
             $css->ColTabla("<strong>Valor Total Glosado</strong>", 1);
             $css->ColTabla("<strong>Estado</strong>", 1);
@@ -209,7 +210,7 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 $css->ColTabla($DatosCuenta["CuentaRIPS"], 1);
                 $css->ColTabla($DatosCuenta["CuentaGlobal"], 1);
                 $css->ColTabla($DatosCuenta["num_factura"], 1);
-                $css->ColTabla($DatosCuenta["identificacion_usuario"], 1);
+                //$css->ColTabla($DatosCuenta["identificacion_usuario"], 1);
                 $css->ColTabla(number_format($DatosCuenta["valor_neto_pagar"]), 1);
                 $css->ColTabla(number_format($DatosCuenta["TotalGlosadoFactura"]), 1);
                 print("<td><div id='EstadoGlosaFactura_$DatosCuenta[num_factura]'>");
@@ -235,7 +236,20 @@ if( !empty($_REQUEST["idFactura"]) or !empty($_REQUEST["CuentaRIPS"]) or !empty(
                 print("</td>");
                 $idFactura=$DatosCuenta["num_factura"];   
                 print("<td style='text-align:center'>");
-                     $css->CrearBotonEvento("BtnMostrar_$idFactura", "Ver Factura", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
+                     $css->CrearBotonEvento("BtnMostrar_$idFactura", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ver Factura &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", 1, "onClick", "MostrarActividades('$DatosCuenta[num_factura]');CambiarColorBtnFacturas('BtnMostrar_$idFactura');", "verde", "");
+                     if($DatosCuenta["TotalGlosadoFactura"]>0){
+                         $sql="SELECT ID FROM registro_glosas_xml_ftp WHERE num_factura='$DatosCuenta[num_factura]' AND Xml_Glosa_Inicial";
+                         $DatosXML=$obGlosas->FetchAssoc($obGlosas->Query($sql));
+                         if($DatosXML["ID"]>0){
+                             print("<br><strong>XML de Glosa Inicial construido</strong>");
+                         }else{
+                            print("<br><br>");
+                            $css->CrearBotonEvento("BtnXML_$idFactura", "Crear XML Glosa Inicial", 1, "onClick", "CrearXMLGlosaInicial('$DatosCuenta[num_factura]','$DatosCuenta[TotalGlosadoFactura]');", "naranja", "");
+                     
+                         }
+                         
+                     }
+                     
                 print("</td>");
             $css->CierraFilaTabla();
         }

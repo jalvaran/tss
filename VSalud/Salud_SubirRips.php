@@ -110,14 +110,18 @@ print("<body>");
             $css->CierraFilaTabla();     
                  
             $css->FilaTabla(16);
-                $css->ColTabla("<strong>ZIP de Archivos *</strong>", 2);
+                $css->ColTabla("<strong>Cuenta Contable</strong>", 1);
+                $css->ColTabla("<strong>ZIP de Archivos *</strong>", 1);
               //  print("<td colspan=2 style='text-align:center'>");
                 $css->ColTabla("<strong>Enviar</strong>", 2);
               //  print("</td>");
             $css->CierraFilaTabla(); 
             
-            $css->FilaTabla(16);                
-                print("<td colspan=2 >");
+            $css->FilaTabla(16);     
+                print("<td colspan=1 >");
+                    $css->CrearTableChosen("CmbCuentaContable", "cuentas_contables", "", "PUC", "Nombre", "", "PUC", 200, 1, "Cuenta Contable", "");
+                print("</td>");
+                print("<td colspan=1 >");
                     $css->CrearUpload("ArchivosZip");
                 print("</td>");
                 print("<td colspan=2 >");

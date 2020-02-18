@@ -160,6 +160,7 @@ if($_REQUEST["idAccion"]){
             $CmbEscenario=$obRips->normalizar($_REQUEST["CmbEscenario"]);
             $TipoNegociacion=$obRips->normalizar($_REQUEST["CmbTipoNegociacion"]);
             $CuentaRIPS=$obRips->normalizar($_REQUEST["CuentaRIPS"]);
+            $CuentaContable=$obRips->normalizar($_REQUEST["CmbCuentaContable"]);
             if($TipoNegociacion=='capita'){
                 $DatosCuentaGlobal=$obCon->DevuelveValores("salud_archivo_facturacion_mov_generados", "num_factura", $CuentaGlobal);
                 if($DatosCuentaGlobal["num_factura"]<>''){
@@ -189,7 +190,7 @@ if($_REQUEST["idAccion"]){
                 $Prefijo=substr($DatosArchivo["nom_cargue"], 0, 2); 
                 if($Prefijo=="AF"){
                     $ErrorAF=0;
-                    $MensajeInsercion=$obRips->InsertarRipsFacturacionGenerada($DatosArchivo["nom_cargue"], $TipoNegociacion, $Separador, $FechaCargue, $idUser,$destino,$FechaRadicado,$NumeroRadicado,$CmbEscenario,$CuentaGlobal,$CuentaRIPS,$idEPS, "");
+                    $MensajeInsercion=$obRips->InsertarRipsFacturacionGenerada($DatosArchivo["nom_cargue"], $TipoNegociacion, $Separador, $FechaCargue, $idUser,$destino,$FechaRadicado,$NumeroRadicado,$CmbEscenario,$CuentaGlobal,$CuentaRIPS,$idEPS,$CuentaContable, "");
                     if($MensajeInsercion["Errores"]>0){
                         $Error=1;
                         $Mensaje["Error"]["Num"]=$MensajeInsercion["Errores"];

@@ -646,6 +646,8 @@ if( !empty($_REQUEST["idAccion"]) ){
             $sql="SELECT COUNT(ID) as TotalRegistros FROM vista_reporte_contable_facturas_xml_ftp WHERE ReportadoXFtp=0";
             $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
             $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            
+            
             print("OK;XML de Glosas a Enviar por FTP $NumeroGlosasIniciales;$NumeroGlosasIniciales");
         break;//Fin caso 23
     
@@ -658,11 +660,53 @@ if( !empty($_REQUEST["idAccion"]) ){
                 $obGlosas->ReportarGlosasXFTP($DatosGlosa);
             }
             
+                        
             $sql="SELECT COUNT(ID) as TotalRegistros FROM vista_reporte_contable_facturas_xml_ftp WHERE ReportadoXFtp=0";
             $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
-            $NumeroGlosas=$DatosTotales["TotalRegistros"];
-            print("OK;XML de Glosas a Reportados por FTP $NumeroGlosas;$NumeroGlosas");
+            $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            print("OK;XML de la factura $DatosGlosa[num_factura], reportada;$NumeroGlosasIniciales");
         break;//Fin caso 24
+        
+        case 25: //Construir el xml de las glosas iniciales
+            $NumeroFactura=$obGlosas->normalizar($_REQUEST["NumeroFactura"]);
+            $ValorGlosado=$obGlosas->normalizar($_REQUEST["ValorGlosado"]);
+            $sql="SELECT * FROM vista_reporte_contable_facturas_xml_ftp_glosas_iniciales WHERE Xml_Glosa_Inicial=0 AND num_factura='$NumeroFactura' LIMIT 1";
+            $DatosGlosa=$obGlosas->FetchAssoc($obGlosas->Query($sql));
+            if($DatosGlosa["ID"]>0){
+                $obGlosas->ConstruirXMLGlosaInicial($DatosGlosa,$ValorGlosado);
+                exit("OK;XML de la Glosa inicial para la factura $NumeroFactura fue creada exitosamente");
+            }else{
+                exit("OK;No hay registros por construir para la factura $NumeroFactura o ya fue creada");
+                
+            }
+            
+            
+        break;//Fin caso 25
+        
+        case 26: //Obtener numero de registros de XML de glosas construir
+                       
+            $sql="SELECT COUNT(ID) as TotalRegistros FROM vista_reporte_contable_facturas_xml_ftp_glosas_iniciales WHERE GlosaInicialReportadaPorFTP=0 AND Xml_Glosa_Inicial=1";
+            $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
+            $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            
+            print("OK;XML de Glosas a Enviar por FTP $NumeroGlosasIniciales;$NumeroGlosasIniciales");
+        break;//Fin caso 26
+    
+        case 27: //Enviar el XML por FTP
+            $TotalGlosasIniciales=$obGlosas->normalizar($_REQUEST["TotalRegistros"]);
+                      
+            $sql="SELECT * FROM vista_reporte_contable_facturas_xml_ftp_glosas_iniciales WHERE GlosaInicialReportadaPorFTP=0 AND Xml_Glosa_Inicial=1 LIMIT 1";
+            $DatosGlosa=$obGlosas->FetchAssoc($obGlosas->Query($sql));
+            if($DatosGlosa["ID"]>0){
+                $obGlosas->ReportarGlosasXFTP($DatosGlosa,1);
+            }
+                        
+            $sql="SELECT COUNT(ID) as TotalRegistros FROM vista_reporte_contable_facturas_xml_ftp_glosas_iniciales WHERE GlosaInicialReportadaPorFTP=0 AND Xml_Glosa_Inicial=1";
+            $DatosTotales = $obGlosas->FetchAssoc($obGlosas->Query($sql));
+            $NumeroGlosasIniciales=$DatosTotales["TotalRegistros"];
+            
+            print("OK;XML de la factura $DatosGlosa[num_factura], reportada;$NumeroGlosasIniciales");
+        break;//Fin caso 27
         
     }
           

@@ -210,8 +210,13 @@ if( !empty($_REQUEST["idFactura"]) ){
                             $Enable=0;
                             print("<strong>Glosa fuera de tiempo<br><strong>");
                         }
-                        
-                        $css->CrearBotonEvento("BtnGlosarActividad", "&nbsp Glosa &nbsp", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
+                        $sql="SELECT ID FROM registro_glosas_xml_ftp WHERE num_factura='$idFactura' AND Xml_Glosa_Inicial";
+                        $DatosXML=$obGlosas->FetchAssoc($obGlosas->Query($sql));
+                        if($DatosXML["ID"]>0){
+                            $css->CrearBotonEvento("BtnGlosarActividad", "&nbsp Glosa &nbsp", 0, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
+                        }else{
+                            $css->CrearBotonEvento("BtnGlosarActividad", "&nbsp Glosa &nbsp", $Enable, "onClick", "GlosarActividad('$TipoArchivo','$idArchivo','$idFactura','$CodActividad')", "naranja", "");
+                        }
                         print("<br><br>");
                         $Enable=0;
                         if($DatosValoresGlosas["NumGlosas"]>0){

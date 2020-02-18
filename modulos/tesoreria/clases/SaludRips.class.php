@@ -1181,9 +1181,9 @@ class Rips extends conexion{
         }else{
            $Separador=",";  
         }
-        
-            
-            $handle = fopen("../archivos/".$NombreArchivo, "r");
+        $Ruta="../../../VSalud/archivos/";
+            if($handle=fopen($Ruta.$NombreArchivo, "r")){
+            //$handle = fopen($Ruta.$NombreArchivo, "r");
             $i=0;
             $z=0;
             $h=0;
@@ -1238,6 +1238,9 @@ class Rips extends conexion{
                         $i=0;
                     }
                 }
+            }
+            }else{
+                exit("E1;Archivo no encontrado");
             }
             $sql=substr($sql, 0, -1);
             $this->Query($sql);
