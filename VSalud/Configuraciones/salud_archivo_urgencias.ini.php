@@ -1,9 +1,9 @@
 <?php
 
-$myTabla="vista_ar_listado";
-$idTabla="id_pagados";
+$myTabla="salud_archivo_urgencias";
+$idTabla="id_urgencias";
 $myPage="salud_archivo_facturacion_mov_pagados.php";
-$myTitulo="Archivo de Recaudo AR";
+$myTitulo="Archivo de Urgencias";
 
 
 

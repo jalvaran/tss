@@ -28,9 +28,10 @@ class Tesoreria extends conexion{
         $this->Query($sql);
     }
     
-    public function EditarPagoTesoreria($idPago,$Fecha,$CmbEps,$CmbBanco,$NumeroTransaccion,$TipoPago,$ValorTransaccion,$Observaciones,$idUser) {
+    public function EditarPagoTesoreria($idPago,$Fecha,$CmbEps,$CmbBanco,$NumeroTransaccion,$TipoPago,$ValorTransaccion,$ValorXLegalizar,$Observaciones,$idUser) {
         $DatosEps= $this->DevuelveValores("salud_eps", "cod_pagador_min", $CmbEps);
         $DatosBanco= $this->DevuelveValores("salud_bancos", "ID", $CmbBanco);
+        
         $tab="salud_tesoreria";
         
         $Datos["cod_enti_administradora"]=$CmbEps;	
@@ -44,7 +45,7 @@ class Tesoreria extends conexion{
         $Datos["observacion"]=$Observaciones;			
         $Datos["fecha_hora_registro"]=date("Y-m-d H:i:s");		
         $Datos["idUser"]=$idUser;			
-        $Datos["valor_legalizar"]=$ValorTransaccion;
+        $Datos["valor_legalizar"]=$ValorXLegalizar;
         $Datos["TipoPago"]=$TipoPago;	 
 
         $sql=$this->getSQLUpdate($tab, $Datos);

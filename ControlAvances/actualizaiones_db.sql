@@ -455,6 +455,8 @@ CREATE TABLE `cuentas_contables` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
 ALTER TABLE `salud_archivo_facturacion_mov_generados` ADD `CuentaContable` bigint NOT NULL AFTER `EstadoGlosa`;
+ALTER TABLE `salud_rips_facturas_generadas_historico` ADD `CuentaContable` bigint NOT NULL AFTER `EstadoGlosa`;
+ALTER TABLE `salud_archivo_af_capita` ADD `CuentaContable` bigint NOT NULL AFTER `EstadoGlosa`;
 ALTER TABLE `salud_rips_facturas_generadas_temp` ADD `CuentaContable` bigint NOT NULL AFTER `CuentaRIPS`;
 ALTER TABLE `salud_circular030_inicial` ADD `CuentaContable` bigint NOT NULL AFTER `Cod_Entidad_Administradora`;
 ALTER TABLE `salud_tesoreria` ADD `TipoPago` int(11) NOT NULL AFTER `fecha_hora_registro`;

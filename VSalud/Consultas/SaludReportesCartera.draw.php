@@ -89,7 +89,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Limit=" ORDER BY fecha_pago_factura,fecha_factura LIMIT $startpoint,$limit";
             
             $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,tipo_negociacion,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado ";
+                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado,CuentaContable ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -171,7 +171,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA PAGO</strong>", 1);
                         $css->ColTabla("<strong>VALOR PAGADO</strong>", 1);
                         $css->ColTabla("<strong>NEGOCIACIÓN</strong>", 1);
-                                                
+                        $css->ColTabla("<strong>CUENTA CONTABLE</strong>", 1);                        
                     $css->CierraFilaTabla();
                     
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
@@ -184,7 +184,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_factura"], 1);
                             $css->ColTabla($DatosConsulta["fecha_pago_factura"], 1);
                             $css->ColTabla($DatosConsulta["valor_pagado"], 1);
-                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1);                        
+                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1);    
+                            $css->ColTabla($DatosConsulta["CuentaContable"], 1);      
                         $css->CierraFilaTabla();
                     }
                     
@@ -269,8 +270,9 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora,tipo_negociacion,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar ";
+            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora ,tipo_negociacion,"
+                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,"
+                    . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar,TotalPagos,SaldoFinalFactura ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -352,7 +354,13 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>FECHA RADICADO</strong>", 1);
                         $css->ColTabla("<strong>DIAS EN MORA</strong>", 1);
                         $css->ColTabla("<strong>VALOR NETO A PAGAR</strong>", 1);
-                        $css->ColTabla("<strong>NEGOCIACIÓN</strong>", 1);                    
+                        $css->ColTabla("<strong>NEGOCIACIÓN</strong>", 1);         
+                        $css->ColTabla("<strong>CUENTA CONTABLE</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA INICIAL</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA LEVANTADA</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA ACEPTADA</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA X CONCILIAR</strong>", 1);  
+                        $css->ColTabla("<strong>SALDO FINAL</strong>", 1);  
                     $css->CierraFilaTabla();
                     
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
@@ -365,8 +373,14 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_factura"], 1);
                             $css->ColTabla($DatosConsulta["fecha_radicado"], 1);
                             $css->ColTabla($DatosConsulta["DiasMora"], 1);
-                            $css->ColTabla($DatosConsulta["valor_neto_pagar"], 1);
-                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1);                        
+                            $css->ColTabla(number_format($DatosConsulta["valor_neto_pagar"]), 1);
+                            $css->ColTabla($DatosConsulta["tipo_negociacion"], 1); 
+                            $css->ColTabla($DatosConsulta["CuentaContable"], 1);  
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaInicial"]), 1);   
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaLevantada"]), 1);   
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaAceptada"]), 1);   
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaXConciliar"]), 1);   
+                            $css->ColTabla(number_format($DatosConsulta["SaldoFinalFactura"]), 1);   
                         $css->CierraFilaTabla();
                     }
                     
@@ -452,7 +466,8 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $Limit=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
             $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,ROUND(valor_pagado) as valor_pagado,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar ";
+                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar, "
+                    . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
             if($obGlosas->NumRows($consulta)){
@@ -535,7 +550,11 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>VALOR NETO A PAGAR</strong>", 1);
                         $css->ColTabla("<strong>VALOR PAGADO</strong>", 1);
                         $css->ColTabla("<strong>DIFERENCIA</strong>", 1);
-                                                
+                        $css->ColTabla("<strong>CUENTA CONTABLE</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA INICIAL</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA LEVANTADA</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA ACEPTADA</strong>", 1);  
+                        $css->ColTabla("<strong>GLOSA X CONCILIAR</strong>", 1); 
                     $css->CierraFilaTabla();
                     
                     while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
@@ -549,7 +568,12 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["fecha_pago_factura"], 1);
                             $css->ColTabla(number_format($DatosConsulta["valor_neto_pagar"]), 1);
                             $css->ColTabla(number_format($DatosConsulta["valor_pagado"]), 1);
-                            $css->ColTabla(number_format($DatosConsulta["DiferenciaEnPago"]), 1);                        
+                            $css->ColTabla(number_format($DatosConsulta["DiferenciaEnPago"]), 1); 
+                            $css->ColTabla($DatosConsulta["CuentaContable"], 1);
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaInicial"]), 1);  
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaLevantada"]), 1);  
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaAceptada"]), 1);  
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaXConciliar"]), 1);  
                         $css->CierraFilaTabla();
                     }
                     
@@ -737,15 +761,19 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 $Separador=$obGlosas->normalizar($_REQUEST["sp"]);
             }
             $CondicionFechaCorte="";
+            
             if(isset($_REQUEST["FechaFinal"])){
                 $FechaCorte=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+                if($FechaCorte==''){
+                    $FechaCorte=date("Y-m-d");
+                }
                 $CondicionFechaCorte=" AND t1.fecha_radicado<='$FechaCorte' ";
             }
             $sql="DROP VIEW IF EXISTS `vista_salud_carteraxdias_v2`;";
             $obGlosas->Query($sql);
             $sql="CREATE VIEW vista_salud_carteraxdias_v2 AS 
                 SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
-                (SELECT DATEDIFF('$FechaCorte',t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+                (SELECT DATEDIFF('$FechaCorte',t1.`fecha_radicado` ) - (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1)) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
                 t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
                 t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
                 (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,

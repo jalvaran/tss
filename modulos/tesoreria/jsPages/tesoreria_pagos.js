@@ -576,7 +576,7 @@ function EditarPago(idPago){
             }else if(respuestas[0]=="E1"){  
                 alertify.error(respuestas[1]);
                 MarqueErrorElemento(respuestas[2]);
-                
+                document.getElementById(idBoton).disabled=false;
             }else{
                 document.getElementById(idDivMensajes).innerHTML=data;
                 

@@ -303,8 +303,14 @@ if( !empty($_REQUEST["Accion"]) ){
             if(!is_numeric($ValorTransaccion) or $ValorTransaccion<=0){
                 exit("E1;El campo cantidad debe ser un numero mayor a Cero, no sea mk;Cantidad");
             }
+            $DatosPago= $obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
             
-            $obCon->EditarPagoTesoreria($idPago,$Fecha,$CmbEps,$CmbBanco,$NumeroTransaccion,$CmbTipoPago,$ValorTransaccion,$Observaciones,$idUser);
+            $ValorXLegalizar=$ValorTransaccion-$DatosPago["valor_legalizado"];
+            if($ValorXLegalizar<0){
+                exit("E1;El Valor de la transaccion digitado supera al valor por legalizar, la operacion no puede ser realizada;ValorTransaccion");
+            }
+            
+            $obCon->EditarPagoTesoreria($idPago,$Fecha,$CmbEps,$CmbBanco,$NumeroTransaccion,$CmbTipoPago,$ValorTransaccion,$ValorXLegalizar,$Observaciones,$idUser);
             print("OK;Pago editado correctamente");
             
         break;//Fin caso 7    

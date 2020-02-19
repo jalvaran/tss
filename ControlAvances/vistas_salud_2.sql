@@ -2,26 +2,39 @@ DROP VIEW IF EXISTS `vista_salud_facturas_pagas`;
 CREATE VIEW vista_salud_facturas_pagas AS 
 SELECT t1.`id_fac_mov_generados` as id_factura_generada,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,t1.`fecha_factura`,
 t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar`,t2.`id_pagados` as id_factura_pagada,t2.`fecha_pago_factura`,t2.`valor_pagado`,t2.`num_pago` ,t1.`tipo_negociacion`,
-t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte`
+t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte`,t1.`CuentaContable`
 FROM salud_archivo_facturacion_mov_generados t1 INNER JOIN salud_archivo_facturacion_mov_pagados t2 ON t1.`num_factura`=t2.`num_factura`
 WHERE t1.estado='PAGADA';
 
 DROP VIEW IF EXISTS `vista_salud_facturas_no_pagas`;
 CREATE VIEW vista_salud_facturas_no_pagas AS 
 SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
-(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1)) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
 t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
-t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`
-FROM salud_archivo_facturacion_mov_generados t1 WHERE t1.tipo_negociacion='evento' AND (t1.estado='RADICADO' OR t1.estado=''); 
+t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,t1.CuentaContable,
+(SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
+(SELECT IFNULL((SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaLevantada,
+(SELECT IFNULL((SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaAceptada,
+(SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar,
+(SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as TotalPagos,
+(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)) AS SaldoFinalFactura
+
+FROM salud_archivo_facturacion_mov_generados t1 WHERE (t1.estado='RADICADO' OR t1.estado=''); 
+
 
 DROP VIEW IF EXISTS `vista_salud_facturas_diferencias`;
 CREATE VIEW vista_salud_facturas_diferencias AS 
 SELECT t1.`id_fac_mov_generados` as id_factura_generada,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,t1.`fecha_factura`,
 t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar`,t2.`id_pagados` as id_factura_pagada,t2.`fecha_pago_factura`,t2.`valor_pagado`,t2.`num_pago` ,
 (SELECT t1.`valor_neto_pagar`-t2.`valor_pagado`) as DiferenciaEnPago ,t1.`tipo_negociacion`,
-t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte` 
+t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte`,t1.CuentaContable,
+(SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
+(SELECT IFNULL((SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaLevantada,
+(SELECT IFNULL((SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaAceptada,
+(SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar
+
 FROM salud_archivo_facturacion_mov_generados t1 INNER JOIN salud_archivo_facturacion_mov_pagados t2 ON t1.`num_factura`=t2.`num_factura`
-WHERE t1.estado='DIFERENCIA' AND t1.tipo_negociacion='evento';
+WHERE t1.estado='DIFERENCIA';
 
 DROP VIEW IF EXISTS `vista_cartera_x_edades`;
 CREATE VIEW vista_cartera_x_edades AS 
@@ -99,15 +112,6 @@ t2.`NombreProceso`,t2.`Concepto`,t1.`Observaciones`,t1.`Soporte`
 FROM `salud_procesos_gerenciales_archivos` t1 
 INNER JOIN salud_procesos_gerenciales t2 ON t1.`idProceso`=t2.`ID`;
 
-
-
-DROP VIEW IF EXISTS `vista_salud_facturas_no_pagas`;
-CREATE VIEW vista_salud_facturas_no_pagas AS 
-SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
-(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
-t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
-t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`
-FROM salud_archivo_facturacion_mov_generados t1 WHERE (t1.estado='RADICADO' OR t1.estado=''); 
 
 DROP VIEW IF EXISTS `vista_salud_facturas_diferencias`;
 CREATE VIEW vista_salud_facturas_diferencias AS 
@@ -289,4 +293,12 @@ SELECT *,
 (SELECT Genera030 FROM salud_eps WHERE salud_eps.cod_pagador_min=`salud_archivo_facturacion_mov_generados`. cod_enti_administradora) as GeneraCircular,
 (SELECT fecha_pago_factura FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=salud_archivo_facturacion_mov_generados.num_factura ORDER BY fecha_pago_factura DESC LIMIT 1) AS FechaPagoFactura 
 FROM `salud_archivo_facturacion_mov_generados` ;
+
+
+DROP VIEW IF EXISTS `vista_ar_listado`;
+CREATE VIEW vista_ar_listado AS
+SELECT t1.*,
+(SELECT t2.CuentaContable FROM salud_archivo_facturacion_mov_generados t2 WHERE t1.num_factura=t2. num_factura LIMIT 1) as CuentaContable
+
+FROM `salud_archivo_facturacion_mov_pagados` t1;
 
