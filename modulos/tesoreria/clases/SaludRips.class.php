@@ -860,7 +860,7 @@ class Rips extends conexion{
     }
     //Copia los registros de la tabla temporal facturas que no existan en la principal y los inserta
     public function AnaliceInsercionFacturasPagadasAdres($Vector,$SubeDesde='Subsidiado') {
-        //Secuencia SQL que selecciona los usuarios que no estan creados de la tabla temporal y los inserta en la principal
+        
         $sql="INSERT INTO `salud_archivo_facturacion_mov_pagados` 
             (`num_factura`,`fecha_pago_factura`,`num_pago`,`valor_pagado`,
             `nom_cargue`,`fecha_cargue`,`Soporte`,`idUser`,`idEPS`,`nom_enti_administradora`,`tipo_negociacion`,`Proceso`,`SubeDesde`)
@@ -988,7 +988,7 @@ class Rips extends conexion{
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
             `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`,`CuentaContable`)
-            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            SELECT (SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1) as CodigoPrestadora,(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
             'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','PAGADA',fecha_radicado,CuentaContable
@@ -1002,11 +1002,11 @@ class Rips extends conexion{
             (`cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
-            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`,`CuentaContable`)
+            SELECT (SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1) as CodigoPrestadora,(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
-            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','RADICADO' ,fecha_radicado
+            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','RADICADO' ,fecha_radicado,CuentaContable
             FROM salud_circular030_inicial as t1 WHERE indic_act_fact='A' AND saldo_factura=valor_factura AND NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
             WHERE t1.`numero_factura`=t2.`num_factura`); ";
@@ -1018,11 +1018,11 @@ class Rips extends conexion{
             (`cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
-            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`,`CuentaContable`)
+            SELECT (SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1) as CodigoPrestadora,(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
-            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado
+            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado,CuentaContable
             FROM salud_circular030_inicial as t1 WHERE indic_act_fact='A' AND saldo_factura<>valor_factura AND saldo_factura>0 AND valor_glosa_acept=0 AND NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
             WHERE t1.`numero_factura`=t2.`num_factura`); ";
@@ -1034,11 +1034,11 @@ class Rips extends conexion{
             (`cod_prest_servicio`,`razon_social`,`tipo_ident_prest_servicio`,`num_ident_prest_servicio`,
             `num_factura`,`fecha_factura`,`fecha_inicio`,`fecha_final`,`cod_enti_administradora`,
             `nom_enti_administradora`,`num_contrato`,`plan_beneficios`,`num_poliza`,`valor_total_pago`,
-            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`)
-            SELECT '191000011401',(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
+            `valor_comision`,`valor_descuentos`,`valor_neto_pagar`,`tipo_negociacion`,`nom_cargue`,`fecha_cargue`,`idUser`,`Arma030Anterior`,`estado`,`fecha_radicado`,`CuentaContable`)
+            SELECT (SELECT CodigoPrestadora FROM empresapro WHERE idEmpresaPro=1) as CodigoPrestadora,(SELECT RazonSocial FROM empresapro WHERE idEmpresaPro=1) as RazonSocial,`tipo_ident_erp`,`num_ident_erp`,`numero_factura`,
             `fecha_factura`,`fecha_factura`,`fecha_factura`,Cod_Entidad_Administradora,`razon_social`,'',
             '','',valor_total_pagos,'','',`valor_factura`,
-            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado
+            'Evento','030_Inicial',`fecha_cargue`,`idUser`,'S','DIFERENCIA' ,fecha_radicado,CuentaContable
             FROM salud_circular030_inicial as t1 WHERE indic_act_fact='A' AND saldo_factura<>valor_factura AND 	valor_glosa_acept>0 AND NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_generados` as t2 
             WHERE t1.`numero_factura`=t2.`num_factura`); ";

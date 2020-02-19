@@ -33,7 +33,7 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
             $Condicion=" WHERE ID>0 ";
             
             if($Busquedas<>''){
-                $Condicion.=" AND (t1.nom_enti_administradora like '%$Busquedas%' or t1.observacion like '%$Busquedas%')";
+                $Condicion.=" AND (t1.fecha_transaccion like '%$Busquedas%' or t1.cod_enti_administradora like '%$Busquedas%' or t1.nom_enti_administradora like '%$Busquedas%' or t1.observacion like '%$Busquedas%')";
             }
             
             if($FiltroLegalizados=='2'){
@@ -45,12 +45,15 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
             
             $PuntoInicio = ($Page * $Limit) - $Limit;
             
-            $sql = "SELECT COUNT(*) as Total FROM salud_tesoreria t1 $Condicion;";
+            $sql = "SELECT COUNT(*) as Items,SUM(valor_transaccion) as TotalPagos,SUM(valor_transaccion) as TotalPagos, SUM(valor_legalizado) as TotalLegalizado,SUM(valor_legalizar) as TotalXLegalizar
+                   FROM salud_tesoreria t1 $Condicion;";
             
             $Consulta=$obCon->Query($sql);
             $totales = $obCon->FetchAssoc($Consulta);
-            $ResultadosTotales = $totales['Total'];
-            
+            $ResultadosTotales = $totales['Items'];
+            $TotalPagos=$totales["TotalPagos"];
+            $TotalLegalizado=$totales["TotalLegalizado"];
+            $TotalXLegalizar=$totales["TotalXLegalizar"];
             
             $sql="SELECT t1.*,
                   (SELECT t2.TipoPago FROM salud_tesoreria_tipos_pago t2 WHERE t2.ID=t1.TipoPago ) as NombreTipoPago  
@@ -68,7 +71,18 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
                         print("<strong>Registros:</strong> <h4 style=color:green>". number_format($ResultadosTotales)."</h4>");
                     print("</td>");
                     
-                
+                    print("<td style='text-align:center'>");
+                        print("<strong>Total Pagos:</strong><br>");
+                        print("".number_format($TotalPagos));
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Total Legalizado:</strong><br>");
+                        print("".number_format($TotalLegalizado));
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Total X Legalizar:</strong><br>");
+                        print("".number_format($TotalXLegalizar));
+                    print("</td>");
                 
                     if($ResultadosTotales>$Limit){
 
@@ -113,7 +127,8 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
             
             $css->FilaTabla(16);
                 
-                $css->ColTabla("<strong>Legalizar</strong>", 1, "C");                
+                $css->ColTabla("<strong>Editar</strong>", 1, "C"); 
+                $css->ColTabla("<strong>Legalizar</strong>", 1, "C");    
                 $css->ColTabla("<strong>ID</strong>", 1, "C");
                 $css->ColTabla("<strong>Tipo de pago</strong>", 1, "C");
                 $css->ColTabla("<strong>Fecha</strong>", 1, "C");
@@ -139,7 +154,9 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
                     $Soporte="../../".$Soporte;
                     $idPago=$RegistrosTabla["ID"];
                     $css->FilaTabla(16);
-                
+                        print("<td style='text-align:center;font-size:30px;color:blue;cursor:pointer'>");
+                            print('<i class="fa fa-fw fa-edit" onclick=AbreFormularioEditarPago(`'.$idPago.'`)></i>');
+                        print("</td>");
                         print("<td style='text-align:center;font-size:30px;color:green;cursor:pointer'>");
                             print('<i class="fa fa-fw fa-money" onclick=AbreFormularioLegalizarPago(`'.$idPago.'`)></i>');
                         print("</td>");
@@ -259,45 +276,69 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
         case 3://Formulario para subir los pagos
             
             $idPago=$obCon->normalizar($_REQUEST["idPago"]);
+            
+            $DatosPago=$obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
+            
             $css->input("hidden", "idPago", "", "idPago", "", $idPago, "", "", "", "");
             
             $css->ProgressBar("PgProgresoUp", "LyProgresoCMG", "", 0, 0, 100, 0, "0%", "", "");
     
-
-            print("<strong>Separador de Archivo</strong><br>");
-            $css->select("CmbSeparador", "form-control", "CmbSeparador", "", "", "", "");
-                $css->option("", "", "", "", "", "");
-                    print("Selecciones el Separador de los archivos");
-                $css->Coption();
-                $css->option("", "", "", "1", "", "");
-                    print("Punto y Coma (;)");
-                $css->Coption();
-                $css->option("", "", "", "2", "", "",1);
-                    print("Coma (,)");
-                $css->Coption();
-                
-            $css->Cselect();
-            
-            print("<br><strong>Tipo de Giro</strong><br>");
-            
-            $css->select("CmbTipoGiro", "form-control", "CmbTipoGiro", "", "", "", "");
-                $css->option("", "", "", "", "", "");
-                    print("Tipo de Giro");
-                $css->Coption();
-                $css->option("", "", "", "1", "", "");
-                    print("Giro Directo Subsidiado");
-                $css->Coption();
-                $css->option("", "", "", "2", "", "",1);
-                    print("Cuenta Maestra (Tesoreria)");
-                $css->Coption();
-                $css->option("", "", "", "3", "", "");
-                    print("Giro Directo Contributivo");
-                $css->Coption();
-                
-            $css->Cselect();
-            
+            $Mensaje="LEGALIZAR EL PAGO No. $idPago, de la EPS: <strong> ".$DatosPago["nom_enti_administradora"]." </strong>";
+            $css->CrearTitulo($Mensaje, "verde");
             
             $css->CrearTabla();
+                $css->FilaTabla(16);
+                    $css->ColTabla("<strong>FECHA DEL PAGO</strong>", 1);
+                    $css->ColTabla("<strong>VALOR DEL PAGO:</strong>", 1);
+                    $css->ColTabla("<strong>VALOR X LEGALIZAR:</strong>", 1);
+                    
+                $css->CierraFilaTabla();
+                $css->FilaTabla(16);
+                    $css->ColTabla($DatosPago["fecha_transaccion"], 1);
+                    $css->ColTabla(number_format($DatosPago["valor_transaccion"]), 1);
+                    $css->ColTabla(number_format($DatosPago["valor_legalizar"]), 1);
+                    
+                $css->CierraFilaTabla();
+                
+                $css->FilaTabla(16);
+                
+                    print("<td>");
+                        print("<strong>Separador de Archivo</strong><br>");
+                        $css->select("CmbSeparador", "form-control", "CmbSeparador", "", "", "", "");
+                            $css->option("", "", "", "", "", "");
+                                print("Selecciones el Separador de los archivos");
+                            $css->Coption();
+                            $css->option("", "", "", "1", "", "");
+                                print("Punto y Coma (;)");
+                            $css->Coption();
+                            $css->option("", "", "", "2", "", "",1);
+                                print("Coma (,)");
+                            $css->Coption();
+
+                        $css->Cselect();
+                    print("</td>");
+                    print("<td colspan=2>");
+                        print("<strong>Tipo de Giro</strong><br>");
+
+                        $css->select("CmbTipoGiro", "form-control", "CmbTipoGiro", "", "", "", "");
+                            $css->option("", "", "", "", "", "");
+                                print("Tipo de Giro");
+                            $css->Coption();
+                            $css->option("", "", "", "1", "", "");
+                                print("Giro Directo Subsidiado");
+                            $css->Coption();
+                            $css->option("", "", "", "2", "", "",1);
+                                print("Cuenta Maestra (Tesoreria)");
+                            $css->Coption();
+                            $css->option("", "", "", "3", "", "");
+                                print("Giro Directo Contributivo");
+                            $css->Coption();
+
+                        $css->Cselect();
+                        
+                    print("</td>");
+                $css->CierraFilaTabla();
+
                 $css->FilaTabla(16);
                     $css->ColTabla("<strong>Pagos (AR)</strong>", 1);
                     $css->ColTabla("<strong>Fecha de Giro</strong>", 1);
@@ -329,7 +370,7 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
                     $css->CierraFilaTabla();
                     $css->FilaTabla(16);
                     print("<td colspan=3>");
-                        $css->CrearBotonEvento("BtnEnviar", "Subir", 1, "onClick", "CargarAR()", "rojo", "");
+                        $css->CrearBotonEvento("BtnEnviar", "Subir", 1, "onClick", "CargarAR('$idPago')", "rojo", "");
                        
                     print("</td>");
                     $css->CierraFilaTabla();
@@ -338,6 +379,101 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
             $css->CerrarTabla();
         break;//Fin caso 3    
         
+    
+        case 4:// formulario para editar pago
+            
+            $idPago=$obCon->normalizar($_REQUEST["idPago"]);
+            $DatosPago=$obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
+            $css->CrearTitulo("<strong>Editar el Pago No. $idPago</strong>", "naranja");
+            $css->CrearTabla();
+            
+                $css->FilaTabla(16);
+                    $css->ColTabla("<strong>Fecha:</strong>", 1,"C");
+                    $css->ColTabla("<strong>EPS:</strong>", 1,"C");
+                    $css->ColTabla("<strong>Banco:</strong>", 1,"C");
+                    $css->ColTabla("<strong>Número Transacción:</strong>", 1,"C");
+                $css->CierraFilaTabla();
+                
+                $css->FilaTabla(16);
+                    print("<td>");
+                        $css->input("date", "Fecha", "form-control", "Fecha", "Fecha", date("Y-m-d"), "Fecha", "off", $DatosPago["fecha_transaccion"], "","style='line-height: 15px;'");
+                        
+                    print("</td>");   
+                    print("<td>");
+                        $DatosEPS=$obCon->DevuelveValores("salud_eps", "cod_pagador_min", $DatosPago["cod_enti_administradora"]);
+                        $css->select("CmbEps", "form-control", "CmbEps", "", "", "", "style=width:400px");
+                            $css->option("", "", "", $DatosPago["cod_enti_administradora"], "", "");
+                                print($DatosPago["nom_enti_administradora"]);
+                            $css->Coption();    
+                        $css->Cselect();
+                    print("</td>");
+                    
+                    print("<td>");
+                        $sql="SELECT * FROM salud_bancos";
+                        $Consulta=$obCon->Query($sql);
+                        
+                        $css->select("CmbBanco", "form-control", "CmbBanco", "", "", "", "");
+                            $css->option("", "", "", "", "", "");
+                                print("Seleccione un Banco");
+                            $css->Coption(); 
+                            while($DatosBanco=$obCon->FetchAssoc($Consulta)){
+                                    $Seleccionado=0;
+                                if($DatosBanco["banco_transaccion"]==$DatosPago["banco_transaccion"]){
+                                    $Seleccionado=1;
+                                }
+                                $css->option("", "", "", $DatosBanco["ID"], "", "",$Seleccionado);
+                                    print($DatosBanco["banco_transaccion"]." || ".$DatosBanco["num_cuenta_banco"]." || ".$DatosBanco["tipo_cuenta"]);
+                                $css->Coption(); 
+                            }
+                        $css->Cselect();
+                        
+                    print("</td>");
+                    
+                    print("<td>");
+                        $css->input("text", "NumeroTransaccion", "form-control", "NumeroTransaccion", $DatosPago["num_transaccion"], $DatosPago["num_transaccion"], "Numero de transaccion", "off", "", "");
+                    print("</td>");
+                    
+                $css->CierraFilaTabla();
+                
+                $css->FilaTabla(16);
+                    print("<td>");
+                        $sql="SELECT * FROM salud_tesoreria_tipos_pago";
+                            $Consulta=$obCon->Query($sql);
+
+                            $css->select("CmbTipoPago", "form-control", "CmbTipoPago", "", "", "", "");
+                                $css->option("", "", "", "", "", "");
+                                    print("Seleccione un tipo de Pago");
+                                $css->Coption(); 
+                                while($DatosTipoPago=$obCon->FetchAssoc($Consulta)){
+                                    $Seleccionado=0;
+                                    if($DatosTipoPago["ID"]=$DatosPago["TipoPago"]){
+                                        $Seleccionado=1;
+                                    }
+                                    $css->option("", "", "", $DatosTipoPago["ID"], "", "",$Seleccionado);
+                                        print($DatosTipoPago["TipoPago"]);
+                                    $css->Coption(); 
+                                }
+                            $css->Cselect();
+                        print("</td>");
+                        
+                        
+                        print("<td>");
+                            $css->input("number", "ValorTransaccion", "form-control", "ValorTransaccion", "", $DatosPago["valor_transaccion"], "Valor de transaccion", "off", "", "");
+                        print("</td>");
+                        print("<td>");
+                            $css->textarea("Observaciones", "form-control", "Observaciones", "", "Observaciones", "", "");
+                                print($DatosPago["observacion"]);
+                            $css->Ctextarea();
+                        print("</td>");
+                        
+                        
+                $css->CierraFilaTabla();
+            
+                $css->CerrarTabla();
+            
+            $css->CrearBotonEvento("BtnGuardar", "Editar", 1, "onclick", "ConfirmaEditarPago('$idPago')", "rojo");
+            
+        break;// fin caso 4
  }
     
           

@@ -75,6 +75,7 @@ if( !empty($_REQUEST["Accion"]) ){
         case 2://Recibe el archivo de pagos
             
             $obRips->VaciarTabla("salud_pagos_temporal"); //Vacío la tabla de subida temporal
+            $obCon->VaciarTabla("salud_pagos_contributivo_temp");
             $Separador=$obRips->normalizar($_REQUEST["CmbSeparador"]);
             $TipoGiro=$obRips->normalizar($_REQUEST["CmbTipoGiro"]);
             $FechaGiro=$obRips->normalizar($_REQUEST["TxtFechaGira"]);
@@ -175,22 +176,49 @@ if( !empty($_REQUEST["Accion"]) ){
         
         case 3://Insertar RIPS de Pagos
             $TipoGiro=$obRips->normalizar($_REQUEST["CmbTipoGiro"]);
+            $idPago=$obRips->normalizar($_REQUEST["idPago"]);
             //print("Tipo de Giro".$TipoGiro);
+            
             $DatosArchivoActual=$obRips->DevuelveValores("salud_subir_rips_pago_control", "ID", 1);
             
             if($TipoGiro==1 ){
                 
                 $obRips->InsertarRipsPagosAdres($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
+                $sql="SELECT SUM(ValorGiro) as TotalPagoAR FROM salud_pagos_temporal";
+                $Totales=$obCon->FetchAssoc($obCon->Query($sql));
+                $DatosPago=$obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
+
+                if($Totales["TotalPagoAR"]>$DatosPago["valor_legalizar"]){
+                    exit("E1;El valor en el AR (". number_format($Totales["TotalPagoAR"]).") Supera el Valor por Legalizar (".$DatosPago["valor_legalizar"].")");
+                }
+                
                 $obRips->AnaliceInsercionFacturasPagadasAdres("");
             }
             if($TipoGiro==3 or $TipoGiro==2){
                
                 $obRips->InsertarRipsPagosAdresContributivoTemporal($DatosArchivoActual["ArchivoActual"],$DatosArchivoActual["Separador"], $DatosArchivoActual["FechaCargue"], $idUser,$DatosArchivoActual["Destino"],$DatosArchivoActual["FechaGiro"],$DatosArchivoActual["TipoGiro"], "");
-                
+                                
                 $sql="UPDATE salud_pagos_contributivo_temp pt INNER JOIN salud_archivo_facturacion_mov_generados mg ON mg.num_factura=pt.numero_factura 
                         SET pt.CodigoEps=mg.cod_enti_administradora, pt.FechaFactura=mg.fecha_factura, pt.FormaContratacion=mg.tipo_negociacion;";
                 $obCon->Query($sql);
+                $sql="SELECT SUM(ValorGiro) as TotalPagoAR FROM salud_pagos_contributivo_temp";
+                $Totales=$obCon->FetchAssoc($obCon->Query($sql));
+                $DatosPago=$obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
                 
+                if($Totales["TotalPagoAR"]>$DatosPago["valor_legalizar"]){
+                    exit("El valor en el AR (". number_format($Totales["TotalPagoAR"]).") Supera el Valor por Legalizar (".$DatosPago["valor_legalizar"].")");
+                }
+                
+                $sql="SELECT t1.* FROM salud_pagos_contributivo_temp t1  WHERE EXISTS (SELECT 1 FROM `salud_pagos_contributivo` as t2 WHERE t1.`FechaPago`=t2.`FechaPago` and t1.`numero_factura`=t2.`numero_factura` AND t1.`NitEPS`=t2.`NitEPS`) LIMIT 10;"; 
+                $Consulta=$obCon->Query($sql);
+                $error=0;
+                while ($DatosTemporal=$obCon->FetchAssoc($Consulta)){
+                    $error=1;
+                    print("El pago de la Factura ".$DatosTemporal["numero_factura"].", por valor de ". number_format($DatosTemporal["ValorGiro"])." ya fue cargado<br>");
+                }
+                if($error==1){
+                    exit();
+                }
                 $sql="INSERT INTO `salud_pagos_contributivo` SELECT * FROM `salud_pagos_contributivo_temp` as t1 
                         WHERE NOT EXISTS (SELECT 1 FROM `salud_pagos_contributivo` as t2 WHERE t1.`FechaPago`=t2.`FechaPago` and t1.`numero_factura`=t2.`numero_factura` AND t1.`NitEPS`=t2.`NitEPS`);"; 
                 $obCon->Query($sql);
@@ -200,7 +228,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 $obCon->Query($sql);
                 $obCon->update("salud_pagos_contributivo", "Estado", 1, "");
                 $obRips->AjusteAutoIncrement("salud_pagos_contributivo", "ID", "");
-                $obCon->VaciarTabla("salud_pagos_contributivo_temp");
+                
                 $TipoMovimiento="Contributivo";
                 if($TipoGiro==2){
                     $TipoMovimiento="CuentaMaestra";
@@ -209,7 +237,7 @@ if( !empty($_REQUEST["Accion"]) ){
                 $obRips->AnaliceInsercionFacturasPagadasAdres("",$TipoMovimiento);
                 //print("Subido");
             }
-            print("OK");
+            print("OK;".$Totales["TotalPagoAR"]);
         break;//Fin caso 3    
         
         case 4:// encuentre facturas con diferencia
@@ -229,10 +257,57 @@ if( !empty($_REQUEST["Accion"]) ){
         case 6://Actualiza las observaciones de cartera tras subir un archivo de pagos
             $Observaciones=$obCon->normalizar($_REQUEST["Observaciones"]);
             $idPago=$obCon->normalizar($_REQUEST["idPago"]);
+            $TotalPago=$obCon->normalizar($_REQUEST["ValorPagos"]);
+            $DatosPago=$obCon->DevuelveValores("salud_tesoreria", "ID", $idPago);
+            $TotalLegalizado=$DatosPago["valor_legalizado"]+$TotalPago;
+            $TotalXLegalizar=$DatosPago["valor_transaccion"]-$TotalLegalizado;
             $obCon->ActualizaRegistro("salud_tesoreria", "observaciones_cartera", $Observaciones, "ID", $idPago);
-            $obCon->ActualizaRegistro("salud_tesoreria", "legalizado", "SI", "ID", $idPago);
+            
+            $obCon->ActualizaRegistro("salud_tesoreria", "valor_legalizado", $TotalLegalizado, "ID", $idPago,0);
+            
+            $obCon->ActualizaRegistro("salud_tesoreria", "valor_legalizar", $TotalXLegalizar, "ID", $idPago,0);
+            if($TotalXLegalizar<=0){
+                $obCon->ActualizaRegistro("salud_tesoreria", "legalizado", "SI", "ID", $idPago);
+            }
             print("OK");
-        break;//fin caso 6    
+        break;//fin caso 6   
+    
+        case 7://Editar un pago
+            $idPago=$obCon->normalizar($_REQUEST["idPago"]);
+            $Fecha=$obCon->normalizar($_REQUEST["Fecha"]);
+            $CmbEps=$obCon->normalizar($_REQUEST["CmbEps"]);
+            $CmbBanco=$obCon->normalizar($_REQUEST["CmbBanco"]);
+            $NumeroTransaccion=$obCon->normalizar($_REQUEST["NumeroTransaccion"]);
+            $CmbTipoPago=$obCon->normalizar($_REQUEST["CmbTipoPago"]);
+            $ValorTransaccion=$obCon->normalizar($_REQUEST["ValorTransaccion"]);
+            $Observaciones=$obCon->normalizar($_REQUEST["Observaciones"]);
+            
+            if($Fecha==''){
+                exit("E1;Debe escribir una Fecha;Fecha");
+            }
+            if($CmbEps==''){
+                exit("E1;Debe Seleccionar una EPS;CmbEps");
+            }
+            if($CmbBanco==''){
+                exit("E1;Debe escribir un Banco;CmbBanco");
+            }
+            if($NumeroTransaccion==''){
+                exit("E1;Debe escribir un Número de Transacción;NumeroTransaccion");
+            }
+            if($CmbTipoPago==''){
+                exit("E1;Seleccione un tipo de pago;CmbTipoPago");
+            }
+            if($Observaciones==''){
+                exit("E1;Debe escribir las observaciones;Observaciones");
+            }
+            if(!is_numeric($ValorTransaccion) or $ValorTransaccion<=0){
+                exit("E1;El campo cantidad debe ser un numero mayor a Cero, no sea mk;Cantidad");
+            }
+            
+            $obCon->EditarPagoTesoreria($idPago,$Fecha,$CmbEps,$CmbBanco,$NumeroTransaccion,$CmbTipoPago,$ValorTransaccion,$Observaciones,$idUser);
+            print("OK;Pago editado correctamente");
+            
+        break;//Fin caso 7    
         
     }
     

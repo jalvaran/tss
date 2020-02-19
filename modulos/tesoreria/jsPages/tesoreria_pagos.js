@@ -228,7 +228,7 @@ function getInfoForm(){
  * Envia la peticion para que sea cargado el AR
  * @returns {undefined}
  */
-function CargarAR(){
+function CargarAR(idPago){
     
     if($('#UpPago').val()==''){
         alertify.alert("Debe Subir un archivo de pago");
@@ -277,7 +277,7 @@ function CargarAR(){
                 
                 document.getElementById("DivMensajes").innerHTML="Archivo Subido";
                 alertify.success("Archivo subido");
-                InsertarRIPSPago();
+                InsertarRIPSPago(idPago);
             }else{
                 alertify.alert("Error "+data);
                 document.getElementById("DivMensajes").innerHTML=data;
@@ -295,12 +295,13 @@ function CargarAR(){
 }
 
 
-function InsertarRIPSPago(){
+function InsertarRIPSPago(idPago){
    
     var TipoGiro = document.getElementById('CmbTipoGiro').value;
     var form_data = new FormData();
         form_data.append('Accion', 3);
         form_data.append('CmbTipoGiro', TipoGiro);
+        form_data.append('idPago', idPago);
         //console.log("Tipo Giro"+TipoGiro)
         $.ajax({
         //async:false,
@@ -312,13 +313,14 @@ function InsertarRIPSPago(){
         data: form_data,
         type: 'post',
         success: function(data){
-            console.log(data)
-            if(data=="OK"){
+            var respuestas = data.split(';');
+            if(respuestas[0]=="OK"){
+                var ValorPagos=respuestas[1];
                 $('.progress-bar').css('width','40%').attr('aria-valuenow', 40);  
                 document.getElementById('LyProgresoCMG').innerHTML="40%";
                 document.getElementById("DivMensajes").innerHTML="Registros del archivo insertados en la tabla temporal";
                 alertify.success("Registros insertados en la tabla de pagos");
-                EncuentreFacturasPagasConDiferencia();
+                EncuentreFacturasPagasConDiferencia(idPago,ValorPagos);
             }else{
                 alertify.alert("Error "+data);
                 document.getElementById("DivMensajes").innerHTML=data;
@@ -338,7 +340,7 @@ function InsertarRIPSPago(){
     
     
 
-function EncuentreFacturasPagasConDiferencia(){
+function EncuentreFacturasPagasConDiferencia(idPago,ValorPagos){
     var form_data = new FormData();
         form_data.append('Accion', 4);
         
@@ -357,7 +359,7 @@ function EncuentreFacturasPagasConDiferencia(){
                 document.getElementById('LyProgresoCMG').innerHTML="60%";
                 document.getElementById("DivMensajes").innerHTML="Facturas Pagas con diferencia analizadas";
                 alertify.success("Facturas Pagas con diferencia analizadas");
-                EncuentreFacturasPagas();
+                EncuentreFacturasPagas(idPago,ValorPagos);
             }else{
                 alertify.alert("Error "+data);
                 document.getElementById("DivMensajes").innerHTML=data;
@@ -383,7 +385,7 @@ function EncuentreFacturasPagasConDiferencia(){
 }
 
 
-function EncuentreFacturasPagas(){
+function EncuentreFacturasPagas(idPago,ValorPagos){
     var form_data = new FormData();
         form_data.append('Accion', 5);
         
@@ -402,7 +404,7 @@ function EncuentreFacturasPagas(){
                 document.getElementById('LyProgresoCMG').innerHTML="100%";
                 document.getElementById("DivMensajes").innerHTML="Facturas Pagas analizadas";
                 alertify.success("Facturas Pagas analizadas");
-                ActualiceObservaciones();
+                ActualiceObservaciones(idPago,ValorPagos);
             }else{
                 alertify.alert("Error "+data);
                 document.getElementById("DivMensajes").innerHTML=data;
@@ -420,13 +422,14 @@ function EncuentreFacturasPagas(){
        
 }
 
-function ActualiceObservaciones(){
+function ActualiceObservaciones(idPago,ValorPagos){
     var Observaciones=document.getElementById('TxtObservaciones').value;
     var idPago=document.getElementById('idPago').value;
     var form_data = new FormData();
         form_data.append('Accion', 6);
         form_data.append('Observaciones', Observaciones);
         form_data.append('idPago', idPago);
+        form_data.append('ValorPagos', ValorPagos);
         
         $.ajax({
         //async:false,
@@ -462,9 +465,131 @@ function ActualiceObservaciones(){
 function CambiePagina(Page=""){
     
     if(Page==""){
-        Page = document.getElementById('CmbPage').value;
+        if(document.getElementById('CmbPage')){
+            Page = document.getElementById('CmbPage').value;
+        }else{
+            Page=1;
+        }
     }
     ListarPagos(Page);
 }
 
+
+function AbreFormularioEditarPago(idPago){
+    document.getElementById("DivDrawTables").innerHTML='<div id="GifProcess">procesando...<br><img   src="../../images/loader.gif" alt="Cargando" height="100" width="100"></div>';
+    
+    var form_data = new FormData();
+        form_data.append('Accion', 4);// pasamos la accion y el numero de accion para el dibujante sepa que caso tomar
+        form_data.append('idPago', idPago);
+       $.ajax({// se arma un objecto por medio de ajax  
+        url: 'Consultas/tesoreria_pagos.draw.php',// se indica donde llegara la informacion del objecto
+        
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post', // se especifica que metodo de envio se utilizara normalmente y por seguridad se utiliza el post
+        success: function(data){            
+            document.getElementById('DivDrawTables').innerHTML=data; //La respuesta del servidor la dibujo en el div DivTablasBaseDatos    
+            $('#CmbEps').select2({
+		  
+                placeholder: 'Selecciona una EPS',
+                ajax: {
+                  url: 'buscadores/salud_eps.search.php',
+                  dataType: 'json',
+                  delay: 250,
+                  processResults: function (data) {
+                      
+                    return {                     
+                      results: data
+                    };
+                  },
+                 cache: true
+                }
+              });
+            
+            
+             },
+        error: function (xhr, ajaxOptions, thrownError) {// si hay error se ejecuta la funcion
+            document.getElementById('DivDrawTables').innerHTML="hay un problema!";
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      });
+}
+
+
+function ConfirmaEditarPago(idPago){
+    alertify.confirm('Está seguro que desea Editar el Pago No '+idPago+'?',
+        function (e) {
+            if (e) {
+                
+                EditarPago(idPago);
+            }else{
+                alertify.error("Se canceló el proceso");
+
+                return;
+            }
+        });
+}
+
+function EditarPago(idPago){
+    var idDivMensajes='DivMensajes';
+    var idBoton='BtnGuardar';
+    document.getElementById(idBoton).disabled=true;
+    var Fecha=document.getElementById("Fecha").value;    
+    var CmbEps=document.getElementById("CmbEps").value;    
+    var CmbBanco=document.getElementById("CmbBanco").value;    
+    var NumeroTransaccion=document.getElementById("NumeroTransaccion").value;  
+    var CmbTipoPago=document.getElementById("CmbTipoPago").value; 
+    
+    var ValorTransaccion=document.getElementById("ValorTransaccion").value;
+    var Observaciones=document.getElementById("Observaciones").value;
+    
+    
+    var form_data = new FormData();
+        form_data.append('Accion', '7'); 
+        form_data.append('Fecha', Fecha);
+        form_data.append('CmbEps', CmbEps);
+        form_data.append('CmbBanco', CmbBanco);
+        form_data.append('NumeroTransaccion', NumeroTransaccion);
+        form_data.append('CmbTipoPago', CmbTipoPago);
+        form_data.append('ValorTransaccion', ValorTransaccion);
+        form_data.append('Observaciones', Observaciones);        
+        form_data.append('idPago', idPago);        
+        
+        
+        $.ajax({
+        url: './procesadores/tesoreria_pagos.process.php',
+        //dataType: 'json',
+        cache: false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: 'post',
+        success: function(data){
+            var respuestas = data.split(';'); //Armamos un vector separando los punto y coma de la cadena de texto
+            if(respuestas[0]=="OK"){
+                
+                alertify.success(respuestas[1]);
+                ListarPagos();
+            }else if(respuestas[0]=="E1"){  
+                alertify.error(respuestas[1]);
+                MarqueErrorElemento(respuestas[2]);
+                
+            }else{
+                document.getElementById(idDivMensajes).innerHTML=data;
+                
+            }
+            document.getElementById(idBoton).disabled=false;         
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            document.getElementById(idBoton).disabled=false;   
+            alert(xhr.status);
+            alert(thrownError);
+          }
+      });
+    
+    }
+    
 ListarPagos();
