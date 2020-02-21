@@ -868,7 +868,7 @@ class Rips extends conexion{
             `fecha_cargue`,`Soporte`,`idUser`,`CodigoEPS`,`NombreEPS`,`FormaContratacion`,`Proceso`,'$SubeDesde'
             FROM salud_pagos_temporal as t1 WHERE NOT EXISTS  
             (SELECT 1 FROM `salud_archivo_facturacion_mov_pagados` as t2  
-            WHERE t1.`numero_factura`=t2.`num_factura` AND t1.Proceso=t2.Proceso); ";
+            WHERE t1.`numero_factura`=t2.`num_factura` AND t1.Proceso=t2.Proceso AND t1.FechaPago=t2.fecha_pago_factura); ";
         
         $this->Query($sql);
     }

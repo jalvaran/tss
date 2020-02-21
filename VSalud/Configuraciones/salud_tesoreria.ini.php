@@ -26,9 +26,9 @@ $Vector["NuevoRegistro"]["Deshabilitado"]=1;
 $Vector["VerRegistro"]["Deshabilitado"]=1;                      
 //$Vector["EditarRegistro"]["Deshabilitado"]=1; 
 
-$Vector["Soporte"]["Link"]=1;   //Indico que esta columna tendra un vinculo
+//$Vector["Soporte"]["Link"]=1;   //Indico que esta columna tendra un vinculo
 
-
+$Vector["Excluir"]["Soporte"]=1;
 // Nueva Accion
 $Ruta="LegalizarPagos.php?ID=";
 $Vector["NuevaAccionLink"][1]="Legalizar";

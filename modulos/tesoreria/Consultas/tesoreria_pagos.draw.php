@@ -28,14 +28,21 @@ if(!empty($_REQUEST["Accion"]) ){// se verifica si el indice accion es diferente
                 $NumPage=1;
             }
             $Busquedas=$obCon->normalizar($_REQUEST["Busquedas"]);
+            $FechaInicialRangos=$obCon->normalizar($_REQUEST["FechaInicialRangos"]);
+            $FechaFinalRangos=$obCon->normalizar($_REQUEST["FechaFinalRangos"]);
             $FiltroLegalizados=$obCon->normalizar($_REQUEST["cmbFiltros"]);
             
             $Condicion=" WHERE ID>0 ";
             
             if($Busquedas<>''){
-                $Condicion.=" AND (t1.fecha_transaccion like '%$Busquedas%' or t1.cod_enti_administradora like '%$Busquedas%' or t1.nom_enti_administradora like '%$Busquedas%' or t1.observacion like '%$Busquedas%')";
+                $Condicion.=" AND (t1.ID = '$Busquedas' or t1.cod_enti_administradora like '%$Busquedas%' or t1.nom_enti_administradora like '%$Busquedas%' or t1.observacion like '%$Busquedas%')";
             }
-            
+            if($FechaInicialRangos<>''){
+                $Condicion.=" AND (t1.fecha_transaccion >= '$FechaInicialRangos')";
+            }
+            if($FechaFinalRangos<>''){
+                $Condicion.=" AND (t1.fecha_transaccion <= '$FechaFinalRangos')";
+            }
             if($FiltroLegalizados=='2'){
                 $Condicion.=" AND (t1.legalizado = 'SI')";
             }

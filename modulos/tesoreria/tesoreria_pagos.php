@@ -69,12 +69,22 @@ $css->PageInit($myTitulo);
             </div>');
             $css->CrearDiv("", "col-md-10", "left", 1, 1);
                       
-            $css->CrearDiv("DivMensajes", "", "left", 1, 1);
+            $css->CrearDiv("DivMensajes", "col-md-4", "left", 1, 1);
             
             $css->CerrarDiv();
-            
-            $css->CrearDiv("", "box-tools pull-right", "left", 1, 1);                
-                    print('<div class="input-group">');               
+            $css->CrearDiv("", "col-md-2", "right", 1, 1); 
+                
+                $css->input("date", "FechaInicialRangos", "form-control", "FechaInicialRangos", "Fecha", "", "Fecha Inicial", "off", "", "onchange=CambiePagina()","style='line-height: 15px;'");
+                
+            $css->CerrarDiv();
+            $css->CrearDiv("", "col-md-2", "right", 1, 1); 
+                $css->input("date", "FechaFinalRangos", "form-control", "FechaFinalRangos", "Fecha", "", "Fecha Final", "off", "", "onchange=CambiePagina()","style='line-height: 15px;'");
+                
+            $css->CerrarDiv();
+            $css->CrearDiv("", "box-tools pull-right", "left", 1, 1);      
+                        
+                    print('<div class="input-group">'); 
+                        
                         $css->input("text", "TxtBusquedas", "form-control", "TxtBusquedas", "", "", "Buscar", "", "", "onchange=CambiePagina()");
 
                     print('<span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>

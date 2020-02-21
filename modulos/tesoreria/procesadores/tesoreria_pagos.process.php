@@ -110,14 +110,18 @@ if( !empty($_REQUEST["Accion"]) ){
                             if(!isset($data[10])){
                                 exit("El archivo no es válido");
                             }
-                            $Giro=str_replace(".","",$data[10]);
-                            $Giro=str_replace(",00","",$Giro);
+                            $idGiro= uniqid("_");
+                            $idGiro=str_replace(" ","",$idGiro);
+                            $Giro=$idGiro;
                         }
                         if($TipoGiro==3 or $TipoGiro==2){
                             if(!isset($data[1])){
                                 exit("E1;El archivo no es válido");
                             }
-                            $Giro="C1";
+                          
+                            $idGiro= uniqid("_");
+                            $idGiro=str_replace(" ","",$idGiro);
+                            $Giro=$idGiro;
                         }
                        // print($Giro);
                         

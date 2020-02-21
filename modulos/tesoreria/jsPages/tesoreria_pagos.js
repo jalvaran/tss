@@ -16,12 +16,16 @@ function ListarPagos(Page=1){
     document.getElementById("DivDrawTables").innerHTML='<div id="GifProcess">procesando...<br><img   src="../../images/loader.gif" alt="Cargando" height="100" width="100"></div>';
     
     var Busquedas =document.getElementById("TxtBusquedas").value;
+    var FechaInicialRangos =document.getElementById("FechaInicialRangos").value;
+    var FechaFinalRangos =document.getElementById("FechaFinalRangos").value;
     var cmbFiltros =document.getElementById("cmbFiltros").value;
     
     var form_data = new FormData();
         form_data.append('Accion', 1);// pasamos la accion y el numero de accion para el dibujante sepa que caso tomar
         form_data.append('Page', Page);
         form_data.append('Busquedas', Busquedas);
+        form_data.append('FechaInicialRangos', FechaInicialRangos);
+        form_data.append('FechaFinalRangos', FechaFinalRangos);
         form_data.append('cmbFiltros', cmbFiltros);
         
        $.ajax({// se arma un objecto por medio de ajax  

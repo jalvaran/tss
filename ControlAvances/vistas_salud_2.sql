@@ -125,20 +125,22 @@ WHERE t1.estado='DIFERENCIA';
 DROP VIEW IF EXISTS `vista_circular_07`;
 CREATE VIEW vista_circular_07 AS 
 SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
-(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1)) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
 t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,
-(SELECT DATE_ADD(t1.`fecha_radicado`, INTERVAL (SELECT t1.`dias_pactados`) DAY)) AS FechaVencimiento,
+(SELECT DATE_ADD(t1.`fecha_radicado`, INTERVAL (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) DAY)) AS FechaVencimiento,
 t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,
+(SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as NitEPS,
 (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as RegimenEPS,
 (SELECT Genera07 FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as Genera07,
 t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
 t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
+(SELECT IF(t1.EstadoGlosa=9,( t1.`valor_neto_pagar`) ,0)) AS TotalDevolucion,  
 (SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
 (SELECT IFNULL((SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaLevantada,
 (SELECT IFNULL((SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaAceptada,
 (SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar,
 (SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as TotalPagos,
-(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)) AS SaldoFinalFactura
+(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)- (SELECT TotalDevolucion)) AS SaldoFinalFactura
 FROM salud_archivo_facturacion_mov_generados t1 WHERE t1.estado<>'' AND t1.estado<>'PAGADA'; 
 
 
@@ -301,4 +303,38 @@ SELECT t1.*,
 (SELECT t2.CuentaContable FROM salud_archivo_facturacion_mov_generados t2 WHERE t1.num_factura=t2. num_factura LIMIT 1) as CuentaContable
 
 FROM `salud_archivo_facturacion_mov_pagados` t1;
+
+
+DROP VIEW IF EXISTS `vista_consolidado_facturacion`;
+CREATE VIEW vista_consolidado_facturacion AS 
+SELECT t1.`id_fac_mov_generados` as id_factura_generada,t1.CuentaContable, 
+(SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1)) as DiasMora ,t1.`CuentaRIPS` as CuentaRIPS,t1.`CuentaGlobal` as CuentaGlobal,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
+t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,
+(SELECT DATE_ADD(t1.`fecha_radicado`, INTERVAL (SELECT dias_convenio FROM salud_eps t2 WHERE t2.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) DAY)) AS FechaVencimiento,
+t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,
+(SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as NitEPS,
+(SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as RegimenEPS,
+(SELECT Genera07 FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.`cod_enti_administradora`) as Genera07,
+t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
+t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
+(SELECT IF(t1.EstadoGlosa=9,( t1.`valor_neto_pagar`) ,0)) AS TotalDevolucion,  
+(SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
+(SELECT IFNULL((SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaLevantada,
+(SELECT IFNULL((SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaAceptada,
+(SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar,
+(SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as TotalPagos,
+(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)- (SELECT TotalDevolucion)) AS SaldoFinalFactura
+FROM salud_archivo_facturacion_mov_generados t1; 
+
+
+
+
+DROP VIEW IF EXISTS `vista_saldos_x_eps`;
+CREATE VIEW vista_saldos_x_eps AS
+
+SELECT cod_enti_administradora,nom_enti_administradora,NitEPS,RegimenEPS,sum(valor_neto_pagar) as TotalFacturado,
+sum(ValorGlosaInicial) as TotalGlosaInicial ,sum(ValorGlosaLevantada) as TotalGlosaLevantada ,
+sum(ValorGlosaAceptada) as TotalGlosaAceptada ,sum(ValorGlosaXConciliar) as TotalGlosaXConciliar ,
+sum(TotalPagos) as TotalPagos,sum(TotalDevolucion) as TotalDevolucion,sum(SaldoFinalFactura) as SaldoEPS  
+FROM vista_circular_07 GROUP BY cod_enti_administradora,RegimenEPS;
 
