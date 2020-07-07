@@ -36,6 +36,7 @@ class Glosas extends conexion{
         $this->InsertarRegistro($tab,$NumRegistros,$Columnas,$Valores);
         
         $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "EstadoGlosa", 9, "num_factura", $idFactura);
+        $this->ActualizaRegistro("salud_archivo_facturacion_mov_generados", "estado", 'DEVUELTA', "num_factura", $idFactura);
         $this->ActualizaRegistro("salud_archivo_consultas", "EstadoGlosa", 9, "num_factura", $idFactura);
         $this->ActualizaRegistro("salud_archivo_procedimientos", "EstadoGlosa", 9, "num_factura", $idFactura);
         $this->ActualizaRegistro("salud_archivo_otros_servicios", "EstadoGlosa", 9, "num_factura", $idFactura);

@@ -2,7 +2,7 @@
 
 $myTabla="salud_archivo_urgencias";
 $idTabla="id_urgencias";
-$myPage="salud_archivo_facturacion_mov_pagados.php";
+$myPage="salud_archivo_urgencias.php";
 $myTitulo="Archivo de Urgencias";
 
 

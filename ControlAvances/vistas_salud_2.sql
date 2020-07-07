@@ -338,3 +338,14 @@ sum(ValorGlosaAceptada) as TotalGlosaAceptada ,sum(ValorGlosaXConciliar) as Tota
 sum(TotalPagos) as TotalPagos,sum(TotalDevolucion) as TotalDevolucion,sum(SaldoFinalFactura) as SaldoEPS  
 FROM vista_circular_07 GROUP BY cod_enti_administradora,RegimenEPS;
 
+DROP VIEW IF EXISTS `vista_salud_registro_devoluciones_facturas_reporte`;
+CREATE VIEW vista_salud_registro_devoluciones_facturas_reporte AS
+SELECT t1.ID,t1.FechaDevolucion,t1.FechaReciboAuditoria,t1.num_factura,
+(SELECT CuentaContable FROM salud_archivo_facturacion_mov_generados t2 WHERE t2.num_factura=t1.num_factura LIMIT 1) as CuentaContable,
+(SELECT nom_enti_administradora FROM salud_archivo_facturacion_mov_generados t2 WHERE t2.num_factura=t1.num_factura LIMIT 1) as NombreEPS,
+(SELECT cod_enti_administradora FROM salud_archivo_facturacion_mov_generados t2 WHERE t2.num_factura=t1.num_factura LIMIT 1) as CodEPS,
+(SELECT nit FROM salud_eps t3 WHERE t3.cod_pagador_min=(SELECT CodEPS) LIMIT 1) as NitEPS,
+(SELECT CONCAT(Nombre,' ',Apellido,' ',Identificacion) FROM usuarios t4 WHERE t4.idUsuarios=t1.idUser LIMIT 1) as DatosUsuario,
+    t1.Observaciones,t1.CodGlosa,t1.idUser,t1.Soporte,t1.ValorFactura,t1.FechaRegistro,t1.Updated 
+FROM salud_registro_devoluciones_facturas t1;
+

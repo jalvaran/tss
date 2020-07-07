@@ -820,7 +820,7 @@ class Rips extends conexion{
             }
             unset($DatosRips["id_temp_rips_generados"]);
             unset($DatosRips["LineaArchivo"]);
-            $DatosRips["valor_total_pago"]=$Vector["ValorCapita"];
+            $DatosRips["valor_total_pago"]=0;
             $DatosRips["valor_neto_pagar"]=$Vector["ValorCapita"];
             $DatosRips["num_factura"]=$Vector["CuentaGlobal"];
             $sql=$this->getSQLInsert("salud_archivo_facturacion_mov_generados", $DatosRips);

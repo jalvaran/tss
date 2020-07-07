@@ -41,7 +41,7 @@ $css->CabeceraFin();
     /////
 $css->CrearDiv("principal", "container", "center",1,1);
 $obTabla->FormularioRangoFechas($myPage,$statement, "");
-$statement=$obTabla->FiltroRangoFechas("fecha_consulta", $statement, "");
+$statement=$obTabla->FiltroRangoFechas("fecha_ingreso", $statement, "");
 $Vector["statement"]=$statement;   //Filtro necesario para la paginacion
 $css->DivNotificacionesJS();
 //print($statement);

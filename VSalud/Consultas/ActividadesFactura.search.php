@@ -203,12 +203,22 @@ if( !empty($_REQUEST["idFactura"]) ){
                         if(($DatosFactura["EstadoGlosa"]>=5 and $DatosFactura["EstadoGlosa"]<=7) or ($DatosFactura["EstadoGlosa"]>8 and $DatosFactura["EstadoGlosa"]<12) ){
                             $Enable=0;
                         }
-                        $DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");
-                        $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFechaFactura["fecha_radicado"], date("Y-m-d"), "");
+                        $sql2="SELECT fecha_radicado,estado FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$idFactura'";
+                        $DatosFechaEstadoFactura=$obGlosas->FetchAssoc($obGlosas->Query($sql2));
+                        //$DatosFechaFactura=$obGlosas->ValorActual("salud_archivo_facturacion_mov_generados", "fecha_radicado", "num_factura='$idFactura'");
+                        $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFechaEstadoFactura["fecha_radicado"], date("Y-m-d"), "");
                         $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1); //Verifico cuantos dias hay parametrizados para poder registrar glosas o devolver una factura
                         if($DiasRadicado["Dias"]>$Parametros["Valor"]){
                             $Enable=0;
                             print("<strong>Glosa fuera de tiempo<br><strong>");
+                        }
+                        if($DatosFechaEstadoFactura["estado"]=='PAGADA' ){
+                            $Enable=0;
+                            print("<strong>Factura Pagada<br><strong>");
+                        }
+                        if($DatosFechaEstadoFactura["estado"]=='DEVUELTA'){
+                            $Enable=0;
+                            print("<strong>Factura Devuelta<br><strong>");
                         }
                         $sql="SELECT ID FROM registro_glosas_xml_ftp WHERE num_factura='$idFactura' AND Xml_Glosa_Inicial";
                         $DatosXML=$obGlosas->FetchAssoc($obGlosas->Query($sql));

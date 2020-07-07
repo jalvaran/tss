@@ -51,8 +51,8 @@ $css->CrearCuadroDeDialogo("DialNuevoProceso", "Nuevo Proceso Gerencial");
         print("<br><strong>IPS:</strong><br>");
         $css->CrearSelectTable("CmbIps", "empresapro", "", "idEmpresaPro", "RazonSocial", "CodigoPrestadora", "Ciudad", "", "", 1, "Seleccione la IPS");
         
-        print("<br><strong>EPS:</strong><br>");
-        $css->CrearTableChosen("CmbEps", "salud_eps", "", "nombre_completo", "cod_pagador_min", "sigla_nombre", "cod_pagador_min", 300, 1, "EPS", "");
+        print("<br><strong>Tercero:</strong><br>");
+        $css->CrearTableChosen("CmbEps", "salud_eps", "", "nombre_completo", "nit", "cod_pagador_min", "cod_pagador_min", 300, 1, "Tercero", "");
         //$css->CrearSelectTable("CmbEps", "salud_eps", "", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "", "", "", 1, "Seleccione la EPS");
         $css->CrearInputText("TxtNombre", "text", "<strong>Nombre del Proceso:</strong><br>", "", "Nombre", "", "", "", 230, 30, 0, 1);
         print("<strong>Concepto:</strong><br>");

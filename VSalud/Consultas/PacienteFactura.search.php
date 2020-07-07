@@ -88,7 +88,7 @@ if( !empty($_REQUEST["idFactura"]) ){
         $css->CerrarTabla();
         
         $sql="SELECT fecha_factura,cod_enti_administradora,nom_enti_administradora,num_contrato,"
-                . "  valor_neto_pagar,valor_total_pago,fecha_radicado,numero_radicado,CuentaRIPS,CuentaGlobal,EstadoGlosa "
+                . "  valor_neto_pagar,valor_total_pago,fecha_radicado,numero_radicado,CuentaRIPS,CuentaGlobal,EstadoGlosa,estado "
                 . "FROM salud_archivo_facturacion_mov_generados WHERE num_factura='$idFactura'";
         $Consulta=$obGlosas->Query($sql);
         $DatosFactura=$obGlosas->FetchArray($Consulta);
@@ -125,6 +125,9 @@ if( !empty($_REQUEST["idFactura"]) ){
                     $Enable=0;
                     if($DatosFactura["EstadoGlosa"]==8){
                         $Enable=1;
+                    }
+                    if($DatosFactura["estado"]=='PAGADA'){
+                        $Enable=0;
                     }
                     $DiasRadicado=$obGlosas->CalculeDiferenciaFechas($DatosFactura["fecha_radicado"], date("Y-m-d"), "");
                     $Parametros=$obGlosas->DevuelveValores("salud_parametros_generales", "ID", 1); //Verifico cuantos dias hay parametrizados para poder registrar glosas o devolver una factura

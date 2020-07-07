@@ -382,7 +382,8 @@ public function DibujeTabla($Vector){
     $statement=$Vector["statement"];
     
     $Columnas=$this->Columnas($Tabla); //Se debe disenar la base de datos colocando siempre la llave primaria de primera
-    
+    $InfoColumnas=$this->ColumnasInfo($Tabla); //Se debe disenar la base de datos colocando siempre la llave primaria de primera
+    //print_r($InfoColumnas);
     $myPage="$Tabla[Tabla]".".php";
     if(isset($Vector["MyPage"])){
         $myPage=$Vector["MyPage"];
@@ -721,11 +722,25 @@ public function DibujeTabla($Vector){
                                     $idEdit=$DatosProducto[0];
                                     //Descomentar para habilitar la edicion en linea
                                     //$this->css->CrearTextArea($idElement, "", $DatosProducto[$i], "", "", "onChange", "EditeRegistro(`$tbl`,`$NomCol`,`$idTabla`,`$idEdit`,`$idElement`)", "", "", 0, 1,0);
-                                
-                                    print(($DatosProducto[$i])); 
+                                    $TipoInfo= substr($InfoColumnas["Type"][$i], 0, 3);
+                                    //print("Tipo ".$TipoInfo);
+                                    if($TipoInfo=="dou"){
+                                        print(number_format($DatosProducto[$i])); 
+                                    }else{
+                                        print(($DatosProducto[$i])); 
+                                    }
+                                    //print(($DatosProducto[$i])); 
                                 }else{
+                                    
+                                    $TipoInfo= substr($InfoColumnas["Type"][$i], 0, 3);
+                                    //print("Tipo ".$TipoInfo);
+                                    if($TipoInfo=="dou"){
+                                        print(number_format($DatosProducto[$i])); 
+                                    }else{
+                                        print(($DatosProducto[$i])); 
+                                    }
                                 //$this->css->CrearInputText("TxtDatos$DatosProducto[0]", "text", "", $DatosProducto[$i], "", "", "Evento", "JS", "", "", 0, 1);
-                                    print(($DatosProducto[$i])); 
+                                    
                                 }
                             }
                         }
@@ -5962,6 +5977,21 @@ $tbl.= "</table>";
         return($statement);
     }
     
+    public function FiltroRangoFechas2($NombreCampo,$statement,$Vector) {
+        if(isset($_REQUEST["BtnEnviarRango2"])){
+            
+            $FechaInicial=$this->obCon->normalizar($_REQUEST["TxtFechaInicialRango2"]);
+            $FechaFinal=$this->obCon->normalizar($_REQUEST["TxtFechaFinalRango2"]);
+            if (strpos($statement, 'WHERE') !== false) {
+                $statement.=" AND $NombreCampo >='$FechaInicial' AND $NombreCampo <='$FechaFinal'";
+            }else{
+                $statement.=" WHERE $NombreCampo >='$FechaInicial' AND $NombreCampo <='$FechaFinal'";
+            }
+            
+        }
+        return($statement);
+    }
+    
     //Agrega un rango de fechas
     public function FormularioRangoFechas($myPage,$st,$Vector) {
         $FechaIni=date("Y-m-d");
@@ -5998,6 +6028,48 @@ $tbl.= "</table>";
                 print("</td>");
                 print("<td>");
                     $this->css->CrearBotonNaranja("BtnEnviarRango", "Enviar");
+                print("</td>");
+            $this->css->CierraFilaTabla();
+        $this->css->CerrarTabla();
+    $this->css->CerrarForm();
+    }
+    
+    //Agrega un rango de fechas
+    public function FormularioRangoFechas2($myPage,$st,$Vector) {
+        $FechaIni=date("Y-m-d");
+        $FechaFin=date("Y-m-d");
+        if(isset($_REQUEST["TxtFechaInicialRango2"])){
+            $FechaIni=$_REQUEST["TxtFechaInicialRango2"];
+            
+        }
+        if(isset($_REQUEST["TxtFechaFinalRango2"])){
+            $FechaFin=$_REQUEST["TxtFechaFinalRango2"];
+            
+        }
+        $this->css=new CssIni("");
+        $this->css->CrearForm2("FrmRangos2", $myPage, "post", "_self");
+        $this->css->CrearInputText("st", "hidden", "", base64_encode($st), "", "", "", "", 150, 30, 0, 1);
+                
+        $this->css->CrearTabla();
+            $this->css->FilaTabla(16);
+                $this->css->ColTabla("<strong>FILTRAR POR RANGOS RADICADOS</strong>", 4);
+            $this->css->CierraFilaTabla();
+            $this->css->FilaTabla(16);
+
+                $this->css->ColTabla("<strong>Fecha Inicial</strong>", 1);
+                $this->css->ColTabla("<strong>Fecha Final</strong>", 1);
+                $this->css->ColTabla("<strong>Enviar</strong>", 1);
+            $this->css->CierraFilaTabla();
+            $this->css->FilaTabla(16);
+
+                print("<td>");
+                    $this->css->CrearInputText("TxtFechaInicialRango2", "date", "", $FechaIni, "", "", "", "", 150, 30, 0, 1);
+                print("</td>");
+                print("<td>");
+                    $this->css->CrearInputText("TxtFechaFinalRango2", "date", "", $FechaFin, "", "", "", "", 150, 30, 0, 1);
+                print("</td>");
+                print("<td>");
+                    $this->css->CrearBotonNaranja("BtnEnviarRango2", "Enviar");
                 print("</td>");
             $this->css->CierraFilaTabla();
         $this->css->CerrarTabla();
