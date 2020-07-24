@@ -30,9 +30,9 @@ if(isset($_REQUEST["Opcion"])){
                 $Separador=',';
             }
             $sqlColumnas="SELECT 'CuentaRIPS','CuentaGlobal','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO DE LA FACTURA',"
-                    . "'CODIGO EPS','EPS','VALOR PAGADO','NEGOCIACION','CUENTA CONTABLE'";
+                    . "'CODIGO EPS','NIT_EPS','EPS','VALOR FACTURA','VALOR PAGADO','DIFERENCIA PAGOS','NEGOCIACION','CUENTA CONTABLE'";
             $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_pagado) AS valor_pagado,tipo_negociacion,CuentaContable ";
+                    . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ROUND(TotalPagos) AS TotalPagos,ROUND(DiferenciaPagos) AS DiferenciaPagos,tipo_negociacion,CuentaContable ";
             $sqlColumnas.=" UNION ALL ";
             
             //print($Indice);
@@ -81,10 +81,10 @@ if(isset($_REQUEST["Opcion"])){
                 $Separador=',';
             }
             $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO',"
-                    . "'DIAS EN MORA','CODIGO EPS','EPS','VALOR X PAGAR','NEGOCIACION',"
+                    . "'DIAS EN MORA','CODIGO EPS','NIT EPS','EPS','VALOR X PAGAR','NEGOCIACION',"
                     . "'CUENTA CONTABLE','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA', 'GLOSA X CONCILIAR','TOTAL PAGOS','SALDO FINAL FACTURA'";
             $query=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,DiasMora,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,tipo_negociacion,"
+                    . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,tipo_negociacion,"
                     . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar,TotalPagos,SaldoFinalFactura ";
             $sqlColumnas.=" UNION ALL ";
             
@@ -133,10 +133,10 @@ if(isset($_REQUEST["Opcion"])){
             }else{
                 $Separador=',';
             }
-            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO DE LA FACTURA',"
-                    . "'CODIGO EPS','EPS','VALOR NETO A PAGAR','VALOR PAGADO','DIFERENCIA','CUENTA CONTABLE','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA', 'GLOSA X CONCILIAR'";
-            $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
-                    . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ROUND(valor_pagado) as valor_pagado,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
+            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA',"
+                    . "'CODIGO EPS','NIT EPS','EPS','VALOR NETO A PAGAR','VALOR PAGADO','DIFERENCIA','CUENTA CONTABLE','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA', 'GLOSA X CONCILIAR'";
+            $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,"
+                    . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ROUND(totalPagos) as totalPagos,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
                     . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar ";
             $sqlColumnas.=" UNION ALL ";
             
@@ -440,6 +440,60 @@ if(isset($_REQUEST["Opcion"])){
             }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;//Fin caso 8
+            
+            case 9: //Exportar Reporte de porcentaje de capitas
+            if(file_exists($Link)){
+                unlink($Link);
+            }
+            
+            
+            $statement=$obCon->normalizar(urldecode($_REQUEST["st"]));
+            $Separador=$obCon->normalizar($_REQUEST["sp"]);
+            if($Separador==1){
+                $Separador=';';
+            }else{
+                $Separador=',';
+            }
+            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO',"
+                    . "'NUMERO DE RADICADO','CODIGO EPS','NIT EPS','EPS','VALOR FACTURADO','VALOR SERVICIOS PRESTADOS','DIFERENCIA','PORCENTAJE',"
+                    . "'CUENTA CONTABLE' ";
+            $query=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_radicado,numero_radicado,"
+                    . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ValorAFCapita,DiferenciaFacturacion,PorcentajeFacturado,"
+                    . "CuentaContable ";
+            $sqlColumnas.=" UNION ALL ";
+            
+            //print($Indice);
+            $sql=$sqlColumnas."SELECT $query FROM $statement;";
+            $Consulta=$obCon->Query($sql);
+            if($archivo = fopen($Link, "a")){
+                $mensaje="";
+                $r=0;
+                while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                    $r++;
+                    for ($i=0;$i<count($DatosExportacion);$i++){
+                        $Dato="";
+                        if(isset($DatosExportacion[$i])){
+                            $Dato=$DatosExportacion[$i];
+                        }
+                        $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                    }
+                    $mensaje=substr($mensaje, 0, -1);
+                    $mensaje.="\r\n";
+                    if($r==1000){
+                        $r=0;
+                        fwrite($archivo, $mensaje);
+                        $mensaje="";
+                    }
+                }
+                
+
+                fwrite($archivo, $mensaje);
+                fclose($archivo);
+                unset($mensaje);
+                unset($DatosExportacion);
+            }
+            print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
+            break;//Fin caso 9
         }
 }else{
     print("No se recibió parametro de opcion");

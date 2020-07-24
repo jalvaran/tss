@@ -3,9 +3,9 @@
 --
 DROP VIEW IF EXISTS `vista_salud_facturas_pagas`;
 CREATE VIEW vista_salud_facturas_pagas AS 
-SELECT t1.`id_fac_mov_generados` as id_factura_generada,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,t1.`fecha_factura`,
+SELECT t1.`CuentaRIPS`,t1.`CuentaGlobal`,t1.`CuentaContable`,t1.`id_fac_mov_generados` as id_factura_generada,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,t1.`fecha_factura`,
 t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar`,t2.`id_pagados` as id_factura_pagada,t2.`fecha_pago_factura`,t2.`valor_pagado`,t2.`num_pago` ,t1.`tipo_negociacion`,
-t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte` 
+t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte`,(SELECT nit FROM salud_eps t3 WHERE t3.cod_pagador_min=t1.cod_enti_administradora LIMIT 1 ) AS NitEPS 
 FROM salud_archivo_facturacion_mov_generados t1 INNER JOIN salud_archivo_facturacion_mov_pagados t2 ON t1.`num_factura`=t2.`num_factura`
 WHERE t1.estado='PAGADA';
 --
@@ -16,7 +16,8 @@ CREATE VIEW vista_salud_facturas_no_pagas AS
 SELECT t1.`id_fac_mov_generados` as id_factura_generada, 
 (SELECT DATEDIFF(now(),t1.`fecha_radicado` ) - t1.`dias_pactados`) as DiasMora ,t1.`cod_prest_servicio`,t1.`razon_social`,t1.`num_factura`,
 t1.`fecha_factura`, t1.`fecha_radicado`,t1.`numero_radicado`,t1.`cod_enti_administradora`,t1.`nom_enti_administradora`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`, 
-t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
+t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,t1.`CuentaContable`,t1.`CuentaRIPS`,t1.`CuentaGlobal`,
+(SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
 (SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,
 (SELECT nit FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as NIT_EPS,
 (SELECT nombre_completo FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as RazonSocialEPS

@@ -45,7 +45,7 @@ print("<body>");
                             //$css->CrearOptionSelect("6", "SIHO", 0);
                             $css->CrearOptionSelect("7", "Saldos por EPS", 0);
                             $css->CrearOptionSelect("8", "Consolidado de Facturacion", 0);
-                            
+                            $css->CrearOptionSelect("9", "Porcentaje Facturacion Capita", 0);
                         $css->CerrarSelect();
                         print("</td>");
                         print("<td  style='text-align:center' >");
