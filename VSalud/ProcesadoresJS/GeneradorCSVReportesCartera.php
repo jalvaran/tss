@@ -441,7 +441,7 @@ if(isset($_REQUEST["Opcion"])){
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;//Fin caso 8
             
-            case 9: //Exportar Reporte de porcentaje de capitas
+        case 9: //Exportar Reporte de porcentaje de capitas
             if(file_exists($Link)){
                 unlink($Link);
             }
@@ -494,6 +494,64 @@ if(isset($_REQUEST["Opcion"])){
             }
             print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
             break;//Fin caso 9
+            
+            case 10: //Exportar Reporte  1122
+                if(file_exists($Link)){
+                    unlink($Link);
+                }
+
+
+                $statement=$obCon->normalizar(urldecode($_REQUEST["st"]));
+                $Separador=$obCon->normalizar($_REQUEST["sp"]);
+                if($Separador==1){
+                    $Separador=';';
+                }else{
+                    $Separador=',';
+                }
+                $sqlColumnas="SELECT 'NIT_EAPB','CODIGO_EAPB','EAPB','TIPO_ENTIDAD','CONTRATO','MODALIDAD',"
+                        . "'FACTURA','FECHA_RADICADO','VALOR_FACTURA','GLOSA_ACEPTADA','VALOR_NETO','PAGOS_0_10','PAGOS_11_30','TOTAL_PAGADO',"
+                        . "'CUMPLE_EVENTO','CUMPLE_CAPITA','PORCENTAJE_CUMPLIMIENTO' ";
+                $sqlColumnas="SELECT '1','2','3','4','5','6',"
+                        . "'7','8','9','10','11','12','13','14',"
+                        . "'15','16','17' ";
+                $query=" NitEPS,cod_eps,nombre_eps,TipoEntidad,num_contrato,tipo_negociacion,num_factura,"
+                        . "fecha_radicado,ROUND(valor_neto_pagar),ROUND(ValorGlosaAceptada),ROUND(SaldoFactura2),ROUND(TotalPagosIntervalo1),ROUND(TotalPagosIntervalo2),ROUND(TotalPagado),"
+                        . "CumpleEvento,CumpleCapita,PorcentajePago ";
+                $sqlColumnas.=" UNION ALL ";
+
+                //print($Indice);
+                $sql=$sqlColumnas."SELECT $query FROM $statement;";
+                $sql="SELECT $query FROM $statement;";
+                $Consulta=$obCon->Query($sql);
+                if($archivo = fopen($Link, "a")){
+                    $mensaje="";
+                    $r=0;
+                    while($DatosExportacion= $obCon->FetchArray($Consulta)){
+                        $r++;
+                        for ($i=0;$i<count($DatosExportacion);$i++){
+                            $Dato="";
+                            if(isset($DatosExportacion[$i])){
+                                $Dato=$DatosExportacion[$i];
+                            }
+                            $mensaje.='"'.str_replace(";", "", $Dato).'";'; 
+                        }
+                        $mensaje=substr($mensaje, 0, -1);
+                        $mensaje.="\r\n";
+                        if($r==1000){
+                            $r=0;
+                            fwrite($archivo, $mensaje);
+                            $mensaje="";
+                        }
+                    }
+
+
+                    fwrite($archivo, $mensaje);
+                    fclose($archivo);
+                    unset($mensaje);
+                    unset($DatosExportacion);
+                }
+                print("<a href='$Link' target='_top'><img src='../../images/download.gif'>Download</img></a>");
+            break;//Fin caso 10
         }
 }else{
     print("No se recibió parametro de opcion");

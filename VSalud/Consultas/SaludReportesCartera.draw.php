@@ -1752,6 +1752,387 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                 }
         break;//Fin caso 9
         
+        case 10: // Reporte 1122
+            
+            
+            $idEPS="";
+            if(isset($_REQUEST["idEPS"])){
+                $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
+            }
+            $CuentaGlobal='';
+            if(isset($_REQUEST["CuentaGlobal"])){
+                $CuentaGlobal=$obGlosas->normalizar($_REQUEST["CuentaGlobal"]);
+            }
+            $FechaInicial="";
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+            }
+            $FechaFinal="";
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+            }
+            $Separador="";
+            if(isset($_REQUEST["Separador"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["Separador"]);
+            }
+            if(isset($_REQUEST["sp"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["sp"]);
+            }
+            
+            $CuentaRIPS="000000";
+            if(isset($_REQUEST["CuentaRIPS"])){
+                $CuentaRIPS=str_pad($obGlosas->normalizar($_REQUEST["CuentaRIPS"]),6,'0',STR_PAD_LEFT);
+            }
+            
+            //Paginacion
+            if(isset($_REQUEST['Page'])){
+                $NumPage=$obGlosas->normalizar($_REQUEST['Page']);
+            }else{
+                $NumPage=1;
+            }
+            //$Condicional=" WHERE (`SaldoFinalFactura` <> 0) AND Genera07='S' ";
+            $Condicional=" WHERE (`cod_eps` <> '')";
+            $Condicional2="";
+            if($idEPS<>''){
+                $Condicional2=" AND cod_eps='$idEPS'";
+            }
+            if($FechaInicial<>''){
+                $Condicional2.=$Condicional2." AND fecha_radicado >= '$FechaInicial' ";
+            }
+            if($FechaFinal<>''){
+                $Condicional2.=$Condicional2." AND fecha_radicado <= '$FechaFinal' ";
+            }
+                        
+            $statement=" `vista_reporte_1122` $Condicional $Condicional2";
+            
+            if(isset($_REQUEST['st'])){
+
+                $statement= urldecode($_REQUEST['st']);
+                //print($statement);
+            }
+            $limit = 10;
+            $startpoint = ($NumPage * $limit) - $limit;
+            $VectorST = explode("LIMIT", $statement);
+            $statement = $VectorST[0]; 
+            $query = "SELECT COUNT(*) as `num`,SUM(SaldoFinalFactura) AS SaldoFinalFactura FROM {$statement}";
+            $row = $obGlosas->FetchArray($obGlosas->Query($query));
+            $ResultadosTotales = $row['num'];
+            $TotalXPagar=$row['SaldoFinalFactura'];
+            $st_reporte=$statement;
+            $Limit=" ORDER BY TotalPagado DESC LIMIT $startpoint,$limit";
+            
+            $query="SELECT * ";
+            $consulta=$obGlosas->Query("$query FROM $statement $Limit");
+            //print("$query FROM $statement");
+            if($obGlosas->NumRows($consulta)){
+                
+                $Resultados=$obGlosas->NumRows($consulta);
+        
+                $css->CrearTabla();
+                $css->FilaTabla(12);
+                    print("<td style='text-align:center'>");
+                        print("<strong>Registros:</strong> <h4 style=color:red>". number_format($ResultadosTotales)."</h4>");
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Saldo Total:</strong> <h4 style=color:red>". number_format($TotalXPagar)."</h4>");
+                    print("</td>");
+                    print("<td colspan='11'>");
+                        $css->CrearNotificacionRoja("Reporte 1122", 16);
+                    print("</td>");
+                    print("<td colspan='3' style='text-align:center'>");
+                        $st1= urlencode($st_reporte);
+                        $css->CrearImageLink("ProcesadoresJS/GeneradorCSVReportesCartera.php?Opcion=$TipoReporte&sp=$Separador&st=$st1", "../images/csv.png", "_blank", 50, 50);
+
+                    print("</td>");
+                $css->CierraFilaTabla();
+                //Paginacion
+                if($Resultados){
+
+                    $st= urlencode($st_reporte);
+                    if($ResultadosTotales>$limit){
+
+                        $css->FilaTabla(12);
+                            print("<td colspan='2' style=text-align:center>");
+                            if($NumPage>1){
+                                $NumPage1=$NumPage-1;
+                                $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
+
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+
+                            }
+                            print("</td>");
+                            $TotalPaginas= ceil($ResultadosTotales/$limit);
+                            print("<td colspan=11 style=text-align:center>");
+                            print("<strong>Página: </strong>");
+
+                            $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&TipoReporte=$TipoReporte&Page=";
+                            $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
+                            $css->CrearSelect("CmbPage", $FuncionJS,70);
+                                for($p=1;$p<=$TotalPaginas;$p++){
+                                    if($p==$NumPage){
+                                        $sel=1;
+                                    }else{
+                                        $sel=0;
+                                    }
+                                    $css->CrearOptionSelect($p, "$p", $sel);
+                                }
+
+                            $css->CerrarSelect();
+                            print("</td>");
+                            
+                            print("<td colspan='3' style=text-align:center>");
+                            if($ResultadosTotales>($startpoint+$limit)){
+                                $NumPage1=$NumPage+1;
+                                $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                            }
+                            print("</td>");
+                           $css->CierraFilaTabla(); 
+                        }
+                    }   
+                    
+                    $css->FilaTabla(12);
+                        
+                        $css->ColTabla("<strong>NIT EPS</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
+                        $css->ColTabla("<strong>EPS</strong>", 1);
+                        $css->ColTabla("<strong>TIPO ENTIDAD</strong>", 1);
+                        $css->ColTabla("<strong>CONTRATO</strong>", 1);
+                        $css->ColTabla("<strong>MODALIDAD</strong>", 1);
+                        $css->ColTabla("<strong>FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>FECHA RADICADO</strong>", 1);
+                        $css->ColTabla("<strong>VALOR FACTURA</strong>", 1);
+                        $css->ColTabla("<strong>GLOSA ACEPTADA</strong>", 1);
+                        $css->ColTabla("<strong>VALOR NETO</strong>", 1);
+                        $css->ColTabla("<strong>PAGOS DE 0 A 10</strong>", 1);
+                        $css->ColTabla("<strong>PAGOS DE 11 A 30</strong>", 1);  
+                        $css->ColTabla("<strong>TOTAL PAGADO</strong>", 1);
+                        $css->ColTabla("<strong>CUMPLE</strong>", 1);
+                        $css->ColTabla("<strong>PORCENTAJE</strong>", 1);
+                    $css->CierraFilaTabla();
+                    
+                    while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
+                        $css->FilaTabla(12);
+                            $css->ColTabla($DatosConsulta["NitEPS"], 1);
+                            $css->ColTabla($DatosConsulta["cod_eps"], 1);
+                            $css->ColTabla($DatosConsulta["nombre_eps"], 1);
+                            $css->ColTabla($DatosConsulta["TipoEntidad"], 1);
+                            $css->ColTabla($DatosConsulta["num_contrato"], 1);
+                            $css->ColTabla(($DatosConsulta["tipo_negociacion"]), 1);
+                            $css->ColTabla($DatosConsulta["num_factura"], 1);                            
+                            $css->ColTabla($DatosConsulta["fecha_radicado"], 1);
+                            $css->ColTabla(number_format($DatosConsulta["valor_neto_pagar"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaAceptada"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["SaldoFactura"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagosIntervalo1"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagosIntervalo2"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagado"]), 1);
+                            if($DatosConsulta["tipo_negociacion"]=='evento'){
+                                $css->ColTabla(($DatosConsulta["CumpleEvento"]), 1);
+                            }else{
+                                $css->ColTabla(($DatosConsulta["CumpleCapita"]), 1);
+                            }
+                            
+                            $css->ColTabla(($DatosConsulta["PorcentajePago"])."%", 1);
+                            
+                            
+                        $css->CierraFilaTabla();
+                    }
+                    
+                    $css->CerrarTabla();
+                    
+                }else{
+                    $css->CrearNotificacionAzul("No hay resultados", 14);
+                }
+        break;//Fin caso 10
+        
+        case 11: // Reporte 1122 por eps
+            
+            
+            $idEPS="";
+            if(isset($_REQUEST["idEPS"])){
+                $idEPS=$obGlosas->normalizar($_REQUEST["idEPS"]);
+            }
+            $CuentaGlobal='';
+            if(isset($_REQUEST["CuentaGlobal"])){
+                $CuentaGlobal=$obGlosas->normalizar($_REQUEST["CuentaGlobal"]);
+            }
+            $FechaInicial="";
+            if(isset($_REQUEST["FechaInicial"])){
+                $FechaInicial=$obGlosas->normalizar($_REQUEST["FechaInicial"]);
+            }
+            $FechaFinal="";
+            if(isset($_REQUEST["FechaFinal"])){
+                $FechaFinal=$obGlosas->normalizar($_REQUEST["FechaFinal"]);
+            }
+            $Separador="";
+            if(isset($_REQUEST["Separador"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["Separador"]);
+            }
+            if(isset($_REQUEST["sp"])){
+                $Separador=$obGlosas->normalizar($_REQUEST["sp"]);
+            }
+            
+            $CuentaRIPS="000000";
+            if(isset($_REQUEST["CuentaRIPS"])){
+                $CuentaRIPS=str_pad($obGlosas->normalizar($_REQUEST["CuentaRIPS"]),6,'0',STR_PAD_LEFT);
+            }
+            
+            //Paginacion
+            if(isset($_REQUEST['Page'])){
+                $NumPage=$obGlosas->normalizar($_REQUEST['Page']);
+            }else{
+                $NumPage=1;
+            }
+            //$Condicional=" WHERE (`SaldoFinalFactura` <> 0) AND Genera07='S' ";
+            $Condicional=" WHERE (`cod_eps` <> '')";
+            $Condicional2="";
+            if($idEPS<>''){
+                $Condicional2=" AND cod_eps='$idEPS'";
+            }
+            if($FechaInicial<>''){
+                $Condicional2.=$Condicional2." AND fecha_radicado >= '$FechaInicial' ";
+            }
+            if($FechaFinal<>''){
+                $Condicional2.=$Condicional2." AND fecha_radicado <= '$FechaFinal' ";
+            }
+                        
+            $statement=" `vista_reporte_1122_eps` $Condicional $Condicional2";
+            
+            if(isset($_REQUEST['st'])){
+
+                $statement= urldecode($_REQUEST['st']);
+                //print($statement);
+            }
+            $limit = 10;
+            $startpoint = ($NumPage * $limit) - $limit;
+            $VectorST = explode("LIMIT", $statement);
+            $statement = $VectorST[0]; 
+            $query = "SELECT COUNT(*) as `num`,SUM(SaldoFinalFactura) AS SaldoFinalFactura FROM {$statement}";
+            $row = $obGlosas->FetchArray($obGlosas->Query($query));
+            $ResultadosTotales = $row['num'];
+            $TotalXPagar=$row['SaldoFinalFactura'];
+            $st_reporte=$statement;
+            $Limit=" ORDER BY TotalPagado DESC LIMIT $startpoint,$limit";
+            
+            $query="SELECT * ";
+            $consulta=$obGlosas->Query("$query FROM $statement $Limit");
+            //print("$query FROM $statement");
+            if($obGlosas->NumRows($consulta)){
+                
+                $Resultados=$obGlosas->NumRows($consulta);
+        
+                $css->CrearTabla();
+                $css->FilaTabla(12);
+                    print("<td style='text-align:center'>");
+                        print("<strong>Registros:</strong> <h4 style=color:red>". number_format($ResultadosTotales)."</h4>");
+                    print("</td>");
+                    print("<td style='text-align:center'>");
+                        print("<strong>Saldo Total:</strong> <h4 style=color:red>". number_format($TotalXPagar)."</h4>");
+                    print("</td>");
+                    print("<td colspan='11'>");
+                        $css->CrearNotificacionRoja("Reporte 1122", 16);
+                    print("</td>");
+                    print("<td colspan='3' style='text-align:center'>");
+                        $st1= urlencode($st_reporte);
+                        $css->CrearImageLink("ProcesadoresJS/GeneradorCSVReportesCartera.php?Opcion=$TipoReporte&sp=$Separador&st=$st1", "../images/csv.png", "_blank", 50, 50);
+
+                    print("</td>");
+                $css->CierraFilaTabla();
+                //Paginacion
+                if($Resultados){
+
+                    $st= urlencode($st_reporte);
+                    if($ResultadosTotales>$limit){
+
+                        $css->FilaTabla(12);
+                            print("<td colspan='2' style=text-align:center>");
+                            if($NumPage>1){
+                                $NumPage1=$NumPage-1;
+                                $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
+
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "rojo", "");
+
+                            }
+                            print("</td>");
+                            $TotalPaginas= ceil($ResultadosTotales/$limit);
+                            print("<td colspan=11 style=text-align:center>");
+                            print("<strong>Página: </strong>");
+
+                            $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&TipoReporte=$TipoReporte&Page=";
+                            $FuncionJS="EnvieObjetoConsulta(`$Page`,`CmbPage`,`DivConsultas`,`5`);return false ;";
+                            $css->CrearSelect("CmbPage", $FuncionJS,70);
+                                for($p=1;$p<=$TotalPaginas;$p++){
+                                    if($p==$NumPage){
+                                        $sel=1;
+                                    }else{
+                                        $sel=0;
+                                    }
+                                    $css->CrearOptionSelect($p, "$p", $sel);
+                                }
+
+                            $css->CerrarSelect();
+                            print("</td>");
+                            
+                            print("<td colspan='3' style=text-align:center>");
+                            if($ResultadosTotales>($startpoint+$limit)){
+                                $NumPage1=$NumPage+1;
+                                $Page="Consultas/SaludReportesCartera.draw.php?st=$st&sp=$Separador&Page=$NumPage1&TipoReporte=$TipoReporte&Carry=";
+                                $FuncionJS="EnvieObjetoConsulta(`$Page`,`idEPS`,`DivConsultas`,`5`);return false ;";
+                                $css->CrearBotonEvento("BtnMas", "Página $NumPage1", 1, "onclick", $FuncionJS, "verde", "");
+                            }
+                            print("</td>");
+                           $css->CierraFilaTabla(); 
+                        }
+                    }   
+                    
+                    $css->FilaTabla(12);
+                        
+                        $css->ColTabla("<strong>NIT EPS</strong>", 1);
+                        $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
+                        $css->ColTabla("<strong>EPS</strong>", 1);
+                        $css->ColTabla("<strong>TIPO ENTIDAD</strong>", 1);
+                        
+                        $css->ColTabla("<strong>MODALIDAD</strong>", 1);
+                        $css->ColTabla("<strong>GLOSA ACEPTADA</strong>", 1);
+                        $css->ColTabla("<strong>VALOR NETO</strong>", 1);
+                        $css->ColTabla("<strong>PAGOS DE 0 A 10</strong>", 1);
+                        $css->ColTabla("<strong>PAGOS DE 11 A 30</strong>", 1);  
+                        $css->ColTabla("<strong>TOTAL PAGADO</strong>", 1);
+                        
+                        $css->ColTabla("<strong>PORCENTAJE</strong>", 1);
+                    $css->CierraFilaTabla();
+                    
+                    while($DatosConsulta=$obGlosas->FetchAssoc($consulta)){
+                        $css->FilaTabla(12);
+                            $css->ColTabla($DatosConsulta["NitEPS"], 1);
+                            $css->ColTabla($DatosConsulta["cod_eps"], 1);
+                            $css->ColTabla($DatosConsulta["nombre_eps"], 1);
+                            $css->ColTabla($DatosConsulta["TipoEntidad"], 1);
+                            
+                            $css->ColTabla(($DatosConsulta["tipo_negociacion"]), 1);
+                            
+                            $css->ColTabla(number_format($DatosConsulta["ValorGlosaAceptada"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["SaldoFacturaGeneral"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagos1"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagos2"]), 1);
+                            $css->ColTabla(number_format($DatosConsulta["TotalPagado"]), 1);
+                            $css->ColTabla(($DatosConsulta["PorcentajePago"]), 1);
+                            
+                            
+                        $css->CierraFilaTabla();
+                    }
+                    
+                    $css->CerrarTabla();
+                    
+                }else{
+                    $css->CrearNotificacionAzul("No hay resultados", 14);
+                }
+        break;//Fin caso 11
+        
     }
           
 }else{

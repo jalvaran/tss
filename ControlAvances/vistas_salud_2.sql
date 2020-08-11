@@ -371,3 +371,44 @@ t1.`dias_pactados`,t1.`fecha_radicado`,t1.`numero_radicado`,t1.`Soporte`,t1.Cuen
 
 FROM salud_archivo_facturacion_mov_generados t1
 WHERE t1.tipo_negociacion='capita';
+
+
+
+DROP VIEW IF EXISTS `vista_reporte_1122`;
+CREATE VIEW vista_reporte_1122 AS 
+SELECT t1.`id_fac_mov_generados` as ID, 
+(SELECT nit FROM salud_eps t3 WHERE t3.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as NitEPS,
+(SELECT TipoEntidad FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as TipoEntidad,
+(SELECT tipo_regimen FROM salud_eps WHERE salud_eps.cod_pagador_min=t1.cod_enti_administradora LIMIT 1) as Regimen,
+t1.`num_contrato`,t1.`num_factura`,t1.`cod_enti_administradora` as cod_eps,t1.`nom_enti_administradora` as nombre_eps,
+t1.`fecha_factura`, t1.`fecha_radicado`,t1.`valor_neto_pagar` ,t1.`tipo_negociacion`,
+(SELECT fecha_pago_factura FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura LIMIT 1) as fecha_pago_factura,
+DATE_ADD(t1.`fecha_radicado`, INTERVAL 10 DAY) as FechaIntervalo1,
+DATE_ADD(t1.`fecha_radicado`, INTERVAL 30 DAY) as FechaIntervalo2,
+(SELECT IFNULL((SELECT SUM(ValorGlosado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaInicial,
+(SELECT IFNULL((SELECT SUM(ValorLevantado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaLevantada,
+(SELECT IFNULL((SELECT SUM(ValorAceptado) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaAceptada,
+(SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar,
+(SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura AND fecha_pago_factura>=t1.fecha_radicado AND fecha_pago_factura<=(SELECT FechaIntervalo1)),0)) as TotalPagosIntervalo1,
+(SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura AND fecha_pago_factura>(SELECT FechaIntervalo1) AND fecha_pago_factura<=(SELECT FechaIntervalo2)),0)) as TotalPagosIntervalo2,
+((SELECT TotalPagosIntervalo1) + (SELECT TotalPagosIntervalo2) ) as TotalPagado,
+(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) ) AS SaldoFactura2,
+(SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagado) ) AS SaldoFinalFactura,
+(ROUND( (100/(SELECT SaldoFactura2)) * ((SELECT TotalPagado)),2) ) as PorcentajePago,
+(SELECT IF((SELECT (TotalPagado))<=(SELECT (SaldoFactura2) ),'NO','SI')) AS CumpleEvento,    
+(SELECT IF((SELECT (TotalPagosIntervalo1))<=(SELECT (SaldoFactura2) ),'NO','SI')) AS CumpleCapita
+
+FROM salud_archivo_facturacion_mov_generados t1 WHERE Estado<>'DEVUELTA' ;
+
+DROP VIEW IF EXISTS `vista_reporte_1122_eps`;
+CREATE VIEW vista_reporte_1122_eps AS 
+SELECT NitEPS,TipoEntidad,Regimen,cod_eps,nombre_eps,tipo_negociacion,
+SUM(SaldoFactura2) as SaldoFacturaGeneral,
+SUM(ValorGlosaAceptada) as ValorGlosaAceptada,
+SUM(TotalPagosIntervalo1) as TotalPagos1,
+SUM(TotalPagosIntervalo2) as TotalPagos2, 
+SUM(TotalPagado) as TotalPagado,
+SUM(SaldoFinalFactura) as SaldoFinalFactura,
+ROUND(AVG(PorcentajePago),2) as PorcentajePago 
+FROM vista_reporte_1122 t1 GROUP BY cod_eps,tipo_negociacion ;
+
