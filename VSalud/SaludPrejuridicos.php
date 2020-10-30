@@ -45,7 +45,9 @@ print("<body>");
         
                 $Page="Consultas/FacturasPrejuridicos.php";
                 $FuncionJS="EnvieObjetoConsulta2(`$Page`,`idEps`,`DivFacturasDif`,`3`);return false ;";
-                $css->CrearSelectTable("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "onchange", $FuncionJS, "", 1,"Seleccione una EPS");
+                $css->CrearTableChosen("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "cod_pagador_min", 230, 1, "Seleccione una eps", "EPS", "1","onchange=$FuncionJS");
+                //$css->CrearSelectTable("idEps", "salud_eps", " ORDER BY nombre_completo", "cod_pagador_min", "nombre_completo", "cod_pagador_min", "onchange", $FuncionJS, "", 1,"Seleccione una EPS");
+                print("<br><br>");
                 $css->CrearTextArea("TxtObservaciones", "", "", "Observaciones", "", "", "", 220, 100, 0, 1);
                 $css->CrearBotonConfirmado("BtnGenerar", "Generar");
             $css->CerrarDiv();
@@ -62,9 +64,14 @@ print("<body>");
             
     $css->CerrarDiv();//Cerramos contenedor Principal
     $css->AgregaJS(); //Agregamos javascripts
+    print('<script> 
+            //$("#idEps").select2(); 
+          </script> ');
     $css->AgregaSubir();
     $css->Footer();
     
     print("</body></html>");
     ob_end_flush();
 ?>
+
+ 

@@ -137,6 +137,7 @@ class CssIni{
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
                 
 		<script src="alertify/lib/alertify.min.js"></script>
+                <link rel="stylesheet" href="select2/dist/css/select2.min.css">
                 
                 ');
             }   
@@ -893,7 +894,7 @@ class CssIni{
             
             print('<script src="js/jquery.js"></script>
             <script src="js/bootstrap-transition.js"></script>
-            
+            <script src="select2/dist/js/select2.full.min.js"></script>
             <script src="js/bootstrap-alert.js"></script>
             <script src="js/bootstrap-modal.js"></script>
             <script src="js/bootstrap-dropdown.js"></script>
@@ -1025,7 +1026,7 @@ function Footer(){
      
 /////////////////////Crear una Chosen
 	
-	function CrearSelectChosen($Nombre, $VarSelect){
+	function CrearSelectChosen($Nombre, $VarSelect,$js=''){
           $Ancho='200px'; 
           $PlaceHolder="Seleccione una opcion"; 
           if(isset($VarSelect["Ancho"])){
@@ -1046,21 +1047,21 @@ function Footer(){
            if(isset($VarSelect["Title"]) and !empty($VarSelect["Title"])){
                 print("<strong>$VarSelect[Title]</strong><br>");
            }
-           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="1" name="'.$Nombre.'" '.$Required.' style="width:'.$Ancho.';">';
+           echo '<select id="'.$Nombre.'" data-placeholder="'.$PlaceHolder.'" class="chosen-select"  tabindex="1" '.$js.'  name="'.$Nombre.'" '.$Required.' style="width:'.$Ancho.'; ">';
            
        	
 	}   
         
         /////////////////////Crear una Chosen
 	
-	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo,$idSeleccionado=""){
+	function CrearTableChosen($Nombre,$Tabla,$Condicion,$Display1,$Display2,$Display3,$idItem, $Ancho,$Requerido,$PlaceHolder,$Titulo,$idSeleccionado="",$js=''){
             $obCon=new conexion(1);
             $consulta=$obCon->ConsultarTabla($Tabla, $Condicion);
             $VarSelect["Ancho"]=$Ancho;
             $VarSelect["Required"]=$Requerido;
             $VarSelect["PlaceHolder"]=$PlaceHolder;
             $VarSelect["Title"]=$Titulo;
-            $this->CrearSelectChosen($Nombre, $VarSelect);
+            $this->CrearSelectChosen($Nombre, $VarSelect,$js);
            
             $this->CrearOptionSelect("", $PlaceHolder, 0);
             while($DatosTabla=$obCon->FetchArray($consulta)){
@@ -1394,7 +1395,8 @@ function Footer(){
                 if($DatosConsulta[$idItemValue]==$idSel){
                   $Sel=1;  
                 }
-                $this->CrearOptionSelect($DatosConsulta[$idItemValue], "$DatosConsulta[$OptionDisplay1] $DatosConsulta[$OptionDisplay2]", $Sel);
+                $text= utf8_encode("$DatosConsulta[$OptionDisplay1] $DatosConsulta[$OptionDisplay2]");
+                $this->CrearOptionSelect($DatosConsulta[$idItemValue], $text, $Sel);
             }
             $this->CerrarSelect();
         }

@@ -333,7 +333,7 @@ t1.`dias_pactados`,t1.`Soporte`,t1.`EstadoCobro`,
 (SELECT IFNULL((SELECT SUM(ValorXConciliar) FROM salud_glosas_iniciales WHERE salud_glosas_iniciales.num_factura=t1.num_factura AND salud_glosas_iniciales.EstadoGlosa<=7),0)) as ValorGlosaXConciliar,
 (SELECT IFNULL((SELECT SUM(valor_pagado) FROM salud_archivo_facturacion_mov_pagados WHERE salud_archivo_facturacion_mov_pagados.num_factura=t1.num_factura),0)) as TotalPagos,
 (SELECT t1.`valor_neto_pagar` - (SELECT ValorGlosaAceptada) - (SELECT TotalPagos)- (SELECT TotalDevolucion)) AS SaldoFinalFactura
-FROM salud_archivo_facturacion_mov_generados t1 WHERE (t1.estado='RADICADO' OR t1.estado='' OR t1.estado='DIFERENCIA' OR t1.estado='DEVUELTA' ); 
+FROM salud_archivo_facturacion_mov_generados t1 ; 
 
 
 
