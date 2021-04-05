@@ -86,7 +86,7 @@ function EnviarZIP(){
     } 
     
     if($('#CmbCuentaContable').val()==''){
-        console.log("Entra a validacion")
+        console.log("Entra a validaciones nuevas")
         var r = confirm("Está seguro que no desea enviar una cuenta contable?");
         if(r==false){
             document.getElementById('BtnSubirZip').disabled=false; 
@@ -125,7 +125,7 @@ function EnviarZIP(){
             
         },
         error: function (xhr, ajaxOptions, thrownError) {
-            alertify.alert("Error al tratar de borrar el archivo",0);
+            alert("Error al tratar de iniciar el proceso",0);
             alert(xhr.status);
             alert(thrownError);
           }

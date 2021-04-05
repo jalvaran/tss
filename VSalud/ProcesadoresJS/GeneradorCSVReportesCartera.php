@@ -29,9 +29,9 @@ if(isset($_REQUEST["Opcion"])){
             }else{
                 $Separador=',';
             }
-            $sqlColumnas="SELECT 'CuentaRIPS','CuentaGlobal','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO DE LA FACTURA',"
+            $sqlColumnas="SELECT 'CuentaRIPS','CuentaGlobal','Contrato','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO DE LA FACTURA',"
                     . "'CODIGO EPS','NIT_EPS','EPS','VALOR FACTURA','VALOR PAGADO','DIFERENCIA PAGOS','NEGOCIACION','CUENTA CONTABLE'";
-            $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
+            $CamposShow=" CuentaRIPS,CuentaGlobal,num_contrato,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
                     . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ROUND(TotalPagos) AS TotalPagos,ROUND(DiferenciaPagos) AS DiferenciaPagos,tipo_negociacion,CuentaContable ";
             $sqlColumnas.=" UNION ALL ";
             
@@ -133,9 +133,9 @@ if(isset($_REQUEST["Opcion"])){
             }else{
                 $Separador=',';
             }
-            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','IPS','FACTURA','FECHA DE FACTURA',"
+            $sqlColumnas="SELECT 'Cuenta RIPS','Cuenta Global','Contrato','IPS','FACTURA','FECHA DE FACTURA','FECHA DE PAGO',"
                     . "'CODIGO EPS','NIT EPS','EPS','VALOR NETO A PAGAR','VALOR PAGADO','DIFERENCIA','CUENTA CONTABLE','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA', 'GLOSA X CONCILIAR'";
-            $CamposShow=" CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,"
+            $CamposShow=" CuentaRIPS,CuentaGlobal,num_contrato,razon_social,num_factura,fecha_factura,fecha_pago_factura,"
                     . "cod_enti_administradora,NitEPS,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar,ROUND(totalPagos) as totalPagos,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
                     . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar ";
             $sqlColumnas.=" UNION ALL ";
@@ -400,10 +400,10 @@ if(isset($_REQUEST["Opcion"])){
             }else{
                 $Separador=',';
             }
-            $sqlColumnas="SELECT 'CUENTA RIPS','CUENTA GLOBAL','CUENTA CONTABLE','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO','NUMERO RADICADO','FECHA DE VENCIMIENTO',"
+            $sqlColumnas="SELECT 'CUENTA RIPS','CUENTA GLOBAL','CONTRATO','CUENTA CONTABLE','IPS','FACTURA','FECHA DE FACTURA','FECHA RADICADO','NUMERO RADICADO','FECHA DE VENCIMIENTO',"
                     . "'DIAS EN MORA','CODIGO EPS','EPS','REGIMEN','VALOR TOTAL','GLOSA INICIAL','GLOSA LEVANTADA','GLOSA ACEPTADA',"
                     . "'TOTAL PAGOS','TOTAL DEVOLUCIONES','SALDO','NEGOCIACION'";
-            $query=" CuentaRIPS,CuentaGlobal,CuentaContable,razon_social,num_factura,fecha_factura,fecha_radicado,numero_radicado,FechaVencimiento,DiasMora,"
+            $query=" CuentaRIPS,CuentaGlobal,num_contrato,CuentaContable,razon_social,num_factura,fecha_factura,fecha_radicado,numero_radicado,FechaVencimiento,DiasMora,"
                     . "cod_enti_administradora,nom_enti_administradora,RegimenEPS,ROUND(valor_neto_pagar) AS valor_neto_pagar,ValorGlosaInicial"
                     . ",ValorGlosaLevantada,ValorGlosaAceptada,TotalPagos,TotalDevolucion,SaldoFinalFactura,tipo_negociacion ";
             $sqlColumnas.=" UNION ALL ";

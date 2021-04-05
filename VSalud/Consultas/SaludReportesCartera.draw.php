@@ -89,7 +89,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_pago_factura,fecha_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,fecha_pago_factura,tipo_negociacion,"
+            $query="SELECT CuentaRIPS,CuentaGlobal,razon_social,num_factura,num_contrato,fecha_factura,fecha_pago_factura,tipo_negociacion,"
                     . "cod_enti_administradora,NitEPS,nom_enti_administradora,valor_neto_pagar,ROUND(TotalPagos) AS valor_pagado,DiferenciaPagos,CuentaContable ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
             //print("$query FROM $statement");
@@ -168,6 +168,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA RIPS</strong>", 1);
                         $css->ColTabla("<strong>CUENTA GLOBAL</strong>", 1);
+                        $css->ColTabla("<strong>CONTRATO</strong>", 1);
                         $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
                         $css->ColTabla("<strong>NIT EPS</strong>", 1);
                         $css->ColTabla("<strong>EPS</strong>", 1);
@@ -185,6 +186,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->FilaTabla(12);
                             $css->ColTabla($DatosConsulta["CuentaRIPS"], 1);
                             $css->ColTabla($DatosConsulta["CuentaGlobal"], 1);
+                            $css->ColTabla($DatosConsulta["num_contrato"], 1);
                             $css->ColTabla($DatosConsulta["cod_enti_administradora"], 1);
                             $css->ColTabla($DatosConsulta["NitEPS"], 1);
                             $css->ColTabla(utf8_encode($DatosConsulta["nom_enti_administradora"]), 1);
@@ -478,7 +480,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
             $st_reporte=$statement;
             $Limit=" ORDER BY fecha_factura LIMIT $startpoint,$limit";
             
-            $query="SELECT NitEPS,CuentaRIPS,CuentaGlobal,razon_social,num_factura,fecha_factura,ROUND(totalPagos) as totalPagos,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
+            $query="SELECT NitEPS,CuentaRIPS,CuentaGlobal,razon_social,num_factura,num_contrato,fecha_pago_factura ,fecha_factura,ROUND(totalPagos) as totalPagos,ROUND(DiferenciaEnPago) as DiferenciaEnPago,"
                     . "cod_enti_administradora,nom_enti_administradora,ROUND(valor_neto_pagar) AS valor_neto_pagar, "
                     . "CuentaContable,ValorGlosaInicial,ValorGlosaLevantada,ValorGlosaAceptada,ValorGlosaXConciliar ";
             $consulta=$obGlosas->Query("$query FROM $statement $Limit");
@@ -558,6 +560,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                     $css->FilaTabla(14);
                         $css->ColTabla("<strong>CUENTA RIPS</strong>", 1);
                         $css->ColTabla("<strong>CUENTA GLOBAL</strong>", 1);
+                        $css->ColTabla("<strong>CONTRATO</strong>", 1);
                         $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
                         $css->ColTabla("<strong>NIT EPS</strong>", 1);
                         $css->ColTabla("<strong>EPS</strong>", 1);
@@ -578,6 +581,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->FilaTabla(12);
                             $css->ColTabla($DatosConsulta["CuentaRIPS"], 1);
                             $css->ColTabla($DatosConsulta["CuentaGlobal"], 1);
+                            $css->ColTabla($DatosConsulta["num_contrato"], 1);
                             $css->ColTabla($DatosConsulta["cod_enti_administradora"], 1);
                             $css->ColTabla($DatosConsulta["NitEPS"], 1);
                             $css->ColTabla(utf8_encode($DatosConsulta["nom_enti_administradora"]), 1);
@@ -1507,6 +1511,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                         $css->ColTabla("<strong>CUENTA RIPS</strong>", 1);
                         $css->ColTabla("<strong>CUENTA GLOBAL</strong>", 1);
                         $css->ColTabla("<strong>CUENTA CONTABLE</strong>", 1);
+                        $css->ColTabla("<strong>CONTRATO</strong>", 1);
                         $css->ColTabla("<strong>NIT EPS</strong>", 1);
                         $css->ColTabla("<strong>CÓDIGO EPS</strong>", 1);
                         $css->ColTabla("<strong>EPS</strong>", 1);
@@ -1531,6 +1536,7 @@ if( !empty($_REQUEST["TipoReporte"]) ){
                             $css->ColTabla($DatosConsulta["CuentaRIPS"], 1);
                             $css->ColTabla($DatosConsulta["CuentaGlobal"], 1);
                             $css->ColTabla($DatosConsulta["CuentaContable"], 1);
+                            $css->ColTabla($DatosConsulta["num_contrato"], 1);
                             $css->ColTabla($DatosConsulta["NitEPS"], 1);
                             $css->ColTabla($DatosConsulta["cod_enti_administradora"], 1);
                             $css->ColTabla(utf8_encode($DatosConsulta["nom_enti_administradora"]), 1);
